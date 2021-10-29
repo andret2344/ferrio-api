@@ -1,0 +1,3672 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<calendar uni-lang="en" lang="English">
+	<day day="1" month="1">
+		<holiday id="1" usual="false">
+			<name>International Hangover Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="2" usual="false">
+			<name>International Day of Peace</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="3" usual="false">
+			<name>Public Domain Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="4" usual="true">
+			<name>New Year's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="1">
+		<holiday id="5" usual="false">
+			<name>Haiti Ancestor's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="1">
+		<holiday id="6" usual="false">
+			<name>Celebration of Peasants' Uprising in Burkina Faso</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="1">
+		<holiday id="7" usual="false">
+			<name>King Samoa's Birthday</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="1">
+		<holiday id="8" usual="false">
+			<name>Joma Shinji in Japan</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="1">
+		<holiday id="9" usual="false">
+			<name>Philatelist's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="10" usual="true">
+			<name>Epiphany</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="1">
+		<holiday id="11" usual="false">
+			<name>Freak's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="1">
+		<holiday id="12" usual="false">
+			<name>Elvis Presley's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="1">
+		<holiday id="13" usual="false">
+			<name>Wildlife Conservation League's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="1">
+		<holiday id="14" usual="false">
+			<name>Vodoun Festival (Benin)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="15" usual="false">
+			<name>Tomasz Baginski's Birthday</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="1">
+		<holiday id="16" usual="false">
+			<name>World Vegetarian's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="1">
+		<holiday id="17" usual="false">
+			<name>Zanzibar Revolution Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="1">
+		<holiday id="18" usual="false">
+			<name>Day of Mutual Adoration</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="1">
+		<holiday id="19" usual="false">
+			<name>Day of Hidden Love</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="20" usual="false">
+			<name>Day of Shy Peoples</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="1">
+		<holiday id="21" usual="false">
+			<name>Wikipedia's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="1">
+		<holiday id="22" usual="false">
+			<name>Poignant Dishes Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="1">
+		<holiday id="23" usual="false">
+			<name>Day of Dialogue with Judaism</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="1">
+		<holiday id="24" usual="false">
+			<name>International Winnie the Pooh Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="1">
+		<holiday id="25" usual="false">
+			<name>Feast of Military Prosecutor's Office Organizational Units</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="1">
+		<holiday id="26" usual="false">
+			<name>Martyr's Day (Azerbaijan)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="1">
+		<holiday id="27" usual="true">
+			<name>Grandmother's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="28" usual="false">
+			<name>Errol Barrow Day on Barbados</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="1">
+		<holiday id="29" usual="true">
+			<name>Grandfather's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="30" usual="false">
+			<name>Day of Unity of Ukraine</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="31" usual="false">
+			<name>Day of Big Penis</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="1">
+		<holiday id="32" usual="false">
+			<name>Day without Plastic Packaging</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="1">
+		<holiday id="33" usual="false">
+			<name>World Day of Media</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="1">
+		<holiday id="34" usual="false">
+			<name>Administrative Professionals' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="1">
+		<holiday id="35" usual="false">
+			<name>International Customs Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="36" usual="false">
+			<name>Transplantology Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="1">
+		<holiday id="37" usual="false">
+			<name>International Day of Commemoration in Memory of the Victims of the Holocaust</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="38" usual="false">
+			<name>Day of Dialogue with Islam</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="1">
+		<holiday id="39" usual="false">
+			<name>International Day of Mobilisation Against Nuclear War</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="1">
+		<holiday id="40" usual="false">
+			<name>Martyrs' Day (Nepal)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="1">
+		<holiday id="41" usual="false">
+			<name>Martyrs' Day (India)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="1">
+		<holiday id="42" usual="false">
+			<name>International Hugging Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="2">
+		<holiday id="43" usual="false">
+			<name>International Day for the Abolition of Slavery (Mauritius)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="2">
+		<holiday id="44" usual="false">
+			<name>Positive Thinking Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="45" usual="false">
+			<name>World Wetland Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="46" usual="false">
+			<name>Merchant's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="47" usual="false">
+			<name>Groundhog Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="48" usual="true">
+			<name>Presentation of Jesus at the Temple</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="2">
+		<holiday id="49" usual="false">
+			<name>Heroes' Day in Mozambique</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="2">
+		<holiday id="50" usual="false">
+			<name>World Cancer Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="2">
+		<holiday id="51" usual="false">
+			<name>Chama Cha Mapinduzi Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="52" usual="false">
+			<name>World Nutella Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="2">
+		<holiday id="53" usual="false">
+			<name>Bob Marley Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="2">
+		<holiday id="54" usual="false">
+			<name>Supreme Audit Office Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="2">
+		<holiday id="55" usual="false">
+			<name>Prison Officers' Feast</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="56" usual="false">
+			<name>Celebration of Revolution Day (Iraq)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="2">
+		<holiday id="57" usual="false">
+			<name>International Day of Pizza</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="2">
+		<holiday id="58" usual="false">
+			<name>Diplomat's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="59" usual="false">
+			<name>Women in Science Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="2">
+		<holiday id="60" usual="false">
+			<name>European Day of Alert Number 112</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="61" usual="false">
+			<name>World Day of the Sick</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="62" usual="false">
+			<name>Polish Nationwide Day of Feeding Forest Game</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="2">
+		<holiday id="63" usual="false">
+			<name>Darwin Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="2">
+		<holiday id="64" usual="false">
+			<name>World Radio Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="65" usual="false">
+			<name>Grandfather Frost's Birthday</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="66" usual="false">
+			<name>Carlos Santana Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="2">
+		<holiday id="67" usual="false">
+			<name>Epileptic's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="68" usual="true">
+			<name>Valentine's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="2">
+		<holiday id="69" usual="false">
+			<name>Single's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="70" usual="false">
+			<name>World Day of Orthodox Youth</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="71" usual="false">
+			<name>Energy Saving Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="2">
+		<holiday id="72" usual="false">
+			<name>International Day of Postmen and Consignments Delivery Men</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="73" usual="false">
+			<name>Polish Post Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="2">
+		<holiday id="74" usual="false">
+			<name>World Cat Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="2">
+		<holiday id="75" usual="false">
+			<name>Battery Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="2">
+		<holiday id="76" usual="false">
+			<name>Celebration of Green Turkmen Flag</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="77" usual="false">
+			<name>Celebration of Democracy in Nepal</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="2">
+		<holiday id="78" usual="false">
+			<name>World Day of Social Justice</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="79" usual="false">
+			<name>International Pipe Smoking Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="80" usual="false">
+			<name>World Pickup Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="2">
+		<holiday id="81" usual="false">
+			<name>International Mother Language Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="82" usual="false">
+			<name>Day of Fight Against the Colonial System</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="2">
+		<holiday id="83" usual="false">
+			<name>World Thinking Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="84" usual="false">
+			<name>European Victims Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="2">
+		<holiday id="85" usual="false">
+			<name>International Needy People Help Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="86" usual="false">
+			<name>Polish Nationwide Fight Against Depression Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="87" usual="false">
+			<name>Day of Red Army</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="88" usual="false">
+			<name>Men's Day(Russia)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="89" usual="false">
+			<name>Defender of the Fatherland Day (Russia)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="90" usual="false">
+			<name>Day Without Secret Commission</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="91" usual="false">
+			<name>Poznan Liberation Day (1945)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="2">
+		<holiday id="92" usual="false">
+			<name>Day of an Unexpected Kiss</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="2">
+		<holiday id="93" usual="false">
+			<name>Masturbation Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="2">
+		<holiday id="94" usual="false">
+			<name>Day of Sleeping in Public Places</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="95" usual="false">
+			<name>Dinosaur Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="2">
+		<holiday id="96" usual="false">
+			<name>Polar Bear Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="2">
+		<holiday id="97" usual="false">
+			<name>Cracovia Fan's Day (Polish football team)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="2">
+		<holiday id="98" usual="false">
+			<name>Rare Illnesses Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="99" usual="false">
+			<name>Leap Year Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="2">
+		<holiday id="100" usual="false">
+			<name>International Day of Days, Which Do Not Exists</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="3">
+		<holiday id="101" usual="false">
+			<name>International Day of Fight Against Nuclear Armament</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="102" usual="false">
+			<name>World Day of Civil Protection</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="103" usual="false">
+			<name>World Day of Consciousness of Self-harm</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="104" usual="false">
+			<name>Plum People Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="105" usual="false">
+			<name>Freckles Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="106" usual="false">
+			<name>Polish Nationwide Banned Soldiers Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="3">
+		<holiday id="107" usual="false">
+			<name>Discordia Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="108" usual="false">
+			<name>World Autism Awareness Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="109" usual="false">
+			<name>Antiquities Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="3">
+		<holiday id="110" usual="false">
+			<name>International Writers' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="111" usual="false">
+			<name>World Day of the Sick</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="3">
+		<holiday id="112" usual="false">
+			<name>Celebration of the Passing of Constitution of the USA</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="3">
+		<holiday id="113" usual="false">
+			<name>Mother-in-law Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="114" usual="false">
+			<name>Dentist's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="3">
+		<holiday id="115" usual="false">
+			<name>European Day of Speech Pathologist</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="116" usual="false">
+			<name>Clean Table Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="3">
+		<holiday id="117" usual="false">
+			<name>Teachers' Day (Albania)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="3">
+		<holiday id="118" usual="false">
+			<name>International Women Rights Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="119" usual="false">
+			<name>International Day of Peace in the World</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="120" usual="false">
+			<name>Ginger's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="121" usual="true">
+			<name>International Women's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="3">
+		<holiday id="122" usual="false">
+			<name>Polish Statistics Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="3">
+		<holiday id="123" usual="true">
+			<name>International Men's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="124" usual="false">
+			<name>International Day of Kissing in the Forehead</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="3">
+		<holiday id="125" usual="false">
+			<name>Village Administrator Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="3">
+		<holiday id="126" usual="false">
+			<name>International Day of Nap at Work</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="3">
+		<holiday id="127" usual="false">
+			<name>Kasuga Matsuri (Monkey festival), Japanese feast included in the Kasuga Grand Shrine</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="3">
+		<holiday id="128" usual="false">
+			<name>Pi Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="129" usual="false">
+			<name>White Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="3">
+		<holiday id="130" usual="false">
+			<name>World Consumer Rights Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="131" usual="false">
+			<name>European Consumer Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="132" usual="false">
+			<name>World Alzheimer's Disease Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="3">
+		<holiday id="133" usual="false">
+			<name>Lithuanian Book Smugglers' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="3">
+		<holiday id="134" usual="false">
+			<name>International Day of Sea</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="135" usual="false">
+			<name>St. Patrik's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="3">
+		<holiday id="136" usual="false">
+			<name>European Brain Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="3">
+		<holiday id="137" usual="false">
+			<name>Fisherman Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="3">
+		<holiday id="138" usual="false">
+			<name>Meat-free Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="139" usual="false">
+			<name>World Sparrow Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="140" usual="true">
+			<name>March Equinox</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="3">
+		<holiday id="141" usual="false">
+			<name>Truant's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="142" usual="false">
+			<name>World Down Syndrome Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="143" usual="false">
+			<name>World Poetry Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="144" usual="false">
+			<name>World Forester Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="145" usual="false">
+			<name>International Day of Forests</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="146" usual="false">
+			<name>International Day for the Elimination of Racial Discrimination</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="3">
+		<holiday id="147" usual="false">
+			<name>World Water Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="148" usual="false">
+			<name>Baltic Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="3">
+		<holiday id="149" usual="false">
+			<name>World Meteorological Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="150" usual="false">
+			<name>Elevator Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="151" usual="false">
+			<name>Hungary-Poland Friendship Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="3">
+		<holiday id="152" usual="false">
+			<name>Polish National Day of Life</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="153" usual="false">
+			<name>World Fight Against Tuberculosis Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="3">
+		<holiday id="154" usual="false">
+			<name>Tolkien Reading Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="155" usual="false">
+			<name>International Waffle Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="3">
+		<holiday id="156" usual="false">
+			<name>Grizzly Bear Day (Ursus Arctos Horribilis)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="157" usual="false">
+			<name>World Day of King of Bears Living in North America, celebrated also in nordic countries</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="3">
+		<holiday id="158" usual="false">
+			<name>International Theatre Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="3">
+		<holiday id="159" usual="false">
+			<name>Masturbation Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="3">
+		<holiday id="160" usual="false">
+			<name>Metalhead Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="3">
+		<holiday id="161" usual="false">
+			<name>Palestinian Earth Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="3">
+		<holiday id="162" usual="false">
+			<name>Freedom Day (Malta)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="4">
+		<holiday id="163" usual="true">
+			<name>April Fools' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="164" usual="false">
+			<name>World Bird Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="165" usual="false">
+			<name>Fish Day (France)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="4">
+		<holiday id="166" usual="false">
+			<name>International Day of Book for Children</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="167" usual="false">
+			<name>World Autism Awareness Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="4">
+		<holiday id="168" usual="false">
+			<name>Anniversary of the Second Republic (Guinea)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="4">
+		<holiday id="169" usual="false">
+			<name>International Day for Mine Awareness and Assistance in Mine Action</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="4">
+		<holiday id="170" usual="false">
+			<name>Arbor Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="171" usual="false">
+			<name>No Makeup Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="172" usual="false">
+			<name>Day of Courtesy Behind the Wheel</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="4">
+		<holiday id="173" usual="false">
+			<name>Day of Remembrance of the Victims of the Rwanda Genocide</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="4">
+		<holiday id="174" usual="false">
+			<name>Health Service Employee Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="175" usual="false">
+			<name>Beaver Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="4">
+		<holiday id="176" usual="false">
+			<name>International Roma Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="4">
+		<holiday id="177" usual="false">
+			<name>Heroes Day (Philippines)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="4">
+		<holiday id="178" usual="false">
+			<name>Bandurka Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="179" usual="false">
+			<name>Military Aviation Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="4">
+		<holiday id="180" usual="false">
+			<name>Radio Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="181" usual="false">
+			<name>World Parkinson's Disease Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="4">
+		<holiday id="182" usual="false">
+			<name>Clean Windows Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="183" usual="false">
+			<name>Chocolate Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="184" usual="false">
+			<name>International Day of Aviation and Cosmonautics</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="185" usual="false">
+			<name>Hamster Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="4">
+		<holiday id="186" usual="false">
+			<name>Worldwide Katyn Remembrance Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="4">
+		<holiday id="187" usual="false">
+			<name>Homeless People Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="4">
+		<holiday id="188" usual="false">
+			<name>World Sobriety Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="4">
+		<holiday id="189" usual="false">
+			<name>Explosives Engineer Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="190" usual="false">
+			<name>Textile Worker Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="4">
+		<holiday id="191" usual="false">
+			<name>World Hemophilia Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="192" usual="false">
+			<name>Teachers’ Days in Syria</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="4">
+		<holiday id="193" usual="false">
+			<name>International Day For Monuments and Sites</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="194" usual="false">
+			<name>World Amateur Radio Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="195" usual="false">
+			<name>Day of Patient in Coma</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="4">
+		<holiday id="196" usual="false">
+			<name>Sierra Leone Republic Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="197" usual="false">
+			<name>Swazi King's Birthday</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="4">
+		<holiday id="198" usual="false">
+			<name>World Press Freedom Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="4">
+		<holiday id="199" usual="false">
+			<name>Anniversary of Founding of Rome</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="4">
+		<holiday id="200" usual="false">
+			<name>Day of Discovery of Brazil</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="201" usual="true">
+			<name>International Mother Earth Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="4">
+		<holiday id="202" usual="false">
+			<name>World Book Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="203" usual="false">
+			<name>Horse Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="4">
+		<holiday id="204" usual="false">
+			<name>International Day of Solidarity of Youth</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="205" usual="false">
+			<name>World Day for Laboratory Animals</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="4">
+		<holiday id="206" usual="false">
+			<name>Secretary's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="207" usual="false">
+			<name>Noise Awareness Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="4">
+		<holiday id="208" usual="false">
+			<name>Roadworker and Transport Worker Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="4">
+		<holiday id="209" usual="false">
+			<name>Noise Awareness Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="4">
+		<holiday id="210" usual="false">
+			<name>Earth Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="211" usual="false">
+			<name>World Day for Safety and Health at Work</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="4">
+		<holiday id="212" usual="false">
+			<name>International Dance Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="4">
+		<holiday id="213" usual="false">
+			<name>Anniversary of Fuhrer's Death</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="5">
+		<holiday id="214" usual="false">
+			<name>Labour Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="5">
+		<holiday id="215" usual="true">
+			<name>Polish Flag Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="216" usual="false">
+			<name>Polonaise and Poles Abroad Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="5">
+		<holiday id="217" usual="false">
+			<name>Sun Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="218" usual="false">
+			<name>No-Computer Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="219" usual="false">
+			<name>Asthma and Allergy Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="220" usual="true">
+			<name>May 3rd Constitution Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="5">
+		<holiday id="221" usual="false">
+			<name>Star Wars Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="222" usual="false">
+			<name>International Firefighters' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="223" usual="false">
+			<name>Ironworker Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="224" usual="false">
+			<name>Chimney Sweep Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="225" usual="false">
+			<name>Potter Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="226" usual="false">
+			<name>Baker Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="5">
+		<holiday id="227" usual="false">
+			<name>International Obstetrician Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="228" usual="false">
+			<name>International Combating Discrimination against Persons with Disabilities Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="229" usual="false">
+			<name>International No Diet Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="5">
+		<holiday id="230" usual="false">
+			<name>Feast of the Swiss Guard (Vatican)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="5">
+		<holiday id="231" usual="false">
+			<name>Radio Day (Russia)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="5">
+		<holiday id="232" usual="false">
+			<name>Librarian's and Library Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="5">
+		<holiday id="233" usual="false">
+			<name>European Union Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="5">
+		<holiday id="234" usual="false">
+			<name>Municipal Worker Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="235" usual="false">
+			<name>World Hugging Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="5">
+		<holiday id="236" usual="false">
+			<name>Miszkolc City Feast (Hungary)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="237" usual="false">
+			<name>A Day Without Littering</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="5">
+		<holiday id="238" usual="false">
+			<name>World Migratory Bird Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="5">
+		<holiday id="239" usual="false">
+			<name>World Day of the Sick</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="5">
+		<holiday id="240" usual="false">
+			<name>World Pharmacists Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="5">
+		<holiday id="241" usual="false">
+			<name>Feast of Polish Music and Art</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="242" usual="false">
+			<name>Forget-Me-Not Flower Day (Poland)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="243" usual="false">
+			<name>International Gay Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="5">
+		<holiday id="244" usual="false">
+			<name>Border Guards Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="5">
+		<holiday id="245" usual="false">
+			<name>World Information Society Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="5">
+		<holiday id="246" usual="false">
+			<name>International Museum Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="5">
+		<holiday id="247" usual="false">
+			<name>International Car Washing Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="248" usual="false">
+			<name>Everybody Draw Mohammed Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="5">
+		<holiday id="249" usual="false">
+			<name>International Washing-up Liquid Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="5">
+		<holiday id="250" usual="false">
+			<name>World Day for Cultural Diversity for Dialogue and Development</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="251" usual="false">
+			<name>Space Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="252" usual="false">
+			<name>Reconnecting with People Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="253" usual="false">
+			<name>Steam Days</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="5">
+		<holiday id="254" usual="false">
+			<name>International Day for Biological Diversity</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="255" usual="false">
+			<name>Animal Rights Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="256" usual="false">
+			<name>Pac–Man Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="5">
+		<holiday id="257" usual="false">
+			<name>Forwarding Agent Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="5">
+		<holiday id="258" usual="false">
+			<name>Cyrillic Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="259" usual="false">
+			<name>European Aquapark Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="5">
+		<holiday id="260" usual="false">
+			<name>Day of Stamper</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="261" usual="false">
+			<name>Brewer Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="262" usual="false">
+			<name>Milk Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="263" usual="false">
+			<name>Towel Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="5">
+		<holiday id="264" usual="false">
+			<name>Georgia Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="265" usual="false">
+			<name>Finding of Kaspar Hauser Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="266" usual="true">
+			<name>Mother's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="5">
+		<holiday id="267" usual="false">
+			<name>Municipal Government Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="5">
+		<holiday id="268" usual="false">
+			<name>No-condom Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="5">
+		<holiday id="269" usual="false">
+			<name>Culture Activist's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="5">
+		<holiday id="270" usual="false">
+			<name>No-bra Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="5">
+		<holiday id="271" usual="false">
+			<name>Food Industry Worker Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="272" usual="false">
+			<name>White Stork Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="273" usual="false">
+			<name>World No Tobacco Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="6">
+		<holiday id="274" usual="false">
+			<name>Roll Feast</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="275" usual="false">
+			<name>No Alcohol Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="276" usual="false">
+			<name>World Milk Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="277" usual="true">
+			<name>International Children's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="6">
+		<holiday id="278" usual="false">
+			<name>Forester Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="279" usual="false">
+			<name>Neighbours' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="280" usual="false">
+			<name>No-tie Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="6">
+		<holiday id="281" usual="false">
+			<name>Good Grade's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="6">
+		<holiday id="282" usual="false">
+			<name>Pressman Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="6">
+		<holiday id="283" usual="false">
+			<name>World Environment Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="6">
+		<holiday id="284" usual="false">
+			<name>Slayer Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="6">
+		<holiday id="285" usual="false">
+			<name>Chemist's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="286" usual="false">
+			<name>Sex Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="6">
+		<holiday id="287" usual="false">
+			<name>IT Specialist Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="6">
+		<holiday id="288" usual="false">
+			<name>Agugaga Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="289" usual="false">
+			<name>Friend's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="290" usual="false">
+			<name>Accountant Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="6">
+		<holiday id="291" usual="false">
+			<name>World Cycling Naked Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="6">
+		<holiday id="292" usual="false">
+			<name>Day of Stomped to Death During Dance</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="6">
+		<holiday id="293" usual="false">
+			<name>Feast of Government Protection Bureau</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="294" usual="false">
+			<name>Nail Stylist Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="6">
+		<holiday id="295" usual="false">
+			<name>Good Advice Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="296" usual="false">
+			<name>Sister's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="6">
+		<holiday id="297" usual="false">
+			<name>Citizen Journalist Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="298" usual="false">
+			<name>World Blood Donor Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="6">
+		<holiday id="299" usual="false">
+			<name>Wind Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="6">
+		<holiday id="300" usual="false">
+			<name>International Day of the African Child</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="6">
+		<holiday id="301" usual="false">
+			<name>World Day to Combat Desertification and Drought</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="6">
+		<holiday id="302" usual="false">
+			<name>Evacuation Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="6">
+		<holiday id="303" usual="false">
+			<name>Texan Emancipation Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="6">
+		<holiday id="304" usual="false">
+			<name>World Refugee Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="6">
+		<holiday id="305" usual="false">
+			<name>World Music Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="306" usual="false">
+			<name>World Skateboard Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="307" usual="false">
+			<name>Tickling Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="308" usual="true">
+			<name>Summer Solstice</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="6">
+		<holiday id="309" usual="false">
+			<name>World's „Garbus” Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="310" usual="false">
+			<name>Physical Culture Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="6">
+		<holiday id="311" usual="false">
+			<name>Public Service Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="312" usual="true">
+			<name>Father's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="6">
+		<holiday id="313" usual="false">
+			<name>Hugging Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="6">
+		<holiday id="314" usual="false">
+			<name>Shipyard Worker Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="315" usual="false">
+			<name>World Smurf Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="6">
+		<holiday id="316" usual="false">
+			<name>International Day against Drug Abuse and Illicit Trafficking</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="317" usual="false">
+			<name>International Day in Support of Victims of Torture</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="6">
+		<holiday id="318" usual="false">
+			<name>World Fishery Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="6">
+		<holiday id="319" usual="false">
+			<name>National Remembrance Day of Poznan's June 1956</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="6">
+		<holiday id="320" usual="false">
+			<name>Navy Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="321" usual="false">
+			<name>WOPR Lifeguard Day (Poland)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="6">
+		<holiday id="322" usual="false">
+			<name>Cabbage Butterfly Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="7">
+		<holiday id="323" usual="false">
+			<name>World Architecture Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="324" usual="false">
+			<name>Dog's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="325" usual="false">
+			<name>Jazz Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="7">
+		<holiday id="326" usual="false">
+			<name>Sportswriter Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="327" usual="false">
+			<name>World UFO Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="7">
+		<holiday id="328" usual="false">
+			<name>Blonde Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="7">
+		<holiday id="329" usual="false">
+			<name>Hot-dog Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="7">
+		<holiday id="330" usual="false">
+			<name>Grabbing the Bust Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="331" usual="false">
+			<name>Tynwald Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="7">
+		<holiday id="332" usual="false">
+			<name>International Kissing Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="7">
+		<holiday id="333" usual="false">
+			<name>International Co-operative Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="7">
+		<holiday id="334" usual="false">
+			<name>Going to Work Using Different Path Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="7">
+		<holiday id="335" usual="false">
+			<name>Military Forces Day (Mauritania)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="7">
+		<holiday id="336" usual="false">
+			<name>World Population Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="7">
+		<holiday id="337" usual="false">
+			<name>World Party Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="7">
+		<holiday id="338" usual="false">
+			<name>Grabbing the Bottom Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="7">
+		<holiday id="339" usual="false">
+			<name>Mobile Phone Free Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="7">
+		<holiday id="340" usual="false">
+			<name>World Emoji Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="7">
+		<holiday id="341" usual="false">
+			<name>Mandela Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="7">
+		<holiday id="342" usual="false">
+			<name>Little Red Riding Hood Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="7">
+		<holiday id="343" usual="false">
+			<name>Four-Eyed People Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="7">
+		<holiday id="344" usual="false">
+			<name>Pi Approximation Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="7">
+		<holiday id="345" usual="false">
+			<name>Snufkin Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="7">
+		<holiday id="346" usual="false">
+			<name>Policeman Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="347" usual="false">
+			<name>World Tequila Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="348" usual="false">
+			<name>Maya the Bee Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="7">
+		<holiday id="349" usual="false">
+			<name>Safe Driver Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="7">
+		<holiday id="350" usual="false">
+			<name>National Feast Ólavsøka (Faroe Islands)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="7">
+		<holiday id="351" usual="false">
+			<name>World Day of Distance Friendship</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="7">
+		<holiday id="352" usual="false">
+			<name>Lughnasadh (Gaelic harvest festival)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="8">
+		<holiday id="353" usual="false">
+			<name>Polish National Commemoration Day of Warsaw Uprising (Remembrance Day of Warsaw)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="8">
+		<holiday id="354" usual="false">
+			<name>Nursing Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="355" usual="false">
+			<name>World Remembrance Day on the Holocaust of the Roma</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="8">
+		<holiday id="356" usual="false">
+			<name>Military Forces Day (Equatorial Guinea)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="8">
+		<holiday id="357" usual="false">
+			<name>Feast of Burkin's Faso Revolution</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="8">
+		<holiday id="358" usual="false">
+			<name>International Beer Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="8">
+		<holiday id="359" usual="false">
+			<name>Mustard Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="8">
+		<holiday id="360" usual="false">
+			<name>Republic Day (Ivory Coast)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="8">
+		<holiday id="361" usual="false">
+			<name>Transport Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="8">
+		<holiday id="362" usual="false">
+			<name>International Day of the World’s Indigenous People</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="8">
+		<holiday id="363" usual="false">
+			<name>Guides and Mountains Rescuers Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="8">
+		<holiday id="364" usual="false">
+			<name>Heritage Conservationist Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="8">
+		<holiday id="365" usual="false">
+			<name>International Youth Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="366" usual="false">
+			<name>Workaholics Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="8">
+		<holiday id="367" usual="false">
+			<name>International Lefthanders Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="8">
+		<holiday id="368" usual="false">
+			<name>Power Engineer Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="8">
+		<holiday id="369" usual="true">
+			<name>Assumption of Mary</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="370" usual="true">
+			<name>Armed Forces Day (Poland)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="8">
+		<holiday id="371" usual="false">
+			<name>World Blood Donation Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="8">
+		<holiday id="372" usual="false">
+			<name>Nuts About Something Person's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="8">
+		<holiday id="373" usual="false">
+			<name>Lighthouse Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="8">
+		<holiday id="374" usual="false">
+			<name>World Gastric Disease Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="8">
+		<holiday id="375" usual="false">
+			<name>Mosquito Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="376" usual="false">
+			<name>Blisteringly Rat Fucked Years Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="377" usual="false">
+			<name>Confessing Love Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="8">
+		<holiday id="378" usual="false">
+			<name>Ninoy Aquino Day (Philippines)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="8">
+		<holiday id="379" usual="false">
+			<name>Security Worker Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="8">
+		<holiday id="380" usual="false">
+			<name>European Day of Remembrance for Victims of Stalinism and Nazism</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="381" usual="false">
+			<name>International Day for the Remembrance of the Slave Trade and its Abolition</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="8">
+		<holiday id="382" usual="false">
+			<name>Windows' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="8">
+		<holiday id="383" usual="false">
+			<name>Anniversary of Nietzsche's Death</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="8">
+		<holiday id="384" usual="false">
+			<name>Heroes' Day (Philippines)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="8">
+		<holiday id="385" usual="false">
+			<name>Truck's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="8">
+		<holiday id="386" usual="false">
+			<name>Aviation Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="8">
+		<holiday id="387" usual="false">
+			<name>Commune and Municipal Guard's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="8">
+		<holiday id="388" usual="false">
+			<name>International Day of the Disappeared</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="8">
+		<holiday id="389" usual="true">
+			<name>Solidarity and Freedom Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="390" usual="false">
+			<name>Blogs' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="9">
+		<holiday id="391" usual="false">
+			<name>Veterans Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="392" usual="false">
+			<name>International Solidarity Day with the Victims of Fascism and Terrorism</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="9">
+		<holiday id="393" usual="false">
+			<name>Memorial of Ho Chi Minh</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="9">
+		<holiday id="394" usual="false">
+			<name>Treaty of Paris Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="9">
+		<holiday id="395" usual="false">
+			<name>Immigrant Day (Argentina)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="9">
+		<holiday id="396" usual="false">
+			<name>International Day of Democracy</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="397" usual="false">
+			<name>International Charity Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="9">
+		<holiday id="398" usual="false">
+			<name>Victory Day in Mozambique</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="9">
+		<holiday id="399" usual="false">
+			<name>Good News Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="400" usual="false">
+			<name>International Literacy Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="401" usual="false">
+			<name>Walter Mitty Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="402" usual="false">
+			<name>National Day of Reading "Pan Tadeusz" (Poland)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="9">
+		<holiday id="403" usual="false">
+			<name>International Beauty Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="404" usual="false">
+			<name>Testers Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="9">
+		<holiday id="405" usual="false">
+			<name>World Suicide Prevention Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="9">
+		<holiday id="406" usual="false">
+			<name>Hysteria and Egocentricity Day in USA</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="407" usual="false">
+			<name>International No Bra Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="9">
+		<holiday id="408" usual="false">
+			<name>United Nations Day for South-South Cooperation</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="409" usual="false">
+			<name>Land Forces Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="410" usual="false">
+			<name>Day of the Programmer (in leap years)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="9">
+		<holiday id="411" usual="false">
+			<name>Day of the Programmer (in common years)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="412" usual="false">
+			<name>Day of Kissing Boys in the Lips</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="413" usual="false">
+			<name>World Day Against Animal Transport</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="9">
+		<holiday id="414" usual="false">
+			<name>Feast of the Cross</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="9">
+		<holiday id="415" usual="false">
+			<name>Prostate Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="416" usual="false">
+			<name>Day of Blowing off the System</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="417" usual="false">
+			<name>Wrappings' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="9">
+		<holiday id="418" usual="false">
+			<name>Ozone Layer Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="9">
+		<holiday id="419" usual="false">
+			<name>Nonsensopedia Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="420" usual="false">
+			<name>Respect for the Elderly Day (Japan)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="9">
+		<holiday id="421" usual="false">
+			<name>International Geologist Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="9">
+		<holiday id="422" usual="false">
+			<name>Wild Flora, Fauna and Natural Habitats Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="9">
+		<holiday id="423" usual="false">
+			<name>Customs Service Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="424" usual="false">
+			<name>International Peace Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="425" usual="false">
+			<name>World Alzheimer's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="9">
+		<holiday id="426" usual="false">
+			<name>Day of Practicing in front of a Mirror a Request for a Payrise</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="427" usual="false">
+			<name>World Car Free Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="428" usual="true">
+			<name>September Equinox</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="9">
+		<holiday id="429" usual="false">
+			<name>Harvest Festival</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="430" usual="false">
+			<name>First Day of Asvin Month</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="431" usual="false">
+			<name>Falling Leaf Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="9">
+		<holiday id="432" usual="false">
+			<name>Day of Advertising The Bible Millennium</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="9">
+		<holiday id="433" usual="false">
+			<name>Construction Worker Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="9">
+		<holiday id="434" usual="false">
+			<name>European Birds' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="435" usual="false">
+			<name>Kissing Girls Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="9">
+		<holiday id="436" usual="false">
+			<name>World Tourism Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="437" usual="false">
+			<name>Polish Underground State Day (PPP)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="438" usual="false">
+			<name>Uncle Google's Birthday</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="9">
+		<holiday id="439" usual="false">
+			<name>International Sea Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="440" usual="false">
+			<name>International Secret Police Operative Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="9">
+		<holiday id="441" usual="false">
+			<name>Hypochondriac Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="9">
+		<holiday id="442" usual="true">
+			<name>Boy's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="443" usual="false">
+			<name>International Translation Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="10">
+		<holiday id="444" usual="false">
+			<name>World Vegetarian Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="445" usual="false">
+			<name>International Health Care Worker Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="446" usual="false">
+			<name>International Day of the Elderly</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="447" usual="false">
+			<name>World Birds Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="448" usual="false">
+			<name>World Music Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="449" usual="false">
+			<name>World Fight Against Hepatitis Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="450" usual="false">
+			<name>World Vegan Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="451" usual="false">
+			<name>Satchel Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="10">
+		<holiday id="452" usual="false">
+			<name>International Day of Non-Violence</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="10">
+		<holiday id="453" usual="false">
+			<name>No Bulletproof Vest Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="454" usual="false">
+			<name>German Unity Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="10">
+		<holiday id="455" usual="false">
+			<name>World Animal Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="10">
+		<holiday id="456" usual="false">
+			<name>World Housing Industry Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="10">
+		<holiday id="457" usual="false">
+			<name>Navy Day (Peru)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="10">
+		<holiday id="458" usual="false">
+			<name>World Post and Postage Stamp Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="10">
+		<holiday id="459" usual="false">
+			<name>European Day Against the Death Penalty</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="10">
+		<holiday id="460" usual="false">
+			<name>Walking out of the Wardrobe Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="461" usual="false">
+			<name>International Girls' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="10">
+		<holiday id="462" usual="false">
+			<name>International Rheumatism Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="463" usual="false">
+			<name>Safe Computer Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="464" usual="false">
+			<name>Columbus Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="10">
+		<holiday id="465" usual="false">
+			<name>Paramedic Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="466" usual="false">
+			<name>Bone Marrow Donor Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="467" usual="false">
+			<name>Suit Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="10">
+		<holiday id="468" usual="false">
+			<name>International Day for Natural Disaster Reduction</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="469" usual="true">
+			<name>Teachers' Day (Poland)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="10">
+		<holiday id="470" usual="false">
+			<name>World White Staff Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="471" usual="false">
+			<name>Lost Child's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="10">
+		<holiday id="472" usual="false">
+			<name>World Food Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="473" usual="false">
+			<name>Pope John Paul II Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="10">
+		<holiday id="474" usual="false">
+			<name>International Day for the Eradication of Poverty</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="10">
+		<holiday id="475" usual="false">
+			<name>Signalman Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="476" usual="false">
+			<name>Postman Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="10">
+		<holiday id="477" usual="false">
+			<name>Standardization Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="10">
+		<holiday id="478" usual="false">
+			<name>International Air Traffic Controller Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="479" usual="false">
+			<name>World Statistics Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="480" usual="false">
+			<name>World Osteoporosis Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="10">
+		<holiday id="481" usual="false">
+			<name>Ndadaye Day (Burundi)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="482" usual="false">
+			<name>No Socs Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="10">
+		<holiday id="483" usual="false">
+			<name>International Stuttering Awareness Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="484" usual="false">
+			<name>CAPS LOCK's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="10">
+		<holiday id="485" usual="false">
+			<name>Avogadro Constant Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="486" usual="false">
+			<name>Mole Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="10">
+		<holiday id="487" usual="false">
+			<name>Tax Collectors' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="488" usual="false">
+			<name>International Bicycle Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="489" usual="false">
+			<name>International Running Away on Bicycle Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="10">
+		<holiday id="490" usual="false">
+			<name>Mongrel Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="491" usual="false">
+			<name>Animal Protection Act Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="10">
+		<holiday id="492" usual="false">
+			<name>World Day for Organ Donation and Transplantation</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="10">
+		<holiday id="493" usual="false">
+			<name>World Day for Audiovisual Heritage</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="10">
+		<holiday id="494" usual="false">
+			<name>BSOD's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="495" usual="false">
+			<name>Rest for Shattered Nerves Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="10">
+		<holiday id="496" usual="false">
+			<name>World Stroke Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="10">
+		<holiday id="497" usual="false">
+			<name>National Skirt Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="498" usual="false">
+			<name>World Day Of Short People</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="10">
+		<holiday id="499" usual="false">
+			<name>Prodigality Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="11">
+		<holiday id="500" usual="false">
+			<name>World Vegan Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="501" usual="false">
+			<name>National Awakening Day (Bulgaria)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="502" usual="true">
+			<name>All Saints' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="11">
+		<holiday id="503" usual="true">
+			<name>All Souls' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="11">
+		<holiday id="504" usual="false">
+			<name>Huntsmen Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="11">
+		<holiday id="505" usual="false">
+			<name>Cheap Vine Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="11">
+		<holiday id="506" usual="false">
+			<name>Fairy Tales Characters' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="507" usual="false">
+			<name>Anniversary of Gunpowder Coup</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="11">
+		<holiday id="508" usual="false">
+			<name>International Day for Preventing the Exploitation of the Environment in War and Armed Conflict</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="11">
+		<holiday id="509" usual="false">
+			<name>Feminists' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="510" usual="false">
+			<name>Pork Chop Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="11">
+		<holiday id="511" usual="false">
+			<name>Feast of the Constitution of Micronesia</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="512" usual="false">
+			<name>European Day of Healthy Eating and Cooking</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="11">
+		<holiday id="513" usual="false">
+			<name>World Quality Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="514" usual="false">
+			<name>World Foreplay Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="11">
+		<holiday id="515" usual="false">
+			<name>Youth Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="516" usual="false">
+			<name>Hedgehog Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="11">
+		<holiday id="517" usual="false">
+			<name>Japanese Day of Single People</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="518" usual="true">
+			<name>National Independence Day (Poland)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="11">
+		<holiday id="519" usual="false">
+			<name>World Breaking Records Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="11">
+		<holiday id="520" usual="false">
+			<name>Feast of Armament and Electronics Services</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="11">
+		<holiday id="521" usual="false">
+			<name>World Diabetes Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="522" usual="false">
+			<name>Senior Citizen Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="523" usual="false">
+			<name>King Julian Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="11">
+		<holiday id="524" usual="false">
+			<name>Feast of Military Geographical Center (Poland)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="11">
+		<holiday id="525" usual="false">
+			<name>International Day of Tolerance</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="11">
+		<holiday id="526" usual="false">
+			<name>Student's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="527" usual="false">
+			<name>Debt Free Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="11">
+		<holiday id="528" usual="false">
+			<name>World Day of Giving up Smoking</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="529" usual="false">
+			<name>Jack Frost Birthday</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="11">
+		<holiday id="530" usual="false">
+			<name>WC Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="11">
+		<holiday id="531" usual="false">
+			<name>Africa Industrialization Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="11">
+		<holiday id="532" usual="false">
+			<name>Social Worker Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="533" usual="false">
+			<name>World Kindness and Greetings Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="11">
+		<holiday id="534" usual="false">
+			<name>Crayons Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="11">
+		<holiday id="535" usual="false">
+			<name>High School Pupil Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="11">
+		<holiday id="536" usual="false">
+			<name>Saint Kate's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="11">
+		<holiday id="537" usual="false">
+			<name>Teddy Bear Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="538" usual="false">
+			<name>Fur Free Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="539" usual="false">
+			<name>Streetcar Driver Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="540" usual="false">
+			<name>Railwayman Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="11">
+		<holiday id="541" usual="false">
+			<name>Maaveerar Day (Feast of an Ethnic Minority in India)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="542" usual="false">
+			<name>Memorial of Saints Primitivus and Facundus</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="11">
+		<holiday id="543" usual="false">
+			<name>Kiss Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="544" usual="false">
+			<name>Meanness Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="545" usual="false">
+			<name>Mentally Balanced Mujaheddin Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="11">
+		<holiday id="546" usual="false">
+			<name>Day of the Cadet</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="11">
+		<holiday id="547" usual="false">
+			<name>White Socs Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="548" usual="true">
+			<name>Saint Andrew's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="12">
+		<holiday id="549" usual="false">
+			<name>World Fight Against AIDS Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="12">
+		<holiday id="550" usual="false">
+			<name>World Fight Day with Oppression</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="12">
+		<holiday id="551" usual="false">
+			<name>International Day of Persons with Disabilities</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="552" usual="false">
+			<name>Oil Man Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="553" usual="false">
+			<name>Gas Fitter Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="12">
+		<holiday id="554" usual="true">
+			<name>Saint Barbara Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="555" usual="false">
+			<name>Missile Troops and Artillery Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="12">
+		<holiday id="556" usual="false">
+			<name>International Volunteer Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="12">
+		<holiday id="557" usual="false">
+			<name>Angel's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="558" usual="true">
+			<name>Saint Nicholas Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="12">
+		<holiday id="559" usual="false">
+			<name>International Civil Aviation Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="12">
+		<holiday id="560" usual="false">
+			<name>World Dogma Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="561" usual="false">
+			<name>Merchant's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="562" usual="false">
+			<name>Bodhi Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="563" usual="false">
+			<name>Student's Day (Bulgaria)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="12">
+		<holiday id="564" usual="false">
+			<name>Day of the Virgin</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="12">
+		<holiday id="565" usual="false">
+			<name>Foundry Worker Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="566" usual="false">
+			<name>Bot's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="12">
+		<holiday id="567" usual="false">
+			<name>Angel Wings Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="12">
+		<holiday id="568" usual="false">
+			<name>Day of Constitution of Russia</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="12">
+		<holiday id="569" usual="false">
+			<name>Bookseller's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="570" usual="false">
+			<name>Television for Children Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="12">
+		<holiday id="571" usual="false">
+			<name>Ludwik Zamenhof's Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="12">
+		<holiday id="572" usual="false">
+			<name>Expletive Free Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="12">
+		<holiday id="573" usual="false">
+			<name>International Refugees' Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="12">
+		<holiday id="574" usual="false">
+			<name>Fish Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="12">
+		<holiday id="575" usual="false">
+			<name>World Greeting Brunettes Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="576" usual="false">
+			<name>Orgasm Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="577" usual="true">
+			<name>Winter Solstice</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="12">
+		<holiday id="578" usual="false">
+			<name>Christmas Lottery Day (Spain)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="579" usual="false">
+			<name>Koliada (Slavic)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="580" usual="false">
+			<name>Unity Day (Zimbabwe)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="12">
+		<holiday id="581" usual="false">
+			<name>World Snowboard Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="12">
+		<holiday id="582" usual="false">
+			<name>Paradise Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="583" usual="true">
+			<name>Christmas Eve</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="12">
+		<holiday id="584" usual="false">
+			<name>Kuaid-e-Azam Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="585" usual="true">
+			<name>Christmas Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="12">
+		<holiday id="586" usual="true">
+			<name>Boxing Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="12">
+		<holiday id="587" usual="false">
+			<name>Day of the Rest After Christmas</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="12">
+		<holiday id="588" usual="false">
+			<name>International Kiss Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="12">
+		<holiday id="589" usual="false">
+			<name>Polar Bears Breeding Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="12">
+		<holiday id="590" usual="false">
+			<name>Cottage Cheese Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="591" usual="false">
+			<name>José Rizal Day</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="12">
+		<holiday id="592" usual="false">
+			<name>No Lingerie Day</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="593" usual="true">
+			<name>New Year's Eve</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+</calendar>
