@@ -1,0 +1,4130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<calendar uni-lang="pl" lang="Polski">
+	<day day="1" month="1">
+		<holiday id="1" usual="false">
+			<name>Światowy Dzień Kaca</name>
+			<description>Data tego święta nie jest przypadkowa. Czy można wyobrazić sobie lepszy powód do świętowania na
+				całym świecie niż początek nowego roku? Tego dnia Kac Morderca nie zadziwi nikogo!
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="2" usual="false">
+			<name>Światowy Dzień Pokoju</name>
+			<description>Dzień ten, obchodzony rokrocznie od roku 1967, został zainicjowany przez papieża Pawła VI,
+				jednak jego adresatami są nie tylko wierni Kościoła katolickiego, ale wszyscy ludzie dobrej woli.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="3" usual="false">
+			<name>Dzień Domeny Publicznej</name>
+			<description>Każdy z nas spotkał się z pojęciem "prawa autorskiego", zapewne wielu też spotkało się z
+				prawami autorskimi obowiązującymi pośmiertnie. Każde z takich praw autorskich liczone jest od pierwszego
+				dnia roku następującego po śmierci autora. Tego samego dnia prawa te mogą się przedawnić, a dzieło
+				autorskie zostać przekazane Domenie Publicznej. Pierwszy raz święto to zostało wspomniane w rou 2004 w
+				Kanadzie.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="4" usual="true">
+			<name>Nowy Rok</name>
+			<description>Cóż tu wiele mówić? Nowy Rok świętować należy hucznie, w końcu wszyscy się starzejemy. Ale na
+				pocieszenie: Krzysztof Ibisz także!
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="1">
+		<holiday id="5" usual="false">
+			<name>Dzień Przodków na Haiti</name>
+			<description>???</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="1">
+		<holiday id="6" usual="false">
+			<name>Święto Powstania Ludowego w Burkina Faso</name>
+			<description>Burkina Faso to mniejsze z państw Afryki bez dostępu do morza. Powstanie Ludowe miało miejsce w
+				roku 1966 i było reakcją na kryzys gospodarczy państwa, w którym się znalazło z powodu nieudolnych rądów
+				ówczesnego (oraz pierwszego) prezydenta i premiera tego kraju. Stanowisko to piastował wówczas Maurice
+				Yaméogo.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="1">
+		<holiday id="7" usual="false">
+			<name>Urodziny Króla Samoa</name>
+			<description>Nic dodać, nic ująć, król Malietoa Tanumafili II urodzony w 1913 roku był królem państa Samoa
+				od roku ogłoszenia tego państwa niepodległym (1962) do śmierci (2007). W dniu śmierci był najstarszym
+				władcą na świecie.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="1">
+		<holiday id="8" usual="false">
+			<name>Joma Shinji w Japonii</name>
+			<description>To japońskie święto oznacza "rytuał wyparcia się zła". Rytuał ten ma niespełna tysiącletnią
+				tradycję, a podczas jego trwania, Panowie ubrani w kimona strzelają z łuków do tarcz. Symboliką tego
+				pokazu jest pokonanie samego Szatana, gdyż każda z tarcz od tyłu posiada napis oznaczajacy diabła, a
+				same strzały postrzegane są jako zdolne do niszczenia zła.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="1">
+		<holiday id="9" usual="false">
+			<name>Dzień Filatelisty</name>
+			<description>"Filatelista" to z j. greckiego osoba z zamiłowaniem do zbierania znaczków pocztowych. Tego
+				dnia w roku 1893 w Krakowie powołane zostało stoważyszenie "Klub Filatelistów".
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="10" usual="true">
+			<name>Święto Objawienia Pańskiego</name>
+			<description>Jest to chrześcijańskie święto upamiętniające ukazanie się Boga człowiekowi. Symbolami święta
+				są: przybycie Mędrców ze Wschodu, by oddać pokłon Jezusowi; Chrzest Chrystusa w Jordanie; Cud przemiany
+				wody w wino. Inną nazwą tego święta jest "Święto Trzech Króli" na cześć pierwszego z symbolizujących je
+				wydarzeń.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="1">
+		<holiday id="11" usual="false">
+			<name>Dzień Dziwaka</name>
+			<description>Studenci amerykańskiej uczelni otrzymali od profesora Philipa Zambardo wykładającego wówczas
+				psychologię, by tego dnia ubrać się w głupie, odrażające stroje i tak też się zachowywać. Sam
+				przeobraził się w kobietę na czas swoich wykładów.
+			</description>
+			<link>https://gim7.edu.lodz.pl/wp-content/uploads/2015/03/Dzie%C5%84-dziwaka.pdf
+				https://archiwalny-turysta.swietokrzyski.eu/blog/AZJA/7-stycznia-swietujemy-Dzien-Dziwaka-s2674.html
+			</link>
+		</holiday>
+	</day>
+	<day day="8" month="1">
+		<holiday id="12" usual="false">
+			<name>Dzień Elvisa Presleya</name>
+			<description>Tego dnia roku 1935 w Tupelo na świat przychodzi król popkultury. Rozpoczął karierę w wieku lat
+				13 w Memphis. Pod koniec oku 1956 otrzymał on nieformalny tytuł "króla rock and rolla".
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="1">
+		<holiday id="13" usual="false">
+			<name>Dzień Ligi Ochrony Przyrody</name>
+			<description>Liga Ochrony Przyrody to najstarsza organizacja przyrodnicza w kraju. W roku 1928 odbył się
+				zjazd organizacyjny Ligi, i to na jego cześć obchodzone jest to święto. To właśnie Liga dba o florę i
+				faunę kraju.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="1">
+		<holiday id="14" usual="false">
+			<name>Święto Suwerenności Ludowej (Benin)</name>
+			<description>???</description>
+			<link/>
+		</holiday>
+		<holiday id="15" usual="false">
+			<name>Urodziny Tomasza Bagińskiego</name>
+			<description>Jegomość urodził się 1976 roku w Białymstoku. Polski rysownik, animator, reżyser. Jest artystą
+				samoukiem. Na Politechnice w Warszawie studiował architekturę, którą porzucił po trzech latach dla
+				robienia filmów.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="1">
+		<holiday id="16" usual="false">
+			<name>Dzień Wegetarian</name>
+			<description>???</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="1">
+		<holiday id="17" usual="false">
+			<name>Dzień Upamiętnienia Rewolucji Zanzibaru</name>
+			<description>Jeszcze zanim na mapie pojawiła się Tanzania, Zanzibar był niezalżnym państwem. W roku 1964
+				obalono Sułtanat, oraz proklamacji Ludowej Republiki Zanzibaru i Pemby. Wynikiem takich działań,
+				Zaznibar połączył się z Tanganiką, w wyniku czego powstała Zjednoczona Republika Tanzanii.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="1">
+		<holiday id="18" usual="false">
+			<name>Dzień Wzajemnej Adoracji</name>
+			<description>Czymże jest adoracja? Adorować to znaczy zachwycać się kimś, starać się o czyjeś względy,
+				myśleć o tej osobie bezkrytycznie i skupiać się jedynie na jej zaletach. Czy wobez tego każdy powinien
+				być adorowany? Z tego wynika, że owszem.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="1">
+		<holiday id="19" usual="false">
+			<name>Dzień Ukrytej Miłości</name>
+			<description>Dokładnie miesiąc przed znanym wszystkim Dniem Zakochanych, to właśnie dzisiaj jest najlepszy
+				dzień na wyznanie skrywanej miłości drugiej osobie. Kto wie, być może ten dzień bedzie rewolucją w nazym
+				życiu?
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="20" usual="false">
+			<name>Dzień Osób Nieśmiałych</name>
+			<description>Czyż nie onieśmiela panów przepiękna kobieta, która oczekuje na reakcję? Czyż panie nie czują
+				zakłopotania, kiedy przystony mężczyzna spogląda gęboko w oczy? Nieśmiałość jest w każdym z nas - nieraz
+				większa, nieraz mniejsza, jestak aż 93% z nas doświadczyło tego uczucia przynajmniej raz w ciągu życia.
+				To z jej pomocą zamiastprecyzyjnego pytania o o plany na wieczór z ust wydobywa się niezrozumiały
+				bełkot, a policzki pokrywa rumieniec.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="1">
+		<holiday id="21" usual="false">
+			<name>Dzień Wikipedii</name>
+			<description>Tego dnia roku 2001 dwojga ludzi średniego wieku wpadło na genialny pomysł. Jimmy Wales oraz
+				Larry Sanger postanowili stworzyć pierwszą, anglojęzyczną wersję popularnej internetowej encyklopedii.
+				Bez nich niewątpliwie niejeden student miałby o wiele cięższe życie.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="1">
+		<holiday id="22" usual="false">
+			<name>Dzień Pikantnych Potraw</name>
+			<description>Jedzenie pikantnych potraw jest zdrowe, a ponadto poprawia samopoczucie. Sam pikantny smak nas
+				rozgrzewa, co w chłodne zimowe wieczory jest jak najbardziej wskazane. Powoduje też większe pragnienie,
+				dzięki czemu lepiej wyrównujemu hydrację organizmu. Co więcej, pikantne potrawy szybciej sycą, więc jemy
+				ich mniej. Nie żałujmy więc papryki, papryczek chili, curry czy nawet pieprzu, niezapomnijmy też o sosie
+				Tabasco. Smacznego!
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="1">
+		<holiday id="23" usual="false">
+			<name>Dzień Dialogu z Judaizmem</name>
+			<description>Konferencja Episkopatu Polski w 1997 ustanowiła to święto, którego celem jest poznanie religii
+				Judaizmu oraz budowanie z nią więzi. Organizowane są różneo rodzaju atrakcje, takie jak nabożeństwa,
+				koncerty muzyki czy nawet zwiedzanie synagog.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="1">
+		<holiday id="24" usual="false">
+			<name>Dzień Kubusia Puchatka</name>
+			<description>"Jaki dziś dzień – zapytał Puchatek, – Dziś – odpowiedział Prosiaczek. Na to Puchatek: – To mój
+				ulubiony dzień...".Ulubiony i ważny również dla najmodszych, bowiem związany jest z datą urodzenia jego
+				twórcy: Aleksandra Milne’a (1882) , który pierwszą książkę o przygodach żółtego amatora miodu wydał w
+				roku 1925.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="1">
+		<holiday id="25" usual="false">
+			<name>Święto Wojskowych Jednostek Organizacyjnych Prokuratury Wojskowej</name>
+			<description>W roku 1919 została wydana wspólna dla całej armii "Ustawa o tymczasowej organizacji sądowej
+				Wojska Polskiego", która obejmowała ustrój sądów i prokuratur wojskowych oraz organizację oficerskiego
+				korpusu sądowego. Naukowy bełkot.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="1">
+		<holiday id="26" usual="false">
+			<name>Dzień Męczenników (Azerbejdżan)</name>
+			<description>Święto państwowe będące wspomnieniem po osobach, które zginęły w obronie niepodległości
+				ojczyzny.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="1">
+		<holiday id="27" usual="true">
+			<name>Dzień Babci</name>
+			<description>Każdy zna popularne święto, którego celem jest uhonorowanie naszych babć, wówczas wnuki
+				składają im życzenia. Pomysł pojawił się w tygodniuku "Kobieta i Życie" w 1964 roku. Rok później pomysł
+				przejął "Express Poznański", a w kolejnym roku "Ekspress Wieczorny" ogłosił ten dzień Dniem Babci.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="28" usual="false">
+			<name>Dzień Errola Barrowa na Barbados</name>
+			<description>Urodzony w roku 1920, polityk, dwukrotny premier. Był wielkim czlowiekiem dla swojego kraju, a
+				dzień jego urodzin został ogłoszony przez parlament świętem narodowym Barbadosu.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="1">
+		<holiday id="29" usual="true">
+			<name>Dzień Dziadka</name>
+			<description>Tego dnia wnuki skłądają życzenia w celu uhonorowania swoich dziadków. "Ekspress Wieczorny" rok
+				po ogłoszeniu Dnia Babci, wskazał następujący po nim dzień jako Dzień Dziadka.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="30" usual="false">
+			<name>Dzień Jedności Ukrainy</name>
+			<description>21 stycznia 1999 roku poprzez dekret ówczesnego prezydenta Ukrainy, Leonida Kuczmy, dzień ten
+				został ogłoszony świętem. Stało się tak ze względu na datę zjednoczenia URL i ZURL, które miało miejsce
+				tego dnia w 1919 roku.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="31" usual="false">
+			<name>Dzień Dużego Członka</name>
+			<description>Tym, którzy mogą dziś świętować należą się spore gratulacje, w końcu nie każdy moze pochwalić
+				się rozmiarem swojego przyrodzenia.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="1">
+		<holiday id="32" usual="false">
+			<name>Dzień bez Opakowań Foliowych</name>
+			<description>W 1965 Gustav Thulin Sten, szwedzki inżynier opatentował cienką torebkę foliową. Dzisiaj
+				zastanawiamy się czym ją zastąpić w trosce o środowisko.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="1">
+		<holiday id="33" usual="false">
+			<name>Światowy Dzień Środków Masowego Przekazu</name>
+			<description>W czasach kiedy Internet nie istniał, a radio i prasa były codziennością w każdym domu, były
+				traktowane ze szczególnym szacunkiem, jako jedyne źródła informacji. Papież paweł VI ustanowił to święto
+				nieprzypadkowo. Jego data jest związana ze wspomnieniem w Kościele katolickim patrona dziennikarzy - św.
+				Franciszka Selezego.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="1">
+		<holiday id="34" usual="false">
+			<name>Dzień Sekretarki i Asystentki</name>
+			<description>Praca sekretarki zazwyczaj kojarzy się niezbyt pozytywnie. Może tego dnia będzie inaczej? Celem
+				tego święta jest uznanie i promocja pracy pracowników administracyjnych (sekretarki i sekretarza,
+				asystentki i asystenta, oraz pracowników pomocniczych)
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="1">
+		<holiday id="35" usual="false">
+			<name>Światowy Dzień Celnictwa</name>
+			<description>Bruksela. Rok 1953. Tgo dnia odbyła się inauguracja Światowej Organizacji Ceł - Rady Współpracy
+				Celnej. Samo święto jest celebrowane na świecie od 1983 roku, a w Polsce od roku 1992.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="36" usual="false">
+			<name>Dzień Transpalnatcji</name>
+			<description>W 1966 w I Klinice Chirurgicznej Akademii Medycznej w Warszawie dokonano pierwszego
+				przeszczepu, który się powiódł. Bohaterem wydarzenia była nerka. Święto to obcodzone jest na cześć tego
+				wydarzenia.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="1">
+		<holiday id="37" usual="false">
+			<name>Międzynarodowy Dzień Pamięci o Ofiarach Holokaustu</name>
+			<description>Organizacja Narodów Zjednoczonych 1 listopada 2005 roku uchwaliła to święto na cześć ofiar
+				Niemców podczas II Wojny Światowej. Tym samym Holokaust zaczął figurować jako wydarzenie historyczne.
+				Data nie jest przypadkowa, bowiem tego dnia wyzwolono obóz Auschwitz-Birkenau w 1945 przez Armię
+				Czerwoną.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="38" usual="false">
+			<name>Dzień dialogu z Islamem</name>
+			<description>Święto obchodzone w Kościele katolickim, którego celem jest budowanie porozumienia z wyznawcami
+				Islamu. W Polsce to święto obchodzone jest od 2001. Nalezy jednak pamiętać, że niezaleznie od wyznania,
+				wszyscy modlimy się do tego samego Boga.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="1">
+		<holiday id="39" usual="false">
+			<name>Międzynarodowy Dzień Mobilizacji Przeciwko Wojnie Nuklearnej</name>
+			<description>Jak nazwa mówi, wszyscy owinniśmy się tego dnia mobilizować, by nie dopuścić do Wojny
+				Nuklearnej. Jeśli do niej dojdzie, nie bedzie już świata, jaki znamy.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="1">
+		<holiday id="40" usual="false">
+			<name>Dzień Męczenników (Nepal)</name>
+			<description>Święto państwowe będące wspomnieniem po osobach, które zginęły w obronie niepodległości
+				ojczyzny.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="1">
+		<holiday id="41" usual="false">
+			<name>Dzień Martyrsów (Indie)</name>
+			<description>Święto państwowe będące wspomnieniem po osobach, które zginęły w obronie niepodległości
+				ojczyzny.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="1">
+		<holiday id="42" usual="false">
+			<name>Międzynarodowy Dzień Przytulania</name>
+			<description>Przytulanie zmniejsza poziom stresu i ryzyko chorób serca. Święto to zostało zapoczątkowane w
+				Ameryce w latach 80. ubiegłego wieku. Inicjatywą była myśl, że Amerykanie wstydzą się okazywać uczucia
+				publicznie, więc święto miało ich do tego sprowokować.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="2">
+		<holiday id="43" usual="false">
+			<name>Rocznica Zniesienia Niewolnictwa (Mauritius)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="2">
+		<holiday id="44" usual="false">
+			<name>Dzień Pozytywnego Myślenia</name>
+			<description>Wedl przysłowie "Optymista twierdzi, że żyjemy w najlepszym z możliwych czasów, pesymista zaś
+				obawia się, że to może być prawda". Pomysłodawcą tego święta jest Kirsten Harrell - amerykański
+				psycholog. Wg badań naukowców pozytywne myślenie może zmniejszyć ryzyko chorób serca, depresji czy
+				wylewów.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="45" usual="false">
+			<name>Światowy Dzień Mokradeł</name>
+			<description>Tego dnia 1971 podpisana zostałą konwencja ramsarska skupiająca się w dużej mierze na ochronie
+				przyrody. Samo święto obchodzone jest od 1997 roku.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="46" usual="false">
+			<name>Dzień Handlowca</name>
+			<description>Święto wywodzące się z czasów PRLu, kiedy to pracownicy świętowali pierszą niedzielę po 29
+				stycznia. Od roku 1986 data się nie zmienia.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="47" usual="false">
+			<name>Dzień Świstaka (w USA)</name>
+			<description>Święto obchodzone w Ameryce oraz Kanadzie na cześć świstaka amerykańskiego, zwanego świszczem.
+				Tego dnia jeśli świstak zobaczy swój cień i nie wróci (poranek słoneczny), oznacza to kolejne 6 tygodni
+				zimy, jeśli zaś zawróci (poranek pochmurny), zwiastuje to rychłą wiosnę. W praktyce przepowiednia ta
+				sprawdza się w pokoło połowie przypadków, co oznacza całkowitą losowość w wyborach świstaka.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="48" usual="true">
+			<name>Ofiarowanie Pańskie</name>
+			<description>???</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="2">
+		<holiday id="49" usual="false">
+			<name>Dzień Bohaterów Mozambiku</name>
+			<description>Mozambik chcąc być niezależnym, musiał zmotywować swoich ludzi. Na ich czele stanął Eduardo
+				Chivambo Mondlane. To on założył i przewodził Frontem WYzwolenia Mozambiku. Zginął w zamchu, kiedy to
+				dostał anonimową przesyłkę od portugalskiego wywiadu z bombą w środku. Święto to obchodzi się w rocznicę
+				jego śmierci.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="2">
+		<holiday id="50" usual="false">
+			<name>Międzynarodowy Dzień Walki z Rakiem</name>
+			<description>W 2000 roku odbył się Światowy Szczyt Walki z Rakiem zorganizowany m. in. przez ówczsnego
+				prezydenta Francji oraz dyrektora generalnego Światowego Dziedzictwa UNESCO. To właśnie wtedy
+				ustanowiono to święto.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="2">
+		<holiday id="51" usual="false">
+			<name>Dzień Chama Cha Mapinduzi</name>
+			<description>W języku suahili "Chama cha Mapinduzi" oznacza "Partię Rewolucji", która rządziła Tanzanią od
+				odzyskania przezń niepodległości, została zawiązana właśnie tego dnia.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="52" usual="false">
+			<name>Światowy Dzień Nutelli</name>
+			<description>Amerykańska bloggerka Sara Rosso (https://www.sararosso.com/) uwielbiała Nutellę do tego
+				stopnia, że w 2007 roku postanowiła na jej cześć stworzyć święto. Ludzie natychmiast to pokochali, a
+				święto zostało oficjalnie zatwierdzone (https://www.nutelladay.com/).
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="2">
+		<holiday id="53" usual="false">
+			<name>Dzień Boba Marleya</name>
+			<description>Tego dnia w roku końca II Wojny Światowej przychodzi na świat jamajski wokalista, wykonawca
+				muzyki ska i rocksteady, później reggae. Współzałożyciel, wokalista i gitarzysta zespołu The Wailers.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="2">
+		<holiday id="54" usual="false">
+			<name>Dzień Najwyższej Izby Kontroli</name>
+			<description>W roku 1919 do życia powołana zostaje NIK, najwyższy organ kontroli RzeczyPospolitej Polskiej
+				podlegający Sejmowi.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="2">
+		<holiday id="55" usual="false">
+			<name>Święto Służby Więziennej</name>
+			<description>Święto obchodzone od roku 2011 na mocy zapisu ustawy o Służbie Więziennej z 9 kwietnia rok
+				wcześniej. Wcześniej Służba Więzienna obchodziła swoje święto 26 kwietnia - w dzień uchwalnia ustawy w
+				1996 roku.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="56" usual="false">
+			<name>Święto Rewolucji (Irak)</name>
+			<description>???</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="2">
+		<holiday id="57" usual="false">
+			<name>Międzynarodowy Dzień Pizzy</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="2">
+		<holiday id="58" usual="false">
+			<name>Dzień Dyplomaty</name>
+			<description>???</description>
+			<link/>
+		</holiday>
+		<holiday id="59" usual="false">
+			<name>Dzień Kobiety w Nauce</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="2">
+		<holiday id="60" usual="false">
+			<name>Europejski Dzień Numeru Alarmowego 112</name>
+			<description>Święto to wynika wprost ze swojej daty, czy raczej data z treści święta. W skład numeru tego
+				wchodzi numer dnia oraz miesiąca.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="61" usual="false">
+			<name>Światowy Dzień Chorego</name>
+			<description>Święto to zostało utanowione przez papieża Jana Pawła II 13 maja 1992 roku, co jest 11 rocznicą
+				zamachu na życie świętego.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="62" usual="false">
+			<name>Ogólnopolski Dzień Dokarmiania Zwierzyny Leśnej</name>
+			<description>W srodku zimy zwierzęta mają problem ze zdobywaniem pożywienia. Ten dzień adresowany jest do
+				osób chcacych pomóc, ale nalezy to robić z głową, gdyż można zaszkodzić zamiast pomóc.
+			</description>
+			<link>https://www.cafeanimal.pl/artykuly/do-poczytania/Dzien-Dokarmiania-Zwierzyny-Lesnej,2297</link>
+		</holiday>
+	</day>
+	<day day="12" month="2">
+		<holiday id="63" usual="false">
+			<name>Dzień Darwina</name>
+			<description>W wielu krajach święto to obchodzone jest, by popularyzować teorię ewolucji na zasadzie doboru
+				naturalnego. Jego data to data urodzin pomysłodawcy - Charlesa Darwina
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="2">
+		<holiday id="64" usual="false">
+			<name>Światowy Dzień Radia</name>
+			<description>Za sprawą Hiszpańskiej rozgłośni radiowej - Academia Española de la Radio - UNESCO zgodziło się
+				na uchwalenie tego święta. Obchodzone ono jest co roku, pierwszy raz w roku 2012.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="65" usual="false">
+			<name>Urodziny Dziadka Mroza</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="66" usual="false">
+			<name>Dzień Carlosa Santany</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="2">
+		<holiday id="67" usual="false">
+			<name>Dzień Chorych Na Padaczkę</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="68" usual="true">
+			<name>Święto Zakochanych</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="2">
+		<holiday id="69" usual="false">
+			<name>Dzień Singla</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="70" usual="false">
+			<name>Światowy Dzień Młodzieży Prawosławnej</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="71" usual="false">
+			<name>Międzynarodowy Dzień Oszczędzania Energii</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="2">
+		<holiday id="72" usual="false">
+			<name>Międzynarodowy Dzień Listonoszy i Doręczycieli Przesyłek</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="73" usual="false">
+			<name>Dzień Poczty Polskiej</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="2">
+		<holiday id="74" usual="false">
+			<name>Dzień Kota</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="2">
+		<holiday id="75" usual="false">
+			<name>Dzień Baterii</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="2">
+		<holiday id="76" usual="false">
+			<name>Święto Zieloniutkiej Flagi Turkmeńskiej</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="77" usual="false">
+			<name>Święto Demokracji w Nepalu</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="2">
+		<holiday id="78" usual="false">
+			<name>Światowy Dzień Sprawiedliwości Społecznej</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="79" usual="false">
+			<name>Międzynarodowy Dzień Palących Fajkę</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="80" usual="false">
+			<name>Światowy Dzień Podrywu</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="2">
+		<holiday id="81" usual="false">
+			<name>Międzynarodowy Dzień Języka Ojczystego</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="82" usual="false">
+			<name>Dzień Walki z Reżimem Kolonialnym</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="2">
+		<holiday id="83" usual="false">
+			<name>Dzień Myśli Braterskiej</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="84" usual="false">
+			<name>Europejski Dzień Ofiar Przestępstw</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="2">
+		<holiday id="85" usual="false">
+			<name>Międzynarodowy Dzień Pomocy Potrzebującym</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="86" usual="false">
+			<name>Ogólnopolski Dzień Walki z Depresją</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="87" usual="false">
+			<name>Dzień Armii Czerwonej</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="88" usual="false">
+			<name>Dzień Mężczyzn (Rosja)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="89" usual="false">
+			<name>Dzień Obrońcy Ojczyzny (Rosja)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="90" usual="false">
+			<name>Dzień Bez Łapówki</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="91" usual="false">
+			<name>Dzień Wyzwolenia Poznania (1945)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="2">
+		<holiday id="92" usual="false">
+			<name>Dzień Niespodziewanego Całusa</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="2">
+		<holiday id="93" usual="false">
+			<name>Dzień Masturbacji</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="2">
+		<holiday id="94" usual="false">
+			<name>Dzień Spania w Miejscach Publicznych</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="95" usual="false">
+			<name>Dzień Dinozaura</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="2">
+		<holiday id="96" usual="false">
+			<name>Dzień Niedźwiedzia Polarnego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="2">
+		<holiday id="97" usual="false">
+			<name>Dzień Kibica Cracovii</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="2">
+		<holiday id="98" usual="false">
+			<name>Dzień Rzadkich Chorób</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="99" usual="false">
+			<name>Dzień Roku Przestępnego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="2">
+		<holiday id="100" usual="false">
+			<name>Międzynarodowy Dzień Dni, Które Nie Istnieją</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="3">
+		<holiday id="101" usual="false">
+			<name>Międzynarodowy Dzień Walki Przeciwko Zbrojeniom Atomowym</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="102" usual="false">
+			<name>Światowy Dzień Obrony Cywilnej</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="103" usual="false">
+			<name>Światowy Dzień Świadomości Autoagresji</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="104" usual="false">
+			<name>Dzień Puszystych</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="105" usual="false">
+			<name>Dzień Piegów</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="106" usual="false">
+			<name>Dzień Żołnierzy Wyklętych</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="3">
+		<holiday id="107" usual="false">
+			<name>Dzień Dyskordii</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="108" usual="false">
+			<name>Światowy Dzień Autyzmu</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="109" usual="false">
+			<name>﻿Dzień Staroci</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="3">
+		<holiday id="110" usual="false">
+			<name>Międzynarodowy Dzień Pisarzy</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="111" usual="false">
+			<name>Międzynarodowy Dzień Chorego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="3">
+		<holiday id="112" usual="false">
+			<name>Rocznica Uchwalenia Konstytucji USA</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="3">
+		<holiday id="113" usual="false">
+			<name>Dzień Teściowej</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="114" usual="false">
+			<name>Dzień Dentysty</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="3">
+		<holiday id="115" usual="false">
+			<name>Europejski Dzień Logopedy</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="116" usual="false">
+			<name>Dzień Czystego Stołu</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="3">
+		<holiday id="117" usual="false">
+			<name>Dzień Nauczyciela w Albanii</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="3">
+		<holiday id="118" usual="false">
+			<name>Międzynarodowy Dzień Praw Kobiet</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="119" usual="false">
+			<name>Międzynarodowy Dzień Pokoju na Świecie</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="120" usual="false">
+			<name>Dzień Osób Rudych</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="121" usual="true">
+			<name>Dzień Kobiet</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="3">
+		<holiday id="122" usual="false">
+			<name>Dzień Polskiej Statystyki</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="3">
+		<holiday id="123" usual="true">
+			<name>Dzień Mężczyzn</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="124" usual="false">
+			<name>Międzynarodowy Dzień Całowania w Czoło</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="3">
+		<holiday id="125" usual="false">
+			<name>Dzień Sołtysa</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="3">
+		<holiday id="126" usual="false">
+			<name>Światowy Dzień Drzemki w Pracy</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="3">
+		<holiday id="127" usual="false">
+			<name>Kasuga Matsuri (Festiwal Małpy), Japońskie Święto Wchodzące w Skład Kasuga Grand Shrine</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="3">
+		<holiday id="128" usual="false">
+			<name>Dzień Liczby π</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="129" usual="false">
+			<name>Biały Dzień</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="3">
+		<holiday id="130" usual="false">
+			<name>Światowy Dzień Praw Konsumenta</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="131" usual="false">
+			<name>Europejski Dzień Konsumenta</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="132" usual="false">
+			<name>Światowy Dzień Choroby Alzheimera</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="3">
+		<holiday id="133" usual="false">
+			<name>Dzień Przemytnika Litewskiej Książki</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="3">
+		<holiday id="134" usual="false">
+			<name>Światowy Dzień Morza</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="135" usual="false">
+			<name>Dzień Św. Patryka</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="3">
+		<holiday id="136" usual="false">
+			<name>Europejski Dzień Mózgu</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="3">
+		<holiday id="137" usual="false">
+			<name>Dzień Wędkarza</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="3">
+		<holiday id="138" usual="false">
+			<name>Dzień Bez Mięsa</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="139" usual="false">
+			<name>Międzynarodowy Dzień Wróbla</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="140" usual="true">
+			<name>Początek Astronomicznej Wiosny</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="3">
+		<holiday id="141" usual="false">
+			<name>Dzień Wagarowicza</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="142" usual="false">
+			<name>Światowy Dzień Zespołu Downa</name>
+			<description>"Gest świadczący o wspieraniu osób z zespołem Downa to założenie w tym dniu dwóch różnych
+				skarpetek."
+			</description>
+			<link>https://anonimowe.pl/sbX8K</link>
+		</holiday>
+		<holiday id="143" usual="false">
+			<name>Międzynarodowy Dzień Poezji</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="144" usual="false">
+			<name>Światowy Dzień Leśnika</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="145" usual="false">
+			<name>Światowy Dzień Lasu</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="146" usual="false">
+			<name>Światowy Dzień Walki z Dyskryminacją Rasową</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="3">
+		<holiday id="147" usual="false">
+			<name>Światowy Dzień Wody</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="148" usual="false">
+			<name>Dzień Ochrony Bałtyku</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="3">
+		<holiday id="149" usual="false">
+			<name>Światowy Dzień Meteorologii (wg niektórych źródeł obchodzony 24.03)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="150" usual="false">
+			<name>Dzień Windy</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="151" usual="false">
+			<name>Dzień Przyjaźni Polsko-Węgierskiej</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="3">
+		<holiday id="152" usual="false">
+			<name>Narodowy Dzień Życia</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="153" usual="false">
+			<name>Dzień Walki z Gruźlicą</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="3">
+		<holiday id="154" usual="false">
+			<name>Dzień Czytania Tolkiena</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="155" usual="false">
+			<name>Międzynarodowy Dzień Gofra</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="3">
+		<holiday id="156" usual="false">
+			<name>Dzień Niedźwiedzia Grizzly (Ursus Arctos Horribilis)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="157" usual="false">
+			<name>Światowy Dzień Króla Niedźwiedzi Zamieszkujących Amerykę Północną, obchodzony również w krajach
+				Skandynawskich
+			</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="3">
+		<holiday id="158" usual="false">
+			<name>Międzynarodowy Dzień Teatru</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="3">
+		<holiday id="159" usual="false">
+			<name>Dzień Masturbacji</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="3">
+		<holiday id="160" usual="false">
+			<name>Dzień Metalowca</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="3">
+		<holiday id="161" usual="false">
+			<name>Dzień Ziemi Palestyńskiej</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="3">
+		<holiday id="162" usual="false">
+			<name>Święto Wolności Malty</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="4">
+		<holiday id="163" usual="true">
+			<name>Prima Aprilis</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="164" usual="false">
+			<name>Międzynarodowy Dzień Ptaków</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="165" usual="false">
+			<name>Dzień Ryby (Francja)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="4">
+		<holiday id="166" usual="false">
+			<name>Międzynarodowy Dzień Książki Dla Dzieci</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="167" usual="false">
+			<name>Światowy Dzień Wiedzy o Autyzmie</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="4">
+		<holiday id="168" usual="false">
+			<name>Rocznica Drugiej Republiki (Gwinea)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="4">
+		<holiday id="169" usual="false">
+			<name>Międzynarodowy Dzień Wiedzy o Minach i Działań Zapobiegających Minom</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="4">
+		<holiday id="170" usual="false">
+			<name>Dzień Drzew</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="171" usual="false">
+			<name>Dzień Bez Makijażu</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="172" usual="false">
+			<name>Dzień Grzeczności za Kierownicą</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="4">
+		<holiday id="173" usual="false">
+			<name>Dzień Upamiętnienia Ludobójstwa w Rwandzie</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="4">
+		<holiday id="174" usual="false">
+			<name>Dzień Pracownika Służby Zdrowia</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="175" usual="false">
+			<name>Dzień Bobra</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="4">
+		<holiday id="176" usual="false">
+			<name>Międzynarodowy Dzień Romów</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="4">
+		<holiday id="177" usual="false">
+			<name>Dzień Bohaterów (Filipiny)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="4">
+		<holiday id="178" usual="false">
+			<name>Dzień Bandurki</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="179" usual="false">
+			<name>Dzień Lotnictwa Wojskowego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="4">
+		<holiday id="180" usual="false">
+			<name>Dzień Radia</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="181" usual="false">
+			<name>Dzień Osób z Chorobą Parkinsona</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="4">
+		<holiday id="182" usual="false">
+			<name>Dzień Czystych Okien</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="183" usual="false">
+			<name>Dzień Czekolady</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="184" usual="false">
+			<name>Międzynarodowy Dzień Lotnictwa i Kosmonautyki</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="185" usual="false">
+			<name>Dzień Chomika</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="4">
+		<holiday id="186" usual="false">
+			<name>Światowy Dzień Pamięci Ofiar Katynia</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="4">
+		<holiday id="187" usual="false">
+			<name>Dzień Ludzi Bezdomnych</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="4">
+		<holiday id="188" usual="false">
+			<name>Światowy Dzień Trzeźwości</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="4">
+		<holiday id="189" usual="false">
+			<name>Dzień Sapera</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="190" usual="false">
+			<name>Dzień Włókniarza</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="4">
+		<holiday id="191" usual="false">
+			<name>Światowy Dzień Chorych na Hemofilię</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="192" usual="false">
+			<name>Dzień Edukacji w Syrii</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="4">
+		<holiday id="193" usual="false">
+			<name>Międzynarodowy Dzień Ochrony Zabytków</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="194" usual="false">
+			<name>Światowy Dzień Krótkofalowca</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="195" usual="false">
+			<name>Dzień Pacjenta w Śpiączce</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="4">
+		<holiday id="196" usual="false">
+			<name>Dzień Republiki Sierra Leone</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="197" usual="false">
+			<name>Urodziny Króla Suazi</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="4">
+		<holiday id="198" usual="false">
+			<name>Międzynarodowy Dzień Wolnej Prasy</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="4">
+		<holiday id="199" usual="false">
+			<name>Rocznica Założenia Rzymu</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="4">
+		<holiday id="200" usual="false">
+			<name>Dzień Odkrycia Brazylii</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="201" usual="true">
+			<name>Międzynarodowy Dzień Matki Ziemi</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="4">
+		<holiday id="202" usual="false">
+			<name>Światowy Dzień Książki i Praw Autorskich</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="203" usual="false">
+			<name>Dzień Koni</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="4">
+		<holiday id="204" usual="false">
+			<name>Międzynarodowy Dzień Solidarności Młodzieży</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="205" usual="false">
+			<name>Międzynarodowy Dzień Przeciwko Wiwisekcji</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="4">
+		<holiday id="206" usual="false">
+			<name>Dzień Sekretarki</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="207" usual="false">
+			<name>Międzynarodowy Dzień Świadomości Zagrożenia Hałasem</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="4">
+		<holiday id="208" usual="false">
+			<name>Dzień Drogowca i Transportowca</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="4">
+		<holiday id="209" usual="false">
+			<name>Międzynarodowy Dzień Świadomości Zagrożenia Hałasem</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="4">
+		<holiday id="210" usual="false">
+			<name>Dzień Ziemi</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="211" usual="false">
+			<name>Światowy Dzień Pamięci Ofiar Wypadków Przy Pracy</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="4">
+		<holiday id="212" usual="false">
+			<name>Międzynarodowy Dzień Tańca</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="4">
+		<holiday id="213" usual="false">
+			<name>Rocznica Śmierci Führera</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="5">
+		<holiday id="214" usual="true">
+			<name>Święto Pracy</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="5">
+		<holiday id="215" usual="true">
+			<name>Święto Polskiej Flagi</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="216" usual="false">
+			<name>Dzień Polonii i Polaków Za Granicą</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="5">
+		<holiday id="217" usual="false">
+			<name>Dzień Słońca</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="218" usual="false">
+			<name>Dzień Bez Komputera</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="219" usual="false">
+			<name>Dzień Chorych Na Astmę i Alergię</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="220" usual="true">
+			<name>Święto Konstytucji 3 Maja</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="5">
+		<holiday id="221" usual="false">
+			<name>Międzynarodowy Dzień Gwiezdnych Wojen</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="222" usual="false">
+			<name>Międzynarodowy Dzień Strażaka</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="223" usual="false">
+			<name>Dzień Hutnika</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="224" usual="false">
+			<name>Dzień Kominiarza</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="225" usual="false">
+			<name>Dzień Garncarza</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="226" usual="false">
+			<name>Dzień Piekarza</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="5">
+		<holiday id="227" usual="false">
+			<name>Międzynarodowy Dzień Położnika</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="228" usual="false">
+			<name>Dzień Walki z Dyskryminacją Osób Niepełnosprawnych</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="229" usual="false">
+			<name>Międzynarodowy Dzień Bez Diety</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="5">
+		<holiday id="230" usual="false">
+			<name>Święto Gwardii Szwajcarskiej (Watykan)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="5">
+		<holiday id="231" usual="false">
+			<name>Dzień Radia (Rosja)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="5">
+		<holiday id="232" usual="false">
+			<name>Dzień Bibliotekarza i Bibliotek</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="5">
+		<holiday id="233" usual="false">
+			<name>Dzień Unii Europejskiej</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="5">
+		<holiday id="234" usual="false">
+			<name>Dzień Pracownika Gospodarki Komunalnej</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="235" usual="false">
+			<name>Światowy Dzień Przytulania</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="5">
+		<holiday id="236" usual="false">
+			<name>Święto Miasta Miszkolc (Węgry)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="237" usual="false">
+			<name>Dzień Bez Śmiecenia</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="5">
+		<holiday id="238" usual="false">
+			<name>Światowy Dzień Ptaków Wędrownych</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="5">
+		<holiday id="239" usual="false">
+			<name>Światowy Dzień Chorego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="5">
+		<holiday id="240" usual="false">
+			<name>Dzień Farmaceuty</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="5">
+		<holiday id="241" usual="false">
+			<name>Święto Polskiej Muzyki i Plastyki</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="242" usual="false">
+			<name>Dzień Niezapominajki</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="243" usual="false">
+			<name>﻿Międzynarodowy Dzień Geja</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="5">
+		<holiday id="244" usual="false">
+			<name>Dzień Straży Granicznej</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="5">
+		<holiday id="245" usual="false">
+			<name>Międzynarodowy Dzień Telekomunikacji</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="5">
+		<holiday id="246" usual="false">
+			<name>Międzynarodowy Dzień Muzeów</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="5">
+		<holiday id="247" usual="false">
+			<name>Dzień Mycia Samochodów</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="248" usual="false">
+			<name>Międzynarodowy Dzień Rysowania Mahometa</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="5">
+		<holiday id="249" usual="false">
+			<name>Międzynarodowy Dzień Płynów Do Mycia Naczyń</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="5">
+		<holiday id="250" usual="false">
+			<name>Światowy Dzień Rozwoju Kulturalnego</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="251" usual="false">
+			<name>Dzień Kosmosu</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="252" usual="false">
+			<name>Dzień Odnawiania Znajomości</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="253" usual="false">
+			<name>Dni Pary</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="5">
+		<holiday id="254" usual="false">
+			<name>Światowy Dzień Różnorodności Biologicznej</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="255" usual="false">
+			<name>Dzień Praw Zwierząt</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="256" usual="false">
+			<name>Dzień Pac–Mana</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="5">
+		<holiday id="257" usual="false">
+			<name>Dzień Spedytora</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="5">
+		<holiday id="258" usual="false">
+			<name>Dzień Cyrylicy</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="259" usual="false">
+			<name>Europejski Dzień Parków Wodnych</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="5">
+		<holiday id="260" usual="false">
+			<name>Dzień Stemplarza</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="261" usual="false">
+			<name>Dzień Piwowara</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="262" usual="false">
+			<name>Dzień Mleka</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="263" usual="false">
+			<name>Dzień Ręcznika</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="5">
+		<holiday id="264" usual="false">
+			<name>Dzień Gruzji</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="265" usual="false">
+			<name>Dzień Znalezienia Kaspara Hausera</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="266" usual="true">
+			<name>Dzień Matki</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="5">
+		<holiday id="267" usual="false">
+			<name>Dzień Samorządu Terytorialnego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="5">
+		<holiday id="268" usual="false">
+			<name>Dzień Bez Prezerwatywy</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="5">
+		<holiday id="269" usual="false">
+			<name>Dzień Działacza Kultury</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="5">
+		<holiday id="270" usual="false">
+			<name>Dzień Bez Stanika</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="5">
+		<holiday id="271" usual="false">
+			<name>Dzień Pracownika Przemysłu Spożywczego</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="272" usual="false">
+			<name>Dzień Bociana Białego</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="273" usual="false">
+			<name>Światowy Dzień Bez Tytoniu</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="6">
+		<holiday id="274" usual="false">
+			<name>Święto Bułki</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="275" usual="false">
+			<name>Dzień Bez Alkoholu</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="276" usual="false">
+			<name>Światowy Dzień Mleka</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="277" usual="true">
+			<name>Międzynarodowy Dzień Dziecka</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="6">
+		<holiday id="278" usual="false">
+			<name>Dzień Leśnika</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="279" usual="false">
+			<name>Dzień Sąsiada</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="280" usual="false">
+			<name>Dzień Bez Krawata</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="6">
+		<holiday id="281" usual="false">
+			<name>Dzień Dobrej Oceny</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="6">
+		<holiday id="282" usual="false">
+			<name>Dzień Drukarza</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="6">
+		<holiday id="283" usual="false">
+			<name>Dzień Ochrony Środowiska</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="6">
+		<holiday id="284" usual="false">
+			<name>Dzień Slayera</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="6">
+		<holiday id="285" usual="false">
+			<name>Dzień Chemika</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="286" usual="false">
+			<name>Dzień Seksu</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="6">
+		<holiday id="287" usual="false">
+			<name>Dzień Informatyka</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="6">
+		<holiday id="288" usual="false">
+			<name>Dzień Agugaga</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="289" usual="false">
+			<name>Dzień Przyjaciela</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="290" usual="false">
+			<name>Dzień Księgowego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="6">
+		<holiday id="291" usual="false">
+			<name>Światowy Dzień Jazdy Nago Na Rowerze</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="6">
+		<holiday id="292" usual="false">
+			<name>Dzień Podeptanych Na Śmierć w Czasie Tańca</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="6">
+		<holiday id="293" usual="false">
+			<name>Święto Biura Ochrony Rządu</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="294" usual="false">
+			<name>Dzień Stylisty Paznokci</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="6">
+		<holiday id="295" usual="false">
+			<name>Święto Dobrych Rad</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="296" usual="false">
+			<name>Święto Siostry</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="6">
+		<holiday id="297" usual="false">
+			<name>Dzień Dziennikarza Obywatelskiego</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="298" usual="false">
+			<name>Światowy Dzień Krwiodawstwa</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="6">
+		<holiday id="299" usual="false">
+			<name>Dzień Wiatru</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="6">
+		<holiday id="300" usual="false">
+			<name>Międzynarodowy Dzień Pomocy Dzieciom Afrykańskim</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="6">
+		<holiday id="301" usual="false">
+			<name>Dzień Walki z Pustynnieniem i Suszami</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="6">
+		<holiday id="302" usual="false">
+			<name>Dzień Ewakuacji</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="6">
+		<holiday id="303" usual="false">
+			<name>Teksański Dzień Emancypacji</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="6">
+		<holiday id="304" usual="false">
+			<name>Światowy Dzień Uchodźcy</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="6">
+		<holiday id="305" usual="false">
+			<name>Święto Muzyki</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="306" usual="false">
+			<name>Dzień Deskorolki</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="307" usual="false">
+			<name>Dzień Łaskotek</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="308" usual="true">
+			<name>Początek Astronomicznego Lata</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="6">
+		<holiday id="309" usual="false">
+			<name>Światowy Dzień "Garbusa"</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="310" usual="false">
+			<name>Dzień Kultury Fizycznej</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="6">
+		<holiday id="311" usual="false">
+			<name>Dzień Służby Publicznej</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="312" usual="true">
+			<name>Dzień Ojca</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="6">
+		<holiday id="313" usual="false">
+			<name>Dzień Przytulania</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="6">
+		<holiday id="314" usual="false">
+			<name>Dzień Stoczniowca</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="315" usual="false">
+			<name>Światowy Dzień Smerfa</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="6">
+		<holiday id="316" usual="false">
+			<name>Międzynarodowy Dzień Solidarności z Osobami Uzależnionymi od Narkotyków</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="317" usual="false">
+			<name>Międzynarodowy Dzień Pomocy Ofiarom Tortur</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="6">
+		<holiday id="318" usual="false">
+			<name>Światowy Dzień Rybołówstwa</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="6">
+		<holiday id="319" usual="false">
+			<name>Narodowy Dzień Pamięci Poznańskiego Czerwca 1956</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="6">
+		<holiday id="320" usual="false">
+			<name>Dzień Marynarki Wojennej</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="321" usual="false">
+			<name>Dzień Ratownika WOPR</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="6">
+		<holiday id="322" usual="false">
+			<name>Dzień Motyla Kapustnika</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="7">
+		<holiday id="323" usual="false">
+			<name>Światowy Dzień Architektury</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="324" usual="false">
+			<name>Dzień Psa</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="325" usual="false">
+			<name>Dzień Jazzu</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="7">
+		<holiday id="326" usual="false">
+			<name>Dzień Dziennikarza Sportowego</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="327" usual="false">
+			<name>Międzynarodowy Dzień UFO</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="7">
+		<holiday id="328" usual="false">
+			<name>Dzień Blondynki</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="7">
+		<holiday id="329" usual="false">
+			<name>Święto Hot-Doga</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="7">
+		<holiday id="330" usual="false">
+			<name>Dzień Łapania Za Biust</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="331" usual="false">
+			<name>Dzień Tynwaldu</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="7">
+		<holiday id="332" usual="false">
+			<name>Światowy Dzień Pocałunku</name>
+			<description>Nie od dziś wiadomo, że gesty znaczą więcej niż tysiąc słów. Nie wahaj się robić tego
+				szczególnie teraz, ponieważ na zachętę świętuje się dziś "Światowy Dzień Pocałunku". Rozdawaj to co
+				piękne w swej prostocie - hojnie obdarz najbliższe Ci osoby ognistymi całusami, serdecznymi i życzliwymi
+				buziakami czy cmoknięciami. Dzięki temu połączysz przyjemne z pożytecznym bowiem pocałunki to samo
+				zdrowie – przez produkcję endorfin poprawia się Nasz nastrój, odporność, podnosi się ciśnienie i
+				temperatura ciała. Chodzi również pogłoska, że takie buziaki wydłużają życie o 5 lat. Zatem do roboty!
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="7">
+		<holiday id="333" usual="false">
+			<name>Dzień Spółdzielczości</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="7">
+		<holiday id="334" usual="false">
+			<name>Dzień Chodzenia Do Pracy Inną Drogą</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="7">
+		<holiday id="335" usual="false">
+			<name>Dzień Sił Zbrojnych Mauretanii</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="7">
+		<holiday id="336" usual="false">
+			<name>Światowy Dzień Ludności</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="7">
+		<holiday id="337" usual="false">
+			<name>Światowy Dzień Imprezy</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="7">
+		<holiday id="338" usual="false">
+			<name>Dzień Łapania Za Pupę</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="7">
+		<holiday id="339" usual="false">
+			<name>Dzień Bez Telefonu Komórkowego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="7">
+		<holiday id="340" usual="false">
+			<name>Światowy Dzień Emoji</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="7">
+		<holiday id="341" usual="false">
+			<name>Międzynarodowy Dzień Nelsona Mandeli</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="7">
+		<holiday id="342" usual="false">
+			<name>Dzień Czerwonego Kapturka</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="7">
+		<holiday id="343" usual="false">
+			<name>Dzień Czterookich</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="7">
+		<holiday id="344" usual="false">
+			<name>Dzień Liczby π</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="7">
+		<holiday id="345" usual="false">
+			<name>Dzień Włóczykija</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="7">
+		<holiday id="346" usual="false">
+			<name>Dzień Policjanta</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="347" usual="false">
+			<name>Światowy Dzień Tequili</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="348" usual="false">
+			<name>Dzień Pszczółki Mai</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="7">
+		<holiday id="349" usual="false">
+			<name>Dzień Bezpiecznego Kierowcy</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="7">
+		<holiday id="350" usual="false">
+			<name>Święto Narodowe Ólavsøka (Wyspy Owcze)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="7">
+		<holiday id="351" usual="false">
+			<name>Światowy Dzień Przyjaźni Na Odległość</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="7">
+		<holiday id="352" usual="false">
+			<name>Wigilia Lughnasadh</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="8">
+		<holiday id="353" usual="false">
+			<name>Narodowy Dzień Pamięci Powstania Warszawskiego (Dzień Pamięci Warszawy)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="8">
+		<holiday id="354" usual="false">
+			<name>Dzień Karmienia Piersią</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="355" usual="false">
+			<name>Światowy Dzień Pamięci o Zagładzie Romów</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="8">
+		<holiday id="356" usual="false">
+			<name>Święto Sił Zbrojnych w Gwinei Równikowej</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="8">
+		<holiday id="357" usual="false">
+			<name>Święto Rewolucji Burkina Faso</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="8">
+		<holiday id="358" usual="false">
+			<name>Międzynarodowy Dzień Piwa i Piwowara</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="8">
+		<holiday id="359" usual="false">
+			<name>Dzień Musztardy</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="8">
+		<holiday id="360" usual="false">
+			<name>Dzień Republiki (Wybrzeże Kości Słoniowej)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="8">
+		<holiday id="361" usual="false">
+			<name>Dzień Transportu</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="8">
+		<holiday id="362" usual="false">
+			<name>Międzynarodowy Dzień Ludności Tubylczej Na Świecie</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="8">
+		<holiday id="363" usual="false">
+			<name>Dzień Przewodników i Ratowników Górskich</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="8">
+		<holiday id="364" usual="false">
+			<name>Dzień KonserwatoraZabytków</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="8">
+		<holiday id="365" usual="false">
+			<name>Międzynarodowy Dzień Młodzieży</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="366" usual="false">
+			<name>Dzień Pracoholików</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="8">
+		<holiday id="367" usual="false">
+			<name>Międzynarodowy Dzień Osób Leworęcznych</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="8">
+		<holiday id="368" usual="false">
+			<name>Dzień Energetyka</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="8">
+		<holiday id="369" usual="true">
+			<name>Wniebowzięcie Najświętszej Maryi Panny</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="370" usual="false">
+			<name>Święto Wojska Polskiego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="8">
+		<holiday id="371" usual="false">
+			<name>Światowy Dzień Krwiodawstwa</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="8">
+		<holiday id="372" usual="false">
+			<name>Dzień Pozytywnie Zakręconych</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="8">
+		<holiday id="373" usual="false">
+			<name>Dzień Latarni Morskiej</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="8">
+		<holiday id="374" usual="false">
+			<name>Światowy Dzień Choroby Żołądkowej</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="8">
+		<holiday id="375" usual="false">
+			<name>Dzień Komara</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="376" usual="false">
+			<name>Dzień Przepieprzonych z Hukiem Lat</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="377" usual="false">
+			<name>Dzień Wyznawania Miłości</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="8">
+		<holiday id="378" usual="false">
+			<name>Dzień Ninoy Aquino (Filipiny)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="8">
+		<holiday id="379" usual="false">
+			<name>Dzień Pracownika Ochrony</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="8">
+		<holiday id="380" usual="false">
+			<name>Europejski Dzień Pamięci Ofiar Nazizmu i Stalinizmu</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="381" usual="false">
+			<name>Międzynarodowy Dzień Pamięci o Handlu Niewolnikami i Jego Zniesieniu</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="8">
+		<holiday id="382" usual="false">
+			<name>Dzień Windowsa</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="8">
+		<holiday id="383" usual="false">
+			<name>Rocznica Śmierci Nietzschego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="8">
+		<holiday id="384" usual="false">
+			<name>Filipiński Dzień Bohaterów</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="8">
+		<holiday id="385" usual="false">
+			<name>Dzień Tira</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="8">
+		<holiday id="386" usual="false">
+			<name>Dzień Lotnictwa</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="8">
+		<holiday id="387" usual="false">
+			<name>Dzień Strażnika Gminnego i Miejskiego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="8">
+		<holiday id="388" usual="false">
+			<name>Międzynarodowy Dzień Pamięci Osób Zaginionych</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="8">
+		<holiday id="389" usual="true">
+			<name>Dzień Solidarności i Wolności</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="390" usual="false">
+			<name>Dzień Blogów</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="9">
+		<holiday id="391" usual="false">
+			<name>Dzień Kombatanta</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="392" usual="false">
+			<name>Międzynarodowy Dzień Solidarności z Ofiarami Faszyzmu i Terroryzmu</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="9">
+		<holiday id="393" usual="false">
+			<name>Wspomnienie Ho Chi Minha</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="9">
+		<holiday id="394" usual="false">
+			<name>Dzień Wersalskiego Pokoju</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="9">
+		<holiday id="395" usual="false">
+			<name>Dzień Imigranta (Argentyna)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="9">
+		<holiday id="396" usual="false">
+			<name>Dzień Demokracji</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="397" usual="false">
+			<name>Międzynarodowy Dzień Dobroczynności</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="9">
+		<holiday id="398" usual="false">
+			<name>Dzień Zwycięstwa w Mozambiku</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="9">
+		<holiday id="399" usual="false">
+			<name>Dzień Dobrych Wiadomości</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="400" usual="false">
+			<name>Dzień Walki z Analfabetyzmem</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="401" usual="false">
+			<name>Dzień Marzyciela</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="402" usual="false">
+			<name>Narodowy Dzień Czytania Pana Tadeusza</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="9">
+		<holiday id="403" usual="false">
+			<name>Międzynarodowy Dzień Urody</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="404" usual="false">
+			<name>﻿Dzień Testera</name>
+			<description>Dzień ten jest obchodzony na cześć znalezienia pierwszego w historii buga.</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="9">
+		<holiday id="405" usual="false">
+			<name>Światowy Dzień Zapobiegania Samobójstwom</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="9">
+		<holiday id="406" usual="false">
+			<name>Dzień Histerii i Egocentryzmu w USA</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="407" usual="false">
+			<name>Międzynarodowy Dzień Bez Stanika</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="9">
+		<holiday id="408" usual="false">
+			<name>Dzień Współpracy Południe-Południe</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="409" usual="false">
+			<name>Dzień Wojsk Lądowych</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="410" usual="false">
+			<name>Dzień Programisty (w latach przestępnych)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="9">
+		<holiday id="411" usual="false">
+			<name>Dzień Programisty (w latach nieprzestępnych)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="412" usual="false">
+			<name>Dzień Całowania Chłopaków w Usta</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="413" usual="false">
+			<name>Światowy Dzień Przeciwko Transportowi Zwierząt</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="9">
+		<holiday id="414" usual="false">
+			<name>Wspomnienie Podwyższenia Krzyża Świętego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="9">
+		<holiday id="415" usual="false">
+			<name>Dzień Prostaty</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="416" usual="false">
+			<name>Dzień Olewania Systemu</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="417" usual="false">
+			<name>Dzien Opakowań</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="9">
+		<holiday id="418" usual="false">
+			<name>Dzień Warstwy Ozonowej</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="9">
+		<holiday id="419" usual="false">
+			<name>Dzień Nonsensopedii</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="420" usual="false">
+			<name>Dzień Szacunku Dla Ludzi Starszych (Japonia)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="9">
+		<holiday id="421" usual="false">
+			<name>Międzynarodowy Dzień Geologa</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="9">
+		<holiday id="422" usual="false">
+			<name>Dzień Dzikiej Flory, Fauny i Naturalnych Siedlisk</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="9">
+		<holiday id="423" usual="false">
+			<name>Dzień Służby Celnej</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="424" usual="false">
+			<name>Międzynarodowy Dzień Pokoju</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="425" usual="false">
+			<name>Światowy Dzień Alzheimera</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="9">
+		<holiday id="426" usual="false">
+			<name>Dzień Ćwiczenia Przed Lustrem Prośby o Podwyżkę Płacy</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="427" usual="false">
+			<name>Dzień Bez Samochodu</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="428" usual="true">
+			<name>Początek Astronomicznej Jesieni</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="9">
+		<holiday id="429" usual="false">
+			<name>Dożynki</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="430" usual="false">
+			<name>Pierwszy Dzień Miesiąca Asvina</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="431" usual="false">
+			<name>Dzień Spadającego Liścia</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="9">
+		<holiday id="432" usual="false">
+			<name>Dzień Ogłoszenia Tysiąclatki</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="9">
+		<holiday id="433" usual="false">
+			<name>Dzień Budowlańca</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="9">
+		<holiday id="434" usual="false">
+			<name>Europejski Dzień Ptaków</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="435" usual="false">
+			<name>Dzień Całowania Dziewczyn</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="9">
+		<holiday id="436" usual="false">
+			<name>Światowy Dzień Turystyki</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="437" usual="false">
+			<name>Dzień Podziemnego Państwa Polskiego</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="438" usual="false">
+			<name>Urodziny Wujka Google</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="9">
+		<holiday id="439" usual="false">
+			<name>Światowy Dzień Morza</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="440" usual="false">
+			<name>Międzynarodowy Dzień Tajniaka</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="9">
+		<holiday id="441" usual="false">
+			<name>Dzień Hipochondryka</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="9">
+		<holiday id="442" usual="true">
+			<name>Dzień Chłopaka</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="443" usual="false">
+			<name>Międzynarodowy Dzień Tłumacza</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="10">
+		<holiday id="444" usual="false">
+			<name>Międzynarodowy Dzień Wegetarianizmu</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="445" usual="false">
+			<name>Międzynarodowy Dzień Pracownika Ochrony Zdrowia</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="446" usual="false">
+			<name>Międzynarodowy Dzień Osób Starszych</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="447" usual="false">
+			<name>Światowy Dzień ptaków</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="448" usual="false">
+			<name>Międzynarodowy Dzień Muzyki</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="449" usual="false">
+			<name>Międzynarodowy Dzień Walki z Wirusowym Zapaleniem Wątroby</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="450" usual="false">
+			<name>Światowy Dzień Wegan</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="451" usual="false">
+			<name>Dzień Tornistra</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="10">
+		<holiday id="452" usual="false">
+			<name>Międzynarodowy Dzień Bez Przemocy</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="10">
+		<holiday id="453" usual="false">
+			<name>Dzień Bez Kamizelki Kuloodpornej</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="454" usual="false">
+			<name>Dzień Jedności Niemiec</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="10">
+		<holiday id="455" usual="false">
+			<name>Międzynarodowy Dzień Zwierząt</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="10">
+		<holiday id="456" usual="false">
+			<name>Światowy Dzień Mieszkalnictwa</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="10">
+		<holiday id="457" usual="false">
+			<name>Dzień Marynarki Wojennej Peru</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="10">
+		<holiday id="458" usual="false">
+			<name>Światowy Dzień Poczty i Znaczka Pocztowego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="10">
+		<holiday id="459" usual="false">
+			<name>Europejski Dzień Przeciw Karze Śmierci</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="10">
+		<holiday id="460" usual="false">
+			<name>Dzień Wychodzenia z Szafy</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="461" usual="false">
+			<name>Międzynarodowy Dzień Dziewcząt</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="10">
+		<holiday id="462" usual="false">
+			<name>Międzynarodowy Dzień Reumatyzmu</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="463" usual="false">
+			<name>Dzień Bezpiecznego Komputera</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="464" usual="false">
+			<name>Dzień Kolumba</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="10">
+		<holiday id="465" usual="false">
+			<name>Dzień Ratownika Medycznego</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="466" usual="false">
+			<name>Dzień Dawcy Szpiku</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="467" usual="false">
+			<name>Dzień Garnituru</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="10">
+		<holiday id="468" usual="false">
+			<name>Międzynarodowy Dzień Zmniejszania Skutków Klęsk Żywiołowych</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="469" usual="true">
+			<name>Dzień Edukacji Narodowej (Dzień Nauczyciela)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="10">
+		<holiday id="470" usual="false">
+			<name>Światowy Dzień Białej Laski</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="471" usual="false">
+			<name>Dzień Dziecka Utraconego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="10">
+		<holiday id="472" usual="false">
+			<name>Światowy Dzień Żywności</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="473" usual="false">
+			<name>Dzień Papieża Jana Pawła II</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="10">
+		<holiday id="474" usual="false">
+			<name>Międzynarodowy Dzień Walki z Ubóstwem</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="10">
+		<holiday id="475" usual="false">
+			<name>Dzień Łącznościowca</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="476" usual="false">
+			<name>Dzień Listonosza</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="10">
+		<holiday id="477" usual="false">
+			<name>Dzień Normalizacji</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="10">
+		<holiday id="478" usual="false">
+			<name>Międzynarodowy Dzień Kontrolera Ruchu Lotniczego</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="479" usual="false">
+			<name>Światowy Dzień Statystyki</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="480" usual="false">
+			<name>Światowy Dzień Chorych na Osteoporozę</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="10">
+		<holiday id="481" usual="false">
+			<name>Dzień Ndadaye (Burundi)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="482" usual="false">
+			<name>Dzień Bez Skarpetek</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="10">
+		<holiday id="483" usual="false">
+			<name>Światowy Dzień Osób Jąkających</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="484" usual="false">
+			<name>Dzień CAPS LOCK'a</name>
+			<description>Dziś Dzień Caps Lock’a, którego pomysłodawcą jest amerykański programista, Derek Arnold. W 2000
+				roku postanowił w ramach żartu zwrócić uwagę na pewną grupę użytkowników sieci - miłośników wielkich
+				liter, właściwie nadużywających obecności sporego klawisza. Odbierany przez wielu jako krzyk,
+				podenerwowanie i przyczyna irytacji, sprawił, że niejednokrotnie uznany został jako niepotrzebny,
+				którego należy czym prędzej usunąć z klawiatur. Jednak święto, to święto więc....czy jesteś GOTOWY ABY
+				UWOLNIĆ CAŁĄ ZŁOŚĆ?
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="10">
+		<holiday id="485" usual="false">
+			<name>Dzień Stałej Avogadra</name>
+			<description>Chemicy, to Wasze święto! 23 października został ochrzczony takim świętem nie bez powodu. Kiedy
+				zapiszemy tę magiczną stałą, wszystko staje się jasne. Jej wartość to 6,022140857 * 10<sup>23</sup>.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="486" usual="false">
+			<name>Dzień Mola</name>
+			<description>To święto jest związane z poprzednim, a samo w sobie obchodzone jest pomiędzy 6:02 AM i 6:02
+				PM. Godziny te wynikają z przybliżenia stałej Avogadra, które wynosi 6,02 * 10<sup>23</sup>. Wg
+				niektórych szkół jest jednak obchodzony 2 czerwca (6.02) od 10:23 AM do 10:23 PM.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="10">
+		<holiday id="487" usual="false">
+			<name>Dzień Poborców Podatkowych</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="488" usual="false">
+			<name>Międzynarodowe Święto Roweru</name>
+			<description>Czy są tu jacyś maniacy rowerowi? Jeśli tak, to dziś przypada Międzynarodowy Dzień Roweru. Te
+				dwukółka postrzegane jako ekonomiczne, zdrowe i przyjemne zyskują uznanie coraz większego grona
+				społeczeństwa. Dlatego wyreguluj przerzutki, dokręć śruby, nasmaruj amortyzatory, napompuj koła… i w
+				drogę!
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="489" usual="false">
+			<name>Międzynarodowe Święto Uciekających Na Rowerze</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="10">
+		<holiday id="490" usual="false">
+			<name>Dzień Kundelka</name>
+			<description>Uchwalona w 1997 roku ustawa o ochronie zwierząt pozostawiła po sobie pamiątkę w postaci Dnia
+				Kundelka. Dziś całą naszą uwagę powinniśmy skupić na tych śmiesznych, wielorasowych człapiących
+				czworonogach, które potrafią odwdzięczać się niewyczerpywalnymi pokładami miłości, wierności i energii.
+				W końcu kundel bury fajny pies!
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="491" usual="false">
+			<name>Dzień Ustawy o Ochronie Zwierząt</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="10">
+		<holiday id="492" usual="false">
+			<name>Światowy Dzień Donacji i Transplantacji</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="10">
+		<holiday id="493" usual="false">
+			<name>Światowy Dzień Dziedzictwa Audiowizualnego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="10">
+		<holiday id="494" usual="false">
+			<name>Dzień BSOD-a</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="495" usual="false">
+			<name>Dzień Odpoczynku dla Zszarganych Nerwów</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="10">
+		<holiday id="496" usual="false">
+			<name>Światowy Dzień Udaru Mózgu</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="10">
+		<holiday id="497" usual="false">
+			<name>Dzień Spódnicy</name>
+			<description>Mini, midi, maxi, jeansowe, wzorzyste czy gładkie – dziś Dzień Spódnicy, czyli elementu
+				odzieży, który przede wszystkim eksponuje kobiece wdzięki i pewną atrakcyjność. Choć lata 70. to
+				pojawienie się pierwszych damskich spodni stanowiących po dziś dzień integralną część każdej garderoby
+				to jednak nie powinnyśmy odbierać męskim miłośnikom takiej satysfakcji. „Chcę oglądać Twoje nogi… Chcę
+				byś założyła mini…” – apelują w końcu Czarno-Czarni.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="498" usual="false">
+			<name>Światowy Dzień Niskich Osób</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="10">
+		<holiday id="499" usual="false">
+			<name>Dzień Rozrzutności</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="11">
+		<holiday id="500" usual="false">
+			<name>Światowy Dzień Wegan</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="501" usual="false">
+			<name>Dzień Budzicieli Narodu (Bułgaria)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="502" usual="true">
+			<name>Wszystkich Świętych</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="11">
+		<holiday id="503" usual="true">
+			<name>Dzień Zaduszny</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="11">
+		<holiday id="504" usual="false">
+			<name>Święto Myśliwych</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="11">
+		<holiday id="505" usual="false">
+			<name>Dzień Taniego Wina</name>
+			<description>"Byk", "Komandos", "Leśny Dzban", "Sperma Szatana", "Apacz", "Amarena"… to zaledwie początek,
+				bo lista ta jest ku zdziwieniu naprawdę „bogata” i nie śmie mieć końca. Cytując klasyka, że „tanie wino
+				jest dobre, bo jest dobre i tanie", kultowy trunek z fantazyjną naklejką ma swoje grono wielbicieli
+				pomimo niebezpieczeństwa czyhającego na zdrowie – obszerny skład zawierający niemalże całą tablicę
+				Mendelejewa potrafi wprowadzić w błąd kubki smakowe uaktywniając ich destrukcyjną siłę.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="11">
+		<holiday id="506" usual="false">
+			<name>Dzień Postaci z Bajek</name>
+			<description>Król Lew, Czerwony Kapturek, Kubuś Puchatek, Smerfy czy Kopciuszek - towarzysze od najmłodszych
+				lat, którzy nie raz rozweselali, bawili a przede wszystkim przekazywali ważne i cenne prawdy życiowe,
+				obchodzą właśnie swoje święto. Pozwól sobie zatem dziś na powrót do tych beztroskich chwil i niech w
+				wiecznie napiętym grafiku zagości „bajkowy seans”.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="507" usual="false">
+			<name>Rocznica Zamachu Prochowego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="11">
+		<holiday id="508" usual="false">
+			<name>Międzynarodowy Dzień Zapobiegania Eksploatacji Środowiska Naturalnego Podczas Wojen i Konfliktów
+				Zbrojnych
+			</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="11">
+		<holiday id="509" usual="false">
+			<name>Dzień Feministek</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="510" usual="false">
+			<name>Dzień Kotleta Schabowego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="11">
+		<holiday id="511" usual="false">
+			<name>Święto Konstytucji Mikronezji</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="512" usual="false">
+			<name>Europejski Dzień Zdrowego Jedzenia i Gotowania</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="11">
+		<holiday id="513" usual="false">
+			<name>Światowy Dzień Jakości</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="514" usual="false">
+			<name>Światowy Dzień Gry Wstępnej</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="11">
+		<holiday id="515" usual="false">
+			<name>Dzień Młodzieży</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="516" usual="false">
+			<name>Dzień Jeża</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="11">
+		<holiday id="517" usual="false">
+			<name>Japoński Dzień Singli</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="518" usual="true">
+			<name>Narodowe Święto Niepodległości</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="11">
+		<holiday id="519" usual="false">
+			<name>Światowy Dzień Bicia Rekordów</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="11">
+		<holiday id="520" usual="false">
+			<name>Święto Służby Uzbrojenia i Elektroniki</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="14" month="11">
+		<holiday id="521" usual="false">
+			<name>Dzień Walki z Cukrzycą</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="522" usual="false">
+			<name>Dzień Seniora</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="523" usual="false">
+			<name>Dzień Króla Juliana</name>
+			<description>„Bóg zapłać, pradawni bogowie! Bo, gdyż, któż jest bardziej godny okładki niż król… całego
+				zoo?” Okładki, a co więcej własnego święta, które przypada właśnie dziś! Dlatego wszyscy Ci co kochają
+				bajkowego króla Juliana wyginają śmiało ciało, przygotowują fistaszki na srebrnej tacy i nie tykają jego
+				stóp!
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="11">
+		<holiday id="524" usual="false">
+			<name>Święto Wojskowego Centrum Geograficznego (Polska)</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="16" month="11">
+		<holiday id="525" usual="false">
+			<name>Dzień Tolerancji</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="11">
+		<holiday id="526" usual="false">
+			<name>Dzień Studenta</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="527" usual="false">
+			<name>Dzień Bez Długów</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="11">
+		<holiday id="528" usual="false">
+			<name>Światowy Dzień Rzucania Palenia Tytoniu</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="529" usual="false">
+			<name>Urodziny Dziadka Mroza</name>
+			<description>Choć powszechnie panujące stwierdzenie, że monopolistą w dziedzinie rozdawania prezentów
+				świątecznych jest Święty Mikołaj, to jak się jednak okazuje nie wpisuje się to w każdy zakątek świata.
+				Kraje bloku wschodniego od 2005 roku zasługi te przypisują Dziadkowi Mrozowi. Jest to postać, która
+				według wierzeń przyodziana w futrzaną czapkę i błękitny płaszcz mknie na swych zaprzęgniętych przez
+				konie saniach w okolicach Nowego Roku. Idea jest jednak niezmienna – nieść radość wszystkim dzieciom
+				dlatego Dziadek Mróz również zasługuje na pamięć.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="19" month="11">
+		<holiday id="530" usual="false">
+			<name>Dzień Toalet</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="11">
+		<holiday id="531" usual="false">
+			<name>Dzień Uprzemysłowienia Afryki</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="11">
+		<holiday id="532" usual="false">
+			<name>Dzień Pracownika Socjalnego</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="533" usual="false">
+			<name>Światowy Dzień Życzliwości i Pozdrowień</name>
+			<description>Dzień dobry użytkowniku. Mam nadzieję, że obudziłeś się w wyjątkowym nastroju, pod prysznicem
+				odśpiewałeś niejedną ulubioną piosenkę a w kawiarence zaparzyła się Twoja aromatyczna kawa. Jeśli taki
+				scenariusz odbiega od tego co faktycznie przyniósł Ci poranek, to życzę Ci, aby jednak dzisiejszy dzień
+				okazał się zaskakująco miły. Z inicjatywy braci Braiana i Michaela McCormacków na znak protestu
+				przeciwko konfliktom zbrojnym pomiędzy Izraelem a Egiptem nieustannie od 1973 roku 21 listopad oznajmia,
+				że pora na Światowy Dzień Życzliwości i Pozdrowień. Dlatego zadbaj o pozytywne nastawienie, obdarz kogoś
+				uśmiechem i powiedz nawet najdrobniejszy komplement!
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="11">
+		<holiday id="534" usual="false">
+			<name>Dzień Kredki</name>
+			<description>"Namalują domek i na płocie kota, i wesołe słonko na pochmurne dni! A gdy w kosmos lecieć
+				przyjdzie mi ochota, prawdziwą rakietę namalują mi!" O czym mowa...? Oczywiście, że o kredkach, które
+				dziś obchodzą swoje święto. Ten fakty z pewnością cieszy najmłodszych, ponieważ jako mile obowiązkowe
+				wyposażenie piórnika pozwalają one wyrazić własne uczucia i emocje a co więcej rozwijają wyobraźnię.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="11">
+		<holiday id="535" usual="false">
+			<name>Dzień Licealisty</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="11">
+		<holiday id="536" usual="false">
+			<name>Katarzynki</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="11">
+		<holiday id="537" usual="false">
+			<name>Dzień Pluszowego Misia</name>
+			<description>Historia Pluszowego Misia – pierwszego przyjaciela i strażnika dziecięcych snów ma swój
+				początek w 1902 roku. Pełniący swoją prezydenturę Stanów Zjednoczonych, Teodor Roosevelt wybrał się na
+				polowanie, podczas którego postrzelony został mały niedźwiedź jednakże na osobistą prośbę prezydenta -
+				uwolniony. Wydarzenie to uwieczniono w lokalnej prasie w formie komiksowej anegdoty tym samym stając się
+				inspiracją dla pewnego producenta zabawek, który postanowił stworzyć pluszowego "Teddy Bear'a" na cześć
+				głowy państwa. Nic dziwnego zatem, że jako symbol ciepła, beztroskości i delikatności Pluszowy Miś
+				zasługuje na swoje święto właśnie dziś!
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="538" usual="false">
+			<name>Dzień Bez Futra</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="539" usual="false">
+			<name>Dzień Tramwajarza</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="540" usual="false">
+			<name>Dzień Kolejarza</name>
+			<description>Kto ma w głowie olej, ten idzie na kolej i może z całą bracią kolejarską dumnie celebrować to
+				święto, które swój początek datuje rokiem 1935. Jest ono wspomnieniem patronki św. Katarzyny
+				Aleksandryjskiej dlatego dziś to my wszyscy podróżujący tym środkiem transportu życzymy przyjemnej i
+				niekończącej podróży w spełnianiu się w tym zawodzie!
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="11">
+		<holiday id="541" usual="false">
+			<name>Dzień Maaveerar (Święto Mniejszości Etnicznej Indii)</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="542" usual="false">
+			<name>Wspomnienie Świętych Prymitywa i Fakunda</name>
+			<description>Dziś wspomnienie liturgiczne Świętych Kościoła Katolickiego – Fakunda i Prymitywa, którzy
+				odmawiając udziału czczenia lokalnych bogów, ponieśli śmierć męczeńską. Ku pamięci tego wydarzenia w
+				Sahagún, nad rzeką Cea zostało wzniesione opactwo benedyktynów (od Sanctus Facundus, San Facun do
+				Sahagún).
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="11">
+		<holiday id="543" usual="false">
+			<name>Dzień Pocałunku</name>
+			<description>O popularności tego święta nie trzeba chyba wspominać, bo właśnie po raz drugi masz szanse
+				dzielić się tym w czym drzemie największa moc. Mowa oczywiście o pocałunkach, którymi wyrazisz całą gamę
+				uczuć począwszy od szacunku i sympatii, przez wdzięczność, miłość aż po wiecznie skrywane pożądanie.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="544" usual="false">
+			<name>Dzień Podłości</name>
+			<description>Idea tego święta budzi w wielu poważne wątpliwości, bo przecież zaledwie tydzień temu
+				propagowano taką wartość jaką jest życzliwość. Wyją†kowo dziś została ona jednak diametralnie zmieniona
+				nakłaniając nas do złośliwości i podłości względem siebie. Twórcy zrodzonego w 2008 roku pomysłu
+				tłumacząc swój zamysł chcieli, aby tak na prawdę człowiek był podły tylko w ten jeden dzień – mógł
+				wyzbyć się wszelkich tłumionych negatywnych emocji po to by cały rok być po prostu milszym.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="545" usual="false">
+			<name>Dzień Zrównoważonego Psychicznie Mudżahedina</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="11">
+		<holiday id="546" usual="false">
+			<name>Dzień Podchorążego</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="11">
+		<holiday id="547" usual="false">
+			<name>Dzień Białych Skarpetek</name>
+			<description>Z dumą noszone przez Greków i Rzymian, ponieważ jako kolebka cywilizacji przyczynili się oni do
+				wynalezienia w II wieku n.e udones – pierwszych prawdziwych skarpet. Choć wiele osób współcześnie jest
+				zdania, że noszenie szczególnie tych w kolorze białym to prawdziwy obciach to jednak znajdują się
+				również zwolennicy, którzy jako posiadacze kultowego dodatku na stopach uwieńczają go sandałami. Dzięki
+				takiemu połączeniu stylizacja komponuje się nieziemsko i wygląda jak milion dolarów. Listopadowa
+				temperatura nie zachęca Nas do takich wariacji ale nie zmienia to faktu, że warto uczcić to święto w
+				słuszny sposób!
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="548" usual="true">
+			<name>Andrzejki</name>
+			<description>Nie trzeba być Andrzejem by móc hucznie świętować dzisiejsze imieniny bo to ponadto jedna z
+				ostatnich okazji aby oddać się zabawom tuż przed zapoczątkowaniem okresu Adwentu. Choć szczegóły na
+				temat corocznych zwyczajów tego wydarzenia nie są w pełni znane, tradycja stale zachęca aby wziąć udział
+				we wszelkich wróżbach i traktować to jako przyjemny dodatek. Kto wie, być może poznasz imię swojej
+				przyszłej połówki a wybór daty ślubu już zawidnieje w Twoim kalendarzu?
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="1" month="12">
+		<holiday id="549" usual="false">
+			<name>Światowy Dzień Walki z AIDS</name>
+			<description>Powszechność hasła "lepiej zapobiegać, niż leczyć" przyświeca idei Światowego Dnia Walki z AIDS
+				powstałego w 1988 roku z inicjatywy Światowej Organizacji Zdrowia. Organizowane liczne kampanie,
+				konferencje, akcje edukacyjne czy happeningi dotyczące profilaktyki HIV/AIDS mają uświadomić powagę i
+				istotne zagrożenie wynikające z zakażenia tą chorobą.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="2" month="12">
+		<holiday id="550" usual="false">
+			<name>Światowy Dzień Walki z Uciskiem</name>
+			<description>Uchwalona przez ONZ Konwencja 2 grudnia 1949 roku sprzeciwiająca się handlowaniu ludźmi i
+				eksploatacją prostytucji rokrocznie przypomina o tym, że również zjawisko ucisku jest nieakceptowane
+				społecznie. Pod tym pojęciem kryje się wszelkie zastraszanie, niewolnictwo, wyzysk najczęściej spotykany
+				w sferze zawodowej. Nie pozwólmy stać się ofiarami a będąc świadkami takiego traktowania - odpowiednio
+				zareagujmy.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="3" month="12">
+		<holiday id="551" usual="false">
+			<name>Międzynarodowy Dzień Osób Niepełnosprawnych</name>
+			<description>Pewne dysfunkcje Naszego organizmu utrudniają niekiedy prawidłowe funkcjonowanie i stwarzają
+				wyraźne problemy. Obchodzony niezmiennie od 1992 roku Międzynarodowy Dzień Osób Niepełnosprawnych ma na
+				celu uświadomienie obecności tego zjawiska a tym samym ma zachęcić do ciągłej integracji z osobami
+				niepełnosprawnymi ze względu na liczne, zauważalne korzyści wynikające z takiej współpracy.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="552" usual="false">
+			<name>Dzień Naftowca</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="553" usual="false">
+			<name>Dzień Gazownika</name>
+			<description>Zgodnie z panującym powszechnie powiedzeniem, że nie psuje się tylko to, czego nie ma, usterkom
+				i awariom nie są w stanie oprzeć się również instalacje gazowe. W takich sytuacjach na pomoc spieszy
+				gazownik, któremu niestraszne są naprawy, przeglądy, konserwacje i remonty urządzeń. Doceńmy jego pracę
+				właśnie dziś, gdyż jest to zawód wysoce trudny i niebezpieczny.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="4" month="12">
+		<holiday id="554" usual="true">
+			<name>Barbórka</name>
+			<description>Dziś tradycyjne święto wszystkich górników, którego patronat przypisuje się od XVII wieku
+				świętej Barbarze z Nikodemii. Kobieta zgodnie z własnymi przekonaniami przyjęła chrzest sprzeciwiając
+				się tym samym pogańskim wierzeniom najbliższej rodziny. Postępowanie traktowane jako zniewaga
+				przyczyniło się do wydania jej władzom rzymskim. Pomimo ogromu cierpienia i krzywdy, nie wyrzekła się
+				ona swojej wiary chrześcijańskiej a poniesiona śmierć męczeńska będąca wyrazem bezwzględnego
+				przywiązania się tym ideom stała się powodem uznania Barbary za symbol dobrej śmierci i ciężkiej pracy.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="555" usual="false">
+			<name>Dzień Wojsk Rakietowych i Artylerii</name>
+			<description>Dziś hucznie rozbrzmiewają salwy honorowe oddawane na cześć wojsk rakietowych i artylerii
+				Wojska Polskiego. Ustanowione przez Ministra Obrony Narodowej w 1995 roku święto upamiętnia bohaterskie,
+				bitewne zasługi naszych przodków jak również jest okazją do nadania wyróżnień żołnierzom doby
+				współczesnej.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="5" month="12">
+		<holiday id="556" usual="false">
+			<name>Międzynarodowy Dzień Wolontariusza</name>
+			<description>Warto pomagać i angażować się w licznie organizowane prace społeczne na rzecz innych. Takie
+				czynne działania, choć w swej istocie stanowią bezcenny gest, są wynikiem potrzeb Naszego serca. Celem
+				zwrócenia uwagi społeczeństwa na włożony trud, ogrom wysiłku i poświęcenie wszystkich ochotników dobrej
+				woli, w 1986 roku ONZ ustanowił Międzynarodowy Dzień Wolontariusza.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="6" month="12">
+		<holiday id="557" usual="false">
+			<name>Dzień Anioła</name>
+			<description>Podczas magicznych chwil upamiętniających postać świętego Mikołaja o swojej obecności
+				przypominają także towarzyszący Nam Aniołowie. Nie bez powodu ich święto uplasowało się na 6 grudnia,
+				bowiem tak jak święty Mikołaj posiadają one ogromne serce, chętne do pomocy. Anioły są uważane za
+				posłańców, których misją jest wpieranie wszelkich naszych działań i przezwyciężaniu trudności
+				napotkanych po drodze.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="558" usual="true">
+			<name>Dzień Świętego Mikołaja</name>
+			<description>Dziś Kościół katolicki upamiętnia postać biskupa z Miry – św. Mikołaja. Wiele legend głosi, że
+				człowiek ten uratował tonących żeglarzy, uchronił przed niesłusznym skazaniem oficerów oraz rozdał
+				majątek ubogim. Tym samym za wielkie serce, bezgraniczną życzliwość, dobroć i pomoc stał się patronem
+				rybaków, marynarzy, panien, więźniów oraz dzieci. Obecnie wszyscy najmłodsi milusińscy oczekują na ten
+				dzień z niecierpliwością by w swoich butach bądź skarpecie odnaleźć drobne upominki i słodycze.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="7" month="12">
+		<holiday id="559" usual="false">
+			<name>Międzynarodowy Dzień Lotnictwa Cywilnego</name>
+			<description>Dzisiejsze święto zainicjowane przez Zgromadzenie Ogólne ONZ jest upamiętnieniem przyjęcia w
+				1944 roku chicagowskiej Konwencji Międzynarodowego Lotnictwa Cywilnego będącej zbiorem odpowiednich
+				regulacji i zasad dotyczących bezpieczeństwa powietrznego ruchu pasażerskiego. Mimo, że wydarzenie to
+				doczekało się swojego oficjalnego wspomnienia dopiero w 50 rocznicę, za pośrednictwem stosowanych haseł
+				przyświecających każdy odbywający się już rokrocznie obchóód z pewnością zwraca uwagę na liczne
+				osiągnięcia w tym obszarze.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="8" month="12">
+		<holiday id="560" usual="false">
+			<name>Światowy Dzień Dogmatu</name>
+			<description>Dogmat to inaczej prawda niepodważalna, akceptowalna bez potrzeby okazania dowodu. Ze względu
+				na Naszą indywidualność, każdy z Nas wykazuje wiarę w dogmaty zawężając tym samym pewne poglądy zarówno
+				religijne, polityczne jak społeczne.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="561" usual="false">
+			<name>Dzień Kupca</name>
+			<description>Będąc w sklepie mniej na uwadzę ważność tej daty - dziś Dzień Kupca. Święto ustanowione w 1937
+				roku swoją obecność zawdzięcza kupcom pielgrzymującym na Jasną Górę. Ze względu na wybuch II Wojny
+				Światowej i okupację, która przyczyniła się do upadku handlu, święto to nie było jednak celebrowane
+				rokrocznie.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="562" usual="false">
+			<name>Dzień Oświecenia Buddy</name>
+			<description>Dziś wszyscy buddyści nurtu Mahajany (Wielkiej Drogi) upamiętniają moment w którym ich mistrz,
+				Siddartha Gautama przeszedł przez osiem stopni świadomości duchowego stanu samourzeczywistnienia i
+				przebudzenia stając się tym samym Buddą czyli bytem oświeconym. Tego dnia tradycją jest wielogodzinna
+				medytacja wierzących przybliżająca ich do osiągnięcia maksymalnego skupienia umysłu, który nie ma ani
+				początku ani końca - jest niezmienny w swej zmianowości.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="563" usual="false">
+			<name>Dzień Studenta w Bułgarii</name>
+			<description/>
+			<link/>
+		</holiday>
+	</day>
+	<day day="9" month="12">
+		<holiday id="564" usual="false">
+			<name>Dzień Dziewic</name>
+			<description>Doceńmy kobiety, które potrafią dotrzymać swej "czystości" dla tego jedynego i dzielnie walczą
+				z panującymi obecnie stereotypami. Powstały Kodeks Dziewicy ma na celu udowodnienie, że seks nie
+				powinien być traktowany na równi z zaspokajaniem potrzeb jedzenia czy picia. Choć dziewictwo jest
+				wspaniałą cnotą, mimo wszystko jest poddawane wielu kontrowersjom - dla niektórych powód do wielkiej
+				dumy, dla innych wstyd. Dlatego ten dzień świętujmy zgodnie z własnymi przekonaniami.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="10" month="12">
+		<holiday id="565" usual="false">
+			<name>Dzień Odlewnika</name>
+			<description/>
+			<link/>
+		</holiday>
+		<holiday id="566" usual="false">
+			<name>Dzień Bota</name>
+			<description>Dziś "Dzień Bota" - technologii, której historia rozpoczęła się w latach 60. XX w. Zakres
+				obszaru wykorzystywania stale się poszerza.Boty powoli zastępują pracę ludzką przejmując rolę
+				automatycznych asystentów głosowych w wielu dziedzinach.Z jednej strony zagrożenie, z drugiej jednak
+				niewątpliwie to nalepszy rozmówca, który nigdy nie pozostawił Nas bez odpowiedzi.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="11" month="12">
+		<holiday id="567" usual="false">
+			<name>Dzień Chruścików</name>
+			<description>Niech nazwa dzisiejszego święta nie napędza Nam apetytu bowiem chruściki to nie tylko wypiek
+				Naszych babć serwowany na tłusty czwartek. Chruściki to także małe owady czyniące wiele dobrego dla
+				całego ekosystemu. Pomysłodawcą jest Lech Pietrzak. W 2002 r. na antenie radiowej Trójki wyszedł z
+				inicjatywą uczczenia tych sympatycznych stworzonek, którym niestety grozi wyginięcie.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="12" month="12">
+		<holiday id="568" usual="false">
+			<name>Święto Konstytucji Rosji</name>
+			<description>W 1993 r. za sprawą ogólnonarodowego referendum Rosja będąca dotychczas pod wpływem
+				konstytucjonalizmu radzieckiego przekształciła się w państwo demokratyczne. Przez taką decyzję
+				zapewniona została stabilizacja - od tego dnia piecze nad rządem sprawuje prezydent i parlament.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="13" month="12">
+		<holiday id="569" usual="false">
+			<name>Dzień Księgarza</name>
+			<description>Księgarz - zawód, który kiedyś miał istotne znaczenie dla rozwoju i upowszechniania
+				czytelnictwa powoli brzmi jak abstrakcja.Nie pomaga panująca niechęć do czytania ani dominacja rynku
+				e-commerce. Nie pozwólmy jednak aby świat księgarski stał się wspomnieniem - wizyta w osiedlowym domu
+				książki może być ciekawym doświadczeniem a życzliwość osób tam pracujących na pewno zachęci do
+				odwiedzania tego miejsca ponownie.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="570" usual="false">
+			<name>Dzień Telewizji Dla Dzieci</name>
+			<description>Nie bez powodu "Dzień Telewizji Dla Dzieci" obchodzi się właśnie dziś.W 1981 r. tuż o poranku
+				milusińskich nie przywitał tradycyjnie emitowany "Teleranek". Brak wyczekiwanej audycji stał się dla
+				wszystkich dzieci tamtego okresu synonimem stanu wojennego w Polsce. Obecnie święto to ma wydźwięk
+				pozytywny. Bajki mają wiele zalet, są nie tylko elementem rozrywkowym ale też edukacyjnym dzięki czemu
+				przyciągają także widzów dorosłych.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="15" month="12">
+		<holiday id="571" usual="false">
+			<name>Dzień Ludwika Zamenhofa</name>
+			<description>Bonan matenon, Amataj! Dziś kartka w kalendarzu przypomina Nam o białostockim okuliście, twórcy
+				języka esperanto, Ludwiku Zamenhofie. Historia samego święta ma swój początek w latach dwudziestych, XX
+				w. kiedy to w głowie ambitnego doktora narodził się pomysł na stworzenie własnego języka pomocniczego.
+				Choć głównym celem miało być ułatwienie komunikacji międzynarodowej to jednak z perspetywy czasu
+				doprowadził on do podzielenia ludności. Mimo to, na świecie entuzjastów tego języka nie brakuje. Może i
+				Ty dziś do nich dołączysz?
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="17" month="12">
+		<holiday id="572" usual="false">
+			<name>Dzień Bez Przekleństw</name>
+			<description>Dziś wszelkim brzydkim słowom i wulgaryzmom mówimy stanowcze NIE! "Dzień Bez Przekleństw" jest
+				idealną okazją aby zastanowić się nad tym w jaki sposób można wyrazić zarówno te negatywne jak i
+				pozytywne emocje. I choć bywa tak, że często zapominamy o dobrych manierach i kulturze osobistej to dziś
+				postarajmy się skupić i docenić piękno Naszej mowy świętując ten dzień zgodnie z przeznaczeniem. Ciekawe
+				jak długo Ty wytrzymasz...?
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="18" month="12">
+		<holiday id="573" usual="false">
+			<name>Międzynarodowy Dzień Emigrantów</name>
+			<description>Choć czasy prawdziwego American Dream powoli stają się przeszłością, wydarzenie jakie zajmuje
+				to miejsce w kalendarzu zasługuje na wyjątkową pamięć - dziś "Międzynarodowy Dzień Emigrantów".Święto
+				ustanowione przez ONZ 4 grudnia 2000 r. opiera się na powstałej 18 grudnia 1990 r.międzynarodowej
+				konwencji ochrony praw emigrantów. Na świecie liczba osób wyruszających w nieznane,poszukujących
+				lepszego życia z roku na rok wzrasta.Rzeczywistość z jaką idzie im się zmierzyć okazuje się niekiedy
+				mylna dlatego też dziś mamy możliwość podzielenia się własnymi odczuciami, doświadczeniami jednocześnie
+				okazując wsparcie i szacunek dla pracowników emigracyjnych.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="20" month="12">
+		<holiday id="574" usual="false">
+			<name>Dzień Ryby</name>
+			<description>Ustanowiony w 2003 r. przez Stowarzyszenie Empatia i Fundację Viva "Dzień Ryby" nie bez powodu
+				ma swoje następstwo jeszcze przed rozpoczęciem przedświątecznej gorączki – dziś w wielu miejscowościach
+				organizowane są happeningi, których przesłaniem jest zastanowienie się nad warunkami i traktowaniem
+				żywych karpi w sklepach zanim te pojawią się na Naszym wigilijnym stole.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="21" month="12">
+		<holiday id="575" usual="false">
+			<name>Światowy Dzień Pozdrawiania Brunetek</name>
+			<description>"Brunteki, blondynki - ja wszystkie was dziewczynki całować chcę…" śpiewał Jan Kiepura. Dziś
+				jednak dzień należy do tych właścicielek pięknych, kruczoczarnych kosmyków, które postrzegane są jako
+				kobiety inteligentne, niezależne, o silnym charakterze. Badania pokazują też, że osiągają one większe
+				sukcesy na wielu płaszczyznach – zatem Panowie, nie szczędźcie pozdrowień!
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="576" usual="false">
+			<name>Dzień Orgazmu</name>
+			<description>"Make love, not war" brzmi hipisowskie hasło, które odgrywa szczególną rolę w historii
+				tworzenia dzisiejszego, zbiegającego się z przesileniem zimowym święta – nie bez powodu zresztą.
+				Wyjątkowa kartka z kalendarza oznajmia, że dziś "Dzień Orgazmu". Według twórców ten element miłosnych
+				uniesień ma dać początek pokoju na całym świecie a tym samym sprawiać ludziom przyjemność z życia. Zatem
+				zdobywajmy szczyty i wyzwalajmy pokojową energię jądrową w zaciszu domowym około godziny 21:44. Do
+				dzieła!
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="577" usual="true">
+			<name>Początek Astronomicznej Zimy</name>
+			<description>Zegary wcale nie przyśpieszyły – dziś "Początek Astronomicznej Zimy" a więc najkrótszy dzień w
+				całym roku potocznie nazywany przesileniem zimowym.Swą wielką wędrówkę po nieboskłonie odbyła właśnie
+				Nasza Gwiazda umiejscawiając się gdzieś nad zwrotnikiem Koziorożca. Zjawisko to obserwowane już w
+				starożytności było źródłem ustanowienia wielu świąt – pośrednio odpowiada za umiejscowienie w kalendarzu
+				i tradycje Bożego Narodzenia,które przypada na 25 grudnia bowiem tego dnia w III w. Rzym świętował
+				"Dzień Narodzin Niepokonanego Słońca".
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="22" month="12">
+		<holiday id="578" usual="false">
+			<name>Dzień Loterii Świątecznej w Hiszpanii</name>
+			<description>Dziś wesprzyj swoje szczęście i kup los celebrując tym samym "Dzień Loterii Świątecznej w
+				Hiszpanii". Pula jest wyjątkowo wartościowa – w 2012 r. odnotowano 180 wygranych pierwszego stopnia
+				wypłacając tym samym 4 miliony euro za kupon. Spiesz się jednak, bo mieszkańcy tego kraju już dawno
+				rozpoczęli walkę aby w końcu spełnić swoje największe marzenia – sklepik na ulicy San Bernardo
+				przechodzi prawdziwy szturm.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="579" usual="false">
+			<name>Święto Godowe (Słowianie)</name>
+			<description>Wszelkie wątpliwości o tym ile jest starej wiary w Bożym Narodzeniu z pewnością rozwieje istota
+				Święta Godowego, które dziś ma swoją pamięć. Nasi słowiańscy sąsiedzi uznają ten dzień za początek
+				nowego roku słonecznego, liturgicznego i wegetacyjnego. Następstwem stoczonej walki światła z ciemnością
+				jest trwające przesilenie zimowe będące symbolem nadziei i radości. Gody zatem są czasem przejściowym
+				kiedy to stary cykl właśnie kończy swą podróż by nowy mógł się narodzić.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="580" usual="false">
+			<name>Dzień Jedności Zimbabwe</name>
+			<description>Dziś "Dzień Jedności Zimababwe" upamiętniający scalenie się dwóch wiecznie uciśnionych przez
+				Rodezyjski Rząd Kolonialny partii ZANI i ZAPU. Poprzez połączenie sił w walce z narastającym reżimem w
+				państwie doprowadzili do obalenia rządów Iana Smitha.Przedstawiciele obu wspomnianych partii - Mugabe i
+				Nkomo w 1987 r. przyjęli pozycję prezydenta i premiera Zimbabwe tworząc marksistowskie ZANU-PF.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="23" month="12">
+		<holiday id="581" usual="false">
+			<name>Światowy Dzień Snowboardu</name>
+			<description>Fanatycy sportów ekstremalnych chwytajcie za deskę i czym prędzej na stok! Dziś Światowy Dzień
+				Snowboardu. Za istnienie tej dyscypliny sportu można podziękować Amerykaninowu Shermanowi Poppen, który
+				w 1965r.wymyślił "snurfera".Choć sam event jest wpisany w kalendarze tylko 22 krajów – w Polsce niestety
+				nie, to w niczym nie przeszkadza pozostałym miłośnikom snowboardu odpowiednio to świętować. Wszystko
+				jednak, jak wiadomo – z rozwagą.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="24" month="12">
+		<holiday id="582" usual="false">
+			<name>Dzień Raju</name>
+			<description>Tego wieczoru Raj stąpi na ziemię. Według wierzeń Naszych przodków Dzień Raju jest chwilą
+				pojednania się świata żywych i zmarłych.Podczas wspólnej wieczerzy praktykowano zachowanie rozwagi aby
+				nie usiąść na kolanach zmarłego, nie zakłócać ich ciszy i spokoju w porze południowej. Za oknem
+				natomiast nie miało dziwić pojawienie się pod śnieżną pierzyną kwitnących kwiatów, drzew, zwierząt czy
+				pszczół,które wybudziły się ze snu zimowego aby złożyć pokłony Dzieciątku.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="583" usual="true">
+			<name>Wigilia Bożego Narodzenia</name>
+			<description>Dziś jest wyjątkowy dzień a właściwie wieczór rozpoczynający świąteczną podróż, na którą czeka
+				chyba każdy z Nas. Nie dziwić powinien widok przymarzniętych nosków dzieci na szybach, które z
+				niecierpliwością wypatrują Pierwszej Gwiazdki. W tle przygrywa kolęda, na stołach już ugoszczono 12
+				potraw symbolizujących płody ziemi, pod choinką stosy prezentów - wydaje się, że ktoś był grzeczny w tym
+				roku. Wszyscy ubrani inaczej niż zwykle łamią się opłatkiem życząc sobie "wzajemnie". Ten magiczny czas
+				spędź w gronie rodziny i najbliższych pamiętając również o dodatkowym nakryciu dla zbłąkanego wędrowca.
+				Praktykuj tę tradycję, która jest wyrazem solidarności z ludźmi samotnie przeżywających święta. Ponadto
+				próbuj wszystkiego i mimo uczucia sytości nie odmawiaj Babci kolejnej dokładki serniczka.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="25" month="12">
+		<holiday id="584" usual="false">
+			<name>Dzień Kuaid-e-Azama</name>
+			<description>Dziś to Pakistańczycy obchodzą swoje święto narodowe ku czci Kuaid-e-Azama. Człowiek ten był
+				znany jako pierwszy generalny gubernator Pakistanu, który za cel postawił sobie stworzenie rządu i
+				odpowiednich praw politycznych. Po jego śmierci jednak losy suwerennego państwa odeszły w niepamięć choć
+				nie można tego powiedzieć o dacie narodzin tego polityka - rodowici Pakistańczycy właśnie dziś dumnie ją
+				honorują.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="585" usual="true">
+			<name>Boże Narodzenie (pierwszy Dzień)</name>
+			<description>Jeśli obudziłeś się bez porannego głodu a na języku wyczuwasz jeszcze nutkę smaków wczorajszego
+				obfitego posiłku to znak, że dziś Pierwszy Dzień Świąt – Boże Narodzenie.Według tradycji
+				chrześcijańskiej to święto upamiętniające narodziny Jezusa Chrystusa. Nie odbiegaj jednak od ogólnego
+				harmonogramu takich chwil – sałatka jarzynowa się sama nie zje, pierogi czekają, no i ten serniczek
+				Babci…
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="26" month="12">
+		<holiday id="586" usual="true">
+			<name>Boże Narodzenie (drugi Dzień)</name>
+			<description>Maraton świąteczny powoli dobiega końca.Dziś Drugi Dzień Świąt obchodzony na pamiątkę
+				pierwszego męczennika za wiarę chrześcijańską - św. Szczepana. Jeśli w lodówce świeci niemalże pustkami
+				możesz w końcu odetchnąć z ulgą. Przysiądź na kanapie, złap pilota bo może właśnie leci w telewizji
+				Kevin. W końcu tradycja to tradycja.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="27" month="12">
+		<holiday id="587" usual="false">
+			<name>Dzień Odpoczynku Po Świętach</name>
+			<description>Święta, święta i...kolejne święta.Dziś obchodzimy "Dzień Odpoczynku Po Świętach" - złap oddech
+				po bożonarodzeniowych zakupach i dzielnie wystanych kolejkach po karpia, wywalczonych burakach na
+				barszcz i kapuście na farsz, stoczonej walce z piętrzącym się kurzem, odbytych niekiedy bużliwych
+				dyskusjach przy stole.Po prostu usiądź, pomyśl o sobie,to jest ten czas by nabrać sił na nadchodzącą
+				przyszłość.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="28" month="12">
+		<holiday id="588" usual="false">
+			<name>Międzynarodowy Dzień Pocałunku</name>
+			<description>Do trzech razy sztuka! Zgodzisz się jednak ze mną, że taki dzień mógłby być codziennie?
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="29" month="12">
+		<holiday id="589" usual="false">
+			<name>Dzień Narodzin Niedźwiedzi Polarnych</name>
+			<description>I te urocze misie doczekały się swojego święta - dziś "Dzień Narodzin Niedźwiedzi Polarnych".
+				Jednak nie bez powodu - 27 grudnia 2006 roku Departament Zasobów Wewnętrznych Stanów Zjednoczonych uznał
+				te niezwykłe zwierzęta jako zagrożone wymarciem i dokonał stosownego wpisu na listę. Między innymi w
+				wyniku praktyk kłusowniczych czy globalnego ocieplenia populacja niedźwiedzi polarnych zmniejsza się z
+				roku na rok. Okres zimowy wiąże się z ich narodzinami dlatego świętujmy ten dzień inaczej niż zwykle -
+				wybierzmy rower zamiast samochodu, gaśmy światło jeśli wychodzimy z pomieszczenia…Chrońmy przyrodę.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="30" month="12">
+		<holiday id="590" usual="false">
+			<name>Dzień Serka Wiejskiego</name>
+			<description>Serek wiejski - naturalny, ze szczypiorkiem, w towarzystwie miodu czy dżemu, grający pierwsze
+				skrzypce na wielu stołach po solidnej, świątecznej rozpuście. O jego istnieniu nie powinny zapominać
+				także osoby zmagające się z cukrzycą oraz dbające o swoją sylwetkę. Nie bez powodu jego święto
+				uplasowało się w grudniu – ziarnista struktura oraz kolor z pewnością przypomina śnieg będący z roku na
+				rok coraz to rzadszym zjawiskiem.W końcu…taki mamy klimat.
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="591" usual="false">
+			<name>Dzień José Rizala</name>
+			<description>Jeśli postać José Rizala nie jest Ci znana to tego dnia się to zmieni. Rodowity Filipińczyk, z
+				wykształcenia okulista, w sercu jednak własny kraj i walka o równorzędną prowincję. Przez swoje poglądy
+				został ogłoszony wrogiem narodu, deportowany a następnie skazany na śmierć - ten bohater oddał życie w
+				słusznej sprawie wypowiadając ostatnie słowa "to się skończyło".
+			</description>
+			<link/>
+		</holiday>
+	</day>
+	<day day="31" month="12">
+		<holiday id="592" usual="false">
+			<name>Dzień Bez Bielizny</name>
+			<description>Dziś "Dzień Bez Bielizny" dlatego dylemat związany z doborem tego elementu kreacji sylwestrowej
+				możesz pominąć. Nie pozwól aby ograniczały Cię fiszbiny, obszywki czy tasiemki. Tej nocy daj porwać się
+				szampańskiej zabawie - stań się prawdziwym Królem/Królową Parkietu a z całą pewnością trudno będzie
+				oderwać od Ciebie wzrok!
+			</description>
+			<link/>
+		</holiday>
+		<holiday id="593" usual="true">
+			<name>Sylwester</name>
+			<description>Ostatni dzień roku należy pożegnać hucznie – dziś Sylwester, dawniej nazwany również "tłustą
+				wigilią" ze względu na suto zastawiane stoły mięsnymi potrawami jako znak wiary, że w nowym roku ludzie
+				nie doświadczą uczucia głodu. Zatem nie szczędź toastów, zabaw, bali i sztucznych ogni. Nie martw się
+				jutrem - celebruj ten czas z najbliższymi, Dwójką czy Polsatem a kwintesencją niech będzie niezliczona
+				liczba bąbelków musujących w kieliszku tuż o północy.
+			</description>
+			<link/>
+		</holiday>
+	</day>
+</calendar>
