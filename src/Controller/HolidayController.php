@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Holiday;
 use App\Service\HolidayService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,15 +19,24 @@ class HolidayController extends AbstractController {
 
 	#[Route('/{lang}', name: 'get_all', methods: ['GET'])]
 	public function getAll(string $lang): Response {
-		$response = new JsonResponse($this->holidayService->getHolidays($this->holidayService->getLanguage($lang)));
-		$response->setEncodingOptions($response->getEncodingOptions() | JSON_PRETTY_PRINT);
+		/**
+		 * @var Holiday[] $holidays
+		 */
+		$holidays = $this->holidayService->getHolidays($this->holidayService->getLanguage($lang));
+		$response = new JsonResponse(json_encode($holidays));
+		$response->headers->set('Content-Length', strlen(json_encode($holidays, JSON_PRETTY_PRINT)));
 		return $response;
 	}
 
 	#[Route('/{lang}/{id}', name: 'get_one', methods: ['GET'])]
 	public function getOne(string $lang, int $id): Response {
-		$response = new JsonResponse($this->holidayService->getHoliday($this->holidayService->getLanguage($lang), $id));
+		/**
+		 * @var Holiday $holiday
+		 */
+		$holiday = $this->holidayService->getHoliday($this->holidayService->getLanguage($lang), $id);
+		$response = new JsonResponse($holiday);
 		$response->setEncodingOptions($response->getEncodingOptions() | JSON_PRETTY_PRINT);
+		$response->headers->set('Content-Length', strlen(json_encode($holiday, JSON_PRETTY_PRINT)));
 		return $response;
 	}
 }
