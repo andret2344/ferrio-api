@@ -23,7 +23,7 @@ class HolidayController extends AbstractController {
 		return $response;
 	}
 
-	#[Route('/{lang}/{id}', name: 'get_all', methods: ['GET'])]
+	#[Route('/{lang}/{id}', name: 'get_one', methods: ['GET'])]
 	public function getOne(string $lang, int $id): Response {
 		$response = new JsonResponse($this->holidayService->getHoliday($this->holidayService->getLanguage($lang), $id));
 		$response->setEncodingOptions($response->getEncodingOptions() | JSON_PRETTY_PRINT);
