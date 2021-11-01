@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Language;
 use App\Service\HolidayService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,10 +23,8 @@ class LanguageController extends AbstractController {
 		 * @var Language[] $languages
 		 */
 		$languages = $this->holidayService->getLanguages();
-		$response = new JsonResponse($languages);
-		$response->setEncodingOptions($response->getEncodingOptions() | JSON_PRETTY_PRINT);
-		$response->headers->set('Content-Length', strlen(json_encode($languages, JSON_PRETTY_PRINT)));
-		return $response;
+		$json = json_encode($languages);
+		return new Response($json, Response::HTTP_OK, ['Content-Length' => strlen($json)]);
 	}
 
 	#[Route('/{lang}', name: 'get_one', methods: ['GET'])]
@@ -39,9 +36,7 @@ class LanguageController extends AbstractController {
 		if ($language === null) {
 			throw new NotFoundHttpException();
 		}
-		$response = new JsonResponse($language);
-		$response->setEncodingOptions($response->getEncodingOptions() | JSON_PRETTY_PRINT);
-		$response->headers->set('Content-Length', strlen(json_encode($language, JSON_PRETTY_PRINT)));
-		return $response;
+		$json = json_encode($language);
+		return new Response($json, Response::HTTP_OK, ['Content-Length' => strlen($json)]);
 	}
 }
