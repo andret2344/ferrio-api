@@ -93,7 +93,7 @@ class HolidayService {
 				$description = $element->getElementsByTagName("description")[0]->nodeValue;
 				$usual = $element->attributes->getNamedItem("usual")->nodeValue;
 				$link = $element->getElementsByTagName("link")[0]->nodeValue;
-				$holidays[] = new Holiday($id, $name, $description, $usual, $link);
+				$holidays[] = new Holiday($id, $name, $description, filter_var($usual, FILTER_VALIDATE_BOOLEAN), $link);
 			}
 			$days[] = new HolidayDay($day, $month, $holidays);
 		}
@@ -124,7 +124,7 @@ class HolidayService {
 					$description = $element->getElementsByTagName("description")[0]->nodeValue;
 					$usual = $element->attributes->getNamedItem("usual")->nodeValue;
 					$link = $element->getElementsByTagName("link")[0]->nodeValue;
-					return new Holiday($id, $name, $description, $usual, $link);
+					return new Holiday($id, $name, $description, filter_var($usual, FILTER_VALIDATE_BOOLEAN), $link);
 				}
 			}
 		}
