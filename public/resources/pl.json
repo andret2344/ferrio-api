@@ -6,7 +6,7 @@
             {
                 "id": 1,
                 "name": "Światowy Dzień Kaca",
-                "description": "Data tego święta nie jest przypadkowa. Czy można wyobrazić sobie lepszy powód do świętowania na całym świecie niż początek nowego roku? Tego dnia Kac Morderca nie zadziwi nikogo!",
+                "description": "Data tego święta nie jest przypadkowa. Czy można wyobrazić sobie lepszy powód do świętowania na całym świecie niż początek nowego roku? Tego dnia Kac Morderca nie zadziwi nikogo.",
                 "usual": false,
                 "link": ""
             },
@@ -20,14 +20,14 @@
             {
                 "id": 3,
                 "name": "Dzień Domeny Publicznej",
-                "description": "Każdy z nas spotkał się z pojęciem \"prawa autorskiego\", zapewne wielu też spotkało się zprawami autorskimi obowiązującymi pośmiertnie. Każde z takich praw autorskich liczone jest od pierwszego dnia roku następującego po śmierci autora. Tego samego dnia prawa te mogą się przedawnić, a dzieło autorskie zostać przekazane Domenie Publicznej. Pierwszy raz święto to zostało wspomniane w rou 2004 w Kanadzie.",
+                "description": "Każdy z nas spotkał się z pojęciem \"prawa autorskiego\", zapewne wielu też spotkało się z prawami autorskimi obowiązującymi pośmiertnie. Każde z takich praw autorskich liczone jest od pierwszego dnia roku następującego po śmierci autora. Tego samego dnia prawa te mogą się przedawnić, a dzieło autorskie zostać przekazane Domenie Publicznej. Pierwszy raz święto to zostało wspomniane w roku 2004 w Kanadzie.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 4,
                 "name": "Nowy Rok",
-                "description": "Cóż tu wiele mówić? Nowy Rok świętować należy hucznie, w końcu wszyscy się starzejemy. Ale na pocieszenie: Krzysztof Ibisz także!",
+                "description": "Co tu wiele mówić? Nowy Rok świętować należy hucznie, w końcu wszyscy się starzejemy. Ale na pocieszenie: Krzysztof Ibisz także!",
                 "usual": true,
                 "link": ""
             }
@@ -40,7 +40,7 @@
             {
                 "id": 5,
                 "name": "Dzień Przodków na Haiti",
-                "description": "???",
+                "description": "",
                 "usual": false,
                 "link": ""
             }
@@ -53,7 +53,7 @@
             {
                 "id": 6,
                 "name": "Święto Powstania Ludowego w Burkina Faso",
-                "description": "Burkina Faso to mniejsze z państw Afryki bez dostępu do morza. Powstanie Ludowe miało miejsce wroku 1966 i było reakcją na kryzys gospodarczy państwa, w którym się znalazło z powodu nieudolnych rądów ówczesnego (oraz pierwszego) prezydenta i premiera tego kraju. Stanowisko to piastował wówczas Maurice Yaméogo.",
+                "description": "Burkina Faso to mniejsze z państw Afryki bez dostępu do morza. Powstanie Ludowe miało miejsce w roku 1966 i było reakcją na kryzys gospodarczy państwa, w którym się znalazło z powodu nieudolnych rżądów ówczesnego (oraz pierwszego) prezydenta i premiera tego kraju. Stanowisko to piastował wówczas Maurice Yaméogo.",
                 "usual": false,
                 "link": ""
             }
@@ -66,7 +66,7 @@
             {
                 "id": 7,
                 "name": "Urodziny Króla Samoa",
-                "description": "Nic dodać, nic ująć, król Malietoa Tanumafili II urodzony w 1913 roku był królem państa Samoa od roku ogłoszenia tego państwa niepodległym (1962) do śmierci (2007). W dniu śmierci był najstarszym władcą na świecie.",
+                "description": "Nic dodać, nic ująć, król Malietoa Tanumafili II urodzony w 1913 roku był królem państwa Samoa od roku ogłoszenia tego państwa niepodległym (1962) do śmierci (2007). W dniu śmierci był najstarszym władcą na świecie.",
                 "usual": false,
                 "link": ""
             }
@@ -79,7 +79,7 @@
             {
                 "id": 8,
                 "name": "Joma Shinji w Japonii",
-                "description": "To japońskie święto oznacza \"rytuał wyparcia się zła\". Ma on niespełna tysiącletnią tradycję, a podczas jego trwania, panowie ubrani w kimona strzelają z łuków do tarcz. Symboliką tego pokazu jest pokonanie samego Szatana, gdyż każda z tarcz od tyłu posiada napis oznaczajacy diabła, a same strzały postrzegane są jako zdolne do niszczenia zła.",
+                "description": "To japońskie święto oznacza \"rytuał wyparcia się zła\". Ma on niespełna tysiącletnią tradycję, a podczas jego trwania, panowie ubrani w kimona strzelają z łuków do tarcz. Symboliką tego pokazu jest pokonanie samego Szatana, gdyż każda z tarcz od tyłu posiada napis oznaczający diabła, a same strzały postrzegane są jako zdolne do niszczenia zła.",
                 "usual": false,
                 "link": ""
             }
@@ -92,7 +92,7 @@
             {
                 "id": 9,
                 "name": "Dzień Filatelisty",
-                "description": "\"Filatelista\" to z j. greckiego osoba z zamiłowaniem do zbierania znaczków pocztowych. Tegodnia w roku 1893 w Krakowie powołane zostało stoważyszenie \"Klub Filatelistów\".",
+                "description": "\"Filatelista\" to z j. greckiego osoba z zamiłowaniem do zbierania znaczków pocztowych. Tego dnia w roku 1893 w Krakowie powołane zostało stowarzyszenie \"Klub Filatelistów\".",
                 "usual": false,
                 "link": ""
             },
@@ -114,7 +114,7 @@
                 "name": "Dzień Dziwaka",
                 "description": "Studenci amerykańskiej uczelni otrzymali od profesora Philipa Zambardo wykładającego wówczas psychologię, by tego dnia ubrać się w głupie, odrażające stroje i tak też się zachowywać. Sam przeobraził się w kobietę na czas swoich wykładów.",
                 "usual": false,
-                "link": "https:\/\/gim7.edu.lodz.pl\/wp-content\/uploads\/2015\/03\/Dzie%C5%84-dziwaka.pdfhttps:\/\/archiwalny-turysta.swietokrzyski.eu\/blog\/AZJA\/7-stycznia-swietujemy-Dzien-Dziwaka-s2674.html"
+                "link": "https:\/\/gim7.edu.lodz.pl\/wp—content\/uploads\/2015\/03\/Dzie%C5%84—dziwaka.pdfhttps:\/\/archiwalny—turysta.swietokrzyski.eu\/blog\/AZJA\/7—stycznia—swietujemy—Dzien—Dziwaka—s2674.html"
             }
         ]
     },
@@ -151,7 +151,7 @@
             {
                 "id": 14,
                 "name": "Święto Suwerenności Ludowej (Benin)",
-                "description": "???",
+                "description": "",
                 "usual": false,
                 "link": ""
             },
@@ -171,7 +171,7 @@
             {
                 "id": 16,
                 "name": "Dzień Wegetarian",
-                "description": "???",
+                "description": "",
                 "usual": false,
                 "link": ""
             }
@@ -184,7 +184,7 @@
             {
                 "id": 17,
                 "name": "Dzień Upamiętnienia Rewolucji Zanzibaru",
-                "description": "Jeszcze zanim na mapie pojawiła się Tanzania, Zanzibar był niezalżnym państwem. W roku 1964 obalono Sułtanat, oraz proklamacji Ludowej Republiki Zanzibaru i Pemby. Wynikiem takich działań, Zaznibar połączył się z Tanganiką, w wyniku czego powstała Zjednoczona Republika Tanzanii.",
+                "description": "Jeszcze zanim na mapie pojawiła się Tanzania, Zanzibar był niezależnym państwem. W roku 1964 obalono Sułtanat, oraz proklamacji Ludowej Republiki Zanzibaru i Pemby. Wynikiem takich działań, Zaznibar połączył się z Tanganiką, w wyniku czego powstała Zjednoczona Republika Tanzanii.",
                 "usual": false,
                 "link": ""
             }
@@ -197,7 +197,7 @@
             {
                 "id": 18,
                 "name": "Dzień Wzajemnej Adoracji",
-                "description": "Czymże jest adoracja? Adorować to znaczy zachwycać się kimś, starać się o czyjeś względy, myśleć o tej osobie bezkrytycznie i skupiać się jedynie na jej zaletach. Czy wobez tego każdy powinien być adorowany? Z tego wynika, że owszem.",
+                "description": "Czymże jest adoracja? Adorować to znaczy zachwycać się kimś, starać się o czyjeś względy, myśleć o tej osobie bezkrytycznie i skupiać się jedynie na jej zaletach. Czy wobec tego każdy powinien być adorowany? Z tego wynika, że owszem.",
                 "usual": false,
                 "link": ""
             }
@@ -210,14 +210,14 @@
             {
                 "id": 19,
                 "name": "Dzień Ukrytej Miłości",
-                "description": "Dokładnie miesiąc przed znanym wszystkim Dniem Zakochanych, to właśnie dzisiaj jest najlepszy dzień na wyznanie skrywanej miłości drugiej osobie. Kto wie, być może ten dzień bedzie rewolucją w nazym życiu?",
+                "description": "Dokładnie miesiąc przed znanym wszystkim Dniem Zakochanych, to właśnie dzisiaj jest najlepszy dzień na wyznanie skrywanej miłości drugiej osobie. Kto wie, być może ten dzień będzie rewolucją w naszym życiu?",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 20,
                 "name": "Dzień Osób Nieśmiałych",
-                "description": "Czyż nie onieśmiela panów przepiękna kobieta, która oczekuje na reakcję? Czyż panie nie czują zakłopotania, kiedy przystony mężczyzna spogląda gęboko w oczy? Nieśmiałość jest w każdym z nas - nieraz większa, nieraz mniejsza, jendak aż 93% z nas doświadczyło tego uczucia przynajmniej raz w ciągu życia. To z jej pomocą zamiast precyzyjnego pytania o plany na wieczór z ust wydobywa się niezrozumiały bełkot, a policzki pokrywa rumieniec.",
+                "description": "Czyż nie onieśmiela panów przepiękna kobieta, która oczekuje na reakcję? Czyż panie nie czują zakłopotania, kiedy przystojny mężczyzna spogląda głęboko w oczy? Nieśmiałość jest w każdym z nas — nieraz większa, nieraz mniejsza, jednak aż 93% z nas doświadczyło tego uczucia przynajmniej raz w ciągu życia. To z jej pomocą zamiast precyzyjnego pytania o plany na wieczór z ust wydobywa się niezrozumiały bełkot, a policzki pokrywa rumieniec.",
                 "usual": false,
                 "link": ""
             }
@@ -243,7 +243,7 @@
             {
                 "id": 22,
                 "name": "Dzień Pikantnych Potraw",
-                "description": "Jedzenie pikantnych potraw jest zdrowe, a ponadto poprawia samopoczucie. Sam pikantny smak nas rozgrzewa, co w chłodne zimowe wieczory jest jak najbardziej wskazane. Powoduje też większe pragnienie, dzięki czemu lepiej wyrównujemu hydrację organizmu. Co więcej, pikantne potrawy szybciej sycą, więc jemy ich mniej. Nie żałujmy więc papryki, papryczek chili, curry czy nawet pieprzu, nie zapomnijmy też o sosie Tabasco. Smacznego!",
+                "description": "Jedzenie pikantnych potraw jest zdrowe, a ponadto poprawia samopoczucie. Sam pikantny smak nas rozgrzewa, co w chłodne zimowe wieczory jest jak najbardziej wskazane. Powoduje też większe pragnienie, dzięki czemu lepiej wyrównujemy nawodnienie organizmu. Co więcej, pikantne potrawy szybciej sycą, więc jemy ich mniej. Nie żałujmy więc papryki, papryczek chili, curry czy nawet pieprzu, nie zapomnijmy też o sosie Tabasco. Smacznego!",
                 "usual": false,
                 "link": ""
             }
@@ -256,7 +256,7 @@
             {
                 "id": 23,
                 "name": "Dzień Dialogu z Judaizmem",
-                "description": "Konferencja Episkopatu Polski w 1997 ustanowiła to święto, którego celem jest poznanie religii Judaizmu oraz budowanie z nią więzi. Organizowane są różneo rodzaju atrakcje, takie jak nabożeństwa, koncerty muzyki czy nawet zwiedzanie synagog.",
+                "description": "Konferencja Episkopatu Polski w 1997 ustanowiła to święto, którego celem jest poznanie religii Judaizmu oraz budowanie z nią więzi. Organizowane są różnego rodzaju atrakcje, takie jak nabożeństwa, koncerty muzyki czy nawet zwiedzanie synagog.",
                 "usual": false,
                 "link": ""
             }
@@ -269,7 +269,7 @@
             {
                 "id": 24,
                 "name": "Dzień Kubusia Puchatka",
-                "description": "\"Jaki dziś dzień – zapytał Puchatek, – Dziś – odpowiedział Prosiaczek. Na to Puchatek: – To mój ulubiony dzień...\". Ulubiony i ważny również dla najmodszych, bowiem związany jest z datą urodzenia jego twórcy: Aleksandra Milne'a (1882) , który pierwszą książkę o przygodach żółtego amatora miodu wydał wroku 1925.",
+                "description": "\"Jaki dziś dzień\" zapytał Puchatek. \"Dziś\" odpowiedział Prosiaczek. Na to Puchatek: \"To mój ulubiony dzień...\". Ulubiony i ważny również dla najmłodszych, bowiem związany jest z datą urodzenia jego twórcy: Aleksandra Milne'a (1882), który pierwszą książkę o przygodach żółtego amatora miodu wydał w roku 1925.",
                 "usual": false,
                 "link": ""
             }
@@ -308,14 +308,14 @@
             {
                 "id": 27,
                 "name": "Dzień Babci",
-                "description": "Każdy zna popularne święto, którego celem jest uhonorowanie naszych babć, wówczas wnuki składają im życzenia. Pomysł pojawił się w tygodniuku \"Kobieta i Życie\" w 1964 roku. Rok później pomysł przejął \"Express Poznański\", a w kolejnym roku \"Ekspress Wieczorny\" ogłosił ten dzień Dniem Babci.",
+                "description": "Każdy zna popularne święto, którego celem jest uhonorowanie naszych babć, wówczas wnuki składają im życzenia. Pomysł pojawił się w tygodniku \"Kobieta i Życie\" w 1964 roku. Rok później pomysł przejął \"Express Poznański\", a w kolejnym roku \"Ekspress Wieczorny\" ogłosił ten dzień Dniem Babci.",
                 "usual": true,
                 "link": ""
             },
             {
                 "id": 28,
                 "name": "Dzień Errola Barrowa na Barbados",
-                "description": "Urodzony w roku 1920, polityk, dwukrotny premier. Był wielkim czlowiekiem dla swojego kraju, a dzień jego urodzin został ogłoszony przez parlament świętem narodowym Barbadosu.",
+                "description": "Urodzony w roku 1920, polityk, dwukrotny premier. Był wielkim człowiekiem dla swojego kraju, a dzień jego urodzin został ogłoszony przez parlament świętem narodowym Barbadosu.",
                 "usual": false,
                 "link": ""
             }
@@ -328,21 +328,21 @@
             {
                 "id": 29,
                 "name": "Dzień Dziadka",
-                "description": "Tego dnia wnuki skłądają życzenia w celu uhonorowania swoich dziadków. \"Ekspress Wieczorny\" rok po ogłoszeniu Dnia Babci, wskazał następujący po nim dzień jako Dzień Dziadka.",
+                "description": "Tego dnia wnuki składają życzenia w celu uhonorowania swoich dziadków. \"Ekspress Wieczorny\" rok po ogłoszeniu Dnia Babci, wskazał następujący po nim dzień jako Dzień Dziadka.",
                 "usual": true,
                 "link": ""
             },
             {
                 "id": 30,
                 "name": "Dzień Jedności Ukrainy",
-                "description": "21 stycznia 1999 roku poprzez dekret ówczesnego prezydenta Ukrainy, Leonida Kuczmy, dzień ten został ogłoszony świętem. Stało się tak ze względu na datę zjednoczenia URL i ZURL, które miało miejscetego dnia w 1919 roku.",
+                "description": "21 stycznia 1999 roku poprzez dekret ówczesnego prezydenta Ukrainy, Leonida Kuczmy, dzień ten został ogłoszony świętem. Stało się tak ze względu na datę zjednoczenia URL i ZURL, które miało miejsce tego dnia w 1919 roku.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 31,
                 "name": "Dzień Dużego Członka",
-                "description": "tym, którzy mogą dziś świętować należą się spore gratulacje, w końcu nie każdy moze pochwalićsię rozmiarem swojego przyrodzenia.",
+                "description": "Tym, którzy mogą dziś świętować, należą się spore gratulacje, w końcu nie każdy może pochwalić się rozmiarem swojego przyrodzenia.",
                 "usual": false,
                 "link": ""
             }
@@ -368,7 +368,7 @@
             {
                 "id": 33,
                 "name": "Światowy Dzień Środków Masowego Przekazu",
-                "description": "W czasach kiedy Internet nie istniał, a radio i prasa były codziennością w każdym domu, były traktowane ze szczególnym szacunkiem, jako jedyne źródła informacji. Papież paweł VI ustanowił to święto nieprzypadkowo. Jego data jest związana ze wspomnieniem w Kościele katolickim patrona dziennikarzy - św. Franciszka Selezego.",
+                "description": "W czasach kiedy Internet nie istniał, a radio i prasa były codziennością w każdym domu, były traktowane ze szczególnym szacunkiem, jako jedyne źródła informacji. Papież Paweł VI ustanowił to święto nieprzypadkowo. Jego data jest związana ze wspomnieniem w Kościele katolickim patrona dziennikarzy — św. Franciszka Selezego.",
                 "usual": false,
                 "link": ""
             }
@@ -394,14 +394,14 @@
             {
                 "id": 35,
                 "name": "Światowy Dzień Celnictwa",
-                "description": "Bruksela, rok 1953. Tgo dnia odbyła się inauguracja Światowej Organizacji Ceł - Rady Współpracy Celnej. Samo święto jest celebrowane na świecie od 1983 roku, a w Polsce od roku 1992.",
+                "description": "Bruksela, rok 1953. Tego dnia odbyła się inauguracja Światowej Organizacji Ceł — Rady Współpracy Celnej. Samo święto jest celebrowane na świecie od 1983 roku, a w Polsce od roku 1992.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 36,
                 "name": "Dzień Transpalnatcji",
-                "description": "W 1966 w I Klinice Chirurgicznej Akademii Medycznej w Warszawie dokonano pierwszego przeszczepu, który się powiódł. Bohaterem wydarzenia była nerka. Święto to obcodzone jest na cześć tego wydarzenia.",
+                "description": "W 1966 roku w I Klinice Chirurgicznej Akademii Medycznej w Warszawie dokonano pierwszego przeszczepu, który się powiódł. Bohaterem wydarzenia była nerka. Święto to obchodzone jest na cześć tego wydarzenia.",
                 "usual": false,
                 "link": ""
             }
@@ -414,14 +414,14 @@
             {
                 "id": 37,
                 "name": "Międzynarodowy Dzień Pamięci o Ofiarach Holokaustu",
-                "description": "Organizacja Narodów Zjednoczonych 1 listopada 2005 roku uchwaliła to święto na cześć ofiar Niemców podczas II Wojny Światowej. tym samym Holokaust zaczął figurować jako wydarzenie historyczne. Data nie jest przypadkowa, bowiem tego dnia wyzwolono obóz Auschwitz-Birkenau w 1945 przez Armię Czerwoną.",
+                "description": "Organizacja Narodów Zjednoczonych 1 listopada 2005 roku uchwaliła to święto na cześć ofiar Niemców podczas II Wojny Światowej. Tym samym Holokaust zaczął figurować jako wydarzenie historyczne. Data nie jest przypadkowa, bowiem tego dnia wyzwolono obóz Auschwitz—Birkenau w 1945 przez Armię Czerwoną.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 38,
                 "name": "Dzień dialogu z Islamem",
-                "description": "Święto obchodzone w Kościele katolickim, którego celem jest budowanie porozumienia z wyznawcami Islamu. W Polsce to święto obchodzone jest od 2001. Nalezy jednak pamiętać, że niezaleznie od wyznania, wszyscy modlimy się do tego samego Boga.",
+                "description": "Święto obchodzone w Kościele katolickim, którego celem jest budowanie porozumienia z wyznawcami Islamu. W Polsce to święto obchodzone jest od 2001. Należy jednak pamiętać, że niezależnie od wyznania, wszyscy modlimy się do tego samego Boga.",
                 "usual": false,
                 "link": ""
             }
@@ -434,7 +434,7 @@
             {
                 "id": 39,
                 "name": "Międzynarodowy Dzień Mobilizacji Przeciwko Wojnie Nuklearnej",
-                "description": "Jak nazwa mówi, wszyscy owinniśmy się tego dnia mobilizować, by nie dopuścić do Wojny Nuklearnej. Jeśli do niej dojdzie, nie bedzie już świata, jaki znamy.",
+                "description": "Jak nazwa mówi, wszyscy powinniśmy się tego dnia mobilizować, by nie dopuścić do Wojny Nuklearnej. Jeśli do niej dojdzie, nie będzie już świata, jaki znamy.",
                 "usual": false,
                 "link": ""
             }
@@ -506,21 +506,21 @@
             {
                 "id": 45,
                 "name": "Światowy Dzień Mokradeł",
-                "description": "Tego dnia 1971 podpisana zostałą konwencja ramsarska skupiająca się w dużej mierze na ochronie przyrody. Samo święto obchodzone jest od 1997 roku.",
+                "description": "Tego dnia 1971 podpisana została konwencja ramsarska skupiająca się w dużej mierze na ochronie przyrody. Samo święto obchodzone jest od 1997 roku.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 46,
                 "name": "Dzień Handlowca",
-                "description": "Święto wywodzące się z czasów PRLu, kiedy to pracownicy świętowali pierszą niedzielę po 29 stycznia. Od roku 1986 data się nie zmienia.",
+                "description": "Święto wywodzące się z czasów PRLu, kiedy to pracownicy świętowali pierwszą niedzielę po 29 stycznia. Od roku 1986 data się nie zmienia.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 47,
                 "name": "Dzień Świstaka (w USA)",
-                "description": "Święto obchodzone w Ameryce oraz Kanadzie na cześć świstaka amerykańskiego, zwanego świszczem. Tego dnia jeśli świstak zobaczy swój cień i nie wróci (poranek słoneczny), oznacza to kolejne 6 tygodni zimy, jeśli zaś zawróci (poranek pochmurny), zwiastuje to rychłą wiosnę. W praktyce przepowiednia ta sprawdza się w około połowie przypadków, co oznacza całkowitą losowość w wyborach świstaka.",
+                "description": "Święto obchodzone w Ameryce oraz Kanadzie na cześć świstaka amerykańskiego, zwanego świszczem. Tego dnia jeśli świstak zobaczy swój cień i nie wróci (poranek słoneczny), oznacza to kolejne 6 tygodni zimy, jeśli zaś zawróci (poranek pochmurny), zwiastuje to rychłą wiosnę. W praktyce przepowiednia ta sprawdza się około w połowie przypadków, co oznacza całkowitą losowość w wyborach świstaka.",
                 "usual": false,
                 "link": ""
             },
@@ -540,7 +540,7 @@
             {
                 "id": 49,
                 "name": "Dzień Bohaterów Mozambiku",
-                "description": "Mozambik, chcąc być niezależnym, musiał zmotywować swoich ludzi. Na ich czele stanął Eduardo Chivambo Mondlane. To on założył i przewodził Frontem WYzwolenia Mozambiku. Zginął w zamchu, kiedy to dostał anonimową przesyłkę od portugalskiego wywiadu z bombą w środku. Święto to obchodzi się w rocznicę jego śmierci.",
+                "description": "Mozambik, chcąc być niezależnym, musiał zmotywować swoich ludzi. Na ich czele stanął Eduardo Chivambo Mondlane. To on założył i przewodził Frontem Wyzwolenia Mozambiku. Zginął w zamachu, kiedy to dostał anonimową przesyłkę od portugalskiego wywiadu z bombą w środku. Święto to obchodzi się w rocznicę jego śmierci.",
                 "usual": false,
                 "link": ""
             }
@@ -553,7 +553,7 @@
             {
                 "id": 50,
                 "name": "Międzynarodowy Dzień Walki z Rakiem",
-                "description": "W 2000 roku odbył się Światowy Szczyt Walki z Rakiem zorganizowany m. in. przez ówczsnego prezydenta Francji oraz dyrektora generalnego Światowego Dziedzictwa UNESCO. To właśnie wtedyu stanowiono to święto.",
+                "description": "W 2000 roku odbył się Światowy Szczyt Walki z Rakiem zorganizowany m.in. przez ówczesnego prezydenta Francji oraz dyrektora generalnego Światowego Dziedzictwa UNESCO. To właśnie wtedy ustanowiono to święto.",
                 "usual": false,
                 "link": ""
             }
@@ -612,7 +612,7 @@
             {
                 "id": 55,
                 "name": "Święto Służby Więziennej",
-                "description": "Święto obchodzone od roku 2011 na mocy zapisu ustawy o Służbie Więziennej z 9 kwietnia rokwcześniej. Wcześniej Służba Więzienna obchodziła swoje święto 26 kwietnia - w dzień uchwalnia ustawy w 1996 roku.",
+                "description": "Święto obchodzone od roku 2011 na mocy zapisu ustawy o Służbie Więziennej z 9 kwietnia rok wcześniej. Wcześniej Służba Więzienna obchodziła swoje święto 26 kwietnia — w dzień uchwalenia ustawy w 1996 roku.",
                 "usual": false,
                 "link": ""
             },
@@ -679,7 +679,7 @@
             {
                 "id": 62,
                 "name": "Ogólnopolski Dzień Dokarmiania Zwierzyny Leśnej",
-                "description": "W srodku zimy zwierzęta mają problem ze zdobywaniem pożywienia. Ten dzień adresowany jest doosób chcacych pomóc, ale nalezy to robić z głową, gdyż można zaszkodzić zamiast pomóc.",
+                "description": "W środku zimy zwierzęta mają problem ze zdobywaniem pożywienia. Ten dzień adresowany jest do osób chcących pomóc, ale należy to robić z głową, gdyż można zaszkodzić, zamiast pomóc.",
                 "usual": false,
                 "link": "https:\/\/www.cafeanimal.pl\/artykuly\/do-poczytania\/Dzien-Dokarmiania-Zwierzyny-Lesnej,2297"
             }
@@ -692,7 +692,7 @@
             {
                 "id": 63,
                 "name": "Dzień Darwina",
-                "description": "W wielu krajach święto to obchodzone jest, by popularyzować teorię ewolucji na zasadzie doboru naturalnego. Jego data to data urodzin pomysłodawcy - Charlesa Darwina",
+                "description": "W wielu krajach święto to obchodzone jest, by popularyzować teorię ewolucji na zasadzie doboru naturalnego. Jego data to data urodzin pomysłodawcy — Charlesa Darwina",
                 "usual": false,
                 "link": ""
             }
@@ -705,7 +705,7 @@
             {
                 "id": 64,
                 "name": "Światowy Dzień Radia",
-                "description": "Za sprawą Hiszpańskiej rozgłośni radiowej - Academia Española de la Radio - UNESCO zgodziło się na uchwalenie tego święta. Obchodzone ono jest co roku począwszy od 2012.",
+                "description": "Za sprawą Hiszpańskiej rozgłośni radiowej — Academia Española de la Radio — UNESCO zgodziło się na uchwalenie tego święta. Obchodzone ono jest co roku, począwszy od 2012.",
                 "usual": false,
                 "link": ""
             },
@@ -3417,7 +3417,7 @@
         "holidays": [
             {
                 "id": 329,
-                "name": "Święto Hot-Doga",
+                "name": "Święto Hot—Doga",
                 "description": "",
                 "usual": false,
                 "link": ""
@@ -3451,7 +3451,7 @@
             {
                 "id": 332,
                 "name": "Światowy Dzień Pocałunku",
-                "description": "Nie od dziś wiadomo, że gesty znaczą więcej niż tysiąc słów. Nie wahaj się robić tegoszczególnie teraz, ponieważ na zachętę świętuje się dziś \"Światowy Dzień Pocałunku\". Rozdawaj to copiękne w swej prostocie - hojnie obdarz najbliższe Ci osoby ognistymi całusami, serdecznymi i życzliwymibuziakami czy cmoknięciami. Dzięki temu połączysz przyjemne z pożytecznym bowiem pocałunki to samozdrowie – przez produkcję endorfin poprawia się Nasz nastrój, odporność, podnosi się ciśnienie itemperatura ciała. Chodzi również pogłoska, że takie buziaki wydłużają życie o 5 lat. Zatem do roboty!",
+                "description": "Nie od dziś wiadomo, że gesty znaczą więcej niż tysiąc słów. Rozdawaj to co piękne w swej prostocie — hojnie obdarz najbliższe Ci osoby ognistymi całusami, serdecznymi i życzliwymi buziakami czy cmoknięciami. Dzięki temu połączysz przyjemne z pożytecznym bowiem pocałunki to samo zdrowie – przez produkcję endorfin poprawia się nasz nastrój, odporność, podnosi się ciśnienie i temperatura ciała. Chodzi również pogłoska, że takie buziaki wydłużają życie o 5 lat.",
                 "usual": false,
                 "link": ""
             }
@@ -5097,7 +5097,7 @@
             {
                 "id": 484,
                 "name": "Dzień CAPS LOCK'a",
-                "description": "Dziś Dzień Caps Lock'a, którego pomysłodawcą jest amerykański programista, Derek Arnold. W 2000 roku postanowił w ramach żartu zwrócić uwagę na pewną grupę użytkowników sieci - miłośników wielkich liter, właściwie nadużywających obecności sporego klawisza. Odbierany przez wielu jako krzyk, podenerwowanie i przyczyna irytacji, sprawił, że niejednokrotnie uznany został jako niepotrzebny, którego należy czym prędzej usunąć z klawiatur. Jednak święto, to święto więc CZY JESTEŚ GOTÓW ABY UWOLNIĆ CAŁĄ ZŁOŚĆ?",
+                "description": "Pomysłodawcą tego święta jest amerykański programista, Derek Arnold. W 2000 roku postanowił w ramach żartu zwrócić uwagę na pewną grupę użytkowników sieci — miłośników wielkich liter, właściwie nadużywających obecności sporego klawisza. Odbierany przez wielu jako krzyk, podenerwowanie i przyczyna irytacji, sprawił, że niejednokrotnie uznany został jako niepotrzebny, którego należy czym prędzej usunąć z klawiatur. Jednak święto, to święto więc CZY JESTEŚ GOTÓW, ABY UWOLNIĆ CAŁĄ ZŁOŚĆ?",
                 "usual": false,
                 "link": ""
             }
@@ -5110,14 +5110,14 @@
             {
                 "id": 485,
                 "name": "Dzień Stałej Avogadra",
-                "description": "Chemicy, to Wasze święto! 23 października został ochrzczony takim świętem nie bez powodu. Kiedy zapiszemy tę magiczną stałą, wszystko staje się jasne. Jej wartość to 6,022140857 * 10^-23.",
+                "description": "Chemicy, to Wasze święto! 23 października został ochrzczony takim świętem nie bez powodu. Kiedy zapiszemy tę magiczną stałą, wszystko staje się jasne. Jej wartość to 6,022140857 * 10^23.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 486,
                 "name": "Dzień Mola",
-                "description": "To święto jest związane z poprzednim, a samo w sobie obchodzone jest pomiędzy 6:02 AM i 6:02PM. Godziny te wynikają z przybliżenia stałej Avogadra, które wynosi 6,02 * 10^-23. Według niektórych szkół jest jednak obchodzony 2 czerwca od 10:23 AM do 10:23 PM.",
+                "description": "To święto jest związane z poprzednim, a samo w sobie obchodzone jest pomiędzy 6:02 AM i 6:02 PM. Godziny te wynikają z przybliżenia stałej Avogadra, które wynosi 6,02 * 10^23. Według niektórych szkół jest jednak obchodzony 2 czerwca od 10:23 AM do 10:23 PM.",
                 "usual": false,
                 "link": ""
             }
@@ -5137,7 +5137,7 @@
             {
                 "id": 488,
                 "name": "Międzynarodowe Święto Roweru",
-                "description": "Czy są tu jacyś maniacy rowerowi? Jeśli tak, to dziś przypada Międzynarodowy Dzień Roweru. Te dwukółka postrzegane jako ekonomiczne, zdrowe i przyjemne zyskują uznanie coraz większego grona społeczeństwa. Dlatego wyreguluj przerzutki, dokręć śruby, nasmaruj amortyzatory, napompuj koła i w drogę!",
+                "description": "Dziś przypada Międzynarodowy Dzień Roweru. Te dwukółka postrzegane jako ekonomiczne, zdrowe i przyjemne zyskują uznanie coraz większego grona społeczeństwa.!",
                 "usual": false,
                 "link": ""
             },
@@ -5157,7 +5157,7 @@
             {
                 "id": 490,
                 "name": "Dzień Kundelka",
-                "description": "Uchwalona w 1997 roku ustawa o ochronie zwierząt pozostawiła po sobie pamiątkę w postaci tego święta. Dziś całą naszą uwagę powinniśmy skupić na tych śmiesznych, wielorasowych człapiących czworonogach, które potrafią odwdzięczać się niewyczerpywalnymi pokładami miłości, wierności i energii.",
+                "description": "Uchwalona w 1997 roku ustawa o ochronie zwierząt pozostawiła po sobie pamiątkę w postaci tego święta. Dziś całą naszą uwagę powinniśmy skupić na tych śmiesznych, wielorasowych człapiących czworonogach, które potrafią odwdzięczać się niewyczerpanymi pokładami miłości, wierności i energii.",
                 "usual": false,
                 "link": ""
             },
@@ -5236,7 +5236,7 @@
             {
                 "id": 497,
                 "name": "Dzień Spódnicy",
-                "description": "Mini, midi, maxi, jeansowe, wzorzyste czy gładkie – dziś Dzień Spódnicy, czyli elementu odzieży, który przede wszystkim eksponuje kobiece wdzięki i pewną atrakcyjność. Choć lata 70. to pojawienie się pierwszych damskich spodni stanowiących po dziś dzień integralną część każdej garderobyto jednak nie powinnyśmy odbierać męskim miłośnikom takiej satysfakcji.",
+                "description": "Dziś Dzień Spódnicy, czyli elementu odzieży, który przede wszystkim eksponuje kobiece wdzięki i pewną atrakcyjność. Choć lata 70. to pojawienie się pierwszych damskich spodni stanowiących po dziś dzień integralną część każdej garderoby, nie powinnyśmy jednak odbierać męskim miłośnikom takiej satysfakcji.",
                 "usual": false,
                 "link": ""
             },
@@ -5322,7 +5322,7 @@
             {
                 "id": 505,
                 "name": "Dzień Taniego Wina",
-                "description": "\"Byk\", \"Komandos\", \"Leśny Dzban\", \"Sperma Szatana\", \"Apacz\", \"Amarena\" to zaledwie początek, bo lista ta jest ku zdziwieniu naprawdę bogata i. Cytując klasyka, \"tanie wino jest dobre, bo jest dobre i tanie\", kultowy trunek z fantazyjną naklejką ma swoje grono wielbicieli pomimo niebezpieczeństwa czyhającego na zdrowie – obszerny skład zawierający niemalże całą tablicę Mendelejewa potrafi wprowadzić w błąd kubki smakowe uaktywniając ich destrukcyjną siłę.",
+                "description": "Cytując klasyka, \"tanie wino jest dobre, bo jest dobre i tanie\". Jest to bowiem kultowy trunek z fantazyjną naklejką, który ma swoje grono wielbicieli pomimo niebezpieczeństwa czyhającego na zdrowie – obszerny skład zawierający niemalże całą tablicę Mendelejewa potrafi wprowadzić w błąd kubki smakowe, uaktywniając ich destrukcyjną siłę.",
                 "usual": false,
                 "link": ""
             }
@@ -5335,7 +5335,7 @@
             {
                 "id": 506,
                 "name": "Dzień Postaci z Bajek",
-                "description": "Król Lew, Czerwony Kapturek, Kubuś Puchatek, Smerfy czy Kopciuszek - towarzysze od najmłodszychlat, którzy nie raz rozweselali, bawili a przede wszystkim przekazywali ważne i cenne prawdy życiowe, obchodzą właśnie swoje święto. Pozwól sobie zatem dziś na powrót do tych beztroskich chwil i niech wwiecznie napiętym grafiku zagości \"bajkowy seans\".",
+                "description": "Towarzysze od najmłodszych lat, którzy nie raz rozweselali, bawili, a przede wszystkim przekazywali ważne i cenne prawdy życiowe, obchodzą właśnie swoje święto. Pozwól sobie zatem dziś na powrót do tych beztroskich chwil i niech w wiecznie napiętym grafiku zagości \"bajkowy seans\".",
                 "usual": false,
                 "link": ""
             },
@@ -5508,7 +5508,7 @@
             {
                 "id": 523,
                 "name": "Dzień Króla Juliana",
-                "description": "\"Bóg zapłać, pradawni bogowie! Bo, gdyż, któż jest bardziej godny okładki niż król całego zoo?\" Wszyscy ci, co kochają bajkowego Króla Juliana wyginają śmiało ciało, przygotowują fistaszki na srebrnej tacy i nie tykają jego stóp!",
+                "description": "\"Bóg zapłać, pradawni bogowie! Bo, gdyż, któż jest bardziej godny okładki niż król całego zoo?\" Wszyscy ci, co kochają bajkowego Króla Juliana wyginającego śmiało ciało, przygotowują fistaszki na srebrnej tacy i nie tykają jego stóp!",
                 "usual": false,
                 "link": ""
             }
@@ -5574,7 +5574,7 @@
             {
                 "id": 529,
                 "name": "Urodziny Dziadka Mroza",
-                "description": "Choć powszechnie panujące stwierdzenie, że monopolistą w dziedzinie rozdawania prezentów świątecznych jest Święty Mikołaj, to jak się jednak okazuje nie wpisuje się to w każdy zakątek świata. Kraje bloku wschodniego od 2005 roku zasługi te przypisują Dziadkowi Mrozowi. Jest to postać, która według wierzeń przyodziana w futrzaną czapkę i błękitny płaszcz mknie na swych zaprzęgniętych przez konie saniach w okolicach Nowego Roku. Idea jest jednak niezmienna – nieść radość wszystkim dzieciom, dlatego Dziadek Mróz również zasługuje na pamięć.",
+                "description": "Choć powszechnie panujące stwierdzenie, że monopolistą w dziedzinie rozdawania prezentów świątecznych jest Święty Mikołaj, to jak się jednak okazuje się, że nie wpisuje się to w każdy zakątek świata. Kraje bloku wschodniego od 2005 roku zasługi te przypisują Dziadkowi Mrozowi. Jest to postać, która według wierzeń przyodziana w futrzaną czapkę i błękitny płaszcz mknie na swych zaprzęgniętych przez konie saniach w okolicach Nowego Roku. Idea jest jednak niezmienna – nieść radość wszystkim dzieciom, dlatego Dziadek Mróz również zasługuje na pamięć.",
                 "usual": false,
                 "link": ""
             }
@@ -5620,7 +5620,7 @@
             {
                 "id": 533,
                 "name": "Światowy Dzień Życzliwości i Pozdrowień",
-                "description": "Dzień dobry. Mam nadzieję, że obudziłeś się w wyjątkowym nastroju, pod prysznicem odśpiewałeś niejedną ulubioną piosenkę, a w kawiarence zaparzyła się Twoja aromatyczna kawa. Jeśli taki scenariusz odbiega od tego, co faktycznie przyniósł Ci poranek, to życzę Ci, aby jednak dzisiejszy dzień okazał się zaskakująco miły. Z inicjatywy braci Braiana i Michaela McCormacków, na znak protestu przeciwko konfliktom zbrojnym pomiędzy Izraelem, a Egiptem nieustannie od 1973 roku 21 listopad oznajmia, że pora na Światowy Dzień Życzliwości i Pozdrowień. Dlatego zadbaj o pozytywne nastawienie, obdarz kogoś uśmiechem i powiedz nawet najdrobniejszy komplement!",
+                "description": "Dzień dobry. Mam nadzieję, że obudziłeś się w wyjątkowym nastroju, pod prysznicem odśpiewałeś niejedną ulubioną piosenkę, a w kawiarence zaparzyła się Twoja aromatyczna kawa. Jeśli taki scenariusz odbiega od tego, co faktycznie przyniósł Ci poranek, to życzę Ci, aby jednak dzisiejszy dzień okazał się zaskakująco miły. Z inicjatywy braci Braiana i Michaela McCormacków, na znak protestu przeciwko konfliktom zbrojnym pomiędzy Izraelem a Egiptem nieustannie od 1973 roku, 21 listopada oznajmia, że pora na Światowy Dzień Życzliwości i Pozdrowień. Dlatego zadbaj o pozytywne nastawienie, obdarz kogoś uśmiechem i powiedz nawet najdrobniejszy komplement!",
                 "usual": false,
                 "link": ""
             }
@@ -5633,7 +5633,7 @@
             {
                 "id": 534,
                 "name": "Dzień Kredki",
-                "description": "\"namalują domek i na płocie kota, i wesołe słonko na pochmurne dni! A gdy w kosmos lecieć przyjdzie mi ochota, prawdziwą rakietę namalują mi!\" O czym mowa? Oczywiście, że o kredkach, któredziś obchodzą swoje święto. Ten fakt z pewnością cieszy najmłodszych, ponieważ jako mile obowiązkowe wyposażenie piórnika, pozwalają one wyrazić własne uczucia i emocje, a co więcej rozwijają wyobraźnię.",
+                "description": "\"Namalują domek i na płocie kota, i wesołe słonko na pochmurne dni! A gdy w kosmos lecieć przyjdzie mi ochota, prawdziwą rakietę namalują mi!\" O czym mowa? Oczywiście, że o kredkach, które dziś obchodzą swoje święto. Ten fakt z pewnością cieszy najmłodszych, ponieważ jako mile obowiązkowe wyposażenie piórnika, pozwalają one wyrazić własne uczucia i emocje, a co więcej rozwijają wyobraźnię.",
                 "usual": false,
                 "link": ""
             }
@@ -5672,7 +5672,7 @@
             {
                 "id": 537,
                 "name": "Dzień Pluszowego Misia",
-                "description": "Historia Pluszowego Misia – pierwszego przyjaciela i strażnika dziecięcych snów ma swój początek w 1902 roku. Pełniący swoją prezydenturę Stanów Zjednoczonych, Teodor Roosevelt wybrał się na polowanie, podczas którego postrzelony został mały niedźwiedź, jednakże na osobistą prośbę prezydenta - uwolnionono go. Wydarzenie to uwieczniono w lokalnej prasie w formie komiksowej anegdoty, tym samym stając się inspiracją dla pewnego producenta zabawek, który postanowił stworzyć pluszowego \"Teddy Bear'a\" na cześć głowy państwa. Nic dziwnego zatem, że jako symbol ciepła, beztroski i delikatności, Pluszowy Miś zasługuje na swoje święto właśnie dziś!",
+                "description": "Historia Pluszowego Misia – pierwszego przyjaciela i strażnika dziecięcych snów ma swój początek w 1902 roku. Pełniący swoją prezydenturę Stanów Zjednoczonych, Teodor Roosevelt wybrał się na polowanie, podczas którego postrzelony został mały niedźwiedź, jednakże na osobistą prośbę prezydenta — uwolniono go. Wydarzenie to uwieczniono w lokalnej prasie w formie komiksowej anegdoty, tym samym stając się inspiracją dla pewnego producenta zabawek, który postanowił stworzyć pluszowego \\\"Teddy Bear'a\\\" na cześć głowy państwa. Nic dziwnego zatem, że jako symbol ciepła, beztroski i delikatności, Pluszowy Miś zasługuje na swoje święto właśnie dziś",
                 "usual": false,
                 "link": ""
             },
@@ -5733,7 +5733,7 @@
             {
                 "id": 544,
                 "name": "Dzień Podłości",
-                "description": "Idea tego święta budzi w wielu poważne wątpliwości, bo przecież zaledwie tydzień temu propagowano taką wartość jaką jest życzliwość. Wyjątkowo dziś została ona jednak diametralnie zmieniona, nakłaniając nas do złośliwości i podłości względem siebie. Twórcy zrodzonego w 2008 roku pomysłu, tłumacząc swój zamysł chcieli, aby tak na prawdę człowiek był podły tylko w ten jeden dzień, mógł wyzbyć się wszelkich tłumionych negatywnych emocji po to, by cały rok być po prostu milszym.",
+                "description": "Idea tego święta budzi w wielu poważne wątpliwości, bo przecież zaledwie tydzień temu propagowano taką wartość, jaką jest życzliwość. Wyjątkowo dziś została ona jednak diametralnie zmieniona, nakłaniając nas do złośliwości i podłości względem siebie. Twórcy zrodzonego w 2008 roku pomysłu, tłumacząc swój zamysł, chcieli, aby tak naprawdę człowiek był podły tylko w ten jeden dzień, mógł wyzbyć się wszelkich tłumionych negatywnych emocji po to, by cały rok być po prostu milszym.",
                 "usual": false,
                 "link": ""
             },
@@ -5766,14 +5766,14 @@
             {
                 "id": 547,
                 "name": "Dzień Białych Skarpetek",
-                "description": "Z dumą noszone przez Greków i Rzymian, ponieważ jako kolebka cywilizacji przyczynili się oni do wynalezienia w II wieku n.e. udones – pierwszych prawdziwych skarpet. Choć wiele osób współcześnie jest zdania, że noszenie szczególnie tych w kolorze białym to prawdziwy obciach, to jednak znajdują się również zwolennicy, którzy jako posiadacze kultowego dodatku na stopach, uwieńczają go sandałami. Dzięki takiemu połączeniu stylizacja komponuje się nieziemsko i wygląda jak milion dolarów. Listopadowa temperatura nie zachęca nas do takich wariacji ale nie zmienia to faktu, że warto uczcić to święto w słuszny sposób!",
+                "description": "Z dumą noszone przez Greków i Rzymian, ponieważ jako kolebka cywilizacji przyczynili się oni do wynalezienia w II wieku n.e. \"udones\", czyli pierwszych prawdziwych skarpet.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 548,
                 "name": "Andrzejki",
-                "description": "Nie trzeba być Andrzejem, by móc hucznie świętować dzisiejsze imieniny, bo to jedna z ostatnich okazji, aby oddać się zabawom tuż przed zapoczątkowaniem okresu Adwentu. Choć szczegóły natemat corocznych zwyczajów tego wydarzenia nie są w pełni znane, tradycja stale zachęca aby wziąć udziałwe wszelkich wróżbach i traktować to jako przyjemny dodatek. Kto wie, być może poznasz imię swojej przyszłej połówki a wybór daty ślubu już zawidnieje w Twoim kalendarzu?",
+                "description": "Nie trzeba być Andrzejem, by móc hucznie świętować dzisiejsze imieniny, bo to jedna z ostatnich okazji, aby oddać się zabawom tuż przed zapoczątkowaniem okresu Adwentu. Choć szczegóły na temat corocznych zwyczajów tego wydarzenia nie są w pełni znane, tradycja stale zachęca, aby wziąć udział we wszelkich wróżbach i traktować to jako przyjemny dodatek.",
                 "usual": true,
                 "link": ""
             }
@@ -5812,7 +5812,7 @@
             {
                 "id": 551,
                 "name": "Międzynarodowy Dzień Osób Niepełnosprawnych",
-                "description": "Pewne dysfunkcje Naszego organizmu utrudniają niekiedy prawidłowe funkcjonowanie i stwarzają wyraźne problemy. Obchodzony niezmiennie od 1992 roku Międzynarodowy Dzień Osób Niepełnosprawnych ma nacelu uświadomienie obecności tego zjawiska a tym samym ma zachęcić do ciągłej integracji z osobami niepełnosprawnymi ze względu na liczne, zauważalne korzyści wynikające z takiej współpracy.",
+                "description": "Pewne dysfunkcje naszego organizmu utrudniają niekiedy prawidłowe funkcjonowanie i stwarzają wyraźne problemy. Obchodzony niezmiennie od 1992 roku Międzynarodowy Dzień Osób Niepełnosprawnych ma na celu uświadomienie obecności tego zjawiska a tym samym ma zachęcić do ciągłej integracji z osobami niepełnosprawnymi ze względu na liczne, zauważalne korzyści wynikające z takiej współpracy.",
                 "usual": false,
                 "link": ""
             },
@@ -5839,7 +5839,7 @@
             {
                 "id": 554,
                 "name": "Barbórka",
-                "description": "Dziś tradycyjne święto wszystkich górników, którego patronat przypisuje się od XVII wieku świętej Barbarze z Nikodemii. Kobieta zgodnie z własnymi przekonaniami przyjęła chrzest sprzeciwiając się tym samym pogańskim wierzeniom najbliższej rodziny. Postępowanie traktowane jako zniewaga przyczyniło się do wydania jej władzom rzymskim. Pomimo ogromu cierpienia i krzywdy, nie wyrzekła się ona swojej wiary chrześcijańskiej, a poniesiona śmierć męczeńska będąca wyrazem bezwzględnego przywiązania się tym ideom stała się powodem uznania Barbary za symbol dobrej śmierci i ciężkiej pracy.",
+                "description": "Dziś tradycyjne święto wszystkich górników, którego patronat przypisuje się od XVII wieku świętej Barbarze z Nikodemii. Kobieta zgodnie z własnymi przekonaniami przyjęła chrzest, sprzeciwiając się tym samym pogańskim wierzeniom najbliższej rodziny. Postępowanie traktowane jako zniewaga przyczyniło się do wydania jej władzom rzymskim. Pomimo ogromu cierpienia i krzywdy, nie wyrzekła się ona swojej wiary chrześcijańskiej, a poniesiona śmierć męczeńska będąca wyrazem bezwzględnego przywiązania się tym ideom stała się powodem uznania Barbary za symbol dobrej śmierci i ciężkiej pracy.",
                 "usual": true,
                 "link": ""
             },
@@ -5859,7 +5859,7 @@
             {
                 "id": 556,
                 "name": "Międzynarodowy Dzień Wolontariusza",
-                "description": "Warto pomagać i angażować się w licznie organizowane prace społeczne na rzecz innych. Takie czynne działania, choć w swej istocie stanowią bezcenny gest, są wynikiem potrzeb naszego serca. Celem zwrócenia uwagi społeczeństwa na włożony trud, ogrom wysiłku i poświęcenie wszystkich ochotników dobrejwoli, w 1986 roku ONZ ustanowił Międzynarodowy Dzień Wolontariusza.",
+                "description": "Warto pomagać i angażować się w licznie organizowane prace społeczne na rzecz innych. Takie czynne działania, choć w swej istocie stanowią bezcenny gest, są wynikiem potrzeb naszego serca. Celem zwrócenia uwagi społeczeństwa na włożony trud, ogrom wysiłku i poświęcenie wszystkich ochotników dobrej woli, w 1986 roku ONZ ustanowił Międzynarodowy Dzień Wolontariusza.",
                 "usual": false,
                 "link": ""
             }
@@ -5879,7 +5879,7 @@
             {
                 "id": 558,
                 "name": "Dzień Świętego Mikołaja",
-                "description": "Dziś Kościół Katolicki upamiętnia postać biskupa z Miry, znanego jako Święty Mikołaja. Wiele legend głosi, że człowiek ten uratował tonących żeglarzy, uchronił przed niesłusznym skazaniem oficerów oraz rozdał majątek ubogim. tym samym za wielkie serce, bezgraniczną życzliwość, dobroć i pomoc stał się patronem rybaków, marynarzy, panien, więźniów oraz dzieci. Obecnie wszyscy najmłodsi oczekują na tendzień z niecierpliwością by w swoich butach bądź skarpecie odnaleźć drobne upominki i słodycze.",
+                "description": "Dziś Kościół Katolicki upamiętnia postać biskupa z Miry, znanego jako Święty Mikołaja. Wiele legend głosi, że człowiek ten uratował tonących żeglarzy, uchronił przed niesłusznym skazaniem oficerów oraz rozdał majątek ubogim. Tym samym za wielkie serce, bezgraniczną życzliwość, dobroć i pomoc stał się patronem rybaków, marynarzy, panien, więźniów oraz dzieci. Obecnie wszyscy najmłodsi oczekują na ten dzień z niecierpliwością by w swoich butach bądź skarpecie odnaleźć drobne upominki i słodycze.",
                 "usual": true,
                 "link": ""
             }
@@ -5892,7 +5892,7 @@
             {
                 "id": 559,
                 "name": "Międzynarodowy Dzień Lotnictwa Cywilnego",
-                "description": "Dzisiejsze święto zainicjowane przez Zgromadzenie Ogólne ONZ jest upamiętnieniem przyjęcia w 1944 roku chicagowskiej Konwencji Międzynarodowego Lotnictwa Cywilnego będącej zbiorem odpowiednich regulacji i zasad dotyczących bezpieczeństwa powietrznego ruchu pasażerskiego. Mimo, że wydarzenie to doczekało się swojego oficjalnego wspomnienia dopiero w 50. rocznicę, za pośrednictwem stosowanych haseł przyświecających każdy odbywający się już rokrocznie obchóód z pewnością zwraca uwagę na liczne osiągnięcia w tym obszarze.",
+                "description": "Dzisiejsze święto zainicjowane przez Zgromadzenie Ogólne ONZ jest upamiętnieniem przyjęcia w 1944 roku chicagowskiej Konwencji Międzynarodowego Lotnictwa Cywilnego będącej zbiorem odpowiednich regulacji i zasad dotyczących bezpieczeństwa powietrznego ruchu pasażerskiego. Mimo że wydarzenie to doczekało się swojego oficjalnego wspomnienia dopiero w 50. rocznicę, za pośrednictwem stosowanych haseł przyświecających każdy odbywający się już rokrocznie obchód z pewnością zwraca uwagę na liczne osiągnięcia w tym obszarze.",
                 "usual": false,
                 "link": ""
             }
@@ -5905,21 +5905,21 @@
             {
                 "id": 560,
                 "name": "Światowy Dzień Dogmatu",
-                "description": "Dogmat to inaczej prawda niepodważalna, akceptowalna bez potrzeby okazania dowodu. Ze względu na naszą indywidualność, każdy z nas wykazuje wiarę w dogmaty zawężając tym samym pewne poglądy zarówno religijne, polityczne jak społeczne.",
+                "description": "Dogmat to inaczej prawda niepodważalna, akceptowalna bez potrzeby okazania dowodu. Ze względu na naszą indywidualność, każdy z nas wykazuje wiarę w dogmaty, zawężając tym samym pewne poglądy zarówno religijne, polityczne jak społeczne.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 561,
                 "name": "Dzień Kupca",
-                "description": "Będąc w sklepie, miej na uwadzę tę datę. Święto to ustanowione w 1937 roku swoją obecność zawdzięcza kupcom pielgrzymującym na Jasną Górę. Ze względu na wybuch II Wojny Światowej i okupację, która przyczyniła się do upadku handlu, święto to nie było jednak celebrowane rokrocznie.",
+                "description": "Będąc w sklepie, miej na uwadze tę datę. Święto to ustanowione w 1937 roku swoją obecność zawdzięcza kupcom pielgrzymującym na Jasną Górę. Ze względu na wybuch II Wojny Światowej i okupację, która przyczyniła się do upadku handlu, święto to nie było jednak celebrowane rokrocznie.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 562,
                 "name": "Dzień Oświecenia Buddy",
-                "description": "Dziś wszyscy buddyści nurtu Mahajany (Wielkiej Drogi) upamiętniają moment w którym ich mistrz, Siddartha Gautama, przeszedł przez osiem stopni świadomości duchowego stanu samourzeczywistnienia i przebudzenia stając się tym samym Buddą, czyli bytem oświeconym. Tego dnia tradycją jest wielogodzinna medytacja wierzących, przybliżająca ich do osiągnięcia maksymalnego skupienia umysłu, który nie ma ani początku ani końca - jest niezmienny w swej zmienności.",
+                "description": "Dziś wszyscy buddyści nurtu Mahajany (Wielkiej Drogi) upamiętniają moment ,w którym ich mistrz, Siddartha Gautama, przeszedł przez osiem stopni świadomości duchowego stanu samourzeczywistnienia i przebudzenia stając się tym samym Buddą, czyli bytem oświeconym. Tego dnia tradycją jest wielogodzinna medytacja wierzących, przybliżająca ich do osiągnięcia maksymalnego skupienia umysłu, który nie ma ani początku, ani końca — jest niezmienny w swej zmienności.",
                 "usual": false,
                 "link": ""
             },
@@ -5939,7 +5939,7 @@
             {
                 "id": 564,
                 "name": "Dzień Dziewic",
-                "description": "Doceńmy kobiety, które potrafią dotrzymać swej \"czystości\" dla tego jedynego i dzielnie walczą z panującymi obecnie stereotypami. Powstały Kodeks Dziewicy ma na celu udowodnienie, że seks niepowinien być traktowany na równi z zaspokajaniem potrzeb jedzenia czy picia. Choć dziewictwo jest wspaniałą cnotą, mimo wszystko jest poddawane wielu kontrowersjom - dla niektórych powód do wielkiej dumy, dla innych zaś do wstydu. Dlatego ten dzień świętujmy zgodnie z własnymi przekonaniami.",
+                "description": "Doceńmy kobiety, które potrafią dotrzymać swej \"czystości\" dla tego jedynego i dzielnie walczą z panującymi obecnie stereotypami. Powstały Kodeks Dziewicy ma na celu udowodnienie, że seks nie powinien być traktowany na równi z zaspokajaniem potrzeb jedzenia czy picia. Choć dziewictwo jest wspaniałą cnotą, mimo wszystko jest poddawane wielu kontrowersjom — dla niektórych powód do wielkiej dumy, dla innych zaś do wstydu. Dlatego ten dzień świętujmy zgodnie z własnymi przekonaniami.",
                 "usual": false,
                 "link": ""
             }
@@ -5959,7 +5959,7 @@
             {
                 "id": 566,
                 "name": "Dzień Bota",
-                "description": "Boty to technologii, której historia rozpoczęła się w latach 60. XX w. Zakres obszaru wykorzystywania stale się poszerza. Boty powoli zastępują pracę ludzką przejmując rolę automatycznych asystentów głosowych w wielu dziedzinach. Z jednej strony zagrożenie, z drugiej jednak niewątpliwie to nalepszy rozmówca, który nigdy nie pozostawił nas bez odpowiedzi.",
+                "description": "Boty to technologii, której historia rozpoczęła się w latach 60. XX w. Zakres obszaru wykorzystywania stale się poszerza. Boty powoli zastępują pracę ludzką, przejmując rolę automatycznych asystentów głosowych w wielu dziedzinach. Z jednej strony zagrożenie, z drugiej jednak niewątpliwie to najlepszy rozmówca, który nigdy nie pozostawił nas bez odpowiedzi.",
                 "usual": false,
                 "link": ""
             }
@@ -5998,14 +5998,14 @@
             {
                 "id": 569,
                 "name": "Dzień Księgarza",
-                "description": "Księgarz to zawód, który kiedyś miał istotne znaczenie dla rozwoju i upowszechniania czytelnictwa powoli brzmi jak abstrakcja. Nie pomaga panująca niechęć do czytania ani dominacja rynku e-commerce. Nie pozwólmy jednak aby świat księgarski stał się wspomnieniem, wizyta w osiedlowym domu książki może być ciekawym doświadczeniem, a życzliwość osób tam pracujących na pewno zachęci doodwiedzania tego miejsca ponownie.",
+                "description": "Księgarz to zawód, który kiedyś miał istotne znaczenie dla rozwoju i upowszechniania czytelnictwa, powoli brzmi jak abstrakcja. Nie pomaga panująca niechęć do czytania ani dominacja rynku e-commerce. Nie pozwólmy jednak aby świat księgarski stał się wspomnieniem, wizyta w osiedlowym domu książki może być ciekawym doświadczeniem, a życzliwość osób tam pracujących na pewno zachęci do odwiedzania tego miejsca ponownie.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 570,
                 "name": "Dzień Telewizji Dla Dzieci",
-                "description": "Data tego święta nie jest przypadkowa. W 1981 roku, tuż o poranku najmłodszych nie przywitał tradycyjnie emitowany \"Teleranek\". Brak wyczekiwanej audycji stał się dla wszystkich dzieci tamtego okresu synonimem stanu wojennego w Polsce, jednak obecnie święto to ma wydźwięk pozytywny. Bajki mają wiele zalet, są nie tylko elementem rozrywkowym ale też edukacyjnym, dzięki czemu przyciągają także widzów dorosłych.",
+                "description": "Data tego święta nie jest przypadkowa. W 1981 roku tuż o poranku najmłodszych nie przywitał tradycyjnie emitowany \"Teleranek\". Brak wyczekiwanej audycji stał się dla wszystkich dzieci tamtego okresu synonimem stanu wojennego w Polsce, jednak obecnie święto to ma wydźwięk pozytywny. Bajki mają wiele zalet, są nie tylko elementem rozrywkowym, ale też edukacyjnym, dzięki czemu przyciągają także widzów dorosłych.",
                 "usual": false,
                 "link": ""
             }
@@ -6018,7 +6018,7 @@
             {
                 "id": 571,
                 "name": "Dzień Ludwika Zamenhofa",
-                "description": "Bonan matenon, Amataj! Dziś kartka w kalendarzu przypomina nam o białostockim okuliście, twórcy języka esperanto, Ludwiku Zamenhofie. Historia samego święta ma swój początek w latach dwudziestych, XX wieku, kiedy to w głowie ambitnego doktora narodził się pomysł na stworzenie własnego języka pomocniczego. Choć głównym celem miało być ułatwienie komunikacji międzynarodowej to jednak z perspetywy czasu doprowadził on do podzielenia ludności. Mimo to, na świecie entuzjastów tego języka nie brakuje. Może i ty dziś do nich dołączysz?",
+                "description": "Dziś kartka w kalendarzu przypomina nam o białostockim okuliście, twórcy języka esperanto, Ludwiku Zamenhofie. Historia samego święta ma swój początek w latach dwudziestych, XX wieku, kiedy to w głowie ambitnego doktora narodził się pomysł na stworzenie własnego języka pomocniczego. Choć głównym celem miało być ułatwienie komunikacji międzynarodowej, to jednak z perspektywy czasu doprowadził on do podzielenia ludności. Mimo to, na świecie entuzjastów tego języka nie brakuje. Może i ty dziś do nich dołączysz?",
                 "usual": false,
                 "link": ""
             }
@@ -6031,7 +6031,7 @@
             {
                 "id": 572,
                 "name": "Dzień Bez Przekleństw",
-                "description": "Dziś wszelkim brzydkim słowom i wulgaryzmom mówimy stanowcze NIE! Święto to jest idealną okazją aby zastanowić się nad tym, w jaki sposób można wyrazić zarówno te negatywne, jak i pozytywne emocje. I choć bywa tak, że często zapominamy o dobrych manierach i kulturze osobistej, to dziś postarajmy się skupić i docenić piękno naszej mowy świętując ten dzień zgodnie z przeznaczeniem. Ciekawe, jak długo ty wytrzymasz?",
+                "description": "Dziś wszelkim brzydkim słowom i wulgaryzmom mówimy stanowcze NIE! Święto to jest idealną okazją, aby zastanowić się nad tym, w jaki sposób można wyrazić zarówno te negatywne, jak i pozytywne emocje. I choć bywa tak, że często zapominamy o dobrych manierach i kulturze osobistej, to dziś postarajmy się skupić i docenić piękno naszej mowy świętując ten dzień zgodnie z przeznaczeniem. Ciekawe, jak długo ty wytrzymasz?",
                 "usual": false,
                 "link": ""
             }
@@ -6044,7 +6044,7 @@
             {
                 "id": 573,
                 "name": "Międzynarodowy Dzień Emigrantów",
-                "description": "Choć czasy prawdziwego American Dream powoli stają się przeszłością, wydarzenie jakie zajmuje to miejsce w kalendarzu zasługuje na wyjątkową pamięć. Święto to ustanowione przez ONZ w dniu 4 grudnia 2000 roku, opiera się na powstałej 18 grudnia 1990 roku międzynarodowej konwencji ochrony praw emigrantów. Na świecie liczba osób wyruszających w nieznane, poszukujących lepszego życia z roku na rok wzrasta. Rzeczywistość, z jaką idzie im się zmierzyć, okazuje się niekiedy mylna, dlatego też dziś mamy możliwość podzielenia się własnymi odczuciami, idoświadczeniami jednocześnie okazując wsparcie i szacunek dla pracowników emigracyjnych.",
+                "description": "Choć czasy prawdziwego American Dream powoli stają się przeszłością, wydarzenie, jakie zajmuje to miejsce w kalendarzu, zasługuje na wyjątkową pamięć. Święto to ustanowione przez ONZ w dniu 4 grudnia 2000 roku, opiera się na powstałej 18 grudnia 1990 roku międzynarodowej konwencji ochrony praw emigrantów. Na świecie liczba osób wyruszających w nieznane, poszukujących lepszego życia z roku na rok wzrasta. Rzeczywistość, z jaką idzie im się zmierzyć, okazuje się niekiedy mylna, dlatego też dziś mamy możliwość podzielenia się własnymi odczuciami, i doświadczeniami jednocześnie okazując wsparcie i szacunek dla pracowników emigracyjnych.",
                 "usual": false,
                 "link": ""
             }
@@ -6057,7 +6057,7 @@
             {
                 "id": 574,
                 "name": "Dzień Ryby",
-                "description": "Ustanowiony w 2003 roku przez Stowarzyszenie Empatia i Fundację Viva, nie bez powoduma swoje następstwo jeszcze przed rozpoczęciem przedświątecznej gorączki. To dziś w wielu miejscowościach organizowane są happeningi, których przesłaniem jest zastanowienie się nad warunkami i traktowaniemżywych karpi w sklepach, zanim te pojawią się na Naszym wigilijnym stole.",
+                "description": "Ustanowiony w 2003 roku przez Stowarzyszenie Empatia i Fundację Viva, nie bez powodu ma swoje następstwo jeszcze przed rozpoczęciem przedświątecznej gorączki. To dziś w wielu miejscowościach organizowane są happeningi, których przesłaniem jest zastanowienie się nad warunkami i traktowaniem żywych karpi w sklepach, zanim te pojawią się na naszym wigilijnym stole.",
                 "usual": false,
                 "link": ""
             }
@@ -6084,7 +6084,7 @@
             {
                 "id": 577,
                 "name": "Początek Astronomicznej Zimy",
-                "description": "Zegary wcale nie przyśpieszyły – dziś najkrótszy dzień w całym roku, potocznie nazywany przesileniem zimowym. Swą wielką wędrówkę po nieboskłonie odbyła właśnie nasza Gwiazda Centralna, umiejscawiając się gdzieś nad zwrotnikiem Koziorożca. Zjawisko to obserwowane już w starożytności było źródłem ustanowienia wielu świąt. Pośrednio zaś odpowiada za umiejscowienie w kalendarzui tradycje Bożego Narodzenia, które przypada na 25 grudnia bowiem tego dnia w III wieku, Rzym świętował \"Dzień Narodzin Niepokonanego Słońca\".",
+                "description": "Zegary wcale nie przyśpieszyły – dziś najkrótszy dzień w całym roku, potocznie nazywany przesileniem zimowym. Swą wielką wędrówkę po nieboskłonie odbyła właśnie nasza Gwiazda Centralna, umiejscawiając się gdzieś nad zwrotnikiem Koziorożca. Zjawisko to obserwowane już w starożytności było źródłem ustanowienia wielu świąt. Pośrednio zaś odpowiada za umiejscowienie w kalendarzu i tradycje Bożego Narodzenia, które przypada na 25 grudnia bowiem tego dnia w III wieku, Rzym świętował \"Dzień Narodzin Niepokonanego Słońca\".",
                 "usual": true,
                 "link": ""
             }
@@ -6104,14 +6104,14 @@
             {
                 "id": 579,
                 "name": "Święto Godowe (Słowianie)",
-                "description": "Wszelkie wątpliwości o tym ile jest starej wiary w Bożym Narodzeniu z pewnością rozwieje istota Święta Godowego, które dziś ma swoją pamięć. Nasi słowiańscy są siedzi uznają ten dzień za początek nowego roku słonecznego, liturgicznego i wegetacyjnego. Następstwem stoczonej walki światła z ciemnością jest trwające przesilenie zimowe, będące symbolem nadziei i radości. Gody zatem są czasem przejściowym, kiedy to stary cykl właśnie kończy swą podróż by nowy mógł się narodzić.",
+                "description": "Wszelkie wątpliwości o tym ile jest starej wiary w Bożym Narodzeniu z pewnością rozwieje istota Święta Godowego, które dziś ma swoją pamięć. Nasi słowiańscy sąsiedzi uznają ten dzień za początek nowego roku słonecznego, liturgicznego i wegetacyjnego. Następstwem stoczonej walki światła z ciemnością jest trwające przesilenie zimowe, będące symbolem nadziei i radości. Gody zatem są czasem przejściowym, kiedy to stary cykl właśnie kończy swą podróż by nowy mógł się narodzić.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 580,
                 "name": "Dzień Jedności Zimbabwe",
-                "description": "Ten dzień upamiętnia scalenie się dwóch wiecznie uciśnionych przez Rodezyjski Rząd Kolonialny partii: ZANI i ZAPU. Poprzez połączenie sił w walce z narastającym reżimem w państwie, doprowadzili do obalenia rządów Iana Smitha. Przedstawiciele obu wspomnianych partii, Mugabe i Nkomo, w 1987 roku przyjęli pozycję prezydenta i premiera Zimbabwe tworząc marksistowskie ZANU-PF.",
+                "description": "Ten dzień upamiętnia scalenie się dwóch wiecznie uciśnionych przez Rodezyjski Rząd Kolonialny partii: ZANI i ZAPU. Poprzez połączenie sił w walce z narastającym reżimem w państwie, doprowadzili do obalenia rządów Iana Smitha. Przedstawiciele obu wspomnianych partii, Mugabe i Nkomo, w 1987 roku przyjęli pozycję prezydenta i premiera Zimbabwe tworząc marksistowskie ZANU—PF.",
                 "usual": false,
                 "link": ""
             }
@@ -6124,7 +6124,7 @@
             {
                 "id": 581,
                 "name": "Światowy Dzień Snowboardu",
-                "description": "Za istnienie tej dyscypliny sportu można podziękować Amerykaninowu Shermanowi Poppen, który w 1965 roku wymyślił \"snurfera\". Choć samo wydarzenie jest wpisane w kalendarze tylko 22 krajów, to w niczym nie przeszkadza pozostałym miłośnikom snowboardu odpowiednio to świętować.",
+                "description": "Za istnienie tej dyscypliny sportu można podziękować Amerykaninowi Shermanowi Poppen, który w 1965 roku wymyślił \"snurfera\". Choć samo wydarzenie jest wpisane w kalendarze tylko 22 krajów, to w niczym nie przeszkadza pozostałym miłośnikom snowboardu odpowiednio to świętować.",
                 "usual": false,
                 "link": ""
             }
@@ -6137,14 +6137,14 @@
             {
                 "id": 582,
                 "name": "Dzień Raju",
-                "description": "Tego wieczoru Raj zstąpi na ziemię. Według wierzeń naszych przodków Dzień Raju jest chwilą pojednania się świata żywych i zmarłych. Podczas wspólnej wieczerzy praktykowano zachowanie rozwagi abynie usiąść na kolanach zmarłego, nie zakłócać ich ciszy i spokoju w porze południowej. Za oknem natomiast nie miało dziwić pojawienie się pod śnieżną pierzyną kwitnących kwiatów, drzew, zwierząt czy pszczół, które wybudziły się ze snu zimowego aby złożyć pokłony Dzieciątku.",
+                "description": "Tego wieczoru Raj zstąpi na ziemię. Według wierzeń naszych przodków Dzień Raju jest chwilą pojednania się świata żywych i zmarłych. Podczas wspólnej wieczerzy praktykowano zachowanie rozwagi, aby nie usiąść na kolanach zmarłego, nie zakłócać ich ciszy i spokoju w porze południowej. Za oknem natomiast nie miało dziwić pojawienie się pod śnieżną pierzyną kwitnących kwiatów, drzew, zwierząt czy pszczół, które wybudziły się ze snu zimowego, aby złożyć pokłony Dzieciątku.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 583,
                 "name": "Wigilia Bożego Narodzenia",
-                "description": "Dziś jest wyjątkowy dzień, a właściwie wieczór rozpoczynający świąteczną podróż, na którą czeka chyba każdy z nas. Nie powinien dziwić widok przymarzniętych nosków dzieci na szybach, które z niecierpliwością wypatrują Pierwszej Gwiazdki. W tle przygrywa kolęda, na stołach już ugoszczono 12 potraw symbolizujących płody ziemi, pod choinką stosy prezentów. Wszyscy ubrani inaczej niż zwykle, łamią się opłatkiem życząc sobie \"wzajemnie\".",
+                "description": "Dziś jest wyjątkowy dzień, a właściwie wieczór rozpoczynający świąteczną podróż, na którą czeka chyba każdy z nas. Nie powinien dziwić widok przymarzniętych nosków dzieci na szybach, które z niecierpliwością wypatrują Pierwszej Gwiazdki. W tle przygrywa kolęda, na stołach już ugoszczono 12 potraw symbolizujących płody ziemi, pod choinką stosy prezentów. Wszyscy ubrani inaczej niż zwykle, łamią się opłatkiem, życząc sobie \"wzajemnie\".",
                 "usual": true,
                 "link": ""
             }
@@ -6156,8 +6156,8 @@
         "holidays": [
             {
                 "id": 584,
-                "name": "Dzień Kuaid-e-Azama",
-                "description": "Dziś to Pakistańczycy obchodzą swoje święto narodowe ku czci Kuaid-e-Azama. Człowiek ten był znany jako pierwszy generalny gubernator Pakistanu, który za cel postawił sobie stworzenie rządu i odpowiednich praw politycznych. Po jego śmierci jednak losy suwerennego państwa odeszły w niepamięć choćnie można tego powiedzieć o dacie narodzin tego polityka - rodowici Pakistańczycy właśnie dziś dumnie ją honorują.",
+                "name": "Dzień Kuaid—e—Azama",
+                "description": "Dziś to Pakistańczycy obchodzą swoje święto narodowe ku czci Kuaid—e—Azama. Człowiek ten był znany jako pierwszy generalny gubernator Pakistanu, który za cel postawił sobie stworzenie rządu i odpowiednich praw politycznych. Po jego śmierci jednak losy suwerennego państwa odeszły w niepamięć, choć nie można tego powiedzieć o dacie narodzin tego polityka — rodowici Pakistańczycy właśnie dziś dumnie ją honorują.",
                 "usual": false,
                 "link": ""
             },
@@ -6190,7 +6190,7 @@
             {
                 "id": 587,
                 "name": "Dzień Odpoczynku Po Świętach",
-                "description": "Święta, święta i... kolejne święta. Dziś obchodzimy \"Dzień Odpoczynku Po Świętach\". Złap oddech po bożonarodzeniowych zakupach i dzielnie wystanych kolejkach po karpia, wywalczonych burakach na barszcz i kapuście na farsz, stoczonej walce z piętrzącym się kurzem, odbytych niekiedy bużliwych dyskusjach przy stole. Po prostu usiądź, pomyśl o sobie, to jest ten czas by nabrać sił na nadchodzącą przyszłość.",
+                "description": "Święta, święta i... kolejne święta. Dziś obchodzimy \"Dzień Odpoczynku Po Świętach\". Złap oddech po bożonarodzeniowych zakupach i dzielnie wystanych kolejkach po karpia, wywalczonych burakach na barszcz i kapuście na farsz, stoczonej walce z piętrzącym się kurzem, odbytych niekiedy burzliwych dyskusjach przy stole. Po prostu usiądź, pomyśl o sobie, to jest ten czas, by nabrać sił na nadchodzącą przyszłość.",
                 "usual": false,
                 "link": ""
             }
@@ -6216,7 +6216,7 @@
             {
                 "id": 589,
                 "name": "Dzień Narodzin Niedźwiedzi Polarnych",
-                "description": "I te urocze misie doczekały się swojego święta. Jednak ta data nie jest przypadkowa, 27 grudnia 2006 roku Departament Zasobów Wewnętrznych Stanów Zjednoczonych uznał te niezwykłe zwierzęta jako zagrożone wymarciem i dokonał stosownego wpisu na listę. Między innymi w wyniku praktyk kłusowniczych, czy globalnego ocieplenia, populacja niedźwiedzi polarnych zmniejsza się z roku na rok. Okres zimowy wiąże się z ich narodzinami, dlatego świętujmy ten dzień inaczej niż zwykle wybierzmy rower zamiast samochodu, gaśmy światło jeśli wychodzimy z pomieszczenia.",
+                "description": "I te urocze misie doczekały się swojego święta. Jednak ta data nie jest przypadkowa, 27 grudnia 2006 roku Departament Zasobów Wewnętrznych Stanów Zjednoczonych uznał te niezwykłe zwierzęta jako zagrożone wymarciem i dokonał stosownego wpisu na listę. Między innymi w wyniku praktyk kłusowniczych, czy globalnego ocieplenia, populacja niedźwiedzi polarnych zmniejsza się z roku na rok. Okres zimowy wiąże się z ich narodzinami, dlatego świętujmy ten dzień inaczej, niż zwykle wybierzmy rower zamiast samochodu, gaśmy światło jeśli wychodzimy z pomieszczenia.",
                 "usual": false,
                 "link": ""
             }
@@ -6229,14 +6229,14 @@
             {
                 "id": 590,
                 "name": "Dzień Serka Wiejskiego",
-                "description": "Serek wiejski, naturalny, ze szczypiorkiem, w towarzystwie miodu czy dżemu, grający pierwsze skrzypce na wielu stołach po solidnej, świątecznej rozpuście. O jego istnieniu nie powinny zapominać także osoby zmagające się z cukrzycą oraz dbające o swoją sylwetkę. Nie bez powodu jego święto uplasowało się w grudniu. Ziarnista struktura oraz kolor z pewnością przypomina śnieg, będący z roku narok coraz to rzadszym zjawiskiem. W końcu taki mamy klimat.",
+                "description": "Serek wiejski, naturalny, ze szczypiorkiem, w towarzystwie miodu czy dżemu, grający pierwsze skrzypce na wielu stołach po solidnej, świątecznej rozpuście. O jego istnieniu nie powinny zapominać także osoby zmagające się z cukrzycą oraz dbające o swoją sylwetkę. Nie bez powodu jego święto uplasowało się w grudniu. Ziarnista struktura oraz kolor z pewnością przypomina śnieg, będący z roku na rok coraz to rzadszym zjawiskiem. W końcu taki mamy klimat.",
                 "usual": false,
                 "link": ""
             },
             {
                 "id": 591,
                 "name": "Dzień José Rizala",
-                "description": "Jeśli postać José Rizala nie jest Ci znana, to tego dnia się to zmieni. Rodowity Filipińczyk, z wykształcenia okulista, w sercu jednak nosił własny kraj i chęć walki o równorzędną prowincję. Przez swoje poglądy został ogłoszony wrogiem narodu, deportowany a następnie skazany na śmierć. Ten bohater oddał życie w słusznej sprawie wypowiadając ostatnie słowa \"to się skończyło\".",
+                "description": "Jeśli postać José Rizala nie jest Ci znana, to tego dnia się to zmieni. Rodowity Filipińczyk, z wykształcenia okulista, w sercu jednak nosił własny kraj i chęć walki o równorzędną prowincję. Przez swoje poglądy został ogłoszony wrogiem narodu, deportowany, a następnie skazany na śmierć. Ten bohater oddał życie w słusznej sprawie, wypowiadając ostatnie słowa \"to się skończyło\".",
                 "usual": false,
                 "link": ""
             }
