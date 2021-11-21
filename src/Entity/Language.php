@@ -2,31 +2,55 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 
+#[ORM\Entity]
 class Language implements JsonSerializable {
-	private string $language;
-	private string $uniLanguage;
+	#[ORM\Id]
+	#[ORM\Column(type: 'string', length: 31)]
+	private string $code;
 
-	public function __construct(string $language, string $uniLanguage) {
-		$this->language = $language;
-		$this->uniLanguage = $uniLanguage;
+	#[ORM\Id]
+	#[ORM\Column(type: 'string', length: 63)]
+	private string $name;
+
+	#[ORM\Column(type: 'integer')]
+	private int $releaseId;
+
+	public function __construct(string $code, string $name, string $releaseId) {
+		$this->code = $code;
+		$this->name = $name;
+		$this->releaseId = $releaseId;
 	}
 
-	public function getLanguage(): string {
-		return $this->language;
+	public function getCode(): string {
+		return $this->code;
 	}
 
-	public function getUniLanguage(): string {
-		return $this->uniLanguage;
+	public function getName(): string {
+		return $this->name;
 	}
 
-	#[ArrayShape(['language' => "string", 'uniLanguage' => "string"])]
+	public function getReleaseId(): int|string {
+		return $this->releaseId;
+	}
+
+	#[ArrayShape([
+		'uniLanguage' => "string",
+		'language' => "string",
+		'code' => "string",
+		'name' => "string",
+		'releaseId' => "int|string"
+	])]
 	public function jsonSerialize(): array {
 		return [
-			'language' => $this->language,
-			'uniLanguage' => $this->uniLanguage
+			'uniLanguage' => $this->code,
+			'language' => $this->name,
+			'code' => $this->code,
+			'name' => $this->name,
+			'releaseId' => $this->releaseId
 		];
 	}
 }

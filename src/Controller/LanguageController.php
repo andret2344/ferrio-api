@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Language;
-use App\Service\HolidayService;
+use App\Repository\LanguageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,10 +12,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/language', name: 'language_')]
 class LanguageController extends AbstractController {
-	private HolidayService $holidayService;
+	private LanguageRepository $languageRepository;
 
-	public function __construct(HolidayService $holidayService) {
-		$this->holidayService = $holidayService;
+	public function __construct(LanguageRepository $languageRepository) {
+		$this->languageRepository = $languageRepository;
 	}
 
 	#[Route('/', name: 'get_all', methods: ['GET'])]
@@ -23,18 +23,18 @@ class LanguageController extends AbstractController {
 		/**
 		 * @var Language[] $languages
 		 */
-		$languages = $this->holidayService->getLanguages();
+		$languages = $this->languageRepository->findAll();
 		$response = new JsonResponse($languages);
 		$response->headers->set("Content-Length", strlen($response->getContent()));
 		return $response;
 	}
 
-	#[Route('/{lang}', name: 'get_one', methods: ['GET'])]
-	public function getOne(string $lang): Response {
+	#[Route('/{code}', name: 'get_one', methods: ['GET'])]
+	public function getOne(string $code): Response {
 		/**
 		 * @var Language $language
 		 */
-		$language = $this->holidayService->getLanguage($lang);
+		$language = $this->languageRepository->findOneBy(['code' => $code]);
 		if ($language === null) {
 			throw new NotFoundHttpException();
 		}

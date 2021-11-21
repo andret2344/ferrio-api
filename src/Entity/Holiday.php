@@ -2,38 +2,66 @@
 
 namespace App\Entity;
 
-use JetBrains\PhpStorm\ArrayShape;
-use JsonSerializable;
+use Doctrine\ORM\Mapping as ORM;
 
-class Holiday implements JsonSerializable {
-	private int $id;
-	private string $name;
-	private string $description;
-	private bool $usual;
-	private string|null $link;
+#[ORM\Entity]
+class Holiday {
+	#[ORM\Id]
+	#[ORM\ManyToOne(targetEntity: Language::class)]
+	#[Orm\JoinColumn(name: "language_code", referencedColumnName: "code", nullable: false)]
+	private Language $language;
 
-	public function __construct(int $id, string $name, string $description, bool $usual = false, ?string $link = null) {
-		$this->id = $id;
+	#[ORM\Id]
+	#[ORM\ManyToOne(targetEntity: HolidayMetadata::class)]
+	#[Orm\JoinColumn(name: "metadata_id", referencedColumnName: "id", nullable: false)]
+	private HolidayMetadata $holidayMetadata;
+
+	#[ORM\Column(type: "text", nullable: true)]
+	private ?string $name;
+
+	#[ORM\Column(type: "text", nullable: true)]
+	private ?string $description;
+
+	#[ORM\Column(type: "text", nullable: true)]
+	private ?string $link;
+
+	public function __construct(Language $language, HolidayMetadata $holidayMetadata, ?string $name, ?string $description, ?string $link) {
+		$this->language = $language;
+		$this->holidayMetadata = $holidayMetadata;
 		$this->name = $name;
 		$this->description = $description;
-		$this->usual = $usual;
 		$this->link = $link;
 	}
 
-	#[ArrayShape([
-		'id' => "int",
-		'name' => "string",
-		'description' => "string",
-		'usual' => "bool",
-		'link' => "null|string"
-	])]
-	public function jsonSerialize(): array {
-		return [
-			'id' => $this->id,
-			'name' => $this->name,
-			'description' => $this->description,
-			'usual' => $this->usual,
-			'link' => $this->link
-		];
+	public function getLanguage(): Language {
+		return $this->language;
+	}
+
+	public function getHolidayMetadata(): HolidayMetadata {
+		return $this->holidayMetadata;
+	}
+
+	public function getName(): ?string {
+		return $this->name;
+	}
+
+	public function setName(?string $name): void {
+		$this->name = $name;
+	}
+
+	public function getDescription(): ?string {
+		return $this->description;
+	}
+
+	public function setDescription(?string $description): void {
+		$this->description = $description;
+	}
+
+	public function getLink(): ?string {
+		return $this->link;
+	}
+
+	public function setLink(?string $link): void {
+		$this->link = $link;
 	}
 }

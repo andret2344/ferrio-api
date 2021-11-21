@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Holiday;
 use App\Entity\HolidayDay;
+use App\Entity\HolidayMetadata;
 use App\Entity\Language;
 use DOMDocument;
 use DOMElement;
@@ -27,8 +28,8 @@ class HolidayService {
 			$dom = new DOMDocument();
 			$dom->loadXML(file_get_contents($this->directory . "/" . $file));
 			$attributes = $dom->childNodes->item(0)->attributes;
-			if ($attributes->getNamedItem('lang')->nodeValue === $language->getLanguage()
-				&& $attributes->getNamedItem('uni-lang')->nodeValue === $language->getUniLanguage()) {
+			if ($attributes->getNamedItem('lang')->nodeValue === $language->getName()
+				&& $attributes->getNamedItem('uni-lang')->nodeValue === $language->getCode()) {
 				return $file;
 			}
 		}
@@ -44,25 +45,10 @@ class HolidayService {
 			$attributes = $dom->childNodes->item(0)->attributes;
 			$result[] = new Language(
 				$attributes->getNamedItem('lang')->nodeValue,
-				$attributes->getNamedItem('uni-lang')->nodeValue);
+				$attributes->getNamedItem('uni-lang')->nodeValue,
+				date("Ymd"));
 		}
 		return $result;
-	}
-
-	public function getLanguage(mixed $criterion): Language|null {
-		/**
-		 * @var Language[] $languages
-		 */
-		$languages = $this->getLanguages();
-		foreach ($languages as $language) {
-			if ($language->getLanguage() === $criterion) {
-				return $language;
-			}
-			if ($language->getUniLanguage() === $criterion) {
-				return $language;
-			}
-		}
-		return null;
 	}
 
 	public function getHolidays(Language $language): array|null {
@@ -93,7 +79,8 @@ class HolidayService {
 				$description = $element->getElementsByTagName("description")[0]->nodeValue;
 				$usual = $element->attributes->getNamedItem("usual")->nodeValue;
 				$link = $element->getElementsByTagName("link")[0]->nodeValue;
-				$holidays[] = new Holiday($id, $name, $description, filter_var($usual, FILTER_VALIDATE_BOOLEAN), $link);
+				$metadata = new HolidayMetadata($id, 0, 0, filter_var($usual, FILTER_VALIDATE_BOOLEAN));
+				$holidays[] = new Holiday($language, $metadata, $name, $description, $link);
 			}
 			$days[] = new HolidayDay($day, $month, $holidays);
 		}
@@ -124,7 +111,7 @@ class HolidayService {
 					$description = $element->getElementsByTagName("description")[0]->nodeValue;
 					$usual = $element->attributes->getNamedItem("usual")->nodeValue;
 					$link = $element->getElementsByTagName("link")[0]->nodeValue;
-					return new Holiday($id, $name, $description, filter_var($usual, FILTER_VALIDATE_BOOLEAN), $link);
+					return new Holiday($language, $name, $description, filter_var($usual, FILTER_VALIDATE_BOOLEAN), $link);
 				}
 			}
 		}

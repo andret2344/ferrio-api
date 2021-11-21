@@ -5,7 +5,10 @@
     "prefer-stable": true,
     "require": {
         "php": "8.0.10",
+        "ext-dom": "*",
         "doctrine/annotations": "^1.13",
+        "doctrine/doctrine-bundle": "^2.4",
+        "doctrine/orm": "^2.10",
         "symfony/apache-pack": "^1.0",
         "symfony/console": "5.3.7",
         "symfony/dotenv": "5.3.8",
@@ -13,8 +16,9 @@
         "symfony/framework-bundle": "5.3.8",
         "symfony/proxy-manager-bridge": "5.3.*",
         "symfony/runtime": "^5.3",
+        "symfony/twig-bundle": "5.3.*",
         "symfony/yaml": "5.3.6",
-        "ext-dom": "*"
+        "twig/twig": "^3.3"
     },
     "config": {
         "optimize-autoloader": true,
@@ -60,6 +64,7 @@
         }
     },
     "require-dev": {
+        "symfony/maker-bundle": "^1.36",
         "symfony/stopwatch": "5.3.*",
         "symfony/web-profiler-bundle": "5.3.*"
     }
