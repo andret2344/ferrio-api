@@ -77,7 +77,7 @@ class Holiday implements JsonSerializable {
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->holidayMetadata->getId(),
-			'usual' => $this->holidayMetadata->getUsual(),
+			'usual' => (boolean)$this->holidayMetadata->getUsual(),
 			'name' => $this->name,
 			'description' => $this->description,
 			'link' => $this->link
