@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Holiday;
+use App\Repository\HolidayRepository;
 use App\Service\HolidayService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,9 +13,11 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/holiday', name: 'holiday_')]
 class HolidayController extends AbstractController {
 	private HolidayService $holidayService;
+	private HolidayRepository $holidayRepository;
 
-	public function __construct(HolidayService $holidayService) {
+	public function __construct(HolidayService $holidayService, HolidayRepository $holidayRepository) {
 		$this->holidayService = $holidayService;
+		$this->holidayRepository = $holidayRepository;
 	}
 
 	#[Route('/{lang}', name: 'get_all', methods: ['GET'])]
@@ -22,7 +25,9 @@ class HolidayController extends AbstractController {
 		/**
 		 * @var Holiday[] $holidays
 		 */
-		$holidays = $this->holidayService->getHolidays($this->holidayService->getLanguage($lang));
+		$holidays = $this->holidayRepository->findBy([
+			'language' => $lang
+		]);
 		$response = new JsonResponse($holidays);
 		$response->headers->set("Content-Length", strlen($response->getContent()));
 		return $response;

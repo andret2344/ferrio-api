@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Language;
 use App\Repository\LanguageRepository;
+use App\Service\HolidayService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +14,11 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/language', name: 'language_')]
 class LanguageController extends AbstractController {
 	private LanguageRepository $languageRepository;
+	private HolidayService $holidayService;
 
-	public function __construct(LanguageRepository $languageRepository) {
+	public function __construct(LanguageRepository $languageRepository, HolidayService $holidayService) {
 		$this->languageRepository = $languageRepository;
+		$this->holidayService = $holidayService;
 	}
 
 	#[Route('/', name: 'get_all', methods: ['GET'])]
@@ -41,5 +44,15 @@ class LanguageController extends AbstractController {
 		$response = new JsonResponse($language);
 		$response->headers->set("Content-Length", strlen($response->getContent()));
 		return $response;
+	}
+
+	#[Route('/{code}/migrate', name: 'migrate', methods: ['GET'])]
+	public function migrate(string $code): Response {
+		/**
+		 * @var Language[] $language
+		 */
+		$language = $this->languageRepository->findBy(['code' => $code]);
+		$this->holidayService->migrate($language[0]);
+		return new Response("");
 	}
 }

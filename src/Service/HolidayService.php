@@ -6,11 +6,17 @@ use App\Entity\Holiday;
 use App\Entity\HolidayDay;
 use App\Entity\HolidayMetadata;
 use App\Entity\Language;
+use Doctrine\ORM\EntityManagerInterface;
 use DOMDocument;
 use DOMElement;
 
 class HolidayService {
 	private string $directory = 'public/resources';
+	private EntityManagerInterface $entityManager;
+
+	public function __construct(EntityManagerInterface $entityManager) {
+		$this->entityManager = $entityManager;
+	}
 
 	private function getFiles(): array {
 		$files = [];
@@ -116,5 +122,29 @@ class HolidayService {
 			}
 		}
 		return null;
+	}
+
+	public function migrate(Language $language): void {
+		$file = $this->directory . '/' . $language->getCode() . '.json';
+		$content = file_get_contents($file);
+		$data = json_decode($content);
+		foreach ($data as $datum) {
+			$day = $datum->day;
+			$month = $datum->month;
+			$holidays = $datum->holidays;
+			foreach ($holidays as $holiday) {
+				$id = $holiday->id;
+				$name = $holiday->name;
+				$description = $holiday->description;
+				$usual = $holiday->usual;
+				$link = $holiday->link;
+				$metadata = new HolidayMetadata($id, $month, $day, $usual);
+				$holidayDTO = new Holiday($language, $metadata, $name, $description, $link);
+				$metadata->addHoliday($holidayDTO);
+				$this->entityManager->persist($holidayDTO);
+				$this->entityManager->persist($metadata);
+				$this->entityManager->flush();
+			}
+		}
 	}
 }
