@@ -68,12 +68,16 @@ class Holiday implements JsonSerializable {
 	}
 
 	#[ArrayShape([
+		'id' => 'int',
+		'usual' => 'boolean',
 		'name' => 'null|string',
 		'description' => 'null|string',
 		'link' => 'null|string'
 	])]
 	public function jsonSerialize(): array {
 		return [
+			'id' => $this->holidayMetadata->getId(),
+			'usual' => $this->holidayMetadata->getUsual(),
 			'name' => $this->name,
 			'description' => $this->description,
 			'link' => $this->link
