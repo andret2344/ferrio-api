@@ -82,7 +82,8 @@ class Holiday implements JsonSerializable {
 		'usual' => 'boolean',
 		'name' => 'null|string',
 		'description' => 'null|string',
-		'link' => 'null|string'
+		'link' => 'null|string',
+		'url' => 'null|string'
 	])]
 	public function jsonSerialize(): array {
 		return [
@@ -90,7 +91,8 @@ class Holiday implements JsonSerializable {
 			'usual' => (boolean)$this->metadata->getUsual(),
 			'name' => $this->name,
 			'description' => $this->description,
-			'link' => $this->link
+			'link' => $this->link,
+			'url' => $this->link
 		];
 	}
 }

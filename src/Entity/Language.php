@@ -21,11 +21,11 @@ class Language implements JsonSerializable {
 	#[ORM\Column(type: 'integer')]
 	private int $releaseId;
 
-	#[ORM\OneToMany(mappedBy: 'language', targetEntity: Holiday::class, orphanRemoval: true)]
-	private Collection $holidays;
-
 	#[ORM\Column(type: 'string', unique: true)]
 	private string $url;
+
+	#[ORM\OneToMany(mappedBy: 'language', targetEntity: Holiday::class, orphanRemoval: true)]
+	private Collection $holidays;
 
 	#[Pure]
 	public function __construct(string $code, string $name, string $releaseId, string $url) {
@@ -61,7 +61,6 @@ class Language implements JsonSerializable {
 			$this->holidays[] = $holiday;
 			$holiday->setLanguage($this);
 		}
-
 		return $this;
 	}
 
@@ -69,7 +68,6 @@ class Language implements JsonSerializable {
 		if ($this->holidays->removeElement($holiday) && $holiday->getLanguage() === $this) {
 			$holiday->setLanguage(null);
 		}
-
 		return $this;
 	}
 

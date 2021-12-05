@@ -4,23 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Holiday;
 use App\Repository\HolidayRepository;
-use App\Repository\LanguageRepository;
-use App\Service\HolidayService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/holiday', name: 'holiday_')]
 class HolidayController extends AbstractController {
-	private HolidayService $holidayService;
 	private HolidayRepository $holidayRepository;
-	private LanguageRepository $languageRepository;
 
-	public function __construct(HolidayService $holidayService, HolidayRepository $holidayRepository, LanguageRepository $languageRepository) {
-		$this->holidayService = $holidayService;
+	public function __construct(HolidayRepository $holidayRepository) {
 		$this->holidayRepository = $holidayRepository;
-		$this->languageRepository = $languageRepository;
 	}
 
 	#[Route('/{lang}', name: 'get_all', methods: ['GET'])]
@@ -41,7 +36,13 @@ class HolidayController extends AbstractController {
 		/**
 		 * @var Holiday $holiday
 		 */
-		$holiday = $this->holidayService->getHoliday($this->languageRepository->findOneBy(['code' => $lang]), $id);
+		$holiday = $this->holidayRepository->findOneBy([
+			'language' => $lang,
+			'metadata' => $id
+		]);
+		if ($holiday == null) {
+			throw new NotFoundHttpException("Holiday with this id ($id) in language \"$lang\" does not exist.");
+		}
 		$response = new JsonResponse($holiday);
 		$response->headers->set("Content-Length", strlen($response->getContent()));
 		return $response;

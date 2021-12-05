@@ -2,26 +2,27 @@
 
 namespace App\Entity;
 
-use App\Repository\HolidayMetadataRepository;
+use App\Repository\MetadataRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 
-#[ORM\Entity(repositoryClass: HolidayMetadataRepository::class)]
+#[ORM\Entity(repositoryClass: MetadataRepository::class)]
 class HolidayMetadata implements JsonSerializable {
 	#[ORM\Id]
-	#[ORM\Column(type: "integer")]
+	#[ORM\Column(type: 'integer')]
 	private int $id;
 
-	#[ORM\Column(type: "integer")]
+	#[ORM\Column(type: 'integer')]
 	private int $month;
 
-	#[ORM\Column(type: "integer")]
+	#[ORM\Column(type: 'integer')]
 	private int $day;
 
-	#[ORM\Column(type: "boolean")]
+	#[ORM\Column(type: 'boolean')]
 	private int $usual;
 
 	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: Holiday::class, orphanRemoval: true)]
@@ -73,6 +74,12 @@ class HolidayMetadata implements JsonSerializable {
 		return $this;
 	}
 
+	#[ArrayShape([
+		'id' => 'int',
+		'month' => 'int',
+		'day' => 'int',
+		'usual' => 'int'
+	])]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,
@@ -81,4 +88,10 @@ class HolidayMetadata implements JsonSerializable {
 			'usual' => $this->usual
 		];
 	}
+
+	public function __toString(): string {
+		return json_encode($this->jsonSerialize());
+	}
+
+
 }
