@@ -15,7 +15,7 @@ class Language implements JsonSerializable {
 	#[ORM\Column(type: 'string', length: 31)]
 	private string $code;
 
-	#[ORM\Column(type: 'string', length: 63)]
+	#[ORM\Column(type: 'string', length: 63, unique: true)]
 	private string $name;
 
 	#[ORM\Column(type: 'integer')]
@@ -24,11 +24,15 @@ class Language implements JsonSerializable {
 	#[ORM\OneToMany(mappedBy: 'language', targetEntity: Holiday::class, orphanRemoval: true)]
 	private Collection $holidays;
 
+	#[ORM\Column(type: 'string', unique: true)]
+	private string $url;
+
 	#[Pure]
-	public function __construct(string $code, string $name, string $releaseId) {
+	public function __construct(string $code, string $name, string $releaseId, string $url) {
 		$this->code = $code;
 		$this->name = $name;
 		$this->releaseId = $releaseId;
+		$this->url = $url;
 		$this->holidays = new ArrayCollection();
 	}
 
@@ -42,6 +46,10 @@ class Language implements JsonSerializable {
 
 	public function getReleaseId(): int|string {
 		return $this->releaseId;
+	}
+
+	public function getUrl(): string {
+		return $this->url;
 	}
 
 	public function getHolidays(): Collection {
@@ -66,11 +74,12 @@ class Language implements JsonSerializable {
 	}
 
 	#[ArrayShape([
-		'uniLanguage' => "string",
-		'language' => "string",
-		'code' => "string",
-		'name' => "string",
-		'releaseId' => "int|string"
+		'uniLanguage' => 'string',
+		'language' => 'string',
+		'code' => 'string',
+		'name' => 'string',
+		'releaseId' => 'int',
+		'url' => 'string'
 	])]
 	public function jsonSerialize(): array {
 		return [
@@ -78,7 +87,8 @@ class Language implements JsonSerializable {
 			'language' => $this->name,
 			'code' => $this->code,
 			'name' => $this->name,
-			'releaseId' => $this->releaseId
+			'releaseId' => $this->releaseId,
+			'url' => $this->url
 		];
 	}
 }

@@ -3,27 +3,28 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 
 #[ORM\Entity]
 class Holiday implements JsonSerializable {
 	#[ORM\Id]
-	#[ORM\ManyToOne(targetEntity: Language::class, cascade: ['persist'], inversedBy: 'holidays')]
-	#[ORM\JoinColumn(referencedColumnName: 'code', nullable: false)]
+	#[ORM\ManyToOne(targetEntity: Language::class)]
+	#[Orm\JoinColumn(name: 'language_code', referencedColumnName: 'code', nullable: false)]
 	private Language $language;
 
 	#[ORM\Id]
-	#[ORM\ManyToOne(targetEntity: HolidayMetadata::class, cascade: ['persist'], inversedBy: 'holidays')]
-	#[ORM\JoinColumn(referencedColumnName: 'id', nullable: false)]
+	#[ORM\ManyToOne(targetEntity: HolidayMetadata::class)]
+	#[Orm\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
 	private HolidayMetadata $metadata;
 
-	#[ORM\Column(type: "text", nullable: true)]
+	#[ORM\Column(type: 'text', nullable: true)]
 	private ?string $name;
 
-	#[ORM\Column(type: "text", nullable: true)]
+	#[ORM\Column(type: 'text', nullable: true)]
 	private ?string $description;
 
-	#[ORM\Column(type: "text", nullable: true)]
+	#[ORM\Column(type: 'text', nullable: true)]
 	private ?string $link;
 
 	public function __construct(Language $language, HolidayMetadata $metadata, ?string $name, ?string $description, ?string $link) {
@@ -76,9 +77,17 @@ class Holiday implements JsonSerializable {
 		$this->link = $link;
 	}
 
+	#[ArrayShape([
+		'id' => 'int',
+		'usual' => 'boolean',
+		'name' => 'null|string',
+		'description' => 'null|string',
+		'link' => 'null|string'
+	])]
 	public function jsonSerialize(): array {
 		return [
-			'metadata' => $this->metadata,
+			'id' => $this->metadata->getId(),
+			'usual' => (boolean)$this->metadata->getUsual(),
 			'name' => $this->name,
 			'description' => $this->description,
 			'link' => $this->link
