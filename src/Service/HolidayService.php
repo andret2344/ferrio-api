@@ -3,8 +3,10 @@
 namespace App\Service;
 
 use App\Entity\Holiday;
+use App\Entity\HolidayDay;
 use App\Entity\HolidayMetadata;
 use App\Entity\Language;
+use App\Repository\HolidayRepository;
 use App\Repository\MetadataRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -12,10 +14,45 @@ class HolidayService {
 	private string $directory = 'public/resources';
 	private EntityManagerInterface $entityManager;
 	private MetadataRepository $metadataRepository;
+	private HolidayRepository $holidayRepository;
 
-	public function __construct(EntityManagerInterface $entityManager, MetadataRepository $metadataRepository) {
+
+	public function __construct(EntityManagerInterface $entityManager,
+								MetadataRepository     $metadataRepository,
+								HolidayRepository      $holidayRepository) {
 		$this->entityManager = $entityManager;
 		$this->metadataRepository = $metadataRepository;
+		$this->holidayRepository = $holidayRepository;
+	}
+
+	public function getHolidays(string $language): array {
+		/**
+		 * @var Holiday[] $holidays
+		 */
+		$holidays = $this->holidayRepository->findBy([
+			'language' => $language
+		]);
+		$days = [];
+		$day = 1;
+		$month = 1;
+		$array = [];
+		foreach ($holidays as $holiday) {
+			if ($day != $holiday->getMetadata()->getDay() || $month != $holiday->getMetadata()->getMonth()) {
+				$days[] = new HolidayDay($day, $month, $array);
+				$array = [];
+				$day = $holiday->getMetadata()->getDay();
+				$month = $holiday->getMetadata()->getMonth();
+			}
+			$array[] = $holiday;
+		}
+		return $days;
+	}
+
+	public function getHoliday(string $language, int $id): Holiday {
+		return $this->holidayRepository->findOneBy([
+			'language' => $language,
+			'metadata' => $id
+		]);
 	}
 
 	public function migrate(Language $language): void {

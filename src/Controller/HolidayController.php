@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Holiday;
-use App\Repository\HolidayRepository;
+use App\Entity\HolidayDay;
+use App\Service\HolidayService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,36 +12,28 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/holiday', name: 'holiday_')]
 class HolidayController extends AbstractController {
-	private HolidayRepository $holidayRepository;
+	private HolidayService $holidayService;
 
-	public function __construct(HolidayRepository $holidayRepository) {
-		$this->holidayRepository = $holidayRepository;
+	public function __construct(HolidayService $holidayService) {
+		$this->holidayService = $holidayService;
 	}
 
-	#[Route('/{lang}', name: 'get_all', methods: ['GET'])]
-	public function getAll(string $lang): Response {
+	#[Route('/{language}', name: 'get_all', methods: ['GET'])]
+	public function getAll(string $language): Response {
 		/**
-		 * @var Holiday[] $holidays
+		 * @var HolidayDay[] $holidayDays
 		 */
-		$holidays = $this->holidayRepository->findBy([
-			'language' => $lang
-		]);
-		$response = new JsonResponse($holidays);
+		$holidayDays = $this->holidayService->getHolidays($language);
+		$response = new JsonResponse($holidayDays);
 		$response->headers->set("Content-Length", strlen($response->getContent()));
 		return $response;
 	}
 
-	#[Route('/{lang}/{id}', name: 'get_one', methods: ['GET'])]
-	public function getOne(string $lang, int $id): Response {
-		/**
-		 * @var Holiday $holiday
-		 */
-		$holiday = $this->holidayRepository->findOneBy([
-			'language' => $lang,
-			'metadata' => $id
-		]);
+	#[Route('/{language}/{id}', name: 'get_one', methods: ['GET'])]
+	public function getOne(string $language, int $id): Response {
+		$holiday = $this->holidayService->getHoliday($language, $id);
 		if ($holiday == null) {
-			throw new NotFoundHttpException("Holiday with this id ($id) in language \"$lang\" does not exist.");
+			throw new NotFoundHttpException("Holiday with this id ($id) in language \"$language\" does not exist.");
 		}
 		$response = new JsonResponse($holiday);
 		$response->headers->set("Content-Length", strlen($response->getContent()));
