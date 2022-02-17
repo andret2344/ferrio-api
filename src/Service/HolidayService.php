@@ -6,115 +6,79 @@ use App\Entity\Holiday;
 use App\Entity\HolidayDay;
 use App\Entity\HolidayMetadata;
 use App\Entity\Language;
-use DOMDocument;
-use DOMElement;
+use App\Repository\HolidayRepository;
+use App\Repository\MetadataRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class HolidayService {
 	private string $directory = 'public/resources';
+	private EntityManagerInterface $entityManager;
+	private MetadataRepository $metadataRepository;
+	private HolidayRepository $holidayRepository;
 
-	private function getFiles(): array {
-		$files = [];
-		foreach (scandir($this->directory) as $file) {
-			if ($file !== '.' && $file !== '..') {
-				$files[] = $file;
-			}
-		}
-		return $files;
+
+	public function __construct(EntityManagerInterface $entityManager,
+								MetadataRepository     $metadataRepository,
+								HolidayRepository      $holidayRepository) {
+		$this->entityManager = $entityManager;
+		$this->metadataRepository = $metadataRepository;
+		$this->holidayRepository = $holidayRepository;
 	}
 
-	private function getFile(Language $language): string|null {
-		$files = $this->getFiles();
-		foreach ($files as $file) {
-			$dom = new DOMDocument();
-			$dom->loadXML(file_get_contents($this->directory . "/" . $file));
-			$attributes = $dom->childNodes->item(0)->attributes;
-			if ($attributes->getNamedItem('lang')->nodeValue === $language->getName()
-				&& $attributes->getNamedItem('uni-lang')->nodeValue === $language->getCode()) {
-				return $file;
-			}
-		}
-		return null;
-	}
-
-	public function getLanguages(): array {
-		$files = $this->getFiles();
-		$result = [];
-		foreach ($files as $file) {
-			$dom = new DOMDocument();
-			$dom->loadXML(file_get_contents($this->directory . "/" . $file));
-			$attributes = $dom->childNodes->item(0)->attributes;
-			$result[] = new Language(
-				$attributes->getNamedItem('lang')->nodeValue,
-				$attributes->getNamedItem('uni-lang')->nodeValue,
-				date("Ymd"));
-		}
-		return $result;
-	}
-
-	public function getHolidays(Language $language): array|null {
-		$file = $this->getFile($language);
-		if ($file === null) {
-			return null;
-		}
-		$dom = new DOMDocument();
-		$dom->loadXML(file_get_contents($this->directory . "/" . $file));
-		$DOMNodeList = $dom->getElementsByTagName("day");
+	public function getHolidays(string $language): array {
+		/**
+		 * @var Holiday[] $holidays
+		 */
+		$holidays = $this->holidayRepository->findBy([
+			'language' => $language
+		]);
 		$days = [];
-		for ($i = 0; $i < $DOMNodeList->length; $i++) {
-			/**
-			 * @var DOMElement $dayElement
-			 */
-			$dayElement = $DOMNodeList->item($i);
-			$day = $dayElement->attributes->getNamedItem("day")->nodeValue;
-			$month = $dayElement->attributes->getNamedItem("month")->nodeValue;
-			$children = $dayElement->getElementsByTagName("holiday");
-			$holidays = [];
-			for ($j = 0; $j < $children->length; $j++) {
-				/**
-				 * @var DOMElement $element
-				 */
-				$element = $children->item($j);
-				$id = $element->attributes->getNamedItem("id")->nodeValue;
-				$name = $element->getElementsByTagName("name")[0]->nodeValue;
-				$description = $element->getElementsByTagName("description")[0]->nodeValue;
-				$usual = $element->attributes->getNamedItem("usual")->nodeValue;
-				$link = $element->getElementsByTagName("link")[0]->nodeValue;
-				$metadata = new HolidayMetadata($id, 0, 0, filter_var($usual, FILTER_VALIDATE_BOOLEAN));
-				$holidays[] = new Holiday($language, $metadata, $name, $description, $link);
+		$day = 1;
+		$month = 1;
+		$array = [];
+		foreach ($holidays as $holiday) {
+			if ($day != $holiday->getMetadata()->getDay() || $month != $holiday->getMetadata()->getMonth()) {
+				$days[] = new HolidayDay($day, $month, $array);
+				$array = [];
+				$day = $holiday->getMetadata()->getDay();
+				$month = $holiday->getMetadata()->getMonth();
 			}
-			$days[] = new HolidayDay($day, $month, $holidays);
+			$array[] = $holiday;
 		}
 		return $days;
 	}
 
-	public function getHoliday(Language $language, int $id): Holiday|null {
-		$file = $this->getFile($language);
-		if ($file === null) {
-			return null;
-		}
-		$dom = new DOMDocument();
-		$dom->loadXML(file_get_contents($this->directory . "/" . $file));
-		$DOMNodeList = $dom->getElementsByTagName("day");
-		for ($i = 0; $i < $DOMNodeList->length; $i++) {
-			/**
-			 * @var DOMElement $dayElement
-			 */
-			$dayElement = $DOMNodeList->item($i);
-			$children = $dayElement->getElementsByTagName("holiday");
-			for ($j = 0; $j < $children->length; $j++) {
-				/**
-				 * @var DOMElement $element
-				 */
-				$element = $children->item($j);
-				if ($id === +$element->attributes->getNamedItem("id")->nodeValue) {
-					$name = $element->getElementsByTagName("name")[0]->nodeValue;
-					$description = $element->getElementsByTagName("description")[0]->nodeValue;
-					$usual = $element->attributes->getNamedItem("usual")->nodeValue;
-					$link = $element->getElementsByTagName("link")[0]->nodeValue;
-					return new Holiday($language, $name, $description, filter_var($usual, FILTER_VALIDATE_BOOLEAN), $link);
+	public function getHoliday(string $language, int $id): Holiday {
+		return $this->holidayRepository->findOneBy([
+			'language' => $language,
+			'metadata' => $id
+		]);
+	}
+
+	public function migrate(Language $language): void {
+		$file = $this->directory . '/' . $language->getCode() . '.json';
+		$content = file_get_contents($file);
+		$data = json_decode($content);
+		foreach ($data as $datum) {
+			$day = $datum->day;
+			$month = $datum->month;
+			$holidays = $datum->holidays;
+			foreach ($holidays as $holiday) {
+				$id = $holiday->id;
+				$name = $holiday->name;
+				$description = $holiday->description;
+				$usual = $holiday->usual;
+				$link = $holiday->link;
+				$metadata = $this->metadataRepository->findOneBy(['id' => $id]);
+				if ($metadata == null) {
+					$metadata = new HolidayMetadata($id, $month, $day, $usual);
+					$this->entityManager->persist($metadata);
 				}
+				$holidayDTO = new Holiday($language, $metadata, $name, $description, $link);
+				$metadata->addHoliday($holidayDTO);
+				$this->entityManager->persist($holidayDTO);
+				$this->entityManager->flush();
 			}
 		}
-		return null;
 	}
 }

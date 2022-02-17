@@ -28,11 +28,11 @@ class HolidayDay implements JsonSerializable {
 		return $this->holidays;
 	}
 
-	public function setHolidays(array $holidays): void {
-		$this->holidays = $holidays;
-	}
-
-	#[ArrayShape(['day' => "int", 'month' => "int", 'holidays' => "array"])]
+	#[ArrayShape([
+		'day' => 'int',
+		'month' => 'int',
+		'holidays' => 'array'
+	])]
 	public function jsonSerialize(): array {
 		return [
 			'day' => $this->day,

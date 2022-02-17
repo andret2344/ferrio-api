@@ -16,7 +16,7 @@ class Holiday implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\ManyToOne(targetEntity: HolidayMetadata::class)]
 	#[Orm\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
-	private HolidayMetadata $holidayMetadata;
+	private HolidayMetadata $metadata;
 
 	#[ORM\Column(type: 'text', nullable: true)]
 	private ?string $name;
@@ -27,20 +27,30 @@ class Holiday implements JsonSerializable {
 	#[ORM\Column(type: 'text', nullable: true)]
 	private ?string $link;
 
-	public function __construct(Language $language, HolidayMetadata $holidayMetadata, ?string $name, ?string $description, ?string $link) {
+	public function __construct(Language $language, HolidayMetadata $metadata, ?string $name, ?string $description, ?string $link) {
 		$this->language = $language;
-		$this->holidayMetadata = $holidayMetadata;
+		$this->metadata = $metadata;
 		$this->name = $name;
 		$this->description = $description;
 		$this->link = $link;
 	}
 
-	public function getLanguage(): Language {
+	public function getLanguage(): ?Language {
 		return $this->language;
 	}
 
-	public function getHolidayMetadata(): HolidayMetadata {
-		return $this->holidayMetadata;
+	public function setLanguage(?Language $language): self {
+		$this->language = $language;
+		return $this;
+	}
+
+	public function getMetadata(): ?HolidayMetadata {
+		return $this->metadata;
+	}
+
+	public function setMetadata(?HolidayMetadata $holidayMetadata): self {
+		$this->metadata = $holidayMetadata;
+		return $this;
 	}
 
 	public function getName(): ?string {
@@ -72,15 +82,17 @@ class Holiday implements JsonSerializable {
 		'usual' => 'boolean',
 		'name' => 'null|string',
 		'description' => 'null|string',
-		'link' => 'null|string'
+		'link' => 'null|string',
+		'url' => 'null|string'
 	])]
 	public function jsonSerialize(): array {
 		return [
-			'id' => $this->holidayMetadata->getId(),
-			'usual' => (boolean)$this->holidayMetadata->getUsual(),
+			'id' => $this->metadata->getId(),
+			'usual' => (boolean)$this->metadata->getUsual(),
 			'name' => $this->name,
 			'description' => $this->description,
-			'link' => $this->link
+			'link' => $this->link,
+			'url' => $this->link
 		];
 	}
 }
