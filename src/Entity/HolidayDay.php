@@ -6,19 +6,19 @@ use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 
 class HolidayDay implements JsonSerializable {
-	private int $id;
+	private string $id;
 	private int $day;
 	private int $month;
 	private array $holidays;
 
-	public function __construct(int $id, int $day, int $month, array $holidays = []) {
+	public function __construct(string $id, int $day, int $month, array $holidays = []) {
 		$this->id = $id;
 		$this->day = $day;
 		$this->month = $month;
 		$this->holidays = $holidays;
 	}
 
-	public function getId(): int {
+	public function getId(): string {
 		return $this->id;
 	}
 
@@ -35,7 +35,7 @@ class HolidayDay implements JsonSerializable {
 	}
 
 	#[ArrayShape([
-		'id' => 'int',
+		'id' => 'string',
 		'day' => 'int',
 		'month' => 'int',
 		'holidays' => 'array'
