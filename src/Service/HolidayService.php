@@ -16,7 +16,6 @@ class HolidayService {
 	private MetadataRepository $metadataRepository;
 	private HolidayRepository $holidayRepository;
 
-
 	public function __construct(EntityManagerInterface $entityManager,
 								MetadataRepository     $metadataRepository,
 								HolidayRepository      $holidayRepository) {
@@ -38,7 +37,8 @@ class HolidayService {
 		$array = [];
 		foreach ($holidays as $holiday) {
 			if ($day != $holiday->getMetadata()->getDay() || $month != $holiday->getMetadata()->getMonth()) {
-				$days[] = new HolidayDay($day, $month, $array);
+				$id = sprintf('%02d', $month) . sprintf('%02d', $day);
+				$days[] = new HolidayDay($id, $day, $month, $array);
 				$array = [];
 				$day = $holiday->getMetadata()->getDay();
 				$month = $holiday->getMetadata()->getMonth();
