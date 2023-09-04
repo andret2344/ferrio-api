@@ -12,10 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/holiday', name: 'holiday_')]
 class HolidayController extends AbstractController {
-	private HolidayService $holidayService;
-
-	public function __construct(HolidayService $holidayService) {
-		$this->holidayService = $holidayService;
+	public function __construct(private readonly HolidayService $holidayService) {
 	}
 
 	#[Route('/{language}', name: 'get_all', methods: ['GET'])]
@@ -25,6 +22,14 @@ class HolidayController extends AbstractController {
 		 */
 		$holidayDays = $this->holidayService->getHolidays($language);
 		$response = new JsonResponse($holidayDays);
+		$response->headers->set("Content-Length", strlen($response->getContent()));
+		return $response;
+	}
+
+	#[Route('/{language}/today', name: 'get_today', methods: ['GET'])]
+	public function getToday(string $language): Response {
+		$holiday = $this->holidayService->getTodayHoliday($language);
+		$response = new JsonResponse($holiday);
 		$response->headers->set("Content-Length", strlen($response->getContent()));
 		return $response;
 	}

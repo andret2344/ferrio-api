@@ -4,28 +4,32 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": "8.0.10",
-        "ext-dom": "*",
-        "doctrine/annotations": "^1.13",
-        "doctrine/doctrine-bundle": "^2.4",
-        "doctrine/orm": "^2.10",
-        "symfony/apache-pack": "^1.0",
-        "symfony/console": "5.3.7",
-        "symfony/dotenv": "5.3.8",
-        "symfony/flex": "^1.3.1",
-        "symfony/framework-bundle": "5.3.8",
-        "symfony/proxy-manager-bridge": "5.3.*",
-        "symfony/runtime": "^5.3",
-        "symfony/twig-bundle": "5.3.*",
-        "symfony/yaml": "5.3.6",
-        "twig/twig": "^3.3"
+        "php": ">=8.2",
+        "composer-plugin-api": "^2.1",
+        "doctrine/annotations": "^2.0",
+        "doctrine/doctrine-bundle": "^2.10",
+        "doctrine/orm": "^2.16",
+        "symfony/apache-pack": "^v1.0",
+        "symfony/console": "*",
+        "symfony/dotenv": "*",
+        "symfony/flex": "^v2.3",
+        "symfony/framework-bundle": "*",
+        "symfony/proxy-manager-bridge": "*",
+        "symfony/runtime": "*",
+        "symfony/twig-bundle": "*",
+        "symfony/yaml": "*",
+        "twig/twig": "^v3.7"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": true,
+            "symfony/runtime": true
+        }
     },
     "autoload": {
         "psr-4": {
@@ -60,12 +64,12 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.3.*"
+            "require": "^6.3"
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.36",
-        "symfony/stopwatch": "5.3.*",
-        "symfony/web-profiler-bundle": "5.3.*"
+        "symfony/maker-bundle": "^v1.50",
+        "symfony/stopwatch": "*",
+        "symfony/web-profiler-bundle": "*"
     }
 }

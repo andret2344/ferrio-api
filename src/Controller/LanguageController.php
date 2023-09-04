@@ -13,12 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/language', name: 'language_')]
 class LanguageController extends AbstractController {
-	private LanguageRepository $languageRepository;
-	private HolidayService $holidayService;
-
-	public function __construct(LanguageRepository $languageRepository, HolidayService $holidayService) {
-		$this->languageRepository = $languageRepository;
-		$this->holidayService = $holidayService;
+	public function __construct(private readonly LanguageRepository $languageRepository) {
 	}
 
 	#[Route('/', name: 'get_all', methods: ['GET'])]
@@ -44,15 +39,5 @@ class LanguageController extends AbstractController {
 		$response = new JsonResponse($language);
 		$response->headers->set("Content-Length", strlen($response->getContent()));
 		return $response;
-	}
-
-	#[Route('/{code}/migrate', name: 'migrate', methods: ['GET'])]
-	public function migrate(string $code): Response {
-		/**
-		 * @var Language[] $language
-		 */
-		$language = $this->languageRepository->findBy(['code' => $code]);
-		$this->holidayService->migrate($language[0]);
-		return new Response("");
 	}
 }

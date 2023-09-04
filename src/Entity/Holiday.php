@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
+use App\Repository\HolidayRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: HolidayRepository::class)]
 class Holiday implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\ManyToOne(targetEntity: Language::class)]
@@ -27,7 +28,8 @@ class Holiday implements JsonSerializable {
 	#[ORM\Column(type: 'text', nullable: true)]
 	private ?string $link;
 
-	public function __construct(Language $language, HolidayMetadata $metadata, ?string $name, ?string $description, ?string $link) {
+	public function __construct(Language $language, HolidayMetadata $metadata, ?string $name,
+								?string $description, ?string $link) {
 		$this->language = $language;
 		$this->metadata = $metadata;
 		$this->name = $name;

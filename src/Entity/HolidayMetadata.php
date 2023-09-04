@@ -62,7 +62,6 @@ class HolidayMetadata implements JsonSerializable {
 			$this->holidays[] = $holiday1;
 			$holiday1->setMetadata($this);
 		}
-
 		return $this;
 	}
 
@@ -70,7 +69,6 @@ class HolidayMetadata implements JsonSerializable {
 		if ($this->holidays->removeElement($holiday1) && $holiday1->getMetadata() === $this) {
 			$holiday1->setMetadata(null);
 		}
-
 		return $this;
 	}
 
@@ -87,9 +85,5 @@ class HolidayMetadata implements JsonSerializable {
 			'day' => $this->day,
 			'usual' => $this->usual
 		];
-	}
-
-	public function __toString(): string {
-		return json_encode($this->jsonSerialize());
 	}
 }
