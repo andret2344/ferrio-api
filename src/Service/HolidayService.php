@@ -42,6 +42,10 @@ readonly class HolidayService {
 	public function getTodayHoliday(string $language): ?HolidayDay {
 		$day = +date('j');
 		$month = +date('m');
+		return $this->getHolidayDay($language, $day, $month);
+	}
+
+	public function getHolidayDay(string $language, int $day, int $month): ?HolidayDay {
 		$id = sprintf('%02d', $month) . sprintf('%02d', $day);
 		$holidays = $this->holidayRepository->findAt($language, $day, $month);
 		return new HolidayDay($id, $day, $month, $holidays);

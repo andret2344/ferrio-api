@@ -27,9 +27,17 @@ class HolidayController extends AbstractController {
 	}
 
 	#[Route('/{language}/today', name: 'get_today', methods: ['GET'])]
-	public function getToday(string $language): Response {
-		$holiday = $this->holidayService->getTodayHoliday($language);
-		$response = new JsonResponse($holiday);
+	public function getTodayHolidays(string $language): Response {
+		$holidayDay = $this->holidayService->getTodayHoliday($language);
+		$response = new JsonResponse($holidayDay);
+		$response->headers->set("Content-Length", strlen($response->getContent()));
+		return $response;
+	}
+
+	#[Route('/{language}/day/{month}/{day}', name: 'get_holiday_day', methods: ['GET'])]
+	public function getHolidayDay(string $language, int $month, int $day): Response {
+		$holidayDay = $this->holidayService->getHolidayDay($language, $day, $month);
+		$response = new JsonResponse($holidayDay);
 		$response->headers->set("Content-Length", strlen($response->getContent()));
 		return $response;
 	}
