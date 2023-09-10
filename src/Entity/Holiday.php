@@ -26,15 +26,15 @@ class Holiday implements JsonSerializable {
 	private ?string $description;
 
 	#[ORM\Column(type: 'text', nullable: true)]
-	private ?string $link;
+	private ?string $url;
 
 	public function __construct(Language $language, HolidayMetadata $metadata, ?string $name,
-								?string $description, ?string $link) {
+								?string  $description, ?string $url) {
 		$this->language = $language;
 		$this->metadata = $metadata;
 		$this->name = $name;
 		$this->description = $description;
-		$this->link = $link;
+		$this->url = $url;
 	}
 
 	public function getLanguage(): ?Language {
@@ -71,12 +71,12 @@ class Holiday implements JsonSerializable {
 		$this->description = $description;
 	}
 
-	public function getLink(): ?string {
-		return $this->link;
+	public function getUrl(): ?string {
+		return $this->url;
 	}
 
-	public function setLink(?string $link): void {
-		$this->link = $link;
+	public function setUrl(?string $url): void {
+		$this->url = $url;
 	}
 
 	#[ArrayShape([
@@ -90,11 +90,11 @@ class Holiday implements JsonSerializable {
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->metadata->getId(),
-			'usual' => (boolean)$this->metadata->getUsual(),
+			'usual' => (bool)$this->metadata->getUsual(),
 			'name' => $this->name,
 			'description' => $this->description,
-			'link' => $this->link,
-			'url' => $this->link
+			'link' => $this->url,
+			'url' => $this->url
 		];
 	}
 }

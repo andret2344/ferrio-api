@@ -15,7 +15,7 @@ class HolidayController extends AbstractController {
 	public function __construct(private readonly HolidayService $holidayService) {
 	}
 
-	#[Route('/{language}', name: 'get_all', methods: ['GET'])]
+	#[Route('/{language<^\S{2}$>}', name: 'get_all', methods: ['GET'])]
 	public function getAll(string $language): Response {
 		/**
 		 * @var HolidayDay[] $holidayDays
@@ -26,7 +26,7 @@ class HolidayController extends AbstractController {
 		return $response;
 	}
 
-	#[Route('/{language}/today', name: 'get_today', methods: ['GET'])]
+	#[Route('/{language<^\S{2}$>}/today', name: 'get_today', methods: ['GET'])]
 	public function getTodayHolidays(string $language): Response {
 		$holidayDay = $this->holidayService->getTodayHoliday($language);
 		$response = new JsonResponse($holidayDay);
@@ -34,7 +34,7 @@ class HolidayController extends AbstractController {
 		return $response;
 	}
 
-	#[Route('/{language}/day/{month}/{day}', name: 'get_holiday_day', methods: ['GET'])]
+	#[Route('/{language<^\S{2}$>}/day/{month<\d+>}/{day<\d+>}', name: 'get_holiday_day', methods: ['GET'])]
 	public function getHolidayDay(string $language, int $month, int $day): Response {
 		$holidayDay = $this->holidayService->getHolidayDay($language, $day, $month);
 		$response = new JsonResponse($holidayDay);
@@ -42,7 +42,7 @@ class HolidayController extends AbstractController {
 		return $response;
 	}
 
-	#[Route('/{language}/{id}', name: 'get_one', methods: ['GET'])]
+	#[Route('/{language<^\S{2}$>}/{id<\d+>}', name: 'get_one', methods: ['GET'])]
 	public function getOne(string $language, int $id): Response {
 		$holiday = $this->holidayService->getHoliday($language, $id);
 		if ($holiday == null) {

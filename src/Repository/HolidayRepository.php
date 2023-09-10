@@ -31,4 +31,20 @@ class HolidayRepository extends ServiceEntityRepository {
 			->getQuery()
 			->getResult();
 	}
+
+	/**
+	 * @param string $language
+	 * @return array
+	 */
+	public function findAllByLanguage(string $language): array {
+		return $this->createQueryBuilder('h')
+			->select(['m.id, m.month', 'm.day', 'h.name', 'm.usual', 'h.description', 'h.url'])
+			->join(HolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
+			->where('h.language = :language')
+			->setParameter('language', $language)
+			->orderBy('m.month', 'ASC')
+			->addOrderBy('m.day', 'ASC')
+			->getQuery()
+			->getResult();
+	}
 }

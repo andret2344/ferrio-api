@@ -10,24 +10,32 @@ readonly class HolidayService {
 	public function __construct(private HolidayRepository $holidayRepository) {
 	}
 
+	/**
+	 * @param string $language
+	 * @return array|HolidayDay[]
+	 */
 	public function getHolidays(string $language): array {
 		/** @var Holiday[] $holidays */
-		$holidays = $this->holidayRepository->findBy([
-			'language' => $language
-		]);
+		$holidays = $this->holidayRepository->findAllByLanguage($language);
 		$days = [];
 		$day = 1;
 		$month = 1;
 		$array = [];
 		foreach ($holidays as $holiday) {
-			if ($day != $holiday->getMetadata()->getDay() || $month != $holiday->getMetadata()->getMonth()) {
+			if ($day != $holiday['day'] || $month != $holiday['month']) {
 				$id = sprintf('%02d', $month) . sprintf('%02d', $day);
 				$days[] = new HolidayDay($id, $day, $month, $array);
 				$array = [];
-				$day = $holiday->getMetadata()->getDay();
-				$month = $holiday->getMetadata()->getMonth();
+				$day = $holiday['day'];
+				$month = $holiday['month'];
 			}
-			$array[] = $holiday;
+			$array[] = [
+				'id' => $holiday['id'],
+				'name' => $holiday['name'],
+				'usual' => $holiday['usual'],
+				'description' => $holiday['description'],
+				'url' => $holiday['url']
+			];
 		}
 		return $days;
 	}
