@@ -37,6 +37,8 @@ readonly class HolidayService {
 				'url' => $holiday['url']
 			];
 		}
+		$id = sprintf('%02d', $month) . sprintf('%02d', $day);
+		$days[] = new HolidayDay($id, $day, $month, $array);
 		return $days;
 	}
 
