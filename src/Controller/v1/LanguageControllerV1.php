@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\v1;
 
 use App\Entity\Language;
 use App\Repository\LanguageRepository;
-use App\Service\HolidayService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/language', name: 'language_')]
-class LanguageController extends AbstractController {
+#[Route(['/language', '/v1/language'], name: 'v1_language_')]
+class LanguageControllerV1 extends AbstractController {
 	public function __construct(private readonly LanguageRepository $languageRepository) {
 	}
 

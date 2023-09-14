@@ -2,12 +2,15 @@
 
 namespace App\Service;
 
+use App\Entity\FloatingHoliday;
 use App\Entity\Holiday;
 use App\Entity\HolidayDay;
+use App\Repository\FloatingHolidayRepository;
 use App\Repository\HolidayRepository;
 
 readonly class HolidayService {
-	public function __construct(private HolidayRepository $holidayRepository) {
+	public function __construct(private HolidayRepository         $holidayRepository,
+								private FloatingHolidayRepository $floatingHolidayRepository) {
 	}
 
 	/**
@@ -35,13 +38,19 @@ readonly class HolidayService {
 				'usual' => $holiday['usual'],
 				'description' => $holiday['description'],
 				'url' => $holiday['url'],
-				'link' => $holiday['url'],
-				'script' => $holiday['script']
+				'link' => $holiday['url']
 			];
 		}
 		$id = sprintf('%02d', $month) . sprintf('%02d', $day);
 		$days[] = new HolidayDay($id, $day, $month, $array);
 		return $days;
+	}
+
+	/**
+	 * @return FloatingHoliday[]|array
+	 */
+	public function getFloatingHolidays(string $language): array {
+		return $this->floatingHolidayRepository->findBy(['language' => $language]);
 	}
 
 	public function getHoliday(string $language, int $id): ?Holiday {
