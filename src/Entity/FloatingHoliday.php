@@ -28,17 +28,13 @@ class FloatingHoliday implements JsonSerializable {
 	#[ORM\Column(type: 'text', nullable: true)]
 	private ?string $url;
 
-	#[ORM\Column(type: 'text', nullable: true)]
-	private ?string $script;
-
 	public function __construct(Language $language, FloatingHolidayMetadata $metadata,
-								?string  $name, ?string $description, ?string $url, ?string $script) {
+								?string  $name, ?string $description, ?string $url) {
 		$this->language = $language;
 		$this->metadata = $metadata;
 		$this->name = $name;
 		$this->description = $description;
 		$this->url = $url;
-		$this->script = $script;
 	}
 
 
@@ -87,15 +83,6 @@ class FloatingHoliday implements JsonSerializable {
 		return $this;
 	}
 
-	public function getScript(): ?string {
-		return $this->script;
-	}
-
-	public function setScript(?string $script): self {
-		$this->script = $script;
-		return $this;
-	}
-
 	#[ArrayShape([
 		'id' => "int",
 		'usual' => "bool",
@@ -111,7 +98,7 @@ class FloatingHoliday implements JsonSerializable {
 			'name' => $this->name,
 			'description' => $this->description,
 			'url' => $this->url,
-			'script' => $this->script
+			'script' => $this->metadata->getScript()
 		];
 	}
 }

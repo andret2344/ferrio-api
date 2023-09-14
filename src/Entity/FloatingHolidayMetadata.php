@@ -19,6 +19,9 @@ class FloatingHolidayMetadata implements JsonSerializable {
 	#[ORM\Column(type: 'boolean')]
 	private int $usual;
 
+	#[ORM\Column(type: 'text', nullable: true)]
+	private ?string $script;
+
 	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: Holiday::class, orphanRemoval: true)]
 	private Collection $holidays;
 
@@ -56,14 +59,25 @@ class FloatingHolidayMetadata implements JsonSerializable {
 		return $this;
 	}
 
+	public function getScript(): ?string {
+		return $this->script;
+	}
+
+	public function setScript(?string $script): self {
+		$this->script = $script;
+		return $this;
+	}
+
 	#[ArrayShape([
 		'id' => 'int',
-		'usual' => 'int'
+		'usual' => 'int',
+		'script' => 'null|string'
 	])]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,
-			'usual' => $this->usual
+			'usual' => $this->usual,
+			'script' => $this->script
 		];
 	}
 }
