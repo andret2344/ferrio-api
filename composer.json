@@ -16,6 +16,7 @@
         "symfony/framework-bundle": "*",
         "symfony/proxy-manager-bridge": "*",
         "symfony/runtime": "*",
+        "symfony/security-bundle": "*",
         "symfony/twig-bundle": "*",
         "symfony/yaml": "*",
         "twig/twig": "^v3.7"

@@ -34,7 +34,9 @@ readonly class HolidayService {
 				'name' => $holiday['name'],
 				'usual' => $holiday['usual'],
 				'description' => $holiday['description'],
-				'url' => $holiday['url']
+				'url' => $holiday['url'],
+				'link' => $holiday['url'],
+				'script' => $holiday['script']
 			];
 		}
 		$id = sprintf('%02d', $month) . sprintf('%02d', $day);

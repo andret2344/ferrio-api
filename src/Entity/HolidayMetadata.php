@@ -28,12 +28,16 @@ class HolidayMetadata implements JsonSerializable {
 	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: Holiday::class, orphanRemoval: true)]
 	private Collection $holidays;
 
+	#[ORM\Column(type: 'text', nullable: true)]
+	private ?string $script;
+
 	#[Pure]
-	public function __construct(int $id, int $month, int $day, int $usual) {
+	public function __construct(int $id, int $month, int $day, int $usual, ?string $script) {
 		$this->id = $id;
 		$this->month = $month;
 		$this->day = $day;
 		$this->usual = $usual;
+		$this->script = $script;
 		$this->holidays = new ArrayCollection();
 	}
 
@@ -72,18 +76,28 @@ class HolidayMetadata implements JsonSerializable {
 		return $this;
 	}
 
+	public function getScript(): ?string {
+		return $this->script;
+	}
+
+	public function setScript(?string $script): void {
+		$this->script = $script;
+	}
+
 	#[ArrayShape([
 		'id' => 'int',
 		'month' => 'int',
 		'day' => 'int',
-		'usual' => 'int'
+		'usual' => 'int',
+		'script' => 'null|string'
 	])]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,
 			'month' => $this->month,
 			'day' => $this->day,
-			'usual' => $this->usual
+			'usual' => $this->usual,
+			'script' => $this->script
 		];
 	}
 }
