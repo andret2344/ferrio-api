@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+	<span class='heading'>Where do you start?</span>
+	<div class='row'>
+		<div class='col-6'>
+			Let me write some descriptions and maybe add a cool holiday.
+		</div>
+		<div class='row col-6'>
+			I want to translate.
+			{% for language in languages %}
+				{% if language.code != 'pl' %}
+					<div class='col-3'>
+						{{ language.name }}
+					</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}

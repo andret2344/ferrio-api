@@ -9,6 +9,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class WebController extends AbstractController {
 	#[Route('/', name: 'index')]
 	public function index(): Response {
-		return new Response("index");
+		return $this->render('index.html.twig');
 	}
 }

@@ -19,13 +19,13 @@ class Holiday implements JsonSerializable {
 	#[Orm\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
 	private HolidayMetadata $metadata;
 
-	#[ORM\Column(type: 'text', nullable: true)]
+	#[ORM\Column(type: 'text', nullable: false)]
 	private ?string $name;
 
-	#[ORM\Column(type: 'text', nullable: true)]
+	#[ORM\Column(type: 'text', nullable: false)]
 	private ?string $description;
 
-	#[ORM\Column(type: 'text', nullable: true)]
+	#[ORM\Column(type: 'text', nullable: false)]
 	private ?string $url;
 
 	public function __construct(Language $language, HolidayMetadata $metadata, ?string $name,

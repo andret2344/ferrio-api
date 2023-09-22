@@ -1,0 +1,16 @@
+@charset "UTF-8";
+@import '~bootstrap/scss/bootstrap';
+
+body {
+	position: relative;
+	margin: auto;
+	width: 1280px;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 22px;
+}
+
+.heading {
+	font-size: 50px;
+	display: block;
+	text-align: center;
+}
