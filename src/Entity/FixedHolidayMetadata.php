@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\MetadataRepository;
+use App\Repository\FixedMetadataRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,8 +10,8 @@ use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 
-#[ORM\Entity(repositoryClass: MetadataRepository::class)]
-class HolidayMetadata implements JsonSerializable {
+#[ORM\Entity(repositoryClass: FixedMetadataRepository::class)]
+class FixedHolidayMetadata implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\Column(type: 'integer')]
 	private int $id;
@@ -25,7 +25,7 @@ class HolidayMetadata implements JsonSerializable {
 	#[ORM\Column(type: 'boolean')]
 	private int $usual;
 
-	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: Holiday::class, orphanRemoval: true)]
+	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHoliday::class, cascade: ['all'], orphanRemoval: true)]
 	private Collection $holidays;
 
 	#[Pure]
@@ -57,7 +57,7 @@ class HolidayMetadata implements JsonSerializable {
 		return $this->holidays;
 	}
 
-	public function addHoliday(Holiday $holiday1): self {
+	public function addHoliday(FixedHoliday $holiday1): self {
 		if (!$this->holidays->contains($holiday1)) {
 			$this->holidays[] = $holiday1;
 			$holiday1->setMetadata($this);
@@ -65,7 +65,7 @@ class HolidayMetadata implements JsonSerializable {
 		return $this;
 	}
 
-	public function removeHoliday(Holiday $holiday1): self {
+	public function removeHoliday(FixedHoliday $holiday1): self {
 		if ($this->holidays->removeElement($holiday1) && $holiday1->getMetadata() === $this) {
 			$holiday1->setMetadata(null);
 		}

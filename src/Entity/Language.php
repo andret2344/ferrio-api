@@ -24,7 +24,7 @@ class Language implements JsonSerializable {
 	#[ORM\Column(type: 'string', unique: true)]
 	private string $url;
 
-	#[ORM\OneToMany(mappedBy: 'language', targetEntity: Holiday::class, orphanRemoval: true)]
+	#[ORM\OneToMany(mappedBy: 'language', targetEntity: FixedHoliday::class, orphanRemoval: true)]
 	private Collection $holidays;
 
 	#[Pure]
@@ -56,7 +56,7 @@ class Language implements JsonSerializable {
 		return $this->holidays;
 	}
 
-	public function addHoliday(Holiday $holiday): self {
+	public function addHoliday(FixedHoliday $holiday): self {
 		if (!$this->holidays->contains($holiday)) {
 			$this->holidays[] = $holiday;
 			$holiday->setLanguage($this);
@@ -64,7 +64,7 @@ class Language implements JsonSerializable {
 		return $this;
 	}
 
-	public function removeHoliday(Holiday $holiday): self {
+	public function removeHoliday(FixedHoliday $holiday): self {
 		if ($this->holidays->removeElement($holiday) && $holiday->getLanguage() === $this) {
 			$holiday->setLanguage(null);
 		}

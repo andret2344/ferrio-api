@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\MetadataRepository;
+use App\Repository\FloatingMetadataRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +10,7 @@ use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 
-#[ORM\Entity(repositoryClass: MetadataRepository::class)]
+#[ORM\Entity(repositoryClass: FloatingMetadataRepository::class)]
 class FloatingHolidayMetadata implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\Column(type: 'integer')]
@@ -22,7 +22,7 @@ class FloatingHolidayMetadata implements JsonSerializable {
 	#[ORM\Column(type: 'text', nullable: true)]
 	private ?string $script;
 
-	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: Holiday::class, orphanRemoval: true)]
+	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHoliday::class, cascade: ['all'], orphanRemoval: true)]
 	private Collection $holidays;
 
 	#[Pure]

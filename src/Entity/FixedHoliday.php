@@ -2,22 +2,22 @@
 
 namespace App\Entity;
 
-use App\Repository\HolidayRepository;
+use App\Repository\FixedHolidayRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 
-#[ORM\Entity(repositoryClass: HolidayRepository::class)]
-class Holiday implements JsonSerializable {
+#[ORM\Entity(repositoryClass: FixedHolidayRepository::class)]
+class FixedHoliday implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\ManyToOne(targetEntity: Language::class)]
 	#[Orm\JoinColumn(name: 'language_code', referencedColumnName: 'code', nullable: false)]
 	private Language $language;
 
 	#[ORM\Id]
-	#[ORM\ManyToOne(targetEntity: HolidayMetadata::class)]
+	#[ORM\ManyToOne(targetEntity: FixedHolidayMetadata::class)]
 	#[Orm\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
-	private HolidayMetadata $metadata;
+	private FixedHolidayMetadata $metadata;
 
 	#[ORM\Column(type: 'text', nullable: false)]
 	private ?string $name;
@@ -28,7 +28,7 @@ class Holiday implements JsonSerializable {
 	#[ORM\Column(type: 'text', nullable: false)]
 	private ?string $url;
 
-	public function __construct(Language $language, HolidayMetadata $metadata, ?string $name,
+	public function __construct(Language $language, FixedHolidayMetadata $metadata, ?string $name,
 								?string  $description, ?string $url) {
 		$this->language = $language;
 		$this->metadata = $metadata;
@@ -46,11 +46,11 @@ class Holiday implements JsonSerializable {
 		return $this;
 	}
 
-	public function getMetadata(): ?HolidayMetadata {
+	public function getMetadata(): ?FixedHolidayMetadata {
 		return $this->metadata;
 	}
 
-	public function setMetadata(?HolidayMetadata $holidayMetadata): self {
+	public function setMetadata(?FixedHolidayMetadata $holidayMetadata): self {
 		$this->metadata = $holidayMetadata;
 		return $this;
 	}

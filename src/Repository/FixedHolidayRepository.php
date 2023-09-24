@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Holiday;
-use App\Entity\HolidayMetadata;
+use App\Entity\FixedHoliday;
+use App\Entity\FixedHolidayMetadata;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 
-class HolidayRepository extends ServiceEntityRepository {
+class FixedHolidayRepository extends ServiceEntityRepository {
 	public function __construct(ManagerRegistry $registry) {
-		parent::__construct($registry, Holiday::class);
+		parent::__construct($registry, FixedHoliday::class);
 	}
 
 	/**
 	 * @param string $language
 	 * @param int $day
 	 * @param int $month
-	 * @return array|Holiday[]
+	 * @return array|FixedHoliday[]
 	 */
 	public function findAt(string $language, int $day, int $month): array {
 		return $this->createQueryBuilder('h')
-			->join(HolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
+			->join(FixedHolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
 			->where('h.language = :language')
 			->andWhere('m.day = :day')
 			->andWhere('m.month = :month')
@@ -39,7 +39,7 @@ class HolidayRepository extends ServiceEntityRepository {
 	public function findAllByLanguage(string $language): array {
 		return $this->createQueryBuilder('h')
 			->select(['m.id, m.month', 'm.day', 'h.name', 'm.usual', 'h.description', 'h.url'])
-			->join(HolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
+			->join(FixedHolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
 			->where('h.language = :language')
 			->setParameter('language', $language)
 			->orderBy('m.month', 'ASC')
