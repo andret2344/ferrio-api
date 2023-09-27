@@ -1,16 +1,21 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-	<span class='heading'>Where do you start?</span>
-	<div class='row'>
-		<div class='col-6'>
-			Let me write some descriptions and maybe add a cool holiday.
+	<span class='heading my-5'>Where do you start?</span>
+	<div class='row bg-warning container'>
+		<div class='col-5 m-4 bg-danger mx-auto my-5'>
+			<a href='{{ path('manage_create') }}' class='d-block text-center py-5 no-a'>
+				Let me write some descriptions and maybe add a cool holiday.
+			</a>
 		</div>
-		<div class='row col-6'>
-			I want to translate.
+		<div class='row col-5 m-4 bg-success mx-auto my-5'>
+			<div class='text-center'>I want to translate.</div>
 			{% for language in languages %}
 				{% if language.code != 'pl' %}
-					<div class='col-3'>
-						{{ language.name }}
+					<div class='col-4 text-center'>
+						<a
+								{# href='{{ path('manage_language', { 'code': language.code }) }}' #}
+								class='d-block language p-4 no-a'
+						>{{ language.name }}</a>
 					</div>
 				{% endif %}
 			{% endfor %}

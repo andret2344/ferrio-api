@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+	<span class='heading my-5'>Welcome to translation into {{ language.name }}!</span>
+	{% for element in original %}
+		{{ element | json_encode }}
+	{% endfor %}
+{% endblock %}

@@ -14,7 +14,8 @@ use JsonSerializable;
 class FixedHolidayMetadata implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\Column(type: 'integer')]
-	private int $id;
+	#[ORM\GeneratedValue]
+	private ?int $id;
 
 	#[ORM\Column(type: 'integer')]
 	private int $month;
@@ -29,7 +30,7 @@ class FixedHolidayMetadata implements JsonSerializable {
 	private Collection $holidays;
 
 	#[Pure]
-	public function __construct(int $id, int $month, int $day, int $usual) {
+	public function __construct(?int $id, int $month, int $day, int $usual) {
 		$this->id = $id;
 		$this->month = $month;
 		$this->day = $day;
@@ -37,7 +38,7 @@ class FixedHolidayMetadata implements JsonSerializable {
 		$this->holidays = new ArrayCollection();
 	}
 
-	public function getId(): int {
+	public function getId(): ?int {
 		return $this->id;
 	}
 
@@ -73,7 +74,7 @@ class FixedHolidayMetadata implements JsonSerializable {
 	}
 
 	#[ArrayShape([
-		'id' => 'int',
+		'id' => 'int|null',
 		'month' => 'int',
 		'day' => 'int',
 		'usual' => 'int'
