@@ -20,16 +20,22 @@ class FloatingHolidayMetadata implements JsonSerializable {
 	#[ORM\Column(type: 'boolean')]
 	private int $usual;
 
-	#[ORM\Column(type: 'text', nullable: true)]
-	private ?string $script;
+	#[ORM\ManyToOne(targetEntity: Script::class)]
+	#[Orm\JoinColumn(name: 'script_id', referencedColumnName: 'id', nullable: false)]
+	private ?Script $script;
+
+	#[ORM\Column(type: 'string')]
+	private string $args;
 
 	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHoliday::class, cascade: ['all'], orphanRemoval: true)]
 	private Collection $holidays;
 
 	#[Pure]
-	public function __construct(int $id, int $usual) {
+	public function __construct(int $id, int $usual, ?Script $script, string $args) {
 		$this->id = $id;
 		$this->usual = $usual;
+		$this->script = $script;
+		$this->args = $args;
 		$this->holidays = new ArrayCollection();
 	}
 
@@ -43,6 +49,10 @@ class FloatingHolidayMetadata implements JsonSerializable {
 
 	public function getHolidays(): Collection {
 		return $this->holidays;
+	}
+
+	public function getArgs(): string {
+		return $this->args;
 	}
 
 	public function addHoliday(FloatingHoliday $holiday): self {
@@ -60,25 +70,27 @@ class FloatingHolidayMetadata implements JsonSerializable {
 		return $this;
 	}
 
-	public function getScript(): ?string {
+	public function getScript(): ?Script {
 		return $this->script;
 	}
 
-	public function setScript(?string $script): self {
+	public function setScript(?Script $script): self {
 		$this->script = $script;
 		return $this;
 	}
 
 	#[ArrayShape([
-		'id' => 'int',
-		'usual' => 'int',
-		'script' => 'null|string'
+		'id' => "int",
+		'usual' => "int",
+		'script' => "\App\Entity\Script|null",
+		'args' => "string"
 	])]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,
 			'usual' => $this->usual,
-			'script' => $this->script
+			'script' => $this->script,
+			'args' => $this->args
 		];
 	}
 }

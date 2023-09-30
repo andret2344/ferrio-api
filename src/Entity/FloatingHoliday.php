@@ -98,7 +98,7 @@ class FloatingHoliday implements JsonSerializable {
 			'name' => $this->name,
 			'description' => $this->description,
 			'url' => $this->url,
-			'script' => $this->metadata->getScript()
+			'script' => $this->metadata->getScript()->getContent()
 		];
 	}
 }

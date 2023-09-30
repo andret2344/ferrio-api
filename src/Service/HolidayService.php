@@ -2,11 +2,11 @@
 
 namespace App\Service;
 
-use App\Entity\FloatingHoliday;
 use App\Entity\FixedHoliday;
+use App\Entity\FloatingHoliday;
 use App\Entity\HolidayDay;
-use App\Repository\FloatingHolidayRepository;
 use App\Repository\FixedHolidayRepository;
+use App\Repository\FloatingHolidayRepository;
 
 readonly class HolidayService {
 	public function __construct(private FixedHolidayRepository    $holidayRepository,
@@ -50,7 +50,15 @@ readonly class HolidayService {
 	 * @return FloatingHoliday[]|array
 	 */
 	public function getFloatingHolidays(string $language): array {
-		return $this->floatingHolidayRepository->findBy(['language' => $language]);
+		/** @var FloatingHoliday[] $holidays */
+		$holidays = $this->floatingHolidayRepository->findBy(['language' => $language]);
+		foreach ($holidays as $holiday) {
+			$script = $holiday->getMetadata()->getScript()->getContent();
+			$args = implode(', ', json_decode($holiday->getMetadata()->getArgs()));
+			$script .= "\n\ncalculate($args);";
+			$holiday->getMetadata()->getScript()->setContent($script);
+		}
+		return $holidays;
 	}
 
 	public function getHoliday(string $language, int $id): ?FixedHoliday {
