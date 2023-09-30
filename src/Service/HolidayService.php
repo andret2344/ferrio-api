@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\FixedHoliday;
 use App\Entity\FloatingHoliday;
 use App\Entity\HolidayDay;
+use App\Entity\Script;
 use App\Repository\FixedHolidayRepository;
 use App\Repository\FloatingHolidayRepository;
 
@@ -53,10 +54,10 @@ readonly class HolidayService {
 		/** @var FloatingHoliday[] $holidays */
 		$holidays = $this->floatingHolidayRepository->findBy(['language' => $language]);
 		foreach ($holidays as $holiday) {
-			$script = $holiday->getMetadata()->getScript()->getContent();
+			$script = $holiday->getMetadata()->getScript();
 			$args = implode(', ', json_decode($holiday->getMetadata()->getArgs()));
-			$script .= "\n\ncalculate($args);";
-			$holiday->getMetadata()->getScript()->setContent($script);
+			$newScript = new Script($script->getId(), $script->getContent() . "\n\ncalculate($args);");
+			$holiday->getMetadata()->setScript($newScript);
 		}
 		return $holidays;
 	}
