@@ -93,15 +93,17 @@ class FloatingHolidayMetadata implements JsonSerializable {
 	}
 
 	#[ArrayShape([
-		'id' => "int",
-		'usual' => "int",
-		'script' => "\App\Entity\Script|null",
-		'args' => "string"
+		'id' => 'int',
+		'usual' => 'int',
+		'category' => 'string',
+		'script' => '\App\Entity\Script|null',
+		'args' => 'string'
 	])]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,
 			'usual' => $this->usual,
+			'category' => $this->category->getName(),
 			'script' => $this->script,
 			'args' => $this->args
 		];

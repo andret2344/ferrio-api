@@ -3,23 +3,22 @@
 namespace App\Controller\v2;
 
 use App\Service\HolidayService;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+use App\Service\LoggingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/v2/holiday', name: 'v2_holiday_')]
+#[Route(['/holiday', '/v2/holiday'], name: 'v2_holiday_')]
 class HolidayControllerV2 extends AbstractController {
 	public function __construct(private readonly HolidayService $holidayService,
-								private readonly Logger         $log = new Logger('LanguageControllerV2')) {
-		$log->pushHandler(new StreamHandler('log/latest.log'));
+								private readonly LoggingService $loggingService) {
 	}
 
 	#[Route('/{language<^\S{2}$>}', name: 'get_all', methods: ['GET'])]
-	public function getAll(string $language): Response {
-		$this->log->info("/$language");
+	public function getAll(Request $request, string $language): Response {
+		$this->loggingService->route($request);
 		$holidayDays = $this->holidayService->getHolidays($language);
 		$floatingHolidays = $this->holidayService->getFloatingHolidays($language);
 		$response = new JsonResponse([
@@ -31,8 +30,8 @@ class HolidayControllerV2 extends AbstractController {
 	}
 
 	#[Route('/{language<^\S{2}$>}/day/{month<\d+>}/{day<\d+>}', name: 'get_holiday_day', methods: ['GET'])]
-	public function getHolidayDay(string $language, int $month, int $day): Response {
-		$this->log->info("/$language/day/$month/$day");
+	public function getHolidayDay(Request $request, string $language, int $month, int $day): Response {
+		$this->loggingService->route($request);
 		$holidayDay = $this->holidayService->getHolidayDay($language, $day, $month);
 		$response = new JsonResponse($holidayDay);
 		$response->headers->set("Content-Length", strlen($response->getContent()));
@@ -40,8 +39,8 @@ class HolidayControllerV2 extends AbstractController {
 	}
 
 	#[Route('/{language<^\S{2}$>}/floating', name: 'get_floating_holidays', methods: ['GET'])]
-	public function getFloatingHolidays(string $language): Response {
-		$this->log->info("/$language/floating");
+	public function getFloatingHolidays(Request $request, string $language): Response {
+		$this->loggingService->route($request);
 		$holidayDay = $this->holidayService->getFloatingHolidays($language);
 		$response = new JsonResponse($holidayDay);
 		$response->headers->set("Content-Length", strlen($response->getContent()));
@@ -49,8 +48,8 @@ class HolidayControllerV2 extends AbstractController {
 	}
 
 	#[Route('/{language<^\S{2}$>}/fixed', name: 'get_fixed_holidays', methods: ['GET'])]
-	public function getFixedHolidays(string $language): Response {
-		$this->log->info("/$language/fixed");
+	public function getFixedHolidays(Request $request, string $language): Response {
+		$this->loggingService->route($request);
 		$holidayDay = $this->holidayService->getHolidays($language);
 		$response = new JsonResponse($holidayDay);
 		$response->headers->set("Content-Length", strlen($response->getContent()));

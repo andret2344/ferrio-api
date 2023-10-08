@@ -19,21 +19,13 @@ class Language implements JsonSerializable {
 	#[ORM\Column(type: 'string', length: 63, unique: true)]
 	private string $name;
 
-	#[ORM\Column(type: 'integer')]
-	private int $releaseId;
-
-	#[ORM\Column(type: 'string', unique: true)]
-	private string $url;
-
 	#[ORM\OneToMany(mappedBy: 'language', targetEntity: FixedHoliday::class, orphanRemoval: true)]
 	private Collection $holidays;
 
 	#[Pure]
-	public function __construct(string $code, string $name, string $releaseId, string $url) {
+	public function __construct(string $code, string $name) {
 		$this->code = $code;
 		$this->name = $name;
-		$this->releaseId = $releaseId;
-		$this->url = $url;
 		$this->holidays = new ArrayCollection();
 	}
 
@@ -43,14 +35,6 @@ class Language implements JsonSerializable {
 
 	public function getName(): string {
 		return $this->name;
-	}
-
-	public function getReleaseId(): int|string {
-		return $this->releaseId;
-	}
-
-	public function getUrl(): string {
-		return $this->url;
 	}
 
 	public function getHolidays(): Collection {
@@ -73,21 +57,13 @@ class Language implements JsonSerializable {
 	}
 
 	#[ArrayShape([
-		'uniLanguage' => 'string',
-		'language' => 'string',
 		'code' => 'string',
-		'name' => 'string',
-		'releaseId' => 'int',
-		'url' => 'string'
+		'name' => 'string'
 	])]
 	public function jsonSerialize(): array {
 		return [
-			'uniLanguage' => $this->code,
-			'language' => $this->name,
 			'code' => $this->code,
-			'name' => $this->name,
-			'releaseId' => $this->releaseId,
-			'url' => $this->url
+			'name' => $this->name
 		];
 	}
 }
