@@ -32,10 +32,8 @@ class ManageController extends AbstractController {
 	#[Route('/{code<^\S{2}$>}', name: 'language')]
 	public function language(string $code): Response {
 		$language = $this->languageRepository->findOneBy(['code' => $code]);
-//		$original = $this->translationService->get('de');
 		return $this->render('manage/translate.html.twig', [
 			'language' => $language,
-//			'original' => $original
 		]);
 	}
 
@@ -58,7 +56,7 @@ class ManageController extends AbstractController {
 			$day = $request->request->get('day');
 			$name = $request->request->get('name');
 			$desc = $request->request->get('description');
-			$metadata = new FixedHolidayMetadata(null, $month, $day, 0);
+			$metadata = new FixedHolidayMetadata(null, $month, $day, 0, null);
 			$entityManager->persist($metadata);
 			/** @var Language $language */
 			$language = $this->languageRepository->findOneBy(['code' => 'pl']);
