@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JsonSchemaMappingsProjectConfiguration">
+    <state>
+      <map>
+        <entry key="Holiday Schema">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="Holiday Schema" />
+              <option name="relativePathToSchema" value="public/resources/schema.json" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="public/resources/en.json" />
+                  </Item>
+                  <Item>
+                    <option name="path" value="public/resources/pl.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+      </map>
+    </state>
+  </component>
+</project>

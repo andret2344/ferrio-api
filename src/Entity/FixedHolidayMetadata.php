@@ -26,15 +26,20 @@ class FixedHolidayMetadata implements JsonSerializable {
 	#[ORM\Column(type: 'boolean')]
 	private int $usual;
 
+	#[ORM\ManyToOne(targetEntity: Category::class)]
+	#[Orm\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
+	private ?Category $category;
+
 	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHoliday::class, cascade: ['all'], orphanRemoval: true)]
 	private Collection $holidays;
 
 	#[Pure]
-	public function __construct(?int $id, int $month, int $day, int $usual) {
+	public function __construct(?int $id, int $month, int $day, int $usual, ?Category $category) {
 		$this->id = $id;
 		$this->month = $month;
 		$this->day = $day;
 		$this->usual = $usual;
+		$this->category = $category;
 		$this->holidays = new ArrayCollection();
 	}
 
@@ -56,6 +61,14 @@ class FixedHolidayMetadata implements JsonSerializable {
 
 	public function getHolidays(): Collection {
 		return $this->holidays;
+	}
+
+	public function getCategory(): ?Category {
+		return $this->category;
+	}
+
+	public function setCategory(?Category $category): void {
+		$this->category = $category;
 	}
 
 	public function addHoliday(FixedHoliday $holiday1): self {

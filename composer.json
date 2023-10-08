@@ -11,6 +11,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/migrations": "^3.6",
         "doctrine/orm": "^2.16",
+        "monolog/monolog": "^3.4",
         "symfony/apache-pack": "^v1.0",
         "symfony/console": "*",
         "symfony/dotenv": "*",
@@ -20,7 +21,7 @@
         "symfony/runtime": "*",
         "symfony/security-bundle": "*",
         "symfony/twig-bundle": "*",
-        "symfony/webpack-encore-bundle": "^2.0",
+        "symfony/webpack-encore-bundle": "^2.1",
         "symfony/yaml": "*",
         "twig/twig": "^v3.7"
     },

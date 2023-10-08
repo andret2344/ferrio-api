@@ -1,0 +1,15 @@
+/*.iml
+/commandlinetools/
+/dataSources.local.xml
+/dataSources.xml
+/dataSources/
+/dbnavigator.xml
+/discord.xml
+/git_toolbox_prj.xml
+/httpRequests/
+/kubernetes-settings.xml
+/modules.xml
+/sonarlint/
+/symfony2.xml
+/watcherTasks.xml
+/workspace.xml
