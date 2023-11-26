@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\FixedHoliday;
 use App\Entity\FixedHolidayMetadata;
 use App\Entity\Language;
+use App\Repository\CountryRepository;
 use App\Repository\FixedHolidayRepository;
 use App\Repository\FloatingHolidayRepository;
 use App\Repository\LanguageRepository;
@@ -18,7 +19,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ManageController extends AbstractController {
 	public function __construct(private readonly LanguageRepository        $languageRepository,
 								private readonly FixedHolidayRepository    $fixedHolidayRepository,
-								private readonly FloatingHolidayRepository $floatingHolidayRepository) {
+								private readonly FloatingHolidayRepository $floatingHolidayRepository,
+								private readonly CountryRepository         $countryRepository) {
 	}
 
 	#[Route('/', name: 'index')]
@@ -56,7 +58,8 @@ class ManageController extends AbstractController {
 			$day = $request->request->get('day');
 			$name = $request->request->get('name');
 			$desc = $request->request->get('description');
-			$metadata = new FixedHolidayMetadata(null, $month, $day, 0, null, null);
+			$country = $this->getCountry($request->request->get('country'));
+			$metadata = new FixedHolidayMetadata(null, $month, $day, 0, $country, null);
 			$entityManager->persist($metadata);
 			/** @var Language $language */
 			$language = $this->languageRepository->findOneBy(['code' => 'pl']);
@@ -66,9 +69,18 @@ class ManageController extends AbstractController {
 		}
 		$fixedHolidays = $this->fixedHolidayRepository->findAllByLanguage('pl');
 		$floatingHolidays = $this->floatingHolidayRepository->findBy(['language' => 'pl']);
+		$countries = $this->countryRepository->findAll();
 		return $this->render('manage/create.html.twig', [
 			'fixed_holidays' => $fixedHolidays,
-			'floating_holidays' => $floatingHolidays
+			'floating_holidays' => $floatingHolidays,
+			'countries' => $countries
 		]);
+	}
+
+	private function getCountry(?string $country) {
+		if ($country === null || $country === 'null') {
+			return null;
+		}
+		return $this->countryRepository->findOneBy(['isoCode' => $country]);
 	}
 }

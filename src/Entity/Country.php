@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
+use App\Repository\CountryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\ArrayShape;
+use JsonSerializable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[ORM\Entity]
-class Country extends AbstractController {
+#[ORM\Entity(repositoryClass: CountryRepository::class)]
+class Country extends AbstractController implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\Column(type: 'string', length: 2, unique: true)]
 	private string $isoCode;
@@ -89,5 +92,18 @@ class Country extends AbstractController {
 			$floatingMetadata->setCountry(null);
 		}
 		return $this;
+	}
+
+	#[ArrayShape([
+		'isoCode' => 'string',
+		'localName' => 'string',
+		'englishName' => 'string'
+	])]
+	public function jsonSerialize(): array {
+		return [
+			'isoCode' => $this->isoCode,
+			'localName' => $this->localName,
+			'englishName' => $this->englishName
+		];
 	}
 }

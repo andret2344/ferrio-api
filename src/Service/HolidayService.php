@@ -38,7 +38,7 @@ readonly class HolidayService {
 				'name' => $holiday['name'],
 				'usual' => $holiday['usual'],
 				'description' => $holiday['description'],
-				'country' => $holiday['englishName'],
+				'country' => $holiday['country'],
 				'url' => $holiday['url'],
 				'link' => $holiday['url']
 			];

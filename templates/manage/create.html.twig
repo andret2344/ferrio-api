@@ -6,6 +6,7 @@
 		<thead>
 		<tr>
 			<th scope="col">#</th>
+			<th scope="col">Country</th>
 			<th scope="col">Month</th>
 			<th scope="col">Day</th>
 			<th scope="col" class='w-25'>Name</th>
@@ -22,6 +23,13 @@
 			</form>
 			<tr>
 				<th scope="row">{{ element.id }}</th>
+				<td>
+					{% if element.country %}
+						{{ element.country }}
+					{% else %}
+						International
+					{% endif %}
+				</td>
 				<td>{{ element.month }}</td>
 				<td>{{ element.day }}</td>
 				<td>
@@ -57,6 +65,7 @@
 		<thead>
 		<tr>
 			<th scope="col">#</th>
+			<th scope="col">Country</th>
 			<th scope="col">Month</th>
 			<th scope="col">Day</th>
 			<th scope="col" class='w-25'>Name</th>
@@ -67,6 +76,20 @@
 		<tbody>
 		<tr>
 			<th scope="row">#</th>
+			<td>
+				<label for='country-select' class='d-none'>Country</label>
+				<select
+						id='country-select'
+						class="selectpicker form-select"
+						name='country'
+						form='create'
+				>
+					<option value='null' selected>International</option>
+					{% for country in countries %}
+						<option value='{{ country.isoCode }}'>{{ country.isoCode }} - {{ country.englishName }}</option>
+					{% endfor %}
+				</select>
+			</td>
 			<td>
 				<label for='month-create' class='d-none'>Month</label>
 				<input
