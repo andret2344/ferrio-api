@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Country;
 use App\Entity\FixedHoliday;
 use App\Entity\FixedHolidayMetadata;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 
 class FixedHolidayRepository extends ServiceEntityRepository {
@@ -38,8 +38,9 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 	 */
 	public function findAllByLanguage(string $language): array {
 		return $this->createQueryBuilder('h')
-			->select(['m.id, m.month', 'm.day', 'h.name', 'm.usual', 'h.description', 'h.url'])
+			->select(['m.id, m.month', 'm.day', 'h.name', 'm.usual', 'h.description', 'h.url', 'c.englishName'])
 			->join(FixedHolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
+			->join(Country::class, 'c', 'WITH', 'c.isoCode = m.country')
 			->where('h.language = :language')
 			->setParameter('language', $language)
 			->orderBy('m.month', 'ASC')

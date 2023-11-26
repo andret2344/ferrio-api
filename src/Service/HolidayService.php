@@ -38,6 +38,7 @@ readonly class HolidayService {
 				'name' => $holiday['name'],
 				'usual' => $holiday['usual'],
 				'description' => $holiday['description'],
+				'country' => $holiday['englishName'],
 				'url' => $holiday['url'],
 				'link' => $holiday['url']
 			];
@@ -48,18 +49,24 @@ readonly class HolidayService {
 	}
 
 	/**
-	 * @return FloatingHoliday[]|array
+	 * @param string $language
+	 * @return array
 	 */
 	public function getFloatingHolidays(string $language): array {
 		/** @var FloatingHoliday[] $holidays */
 		$holidays = $this->floatingHolidayRepository->findBy(['language' => $language]);
+		$data = [];
 		foreach ($holidays as $holiday) {
 			$script = $holiday->getMetadata()->getScript();
 			$args = implode(', ', json_decode($holiday->getMetadata()->getArgs()));
-			$newScript = new Script($script->getId(), $script->getContent() . "\n\ncalculate($args);");
-			$holiday->getMetadata()->setScript($newScript);
+			$script = new Script($script->getId(), $script->getContent() . "\n\ncalculate($args);");
+			$data[] = [
+				...$holiday->jsonSerialize(),
+				'country' => $holiday->getMetadata()->getCountry()->getEnglishName(),
+				'script' => $script->getContent()
+			];
 		}
-		return $holidays;
+		return $data;
 	}
 
 	public function getHoliday(string $language, int $id): ?FixedHoliday {

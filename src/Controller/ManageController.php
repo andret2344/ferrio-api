@@ -56,7 +56,7 @@ class ManageController extends AbstractController {
 			$day = $request->request->get('day');
 			$name = $request->request->get('name');
 			$desc = $request->request->get('description');
-			$metadata = new FixedHolidayMetadata(null, $month, $day, 0, null);
+			$metadata = new FixedHolidayMetadata(null, $month, $day, 0, null, null);
 			$entityManager->persist($metadata);
 			/** @var Language $language */
 			$language = $this->languageRepository->findOneBy(['code' => 'pl']);

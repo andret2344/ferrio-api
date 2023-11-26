@@ -24,6 +24,10 @@ class FloatingHolidayMetadata implements JsonSerializable {
 	#[Orm\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
 	private ?Category $category;
 
+	#[ORM\ManyToOne(targetEntity: Country::class)]
+	#[Orm\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
+	private ?Country $country;
+
 	#[ORM\ManyToOne(targetEntity: Script::class)]
 	#[Orm\JoinColumn(name: 'script_id', referencedColumnName: 'id', nullable: false)]
 	private ?Script $script;
@@ -35,9 +39,15 @@ class FloatingHolidayMetadata implements JsonSerializable {
 	private Collection $holidays;
 
 	#[Pure]
-	public function __construct(int $id, int $usual, ?Category $category, ?Script $script, string $args) {
+	public function __construct(int       $id,
+								int       $usual,
+								?Country  $country,
+								?Category $category,
+								?Script   $script,
+								string    $args) {
 		$this->id = $id;
 		$this->usual = $usual;
+		$this->country = $country;
 		$this->category = $category;
 		$this->script = $script;
 		$this->args = $args;
@@ -58,6 +68,14 @@ class FloatingHolidayMetadata implements JsonSerializable {
 
 	public function setCategory(?Category $category): void {
 		$this->category = $category;
+	}
+
+	public function getCountry(): ?Country {
+		return $this->country;
+	}
+
+	public function setCountry(?Country $country): void {
+		$this->country = $country;
 	}
 
 	public function getHolidays(): Collection {
@@ -96,6 +114,7 @@ class FloatingHolidayMetadata implements JsonSerializable {
 		'id' => 'int',
 		'usual' => 'int',
 		'category' => 'string',
+		'country' => 'string',
 		'script' => '\App\Entity\Script|null',
 		'args' => 'string'
 	])]
@@ -104,6 +123,7 @@ class FloatingHolidayMetadata implements JsonSerializable {
 			'id' => $this->id,
 			'usual' => $this->usual,
 			'category' => $this->category->getName(),
+			'country' => $this->country->getEnglishName(),
 			'script' => $this->script,
 			'args' => $this->args
 		];
