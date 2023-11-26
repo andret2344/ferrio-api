@@ -40,7 +40,7 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 		return $this->createQueryBuilder('h')
 			->select(['m.id, m.month', 'm.day', 'h.name', 'm.usual', 'h.description', 'h.url', 'c.englishName'])
 			->join(FixedHolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
-			->join(Country::class, 'c', 'WITH', 'c.isoCode = m.country')
+			->leftJoin(Country::class, 'c', 'WITH', 'c.isoCode = m.country')
 			->where('h.language = :language')
 			->setParameter('language', $language)
 			->orderBy('m.month', 'ASC')

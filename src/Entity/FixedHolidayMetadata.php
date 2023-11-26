@@ -104,7 +104,7 @@ class FixedHolidayMetadata implements JsonSerializable {
 		'month' => 'int',
 		'day' => 'int',
 		'usual' => 'int',
-		'country' => 'string',
+		'country' => 'string|null',
 		'category' => 'string'
 	])]
 	public function jsonSerialize(): array {
@@ -113,7 +113,7 @@ class FixedHolidayMetadata implements JsonSerializable {
 			'month' => $this->month,
 			'day' => $this->day,
 			'usual' => $this->usual,
-			'country' => $this->country->getEnglishName(),
+			'country' => $this->country?->getEnglishName(),
 			'category' => $this->category->getName()
 		];
 	}

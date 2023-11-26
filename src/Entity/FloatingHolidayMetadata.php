@@ -114,7 +114,7 @@ class FloatingHolidayMetadata implements JsonSerializable {
 		'id' => 'int',
 		'usual' => 'int',
 		'category' => 'string',
-		'country' => 'string',
+		'country' => 'string|null',
 		'script' => '\App\Entity\Script|null',
 		'args' => 'string'
 	])]
@@ -123,7 +123,7 @@ class FloatingHolidayMetadata implements JsonSerializable {
 			'id' => $this->id,
 			'usual' => $this->usual,
 			'category' => $this->category->getName(),
-			'country' => $this->country->getEnglishName(),
+			'country' => $this->country?->getEnglishName(),
 			'script' => $this->script,
 			'args' => $this->args
 		];
