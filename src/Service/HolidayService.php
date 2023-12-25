@@ -62,7 +62,7 @@ readonly class HolidayService {
 			$script = new Script($script->getId(), $script->getContent() . "\n\ncalculate($args);");
 			$data[] = [
 				...$holiday->jsonSerialize(),
-				'country' => $holiday->getMetadata()->getCountry()?->getEnglishName(),
+				'country' => $holiday->getMetadata()->getCountry()?->getIsoCode(),
 				'script' => $script->getContent()
 			];
 		}
