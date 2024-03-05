@@ -7,6 +7,7 @@ use App\Entity\FixedHolidayMetadata;
 use App\Entity\Language;
 use App\Repository\CountryRepository;
 use App\Repository\FixedHolidayRepository;
+use App\Repository\FixedMetadataRepository;
 use App\Repository\FloatingHolidayRepository;
 use App\Repository\LanguageRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,6 +21,7 @@ class ManageController extends AbstractController {
 	public function __construct(private readonly LanguageRepository        $languageRepository,
 								private readonly FixedHolidayRepository    $fixedHolidayRepository,
 								private readonly FloatingHolidayRepository $floatingHolidayRepository,
+								private readonly FixedMetadataRepository   $fixedMetadataRepository,
 								private readonly CountryRepository         $countryRepository) {
 	}
 
@@ -32,7 +34,28 @@ class ManageController extends AbstractController {
 	}
 
 	#[Route('/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'language')]
-	public function language(string $from, string $to): Response {
+	public function language(Request $request, EntityManagerInterface $entityManager, string $from, string $to): Response {
+		$action = $request->request->get('action');
+		if ($action === 'update') {
+			$id = $request->request->get('metadata_id');
+			$name = $request->request->get('name');
+			$desc = $request->request->get('description');
+			/** @var FixedHolidayMetadata $metadata */
+			$metadata = $this->fixedMetadataRepository->findOneBy(['id' => $id]);
+			/** @var FixedHoliday|null $holiday */
+			$holiday = $this->fixedHolidayRepository->findOneBy(['metadata' => $id, 'language' => $to]);
+			/** @var Language $language */
+			$language = $this->languageRepository->findOneBy(['code' => $to]);
+			if ($holiday == null) {
+				$holiday = new FixedHoliday($language, $metadata, $name, $desc, null);
+			} else {
+				$holiday
+					->setName($name)
+					->setDescription($desc);
+			}
+			$entityManager->persist($holiday);
+			$entityManager->flush();
+		}
 		$languageFrom = $this->languageRepository->findOneBy(['code' => $from]);
 		$languageTo = $this->languageRepository->findOneBy(['code' => $to]);
 		$holidays = $this->fixedHolidayRepository->findAllAggregatedById($from, $to);
@@ -44,8 +67,8 @@ class ManageController extends AbstractController {
 	}
 
 	#[Route('/{to<^\S{2}$>}', name: 'language_default')]
-	public function languageDefault(string $to): Response {
-		return $this->language('pl', $to);
+	public function languageDefault(Request $request, EntityManagerInterface $entityManager, string $to): Response {
+		return $this->language($request, $entityManager, 'pl', $to);
 	}
 
 	#[Route('/create', name: 'create')]

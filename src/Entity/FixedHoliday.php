@@ -41,7 +41,7 @@ class FixedHoliday implements JsonSerializable {
 		return $this->language;
 	}
 
-	public function setLanguage(?Language $language): self {
+	public function setLanguage(?Language $language): static {
 		$this->language = $language;
 		return $this;
 	}
@@ -50,7 +50,7 @@ class FixedHoliday implements JsonSerializable {
 		return $this->metadata;
 	}
 
-	public function setMetadata(?FixedHolidayMetadata $holidayMetadata): self {
+	public function setMetadata(?FixedHolidayMetadata $holidayMetadata): static {
 		$this->metadata = $holidayMetadata;
 		return $this;
 	}
@@ -59,24 +59,27 @@ class FixedHoliday implements JsonSerializable {
 		return $this->name;
 	}
 
-	public function setName(?string $name): void {
+	public function setName(?string $name): static {
 		$this->name = $name;
+		return $this;
 	}
 
 	public function getDescription(): ?string {
 		return $this->description;
 	}
 
-	public function setDescription(?string $description): void {
+	public function setDescription(?string $description): static {
 		$this->description = $description;
+		return $this;
 	}
 
 	public function getUrl(): ?string {
 		return $this->url;
 	}
 
-	public function setUrl(?string $url): void {
+	public function setUrl(?string $url): static {
 		$this->url = $url;
+		return $this;
 	}
 
 	#[ArrayShape([

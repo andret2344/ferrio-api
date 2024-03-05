@@ -1,24 +1,30 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-	<span class='heading my-5'>Where do you start?</span>
-	<div class='row bg-warning container'>
-		<div class='col-5 m-4 bg-danger mx-auto my-5'>
-			<a href='{{ path('manage_create') }}' class='d-block text-center py-5 no-a'>
-				Let me write some descriptions and maybe add a cool holiday.
-			</a>
+	<main class='section-manage-main'>
+		<div class='container container-main mt-5 py-3'>
+			<span class='heading my-2 py-2'>Where do you start?</span>
+			<div class='row'>
+				<div class='col-5 m-4 mx-auto tile'>
+					<a href='{{ path('manage_create') }}' class='d-block text-center py-5 no-a title-create'>
+						Let me write some descriptions and maybe add a cool holiday.
+					</a>
+				</div>
+				<div class='row col-5 m-4 mx-auto tile'>
+					<div class='text-center m-3 title-translate'>I want to translate.</div>
+					{% for language in languages %}
+						{% if language.code != 'pl' %}
+							<div class='col-4'>
+								<div class='text-center language'>
+									<a
+											href='{{ path('manage_language', { 'from': 'pl', 'to': language.code }) }}'
+											class='d-block p-4 no-a language-link'
+									>{{ language.name }}</a>
+								</div>
+							</div>
+						{% endif %}
+					{% endfor %}
+				</div>
+			</div>
 		</div>
-		<div class='row col-5 m-4 bg-success mx-auto my-5'>
-			<div class='text-center'>I want to translate.</div>
-			{% for language in languages %}
-				{% if language.code != 'pl' %}
-					<div class='col-4 text-center'>
-						<a
-								{# href='{{ path('manage_language', { 'code': language.code }) }}' #}
-								class='d-block language p-4 no-a'
-						>{{ language.name }}</a>
-					</div>
-				{% endif %}
-			{% endfor %}
-		</div>
-	</div>
+	</main>
 {% endblock %}

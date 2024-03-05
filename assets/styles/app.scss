@@ -1,6 +1,10 @@
 @charset "UTF-8";
 @import '~bootstrap/scss/bootstrap';
 
+body {
+	background-color: black;
+}
+
 .section-main {
 	position: relative;
 	margin: auto;
@@ -20,8 +24,31 @@
 	text-decoration: none;
 }
 
-.language {
-	border-radius: 40px;
-	background: #73AD21;
-	height: 100px;
+.section-manage-main {
+	.container-main {
+		background-color: #222222;
+		border-radius: 52px;
+	}
+	
+	.tile {
+		border-radius: 36px;
+		background-color: #010830;
+	}
+	
+	.title-create {
+		font-size: 32px;
+	}
+	
+	.title-translate {
+		font-size: 26px;
+	}
+	
+	.language {
+		border-radius: 40px;
+		background: #101060;
+	}
+	
+	.language-link {
+		padding: 50px;
+	}
 }
