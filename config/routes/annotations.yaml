@@ -1,15 +1,15 @@
 controllers:
     resource: ../../src/Controller/
-    type: annotation
+    type: attribute
 
 controllers_v1:
     resource: ../../src/Controller/v1/
-    type: annotation
+    type: attribute
 
 controllers_v2:
     resource: ../../src/Controller/v2/
-    type: annotation
+    type: attribute
 
 kernel:
     resource: ../../src/Kernel.php
-    type: annotation
+    type: attribute

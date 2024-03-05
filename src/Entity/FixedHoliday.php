@@ -10,7 +10,7 @@ use JsonSerializable;
 #[ORM\Entity(repositoryClass: FixedHolidayRepository::class)]
 class FixedHoliday implements JsonSerializable {
 	#[ORM\Id]
-	#[ORM\ManyToOne(targetEntity: Language::class)]
+	#[ORM\ManyToOne(targetEntity: Language::class, inversedBy: 'holidays')]
 	#[Orm\JoinColumn(name: 'language_code', referencedColumnName: 'code', nullable: false)]
 	private Language $language;
 

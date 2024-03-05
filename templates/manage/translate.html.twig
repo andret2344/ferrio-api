@@ -1,7 +1,61 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-	<span class='heading my-5'>Welcome to translation into {{ language.name }}!</span>
-	{% for element in original %}
-		{{ element | json_encode }}
-	{% endfor %}
+	<nav class="navbar bg-body-tertiary">
+		<div class="container-fluid">
+			<a class="navbar-brand">UHC Translation UI</a>
+		</div>
+	</nav>
+	<section class='section-main'>
+		<span class='heading my-5'>Welcome to translation from {{ languageFrom.name }} to {{ languageTo.name }}!</span>
+		<table class="table table-dark table-bordered">
+			<caption>Translations</caption>
+			<thead>
+			<tr>
+				<th scope='col'>#</th>
+				<th scope='col' class='w-50'>From</th>
+				<th scope='col' class='w-50'>To</th>
+				<th scope='col'></th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for element in holidays %}
+				{% set form_id = 'form-' ~ element.id %}
+				<form id='{{ form_id }}' method='post'>
+					<input type='hidden' name='action' value='update' form='{{ form_id }}'/>
+					<input type='hidden' name='metadata_id' value='{{ element.id }}' form='{{ form_id }}'/>
+				</form>
+				<tr>
+					<td rowspan='2'>{{ element.id }}</td>
+					<td>{{ element.nameFrom }}</td>
+					<td>
+						<label for='{{ 'name-' ~ element.id }}' class='d-none'>Name</label>
+						<input
+								name='name'
+								class='w-100 textarea-holiday-name'
+								form='{{ form_id }}'
+								id='{{ 'name-' ~ element.id }}'
+								value='{{ element.nameTo }}'
+						/>
+					</td>
+					<td rowspan='2'>
+						<input type='submit' value='Send'>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ element.descriptionFrom }}</td>
+					<td>
+						<label for='{{ 'description-' ~ element.id }}' class='d-none'>Description</label>
+						<textarea
+								style='min-height: 72px'
+								name='description'
+								class='w-100 textarea-holiday-description'
+								form='{{ form_id }}'
+								id='{{ 'description-' ~ element.id }}'
+						>{{ element.descriptionTo }}</textarea>
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</section>
 {% endblock %}

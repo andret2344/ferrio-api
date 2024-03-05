@@ -31,12 +31,21 @@ class ManageController extends AbstractController {
 		]);
 	}
 
-	#[Route('/{code<^\S{2}$>}', name: 'language')]
-	public function language(string $code): Response {
-		$language = $this->languageRepository->findOneBy(['code' => $code]);
+	#[Route('/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'language')]
+	public function language(string $from, string $to): Response {
+		$languageFrom = $this->languageRepository->findOneBy(['code' => $from]);
+		$languageTo = $this->languageRepository->findOneBy(['code' => $to]);
+		$holidays = $this->fixedHolidayRepository->findAllAggregatedById($from, $to);
 		return $this->render('manage/translate.html.twig', [
-			'language' => $language,
+			'languageFrom' => $languageFrom,
+			'languageTo' => $languageTo,
+			'holidays' => $holidays
 		]);
+	}
+
+	#[Route('/{to<^\S{2}$>}', name: 'language_default')]
+	public function languageDefault(string $to): Response {
+		return $this->language('pl', $to);
 	}
 
 	#[Route('/create', name: 'create')]

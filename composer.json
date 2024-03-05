@@ -7,15 +7,15 @@
         "php": ">=8.2",
         "composer-plugin-api": "^2.1",
         "doctrine/annotations": "^2.0",
-        "doctrine/doctrine-bundle": "^2.10",
-        "doctrine/doctrine-migrations-bundle": "^3.2",
-        "doctrine/migrations": "^3.6",
-        "doctrine/orm": "^2.16",
-        "monolog/monolog": "^3.4",
+        "doctrine/doctrine-bundle": "^2.11",
+        "doctrine/doctrine-migrations-bundle": "^3.3",
+        "doctrine/migrations": "^3.7",
+        "doctrine/orm": "^2.19",
+        "monolog/monolog": "^3.5",
         "symfony/apache-pack": "^v1.0",
         "symfony/console": "*",
         "symfony/dotenv": "*",
-        "symfony/flex": "^v2.3",
+        "symfony/flex": "^v2.4",
         "symfony/framework-bundle": "*",
         "symfony/proxy-manager-bridge": "*",
         "symfony/runtime": "*",
@@ -23,7 +23,7 @@
         "symfony/twig-bundle": "*",
         "symfony/webpack-encore-bundle": "^2.1",
         "symfony/yaml": "*",
-        "twig/twig": "^v3.7"
+        "twig/twig": "^v3.8"
     },
     "config": {
         "optimize-autoloader": true,
@@ -69,11 +69,11 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "^6.3"
+            "require": "^7.0"
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^v1.50",
+        "symfony/maker-bundle": "^v1.56",
         "symfony/stopwatch": "*",
         "symfony/web-profiler-bundle": "*"
     }
