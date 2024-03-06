@@ -58,10 +58,12 @@ class ManageController extends AbstractController {
 		}
 		$languageFrom = $this->languageRepository->findOneBy(['code' => $from]);
 		$languageTo = $this->languageRepository->findOneBy(['code' => $to]);
+		$languages = $this->languageRepository->findAll();
 		$holidays = $this->fixedHolidayRepository->findAllAggregatedById($from, $to);
 		return $this->render('manage/translate.html.twig', [
 			'languageFrom' => $languageFrom,
 			'languageTo' => $languageTo,
+			'languages' => $languages,
 			'holidays' => $holidays
 		]);
 	}
