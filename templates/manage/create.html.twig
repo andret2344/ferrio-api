@@ -34,8 +34,8 @@
 				<tr class='tr-holiday'>
 					<th scope="row">{{ element.id }}</th>
 					<td>
-						{% if element.country %}
-							{{ element.country }}
+						{% if element.countryName %}
+							{{ element.countryCode }} - {{ element.countryName }}
 						{% else %}
 							International
 						{% endif %}
@@ -87,9 +87,9 @@
 			<tr>
 				<th scope="row">#</th>
 				<td>
-					<label for='country-select' class='d-none'>Country</label>
+					<label for='country-create' class='d-none'>Country</label>
 					<select
-							id='country-select'
+							id='country-create'
 							class="selectpicker form-select"
 							name='country'
 							form='create'
