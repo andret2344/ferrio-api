@@ -37,7 +37,7 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 	 * @param string $language
 	 * @return array
 	 */
-	public function findAllByLanguage(string $language): array {
+	public function findAllByLanguage(string $language, int $offset = 0, int $limit = 1_000_000): array {
 		return $this->createQueryBuilder('h')
 			->select([
 				'm.id',
@@ -53,6 +53,8 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 			->join(FixedHolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
 			->leftJoin(Country::class, 'c', 'WITH', 'c.isoCode = m.country')
 			->where('h.language = :language')
+			->setFirstResult($offset)
+			->setMaxResults($limit)
 			->setParameter('language', $language)
 			->orderBy('m.month', 'ASC')
 			->addOrderBy('m.day', 'ASC')

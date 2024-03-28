@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/manage', name: 'manage_')]
 class ManageController extends AbstractController {
@@ -75,6 +75,11 @@ class ManageController extends AbstractController {
 
 	#[Route('/create', name: 'create')]
 	public function create(Request $request, EntityManagerInterface $entityManager): Response {
+		return $this->createPage($request, $entityManager, 1);
+	}
+
+	#[Route('/create/{page}', name: 'create_page')]
+	public function createPage(Request $request, EntityManagerInterface $entityManager, int $page): Response {
 		$action = $request->request->get('action');
 		if ($action === 'update') {
 			$id = $request->request->get('metadata_id');
@@ -101,7 +106,7 @@ class ManageController extends AbstractController {
 			$entityManager->persist($holiday);
 			$entityManager->flush();
 		}
-		$fixedHolidays = $this->fixedHolidayRepository->findAllByLanguage('pl');
+		$fixedHolidays = $this->fixedHolidayRepository->findAllByLanguage('pl', ($page - 1) * 100, 100);
 		$floatingHolidays = $this->floatingHolidayRepository->findBy(['language' => 'pl']);
 		$countries = $this->countryRepository->findAll();
 		return $this->render('manage/create.html.twig', [

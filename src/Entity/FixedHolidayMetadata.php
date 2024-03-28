@@ -24,13 +24,13 @@ class FixedHolidayMetadata implements JsonSerializable {
 	private int $day;
 
 	#[ORM\Column(type: 'boolean')]
-	private int $usual;
+	private bool $usual;
 
 	#[ORM\ManyToOne(targetEntity: Category::class)]
 	#[Orm\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
 	private ?Category $category;
 
-	#[ORM\ManyToOne(targetEntity: Country::class)]
+	#[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'fixedHolidays')]
 	#[Orm\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
 	private ?Country $country;
 

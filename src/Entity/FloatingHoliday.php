@@ -15,7 +15,7 @@ class FloatingHoliday implements JsonSerializable {
 	private Language $language;
 
 	#[ORM\Id]
-	#[ORM\ManyToOne(targetEntity: FloatingHolidayMetadata::class)]
+	#[ORM\ManyToOne(targetEntity: FloatingHolidayMetadata::class, inversedBy: 'holidays')]
 	#[Orm\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
 	private FloatingHolidayMetadata $metadata;
 
