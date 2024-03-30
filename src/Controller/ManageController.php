@@ -33,8 +33,8 @@ class ManageController extends AbstractController {
 		]);
 	}
 
-	#[Route('/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'language')]
-	public function language(Request $request, EntityManagerInterface $entityManager, string $from, string $to): Response {
+	#[Route('/translate/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'translate')]
+	public function translate(Request $request, EntityManagerInterface $entityManager, string $from, string $to): Response {
 		$action = $request->request->get('action');
 		if ($action === 'update') {
 			$id = $request->request->get('metadata_id');
@@ -68,9 +68,9 @@ class ManageController extends AbstractController {
 		]);
 	}
 
-	#[Route('/{to<^\S{2}$>}', name: 'language_default')]
-	public function languageDefault(Request $request, EntityManagerInterface $entityManager, string $to): Response {
-		return $this->language($request, $entityManager, 'pl', $to);
+	#[Route('/translate/{to<^\S{2}$>}', name: 'translate_default')]
+	public function translateDefault(Request $request, EntityManagerInterface $entityManager, string $to): Response {
+		return $this->translate($request, $entityManager, 'pl', $to);
 	}
 
 	#[Route('/create', name: 'create')]

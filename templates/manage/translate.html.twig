@@ -20,7 +20,7 @@
 								<li>
 									<a
 											class="dropdown-item"
-											href="/manage/{{ language.code }}/{{ languageTo.code }}"
+											href='{{ path('manage_translate', {'from': language.code, 'to': languageTo.code }) }}'
 									>{{ language.name }}</a>
 								</li>
 							{% endif %}
@@ -61,6 +61,7 @@
 			<thead>
 			<tr>
 				<th scope='col'>#</th>
+				<th scope='col'>Date</th>
 				<th scope='col' class='w-50'>From</th>
 				<th scope='col' class='w-50'>To</th>
 				<th scope='col'></th>
@@ -75,6 +76,7 @@
 				</form>
 				<tr>
 					<td rowspan='2'>{{ element.id }}</td>
+					<td rowspan='2'>{{ element.month | pad(2, '0') }}.{{ element.day | pad(2, '0') }}</td>
 					<td>{{ element.nameFrom }}</td>
 					<td>
 						<label for='{{ 'name-' ~ element.id }}' class='d-none'>Name</label>

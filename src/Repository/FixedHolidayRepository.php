@@ -87,18 +87,24 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 		$rsm = new ResultSetMapping();
 		$rsm->addEntityResult(FixedHoliday::class, 'h');
 		$rsm->addScalarResult('id', 'id');
+		$rsm->addScalarResult('day', 'day');
+		$rsm->addScalarResult('month', 'month');
 		$rsm->addScalarResult('name_from', 'nameFrom');
 		$rsm->addScalarResult('description_from', 'descriptionFrom');
 		$rsm->addScalarResult('name_to', 'nameTo');
 		$rsm->addScalarResult('description_to', 'descriptionTo');
-		$sql = "SELECT h1.metadata_id AS id,
+		$sql = "SELECT m1.day         AS day,
+					   m1.month       AS month,
+					   h1.metadata_id AS id,
 					   h1.name        AS name_from,
 					   h1.description AS description_from,
 					   h2.name        AS name_to,
 					   h2.description AS description_to
 				FROM (SELECT * FROM fixed_holiday WHERE fixed_holiday.language_code = :langFrom) as h1
-					LEFT JOIN (SELECT * FROM fixed_holiday WHERE fixed_holiday.language_code = :langTo) as h2
-				ON h1.metadata_id = h2.metadata_id";
+						 LEFT JOIN (SELECT * FROM fixed_holiday WHERE fixed_holiday.language_code = :langTo) as h2
+								   ON h1.metadata_id = h2.metadata_id
+						 INNER JOIN fixed_holiday_metadata m1 ON h1.metadata_id = m1.id
+				ORDER BY month, day;";
 		$query = $this->_em->createNativeQuery($sql, $rsm);
 		$query->setParameter('langFrom', $languageFrom);
 		$query->setParameter('langTo', $languageTo);
