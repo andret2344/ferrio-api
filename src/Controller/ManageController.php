@@ -116,6 +116,30 @@ class ManageController extends AbstractController {
 		]);
 	}
 
+	#[Route('/check', name: 'check')]
+	public function check(Request $request): Response {
+		return $this->checkLanguage($request, 'pl');
+	}
+
+	#[Route('/check/{lang<^\S{2}$>}', name: 'check_language')]
+	public function checkLanguage(Request $request, string $lang): Response {
+		$action = $request->request->get('action');
+		$result = [];
+		if ($action === 'check') {
+			$holidays = preg_split("/[\r\n]+/",$request->request->get('holidays'));
+			if ($request->request->get('holidays')) {
+				$result = $this->fixedHolidayRepository->check($lang, $holidays);
+			}
+		}
+		$language = $this->languageRepository->findOneBy(['code' => $lang]);
+		$languages = $this->languageRepository->findAll();
+		return $this->render('manage/check.html.twig', [
+			'language' => $language,
+			'languages' => $languages,
+			'result' => $result
+		]);
+	}
+
 	private function getCountry(?string $country) {
 		if ($country === null || $country === 'null') {
 			return null;

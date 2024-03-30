@@ -6,6 +6,9 @@ use App\Entity\Country;
 use App\Entity\FixedHoliday;
 use App\Entity\FixedHolidayMetadata;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -60,6 +63,24 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 			->addOrderBy('m.day', 'ASC')
 			->getQuery()
 			->getResult();
+	}
+
+	/**
+	 * @param string $language
+	 * @param array $array
+	 * @return array|string[]
+	 */
+	public function check(string $language, array $array): array {
+		$existingNames = $this->createQueryBuilder('h2')
+			->select('h2.name')
+			->join('h2.metadata', 'm')
+			->andWhere('h2.language = :language')
+			->setParameter('language', $language)
+			->getQuery()
+			->getResult();
+
+		$existingNames = array_column($existingNames, 'name');
+		return array_diff($array, $existingNames);
 	}
 
 	public function findAllAggregatedById(string $languageFrom, string $languageTo) {
