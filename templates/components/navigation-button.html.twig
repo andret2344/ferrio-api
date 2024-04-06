@@ -1,0 +1,11 @@
+<div class="pagination-button{{ disabled ? ' disabled' : '' }}">
+	{% if disabled %}
+		<div class='holder'>
+			<div>{{ text | raw }}</div>
+		</div>
+	{% else %}
+		<a class='holder' href="/manage/create/{{ page }}" rel="{{ rel }}">
+			<div>{{ text | raw }}</div>
+		</a>
+	{% endif %}
+</div>

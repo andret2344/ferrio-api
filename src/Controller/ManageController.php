@@ -34,7 +34,8 @@ class ManageController extends AbstractController {
 	}
 
 	#[Route('/translate/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'translate')]
-	public function translate(Request $request, EntityManagerInterface $entityManager, string $from, string $to): Response {
+	public function translate(Request $request, EntityManagerInterface $entityManager,
+							  string  $from, string $to): Response {
 		$action = $request->request->get('action');
 		if ($action === 'update') {
 			$id = $request->request->get('metadata_id');
@@ -109,10 +110,13 @@ class ManageController extends AbstractController {
 		$fixedHolidays = $this->fixedHolidayRepository->findAllByLanguage('pl', ($page - 1) * 100, 100);
 		$floatingHolidays = $this->floatingHolidayRepository->findBy(['language' => 'pl']);
 		$countries = $this->countryRepository->findAll();
+		$pages = ceil($this->fixedMetadataRepository->count([]) / 100);
 		return $this->render('manage/create.html.twig', [
 			'fixed_holidays' => $fixedHolidays,
 			'floating_holidays' => $floatingHolidays,
-			'countries' => $countries
+			'countries' => $countries,
+			'page' => $page,
+			'pages' => $pages
 		]);
 	}
 
@@ -126,7 +130,7 @@ class ManageController extends AbstractController {
 		$action = $request->request->get('action');
 		$result = [];
 		if ($action === 'check') {
-			$holidays = preg_split("/[\r\n]+/",$request->request->get('holidays'));
+			$holidays = preg_split("/[\r\n]+/", $request->request->get('holidays'));
 			if ($request->request->get('holidays')) {
 				$result = $this->fixedHolidayRepository->check($lang, $holidays);
 			}

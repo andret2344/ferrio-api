@@ -1,0 +1,23 @@
+<div class='page-navigation'>
+	{% include 'components/navigation-button.html.twig' with {'disabled': page == 1, 'page': 1, 'rel': '', 'text': '<i class="uil uil-angle-double-left"></i>'} %}
+	{% include 'components/navigation-button.html.twig' with {'disabled': page == 1, 'page': page - 1, 'rel': 'prev', 'text': '<i class="uil uil-angle-left"></i>'} %}
+
+	{% if page > 2 %}
+		...
+	{% endif %}
+	{% if page > 1 %}
+		{% include 'components/navigation-button.html.twig' with {'disabled': 0, 'page': page - 1, 'rel': '', 'text': page - 1} %}
+	{% endif %}
+
+	{% include 'components/navigation-button.html.twig' with {'disabled': 1, 'page': page, 'rel': '', 'text': page} %}
+
+	{% if page < pages %}
+		{% include 'components/navigation-button.html.twig' with {'disabled': 0, 'page': page + 1, 'rel': '', 'text': page + 1} %}
+	{% endif %}
+	{% if page + 1 < pages %}
+		...
+	{% endif %}
+
+	{% include 'components/navigation-button.html.twig' with {'disabled': page == pages, 'page': page + 1, 'rel': 'next', 'text': '<i class="uil uil-angle-right"></i>'} %}
+	{% include 'components/navigation-button.html.twig' with {'disabled': page == pages, 'page': pages, 'rel': '', 'text': '<i class="uil uil-angle-double-right"></i>'} %}
+</div>

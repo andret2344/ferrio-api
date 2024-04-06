@@ -53,3 +53,37 @@ body {
 		padding: 50px;
 	}
 }
+
+.page-navigation {
+	width: fit-content;
+	margin: 20px auto auto;
+	
+	.pagination-button {
+		background-color: $blue-800;
+		min-width: 50px;
+		width: 50px;
+		display: inline-block;
+		border: $blue-800 solid 1px;
+		
+		&.disabled {
+			background-color: unset;
+			cursor: not-allowed;
+		}
+		
+		.holder {
+			font-weight: 600;
+			text-align: center;
+			vertical-align: center;
+			text-decoration: none;
+			color: inherit;
+			
+			div {
+				padding: 10px 12px;
+			}
+		}
+		
+		&:not(.disabled):hover {
+			text-decoration: underline solid;
+		}
+	}
+}
