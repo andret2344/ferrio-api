@@ -38,6 +38,9 @@ class FloatingHolidayMetadata implements JsonSerializable {
 	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHoliday::class, cascade: ['all'], orphanRemoval: true)]
 	private Collection $holidays;
 
+	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHolidayReport::class, cascade: ['all'], orphanRemoval: true)]
+	private Collection $reports;
+
 	#[Pure]
 	public function __construct(int       $id,
 								int       $usual,
@@ -52,6 +55,7 @@ class FloatingHolidayMetadata implements JsonSerializable {
 		$this->script = $script;
 		$this->args = $args;
 		$this->holidays = new ArrayCollection();
+		$this->reports = new ArrayCollection();
 	}
 
 	public function getId(): int {
@@ -97,6 +101,21 @@ class FloatingHolidayMetadata implements JsonSerializable {
 	public function removeHoliday(FloatingHoliday $holiday): self {
 		if ($this->holidays->removeElement($holiday) && $holiday->getMetadata() === $this) {
 			$holiday->setMetadata(null);
+		}
+		return $this;
+	}
+
+	public function addReport(FloatingHolidayReport $report): self {
+		if (!$this->reports->contains($report)) {
+			$this->reports[] = $report;
+			$report->setMetadata($this);
+		}
+		return $this;
+	}
+
+	public function removeReport(FloatingHolidayReport $report): self {
+		if ($this->holidays->removeElement($report) && $report->getMetadata() === $this) {
+			$report->setMetadata(null);
 		}
 		return $this;
 	}

@@ -37,6 +37,9 @@ class FixedHolidayMetadata implements JsonSerializable {
 	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHoliday::class, cascade: ['all'], orphanRemoval: true)]
 	private Collection $holidays;
 
+	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHolidayReport::class, cascade: ['all'], orphanRemoval: true)]
+	private Collection $reports;
+
 	#[Pure]
 	public function __construct(?int $id, int $month, int $day, int $usual, ?Country $country, ?Category $category) {
 		$this->id = $id;
@@ -46,6 +49,7 @@ class FixedHolidayMetadata implements JsonSerializable {
 		$this->country = $country;
 		$this->category = $category;
 		$this->holidays = new ArrayCollection();
+		$this->reports = new ArrayCollection();
 	}
 
 	public function getId(): ?int {
@@ -84,17 +88,32 @@ class FixedHolidayMetadata implements JsonSerializable {
 		$this->country = $country;
 	}
 
-	public function addHoliday(FixedHoliday $holiday1): self {
-		if (!$this->holidays->contains($holiday1)) {
-			$this->holidays[] = $holiday1;
-			$holiday1->setMetadata($this);
+	public function addHoliday(FixedHoliday $holiday): self {
+		if (!$this->holidays->contains($holiday)) {
+			$this->holidays[] = $holiday;
+			$holiday->setMetadata($this);
 		}
 		return $this;
 	}
 
-	public function removeHoliday(FixedHoliday $holiday1): self {
-		if ($this->holidays->removeElement($holiday1) && $holiday1->getMetadata() === $this) {
-			$holiday1->setMetadata(null);
+	public function removeHoliday(FixedHoliday $holiday): self {
+		if ($this->holidays->removeElement($holiday) && $holiday->getMetadata() === $this) {
+			$holiday->setMetadata(null);
+		}
+		return $this;
+	}
+
+	public function addReport(FixedHolidayReport $report): self {
+		if (!$this->reports->contains($report)) {
+			$this->reports[] = $report;
+			$report->setMetadata($this);
+		}
+		return $this;
+	}
+
+	public function removeReport(FixedHolidayReport $report): self {
+		if ($this->holidays->removeElement($report) && $report->getMetadata() === $this) {
+			$report->setMetadata(null);
 		}
 		return $this;
 	}

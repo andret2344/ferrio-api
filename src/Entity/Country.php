@@ -17,9 +17,6 @@ class Country extends AbstractController implements JsonSerializable {
 	private string $isoCode;
 
 	#[ORM\Column(type: 'string', length: 255, unique: true)]
-	private string $localName;
-
-	#[ORM\Column(type: 'string', length: 255, unique: true)]
 	private string $englishName;
 
 	#[ORM\OneToMany(mappedBy: 'country', targetEntity: FixedHolidayMetadata::class, orphanRemoval: true)]
@@ -28,9 +25,8 @@ class Country extends AbstractController implements JsonSerializable {
 	#[ORM\OneToMany(mappedBy: 'country', targetEntity: FloatingHolidayMetadata::class, orphanRemoval: true)]
 	private Collection $floatingHolidays;
 
-	public function __construct(string $isoCode, string $localName, string $englishName) {
+	public function __construct(string $isoCode, string $englishName) {
 		$this->isoCode = $isoCode;
-		$this->localName = $localName;
 		$this->englishName = $englishName;
 		$this->fixedHolidays = new ArrayCollection();
 		$this->floatingHolidays = new ArrayCollection();
@@ -42,14 +38,6 @@ class Country extends AbstractController implements JsonSerializable {
 
 	public function setIsoCode(string $isoCode): void {
 		$this->isoCode = $isoCode;
-	}
-
-	public function getLocalName(): string {
-		return $this->localName;
-	}
-
-	public function setLocalName(string $localName): void {
-		$this->localName = $localName;
 	}
 
 	public function getEnglishName(): string {
@@ -96,13 +84,11 @@ class Country extends AbstractController implements JsonSerializable {
 
 	#[ArrayShape([
 		'isoCode' => 'string',
-		'localName' => 'string',
 		'englishName' => 'string'
 	])]
 	public function jsonSerialize(): array {
 		return [
 			'isoCode' => $this->isoCode,
-			'localName' => $this->localName,
 			'englishName' => $this->englishName
 		];
 	}

@@ -15,9 +15,10 @@ security:
             pattern: ^/
             http_basic: ~
     access_control:
-        - { path: ^/_wdt, roles: [ PUBLIC_ACCESS ] }
         - { path: ^/v\d+/holiday, roles: [ PUBLIC_ACCESS ] }
         - { path: ^/holiday, roles: [ PUBLIC_ACCESS ] }
+        - { path: ^/v\d+/report, roles: [ PUBLIC_ACCESS ] }
+        - { path: ^/report, roles: [ PUBLIC_ACCESS ] }
         - { path: ^/, roles: [ ROLE_USER ] }
 
 when@test:
