@@ -16,7 +16,7 @@ class FloatingHolidayReport implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\Column(type: 'integer')]
 	#[ORM\GeneratedValue]
-	private int $id;
+	private ?int $id;
 
 	#[ORM\ManyToOne(targetEntity: Language::class)]
 	#[Orm\JoinColumn(name: 'language_code', referencedColumnName: 'code', nullable: false)]
@@ -41,7 +41,7 @@ class FloatingHolidayReport implements JsonSerializable {
 	#[ORM\Column(type: 'boolean', nullable: false)]
 	private bool $verified;
 
-	public function __construct(int                     $id,
+	public function __construct(?int                    $id,
 								Language                $language,
 								FloatingHolidayMetadata $metadata,
 								ReportType              $reportType,

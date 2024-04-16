@@ -4,14 +4,15 @@ namespace App\Controller\v2;
 
 use App\Entity\FixedHolidayMetadata;
 use App\Entity\FixedHolidayReport;
+use App\Entity\FloatingHolidayMetadata;
+use App\Entity\FloatingHolidayReport;
 use App\Entity\ReportType;
 use App\Repository\FixedHolidayReportRepository;
 use App\Repository\FixedMetadataRepository;
 use App\Repository\FloatingHolidayReportRepository;
+use App\Repository\FloatingMetadataRepository;
 use App\Repository\LanguageRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,10 +22,11 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(['/report', '/v2/report'], name: 'v2_report_')]
 class ReportControllerV2 extends AbstractController {
 	public function __construct(private readonly EntityManagerInterface          $entityManager,
-								private readonly FixedHolidayReportRepository    $fixedHolidayReportRepository,
-								private readonly FloatingHolidayReportRepository $floatingHolidayReportRepository,
 								private readonly LanguageRepository              $languageRepository,
-								private readonly FixedMetadataRepository         $fixedMetadataRepository) {
+								private readonly FixedHolidayReportRepository    $fixedHolidayReportRepository,
+								private readonly FixedMetadataRepository         $fixedMetadataRepository,
+								private readonly FloatingHolidayReportRepository $floatingHolidayReportRepository,
+								private readonly FloatingMetadataRepository      $floatingMetadataRepository) {
 	}
 
 	#[Route('/', name: 'get_all', methods: ['GET'])]
@@ -55,10 +57,6 @@ class ReportControllerV2 extends AbstractController {
 		return new JsonResponse($this->floatingHolidayReportRepository->findOneBy(['id' => $id]));
 	}
 
-	/**
-	 * @throws OptimisticLockException
-	 * @throws ORMException
-	 */
 	#[Route('/fixed', name: 'post_fixed', methods: ['POST'])]
 	public function postFixed(Request $request): Response {
 		$data = json_decode($request->getContent(), true);
@@ -74,10 +72,18 @@ class ReportControllerV2 extends AbstractController {
 		return new Response(null, 204);
 	}
 
-	#[Route('/floating', name: 'post_floating', methods: ['GET'])]
+	#[Route('/floating', name: 'post_floating', methods: ['POST'])]
 	public function postFloating(Request $request): Response {
-		$data = $request->getContent();
-
-		return new JsonResponse($data);
+		$data = json_decode($request->getContent(), true);
+		$language = $this->languageRepository->findOneBy(['code' => $data['language']]);
+		/** @var FloatingHolidayMetadata $metadata */
+		$metadata = $this->floatingMetadataRepository->findOneBy(['id' => $data['metadata']]);
+		$reportType = ReportType::from($data['report_type']);
+		$additionalDescription = $data['description'] ?? null;
+		$report = new FloatingHolidayReport(null, $language, $metadata, $reportType, $data['data'], $additionalDescription);
+		$metadata->addReport($report);
+		$this->entityManager->persist($metadata);
+		$this->entityManager->flush();
+		return new Response(null, 204);
 	}
 }
