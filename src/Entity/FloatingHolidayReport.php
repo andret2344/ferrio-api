@@ -36,7 +36,7 @@ class FloatingHolidayReport implements JsonSerializable {
 	#[ORM\Column(type: 'datetimetz_immutable', nullable: false)]
 	private readonly DateTimeImmutable $datetime;
 
-	#[ORM\Column(type: 'string', nullable: false, enumType: ReportType::class)]
+	#[ORM\Column(type: 'string', nullable: false, enumType: ReportState::class)]
 	private ReportState $reportState;
 
 	public function __construct(?int                    $id,
