@@ -39,7 +39,7 @@ class FloatingHolidayMetadata implements JsonSerializable {
 	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHoliday::class, cascade: ['all'], orphanRemoval: true)]
 	private Collection $holidays;
 
-	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHolidayReport::class, cascade: ['all'], orphanRemoval: true)]
+	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FloatingHolidayReport::class, cascade: ['all'], orphanRemoval: true)]
 	private Collection $reports;
 
 	#[Pure]
