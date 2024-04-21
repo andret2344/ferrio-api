@@ -6,7 +6,6 @@ use App\Repository\FixedHolidayReportRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
@@ -17,43 +16,43 @@ class FixedHolidayReport implements JsonSerializable {
 	#[ORM\GeneratedValue]
 	private ?int $id;
 
+	#[ORM\Column(type: 'string', nullable: false)]
+	private string $userId;
+
 	#[ORM\ManyToOne(targetEntity: Language::class)]
-	#[Orm\JoinColumn(name: 'language_code', referencedColumnName: 'code', nullable: false)]
+	#[ORM\JoinColumn(name: 'language_code', referencedColumnName: 'code', nullable: false)]
 	private Language $language;
 
 	#[ORM\ManyToOne(targetEntity: FixedHolidayMetadata::class, inversedBy: 'reports')]
-	#[Orm\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
+	#[ORM\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
 	private ?FixedHolidayMetadata $metadata;
 
 	#[ORM\Column(type: 'string', nullable: false, enumType: ReportType::class)]
 	private ReportType $reportType;
 
-	#[ORM\Column(type: 'json', nullable: false)]
-	private ?array $data;
-
 	#[ORM\Column(type: 'text', length: 65536, nullable: true)]
-	private ?string $additionalDescription;
+	private ?string $description;
 
 	#[ORM\Column(type: 'datetimetz_immutable', nullable: false)]
 	private readonly DateTimeImmutable $datetime;
 
-	#[ORM\Column(type: 'boolean', nullable: false)]
-	private bool $verified;
+	#[ORM\Column(type: 'string', nullable: false, enumType: ReportType::class)]
+	private ReportState $reportState;
 
 	public function __construct(?int                 $id,
+								string               $userId,
 								Language             $language,
 								FixedHolidayMetadata $metadata,
 								ReportType           $reportType,
-								?array               $data,
-								?string              $additionalDescription) {
+								?string              $description) {
 		$this->id = $id;
+		$this->userId = $userId;
 		$this->language = $language;
 		$this->metadata = $metadata;
 		$this->reportType = $reportType;
-		$this->data = $data;
-		$this->additionalDescription = $additionalDescription;
+		$this->description = $description;
 		$this->datetime = new DateTimeImmutable();
-		$this->verified = false;
+		$this->reportState = ReportState::REPORTED;
 	}
 
 	public function getId(): int {
@@ -62,6 +61,14 @@ class FixedHolidayReport implements JsonSerializable {
 
 	public function setId(int $id): void {
 		$this->id = $id;
+	}
+
+	public function getUserId(): string {
+		return $this->userId;
+	}
+
+	public function setUserId(string $userId): void {
+		$this->userId = $userId;
 	}
 
 	public function getLanguage(): Language {
@@ -88,41 +95,36 @@ class FixedHolidayReport implements JsonSerializable {
 		$this->reportType = $reportType;
 	}
 
-	public function getData(): ?array {
-		return $this->data;
+	public function getDescription(): ?string {
+		return $this->description;
 	}
 
-	public function setData(?array $data): void {
-		$this->data = $data;
-	}
-
-	public function getAdditionalDescription(): ?string {
-		return $this->additionalDescription;
-	}
-
-	public function setAdditionalDescription(?string $additionalDescription): void {
-		$this->additionalDescription = $additionalDescription;
+	public function setDescription(?string $description): void {
+		$this->description = $description;
 	}
 
 	public function getDatetime(): DateTimeImmutable {
 		return $this->datetime;
 	}
 
-	public function isVerified(): bool {
-		return $this->verified;
+	public function getReportState(): ReportState {
+		return $this->reportState;
 	}
 
-	#[Pure]
+	public function setReportState(ReportState $reportState): void {
+		$this->reportState = $reportState;
+	}
+
 	#[Override]
 	#[ArrayShape([
 		'id' => "int",
+		'user_id' => 'string',
 		'language_code' => "\App\Entity\Language",
 		'metadata_id' => "int",
 		'report_type' => "\App\Entity\ReportType",
-		'data' => "array|null",
-		'additional_description' => "null|string",
+		'description' => "null|string",
 		'datetime' => "null|string",
-		'verified' => "bool"
+		'report_state' => "\App\Entity\ReportState"
 	])]
 	public function jsonSerialize(): array {
 		return [
@@ -130,10 +132,9 @@ class FixedHolidayReport implements JsonSerializable {
 			'language_code' => $this->language->getCode(),
 			'metadata_id' => $this->metadata->getId(),
 			'report_type' => $this->reportType,
-			'data' => $this->data,
-			'additional_description' => $this->additionalDescription,
+			'description' => $this->description,
 			'datetime' => $this->datetime->format('Y-m-d H:i:s'),
-			'verified' => $this->verified
+			'report_state' => $this->reportState
 		];
 	}
 }

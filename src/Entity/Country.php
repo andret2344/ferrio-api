@@ -7,7 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
+use Override;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[ORM\Entity(repositoryClass: CountryRepository::class)]
@@ -82,6 +84,8 @@ class Country extends AbstractController implements JsonSerializable {
 		return $this;
 	}
 
+	#[Pure]
+	#[Override]
 	#[ArrayShape([
 		'isoCode' => 'string',
 		'englishName' => 'string'

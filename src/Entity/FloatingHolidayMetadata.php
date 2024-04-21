@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
+use Override;
 
 #[ORM\Entity(repositoryClass: FloatingMetadataRepository::class)]
 class FloatingHolidayMetadata implements JsonSerializable {
@@ -21,15 +22,15 @@ class FloatingHolidayMetadata implements JsonSerializable {
 	private bool $usual;
 
 	#[ORM\ManyToOne(targetEntity: Category::class)]
-	#[Orm\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
+	#[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
 	private ?Category $category;
 
 	#[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'floatingHolidays')]
-	#[Orm\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
+	#[ORM\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
 	private ?Country $country;
 
 	#[ORM\ManyToOne(targetEntity: Script::class)]
-	#[Orm\JoinColumn(name: 'script_id', referencedColumnName: 'id', nullable: false)]
+	#[ORM\JoinColumn(name: 'script_id', referencedColumnName: 'id', nullable: false)]
 	private ?Script $script;
 
 	#[ORM\Column(type: 'string')]
@@ -129,6 +130,8 @@ class FloatingHolidayMetadata implements JsonSerializable {
 		return $this;
 	}
 
+	#[Pure]
+	#[Override]
 	#[ArrayShape([
 		'id' => 'int',
 		'usual' => 'int',

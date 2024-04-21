@@ -5,18 +5,20 @@ namespace App\Entity;
 use App\Repository\FloatingHolidayRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
+use Override;
 
 #[ORM\Entity(repositoryClass: FloatingHolidayRepository::class)]
 class FloatingHoliday implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\ManyToOne(targetEntity: Language::class)]
-	#[Orm\JoinColumn(name: 'language_code', referencedColumnName: 'code', nullable: false)]
+	#[ORM\JoinColumn(name: 'language_code', referencedColumnName: 'code', nullable: false)]
 	private Language $language;
 
 	#[ORM\Id]
 	#[ORM\ManyToOne(targetEntity: FloatingHolidayMetadata::class, inversedBy: 'holidays')]
-	#[Orm\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
+	#[ORM\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
 	private FloatingHolidayMetadata $metadata;
 
 	#[ORM\Column(type: 'text', nullable: false)]
@@ -83,6 +85,8 @@ class FloatingHoliday implements JsonSerializable {
 		return $this;
 	}
 
+	#[Pure]
+	#[Override]
 	#[ArrayShape([
 		'id' => "int",
 		'usual' => "bool",
@@ -98,7 +102,8 @@ class FloatingHoliday implements JsonSerializable {
 			'name' => $this->name,
 			'description' => $this->description,
 			'url' => $this->url,
-			'script' => $this->metadata->getScript()->getContent()
+			'script' => $this->metadata->getScript()
+				->getContent()
 		];
 	}
 }

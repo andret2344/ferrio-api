@@ -64,8 +64,9 @@ class ReportControllerV2 extends AbstractController {
 		/** @var FixedHolidayMetadata $metadata */
 		$metadata = $this->fixedMetadataRepository->findOneBy(['id' => $data['metadata']]);
 		$reportType = ReportType::from($data['report_type']);
-		$additionalDescription = $data['description'] ?? null;
-		$report = new FixedHolidayReport(null, $language, $metadata, $reportType, $data['data'], $additionalDescription);
+		$description = $data['description'] ?? null;
+		$userId = $data['user_id'] ?? null;
+		$report = new FixedHolidayReport(null, $userId, $language, $metadata, $reportType, $description);
 		$metadata->addReport($report);
 		$this->entityManager->persist($metadata);
 		$this->entityManager->flush();
@@ -79,8 +80,9 @@ class ReportControllerV2 extends AbstractController {
 		/** @var FloatingHolidayMetadata $metadata */
 		$metadata = $this->floatingMetadataRepository->findOneBy(['id' => $data['metadata']]);
 		$reportType = ReportType::from($data['report_type']);
-		$additionalDescription = $data['description'] ?? null;
-		$report = new FloatingHolidayReport(null, $language, $metadata, $reportType, $data['data'], $additionalDescription);
+		$description = $data['description'] ?? null;
+		$userId = $data['user_id'] ?? null;
+		$report = new FloatingHolidayReport(null, $userId, $language, $metadata, $reportType, $description);
 		$metadata->addReport($report);
 		$this->entityManager->persist($metadata);
 		$this->entityManager->flush();

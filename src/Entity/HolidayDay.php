@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
+use Override;
 
 class HolidayDay implements JsonSerializable {
 	private string $id;
@@ -34,6 +36,8 @@ class HolidayDay implements JsonSerializable {
 		return $this->holidays;
 	}
 
+	#[Pure]
+	#[Override]
 	#[ArrayShape([
 		'id' => 'string',
 		'day' => 'int',

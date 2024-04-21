@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
+use Override;
 
 #[ORM\Entity(repositoryClass: ScriptRepository::class)]
 class Script implements JsonSerializable {
@@ -61,6 +62,8 @@ class Script implements JsonSerializable {
 		return $this;
 	}
 
+	#[Pure]
+	#[Override]
 	#[ArrayShape([
 		'id' => 'integer',
 		'content' => 'string',

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
+use Override;
 
 #[ORM\Entity(repositoryClass: LanguageRepository::class)]
 class Language implements JsonSerializable {
@@ -56,6 +57,8 @@ class Language implements JsonSerializable {
 		return $this;
 	}
 
+	#[Pure]
+	#[Override]
 	#[ArrayShape([
 		'code' => 'string',
 		'name' => 'string'

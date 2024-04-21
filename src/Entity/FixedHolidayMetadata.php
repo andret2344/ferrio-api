@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
+use Override;
 
 #[ORM\Entity(repositoryClass: FixedMetadataRepository::class)]
 class FixedHolidayMetadata implements JsonSerializable {
@@ -27,11 +28,11 @@ class FixedHolidayMetadata implements JsonSerializable {
 	private bool $usual;
 
 	#[ORM\ManyToOne(targetEntity: Category::class)]
-	#[Orm\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
+	#[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
 	private ?Category $category;
 
 	#[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'fixedHolidays')]
-	#[Orm\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
+	#[ORM\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
 	private ?Country $country;
 
 	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHoliday::class, cascade: ['all'], orphanRemoval: true)]
@@ -118,6 +119,8 @@ class FixedHolidayMetadata implements JsonSerializable {
 		return $this;
 	}
 
+	#[Pure]
+	#[Override]
 	#[ArrayShape([
 		'id' => 'int|null',
 		'month' => 'int',
