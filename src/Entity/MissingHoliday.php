@@ -26,7 +26,7 @@ class MissingHoliday implements JsonSerializable {
 	#[ORM\Column(type: 'string', nullable: false)]
 	private string $name;
 
-	#[ORM\Column(type: 'string', nullable: false)]
+	#[ORM\Column(type: 'text', length: 65536, nullable: false)]
 	private string $description;
 
 	#[ORM\Column(type: 'string', nullable: false, enumType: ReportState::class)]
