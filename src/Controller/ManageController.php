@@ -18,11 +18,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/manage', name: 'manage_')]
 class ManageController extends AbstractController {
-	public function __construct(private readonly LanguageRepository        $languageRepository,
-								private readonly FixedHolidayRepository    $fixedHolidayRepository,
-								private readonly FloatingHolidayRepository $floatingHolidayRepository,
-								private readonly FixedMetadataRepository   $fixedMetadataRepository,
-								private readonly CountryRepository         $countryRepository) {
+	public function __construct(
+		private readonly LanguageRepository        $languageRepository,
+		private readonly FixedHolidayRepository    $fixedHolidayRepository,
+		private readonly FloatingHolidayRepository $floatingHolidayRepository,
+		private readonly FixedMetadataRepository   $fixedMetadataRepository,
+		private readonly CountryRepository         $countryRepository) {
 	}
 
 	#[Route('/', name: 'index')]

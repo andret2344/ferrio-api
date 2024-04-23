@@ -12,8 +12,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(['/holiday', '/v2/holiday'], name: 'v2_holiday_')]
 class HolidayControllerV2 extends AbstractController {
-	public function __construct(private readonly HolidayService $holidayService,
-								private readonly LoggingService $loggingService) {
+	public function __construct(
+		private readonly HolidayService $holidayService,
+		private readonly LoggingService $loggingService) {
 	}
 
 	#[Route('/{language<^\S{2}$>}', name: 'get_all', methods: ['GET'])]

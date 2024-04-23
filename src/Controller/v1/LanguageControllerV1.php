@@ -14,8 +14,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(['/language', '/v1/language'], name: 'v1_language_')]
 class LanguageControllerV1 extends AbstractController {
-	public function __construct(private readonly LanguageRepository $languageRepository,
-								private readonly LoggingService     $loggingService) {
+	public function __construct(
+		private readonly LanguageRepository $languageRepository,
+		private readonly LoggingService     $loggingService) {
 	}
 
 	#[Route('/', name: 'get_all', methods: ['GET'])]

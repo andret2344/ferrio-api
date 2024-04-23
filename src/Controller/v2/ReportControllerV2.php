@@ -21,12 +21,13 @@ use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(['/report', '/v2/report'], name: 'v2_report_')]
 class ReportControllerV2 extends AbstractController {
-	public function __construct(private readonly EntityManagerInterface          $entityManager,
-								private readonly LanguageRepository              $languageRepository,
-								private readonly FixedHolidayReportRepository    $fixedHolidayReportRepository,
-								private readonly FixedMetadataRepository         $fixedMetadataRepository,
-								private readonly FloatingHolidayReportRepository $floatingHolidayReportRepository,
-								private readonly FloatingMetadataRepository      $floatingMetadataRepository) {
+	public function __construct(
+		private readonly EntityManagerInterface          $entityManager,
+		private readonly LanguageRepository              $languageRepository,
+		private readonly FixedHolidayReportRepository    $fixedHolidayReportRepository,
+		private readonly FixedMetadataRepository         $fixedMetadataRepository,
+		private readonly FloatingHolidayReportRepository $floatingHolidayReportRepository,
+		private readonly FloatingMetadataRepository      $floatingMetadataRepository) {
 	}
 
 	#[Route('/', name: 'get_all', methods: ['GET'])]
