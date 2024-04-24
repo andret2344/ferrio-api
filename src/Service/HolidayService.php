@@ -16,6 +16,7 @@ readonly class HolidayService {
 
 	/**
 	 * @param string $language
+	 *
 	 * @return array|HolidayDay[]
 	 */
 	public function getHolidays(string $language): array {
@@ -38,8 +39,8 @@ readonly class HolidayService {
 				'name' => $holiday['name'],
 				'usual' => $holiday['usual'],
 				'description' => '', //$holiday['description'],
-				'countryName' => $holiday['countryName'],
-				'countryCode' => $holiday['countryCode'],
+				'country_name' => $holiday['countryName'],
+				'country_code' => $holiday['countryCode'],
 				'url' => $holiday['url']
 			];
 		}
@@ -50,6 +51,7 @@ readonly class HolidayService {
 
 	/**
 	 * @param string $language
+	 *
 	 * @return array
 	 */
 	public function getFloatingHolidays(string $language): array {
@@ -57,29 +59,19 @@ readonly class HolidayService {
 		$holidays = $this->floatingHolidayRepository->findBy(['language' => $language]);
 		$data = [];
 		foreach ($holidays as $holiday) {
-			$script = $holiday->getMetadata()->getScript();
-			$args = implode(', ', json_decode($holiday->getMetadata()->getArgs()));
+			$metadata = $holiday->getMetadata();
+			$script = $metadata->getScript();
+			$args = implode(', ', json_decode($metadata->getArgs()));
 			$script = new Script($script->getId(), $script->getContent() . "\n\ncalculate($args);");
+			$country = $metadata->getCountry();
 			$data[] = [
 				...$holiday->jsonSerialize(),
-				'country' => $holiday->getMetadata()->getCountry()?->getIsoCode(),
+				'country_code' => $country?->getIsoCode(),
+				'country_name' => $country?->getEnglishName(),
 				'script' => $script->getContent()
 			];
 		}
 		return $data;
-	}
-
-	public function getHoliday(string $language, int $id): ?FixedHoliday {
-		return $this->holidayRepository->findOneBy([
-			'language' => $language,
-			'metadata' => $id
-		]);
-	}
-
-	public function getTodayHoliday(string $language): ?HolidayDay {
-		$day = +date('j');
-		$month = +date('m');
-		return $this->getHolidayDay($language, $day, $month);
 	}
 
 	public function getHolidayDay(string $language, int $day, int $month): ?HolidayDay {
