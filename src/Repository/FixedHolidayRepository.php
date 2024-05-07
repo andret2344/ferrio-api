@@ -18,6 +18,7 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 	 * @param string $language
 	 * @param int $day
 	 * @param int $month
+	 *
 	 * @return array|FixedHoliday[]
 	 */
 	public function findAt(string $language, int $day, int $month): array {
@@ -35,6 +36,7 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 
 	/**
 	 * @param string $language
+	 *
 	 * @return array
 	 */
 	public function findAllByLanguage(string $language, int $offset = 0, int $limit = 1_000_000): array {
@@ -48,7 +50,8 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 				'h.description',
 				'h.url',
 				'c.englishName AS countryName',
-				'c.isoCode AS countryCode'
+				'c.isoCode AS countryCode',
+				'm.matureContent AS matureContent'
 			])
 			->join(FixedHolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
 			->leftJoin(Country::class, 'c', 'WITH', 'c.isoCode = m.country')
@@ -65,6 +68,7 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 	/**
 	 * @param string $language
 	 * @param array $array
+	 *
 	 * @return array|string[]
 	 */
 	public function check(string $language, array $array): array {

@@ -15,7 +15,7 @@ class FixedMetadataRepository extends ServiceEntityRepository {
 	public function findAllByLanguage(string $language) {
 		return $this->createQueryBuilder('m')
 			->innerJoin(FixedHoliday::class, 'h', 'WITH', 'm.id = h.metadata')
-			->select(['m.id', 'm.day', 'm.month', 'h.name', 'h.description'])
+			->select(['m.id', 'm.day', 'm.month', 'h.name', 'h.description', 'm.matureContent'])
 			->where('h.language = :code')
 			->setParameter('code', $language)
 			->getQuery()
