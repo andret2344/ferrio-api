@@ -41,8 +41,11 @@ class FixedHolidayMetadata implements JsonSerializable {
 	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHolidayReport::class, cascade: ['all'], orphanRemoval: true)]
 	private Collection $reports;
 
+	#[ORM\Column(type: 'boolean', nullable: false)]
+	private bool $matureContent;
+
 	#[Pure]
-	public function __construct(?int $id, int $month, int $day, int $usual, ?Country $country, ?Category $category) {
+	public function __construct(?int $id, int $month, int $day, int $usual, ?Country $country, ?Category $category, bool $matureContent) {
 		$this->id = $id;
 		$this->month = $month;
 		$this->day = $day;
@@ -51,6 +54,7 @@ class FixedHolidayMetadata implements JsonSerializable {
 		$this->category = $category;
 		$this->holidays = new ArrayCollection();
 		$this->reports = new ArrayCollection();
+		$this->matureContent = $matureContent;
 	}
 
 	public function getId(): ?int {
@@ -119,6 +123,14 @@ class FixedHolidayMetadata implements JsonSerializable {
 		return $this;
 	}
 
+	public function isMatureContent(): bool {
+		return $this->matureContent;
+	}
+
+	public function setMatureContent(bool $matureContent): void {
+		$this->matureContent = $matureContent;
+	}
+
 	#[Pure]
 	#[Override]
 	#[ArrayShape([
@@ -127,7 +139,8 @@ class FixedHolidayMetadata implements JsonSerializable {
 		'day' => 'int',
 		'usual' => 'int',
 		'country' => 'string|null',
-		'category' => 'string'
+		'category' => 'string',
+		'mature_content' => 'bool',
 	])]
 	public function jsonSerialize(): array {
 		return [
@@ -136,7 +149,8 @@ class FixedHolidayMetadata implements JsonSerializable {
 			'day' => $this->day,
 			'usual' => $this->usual,
 			'country' => $this->country?->getEnglishName(),
-			'category' => $this->category->getName()
+			'category' => $this->category->getName(),
+			'mature_content' => $this->matureContent,
 		];
 	}
 }

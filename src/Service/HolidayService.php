@@ -41,7 +41,8 @@ readonly class HolidayService {
 				'description' => '', //$holiday['description'],
 				'country_name' => $holiday['countryName'],
 				'country_code' => $holiday['countryCode'],
-				'url' => $holiday['url']
+				'url' => $holiday['url'],
+				'mature_content' => $holiday['matureContent'],
 			];
 		}
 		$id = sprintf('%02d', $month) . sprintf('%02d', $day);

@@ -42,13 +42,17 @@ class FloatingHolidayMetadata implements JsonSerializable {
 	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FloatingHolidayReport::class, cascade: ['all'], orphanRemoval: true)]
 	private Collection $reports;
 
+	#[ORM\Column(type: 'boolean', nullable: false)]
+	private bool $matureContent;
+
 	#[Pure]
 	public function __construct(int       $id,
 								int       $usual,
 								?Country  $country,
 								?Category $category,
 								?Script   $script,
-								string    $args) {
+								string    $args,
+								bool      $matureContent) {
 		$this->id = $id;
 		$this->usual = $usual;
 		$this->country = $country;
@@ -57,6 +61,7 @@ class FloatingHolidayMetadata implements JsonSerializable {
 		$this->args = $args;
 		$this->holidays = new ArrayCollection();
 		$this->reports = new ArrayCollection();
+		$this->matureContent = $matureContent;
 	}
 
 	public function getId(): int {
@@ -138,7 +143,8 @@ class FloatingHolidayMetadata implements JsonSerializable {
 		'category' => 'string',
 		'country' => 'string|null',
 		'script' => '\App\Entity\Script|null',
-		'args' => 'string'
+		'args' => 'string',
+		'mature_content' => 'bool'
 	])]
 	public function jsonSerialize(): array {
 		return [
@@ -147,7 +153,8 @@ class FloatingHolidayMetadata implements JsonSerializable {
 			'category' => $this->category->getName(),
 			'country' => $this->country?->getEnglishName(),
 			'script' => $this->script,
-			'args' => $this->args
+			'args' => $this->args,
+			'mature_content' => $this->matureContent
 		];
 	}
 }
