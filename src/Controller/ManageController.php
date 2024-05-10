@@ -111,7 +111,7 @@ class ManageController extends AbstractController {
 		$fixedHolidays = $this->fixedHolidayRepository->findAllByLanguage('pl', ($page - 1) * 100, 100);
 		$floatingHolidays = $this->floatingHolidayRepository->findBy(['language' => 'pl']);
 		$countries = $this->countryRepository->findAll();
-		$pages = ceil($this->fixedMetadataRepository->count() / 100);
+		$pages = ceil($this->fixedMetadataRepository->count([]) / 100);
 		return $this->render('manage/create.html.twig', [
 			'fixed_holidays' => $fixedHolidays,
 			'floating_holidays' => $floatingHolidays,
