@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\MissingHolidayRepository;
+use App\Repository\MissingFixedHolidayRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
-#[ORM\Entity(repositoryClass: MissingHolidayRepository::class)]
-class MissingHoliday implements JsonSerializable {
+#[ORM\Entity(repositoryClass: MissingFixedHolidayRepository::class)]
+class MissingFixedHoliday implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\Column(type: 'integer')]
 	#[ORM\GeneratedValue]
@@ -19,25 +19,28 @@ class MissingHoliday implements JsonSerializable {
 	#[ORM\Column(type: 'string', nullable: false)]
 	private string $userId;
 
-	#[ORM\ManyToOne(targetEntity: Language::class)]
-	#[ORM\JoinColumn(name: 'language_code', referencedColumnName: 'code', nullable: false)]
-	private Language $language;
-
 	#[ORM\Column(type: 'string', nullable: false)]
 	private string $name;
 
 	#[ORM\Column(type: 'text', length: 65536, nullable: false)]
 	private string $description;
 
+	#[ORM\Column(type: 'integer', nullable: false)]
+	private string $day;
+
+	#[ORM\Column(type: 'integer', nullable: false)]
+	private string $month;
+
 	#[ORM\Column(type: 'string', nullable: false, enumType: ReportState::class)]
 	private ReportState $reportState;
 
-	public function __construct(?int $id, string $userId, Language $language, string $name, string $description) {
+	public function __construct(?int $id, string $userId, string $name, string $description, string $day, string $month) {
 		$this->id = $id;
 		$this->userId = $userId;
-		$this->language = $language;
 		$this->name = $name;
 		$this->description = $description;
+		$this->day = $day;
+		$this->month = $month;
 		$this->reportState = ReportState::REPORTED;
 	}
 
@@ -57,12 +60,20 @@ class MissingHoliday implements JsonSerializable {
 		$this->userId = $userId;
 	}
 
-	public function getLanguage(): Language {
-		return $this->language;
+	public function getDay(): string {
+		return $this->day;
 	}
 
-	public function setLanguage(Language $language): void {
-		$this->language = $language;
+	public function setDay(string $day): void {
+		$this->day = $day;
+	}
+
+	public function getMonth(): string {
+		return $this->month;
+	}
+
+	public function setMonth(string $month): void {
+		$this->month = $month;
 	}
 
 	public function getName(): string {
@@ -93,20 +104,22 @@ class MissingHoliday implements JsonSerializable {
 	#[Override]
 	#[ArrayShape([
 		'id' => 'int|null',
-		'userId' => 'string',
-		'language' => 'string',
+		'user_id' => 'string',
+		'day' => 'integer',
+		'month' => 'integer',
 		'name' => 'string',
 		'description' => 'string',
-		'reportState' => '\App\Entity\ReportState'
+		'report_state' => '\App\Entity\ReportState'
 	])]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,
-			'userId' => $this->userId,
-			'language' => $this->language->getCode(),
+			'user_id' => $this->userId,
+			'day' => $this->day,
+			'month' => $this->month,
 			'name' => $this->name,
 			'description' => $this->description,
-			'reportState' => $this->reportState,
+			'report_state' => $this->reportState,
 		];
 	}
 }
