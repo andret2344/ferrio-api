@@ -34,9 +34,9 @@ class ManageController extends AbstractController {
 		]);
 	}
 
-	#[Route('/translate/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'translate')]
+	#[Route('/translate/{page}/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'translate')]
 	public function translate(Request $request, EntityManagerInterface $entityManager,
-							  string  $from, string $to): Response {
+							  int     $page, string $from, string $to): Response {
 		$action = $request->request->get('action');
 		if ($action === 'update') {
 			$id = $request->request->get('metadata_id');
@@ -61,18 +61,21 @@ class ManageController extends AbstractController {
 		$languageFrom = $this->languageRepository->findOneBy(['code' => $from]);
 		$languageTo = $this->languageRepository->findOneBy(['code' => $to]);
 		$languages = $this->languageRepository->findAll();
-		$holidays = $this->fixedHolidayRepository->findAllAggregatedById($from, $to);
+		$holidays = $this->fixedHolidayRepository->findAllAggregatedById($from, $to, ($page - 1) * 100, 100);
+		$pages = ceil($this->fixedMetadataRepository->count([]) / 100);
 		return $this->render('manage/translate.html.twig', [
 			'languageFrom' => $languageFrom,
 			'languageTo' => $languageTo,
 			'languages' => $languages,
-			'holidays' => $holidays
+			'holidays' => $holidays,
+			'page' => $page,
+			'pages' => $pages
 		]);
 	}
 
-	#[Route('/translate/{to<^\S{2}$>}', name: 'translate_default')]
-	public function translateDefault(Request $request, EntityManagerInterface $entityManager, string $to): Response {
-		return $this->translate($request, $entityManager, 'pl', $to);
+	#[Route('/translate/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'translate_default')]
+	public function translateDefault(Request $request, EntityManagerInterface $entityManager, string $from, string $to): Response {
+		return $this->translate($request, $entityManager, 1, $from, $to);
 	}
 
 	#[Route('/create', name: 'create')]

@@ -11,7 +11,7 @@
 	</nav>
 	<section class='section-main'>
 		<span class='heading my-5'>Welcome to creation UI!</span>
-		{% include 'components/navigation.html.twig' with {'page': page} %}
+		{% include 'components/navigation.html.twig' with {'page': page, 'url': '/manage/create/%page%'} %}
 		<table class="table table-dark table-bordered">
 			<caption>Translations</caption>
 			<thead>
@@ -151,7 +151,7 @@
 			</tr>
 			</tbody>
 		</table>
-		{% include 'components/navigation.html.twig' with {'page': page} %}
+		{% include 'components/navigation.html.twig' with {'page': page, 'url': '/manage/create/%page%'} %}
 	</section>
 	<script type='text/javascript'>
 		const hidingSwitch = document.querySelector('#hideDescribedHolidays');

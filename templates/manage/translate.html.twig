@@ -20,7 +20,7 @@
 								<li>
 									<a
 											class="dropdown-item"
-											href='{{ path('manage_translate', {'from': language.code, 'to': languageTo.code }) }}'
+											href='{{ path('manage_translate', {'page': page, 'from': language.code, 'to': languageTo.code }) }}'
 									>{{ language.name }}</a>
 								</li>
 							{% endif %}
@@ -44,7 +44,7 @@
 								<li>
 									<a
 											class="dropdown-item"
-											href="/manage/{{ languageFrom.code }}/{{ language.code }}"
+											href="/manage/translate/{{ languageFrom.code }}/{{ language.code }}"
 									>{{ language.name }}</a>
 								</li>
 							{% endif %}
@@ -56,6 +56,8 @@
 	</nav>
 	<section class='section-main'>
 		<span class='heading my-5'>Welcome to translation from {{ languageFrom.name }} to {{ languageTo.name }}!</span>
+		{% set url = '/manage/translate/%page%/' ~ languageFrom.code ~ '/' ~ languageTo.code %}
+		{% include 'components/navigation.html.twig' with {'page': page, 'url': url} %}
 		<table class="table table-dark table-bordered">
 			<caption>Translations</caption>
 			<thead>
@@ -108,11 +110,12 @@
 			{% endfor %}
 			</tbody>
 		</table>
+		{% include 'components/navigation.html.twig' with {'page': page, 'url': url} %}
 	</section>
 	<script>
 		const swapIcon = document.querySelector('.swap');
 		swapIcon.addEventListener('click', () => {
-			window.location.href = '/manage/{{ languageTo.code }}/{{ languageFrom.code }}';
+			window.location.href = '/manage/translate/{{ page }}/{{ languageTo.code }}/{{ languageFrom.code }}';
 		});
 	</script>
 {% endblock %}

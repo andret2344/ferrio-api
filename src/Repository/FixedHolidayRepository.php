@@ -6,6 +6,7 @@ use App\Entity\Country;
 use App\Entity\FixedHoliday;
 use App\Entity\FixedHolidayMetadata;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -84,7 +85,7 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 		return array_diff($array, $existingNames);
 	}
 
-	public function findAllAggregatedById(string $languageFrom, string $languageTo) {
+	public function findAllAggregatedById(string $languageFrom, string $languageTo, int $offset = 0, int $limit = 1_000_000) {
 		$rsm = new ResultSetMapping();
 		$rsm->addEntityResult(FixedHoliday::class, 'h');
 		$rsm->addScalarResult('id', 'id');
@@ -105,10 +106,13 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 						 LEFT JOIN (SELECT * FROM fixed_holiday WHERE fixed_holiday.language_code = :langTo) as h2
 								   ON h1.metadata_id = h2.metadata_id
 						 INNER JOIN fixed_holiday_metadata m1 ON h1.metadata_id = m1.id
-				ORDER BY month, day;";
+				ORDER BY month, day
+				LIMIT :limit OFFSET :offset;";
 		$query = $this->_em->createNativeQuery($sql, $rsm);
 		$query->setParameter('langFrom', $languageFrom);
 		$query->setParameter('langTo', $languageTo);
+		$query->setParameter('limit', $limit, ParameterType::INTEGER);
+		$query->setParameter('offset', $offset, ParameterType::INTEGER);
 		return $query->getResult();
 	}
 }

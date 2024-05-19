@@ -4,7 +4,7 @@
 			<div>{{ text | raw }}</div>
 		</div>
 	{% else %}
-		<a class='holder' href="/manage/create/{{ page }}" rel="{{ rel }}">
+		<a class='holder' href="{{ url }}" rel="{{ rel }}">
 			<div>{{ text | raw }}</div>
 		</a>
 	{% endif %}
