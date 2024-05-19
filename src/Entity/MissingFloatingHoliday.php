@@ -31,6 +31,10 @@ class MissingFloatingHoliday implements JsonSerializable {
 	#[ORM\Column(type: 'string', nullable: false, enumType: ReportState::class)]
 	private ReportState $reportState;
 
+	#[ORM\OneToOne(targetEntity: FloatingHolidayMetadata::class)]
+	#[ORM\Column(nullable: true)]
+	private ?FloatingHolidayMetadata $holiday;
+
 	public function __construct(?int $id, string $userId, string $name, string $description, string $date) {
 		$this->id = $id;
 		$this->userId = $userId;
@@ -38,6 +42,7 @@ class MissingFloatingHoliday implements JsonSerializable {
 		$this->description = $description;
 		$this->date = $date;
 		$this->reportState = ReportState::REPORTED;
+		$this->holiday = null;
 	}
 
 	public function getId(): ?int {
@@ -96,7 +101,8 @@ class MissingFloatingHoliday implements JsonSerializable {
 		'name' => 'string',
 		'description' => 'string',
 		'date' => 'string',
-		'reportState' => '\App\Entity\ReportState'
+		'reportState' => '\App\Entity\ReportState',
+		'holiday_id' => 'int|null'
 	])]
 	public function jsonSerialize(): array {
 		return [
@@ -106,6 +112,7 @@ class MissingFloatingHoliday implements JsonSerializable {
 			'description' => $this->description,
 			'date' => $this->date,
 			'reportState' => $this->reportState,
+			'holiday_id' => $this->holiday?->getId()
 		];
 	}
 }
