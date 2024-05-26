@@ -30,32 +30,14 @@ class ReportControllerV2 extends AbstractController {
 		private readonly FloatingMetadataRepository      $floatingMetadataRepository) {
 	}
 
-	#[Route('/', name: 'get_all', methods: ['GET'])]
-	public function getAll(): Response {
-		return new JsonResponse([
-			'fixed' => $this->fixedHolidayReportRepository->findAll(),
-			'floating' => $this->floatingHolidayReportRepository->findAll()
-		]);
+	#[Route('/{uid<^\S+$>}/floating', name: 'get_fixed_by_uid', methods: ['GET'])]
+	public function getFixedByUid(string $uid): Response {
+		return new JsonResponse($this->fixedHolidayReportRepository->findOneBy(['userId' => $uid]));
 	}
 
-	#[Route('/fixed', name: 'get_all_fixed', methods: ['GET'])]
-	public function getAllFixed(): Response {
-		return new JsonResponse($this->fixedHolidayReportRepository->findAll());
-	}
-
-	#[Route('/floating', name: 'get_all_floating', methods: ['GET'])]
-	public function getAllFloating(): Response {
-		return new JsonResponse($this->floatingHolidayReportRepository->findAll());
-	}
-
-	#[Route('/fixed/{id}', name: 'get_one_fixed', methods: ['GET'])]
-	public function getFixed(int $id): Response {
-		return new JsonResponse($this->fixedHolidayReportRepository->findOneBy(['id' => $id]));
-	}
-
-	#[Route('/floating/{id}', name: 'get_one_floating', methods: ['GET'])]
-	public function getFloating(int $id): Response {
-		return new JsonResponse($this->floatingHolidayReportRepository->findOneBy(['id' => $id]));
+	#[Route('/{uid<^\S+$>}/floating', name: 'get_floating_by_uid', methods: ['GET'])]
+	public function getFloatingByUid(string $uid): Response {
+		return new JsonResponse($this->floatingHolidayReportRepository->findOneBy(['userId' => $uid]));
 	}
 
 	#[Route('/fixed', name: 'post_fixed', methods: ['POST'])]

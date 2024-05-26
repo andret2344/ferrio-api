@@ -21,20 +21,14 @@ class MissingControllerV2 extends AbstractController {
 		private readonly MissingFloatingHolidayRepository $missingFloatingHolidayRepository) {
 	}
 
-	#[Route('/', name: 'get_all', methods: ['GET'])]
-	public function getAll(): Response {
-		return new JsonResponse([
-			'fixed' => $this->missingFixedHolidayRepository->findAll(),
-			'floating' => $this->missingFloatingHolidayRepository->findAll()
-		]);
+	#[Route('/{uid<^\S+$>}/fixed', name: 'get_fixed_by_uid', methods: ['GET'])]
+	public function getFixedByUid(string $uid): Response {
+		return new JsonResponse($this->missingFixedHolidayRepository->findBy(['userId' => $uid]));
 	}
 
-	#[Route('/{uid<^\S+$>}', name: 'get_by_uid', methods: ['GET'])]
-	public function getByUid(string $uid): Response {
-		return new JsonResponse([
-			'fixed' => $this->missingFixedHolidayRepository->findBy(['userId' => $uid]),
-			'floating' => $this->missingFloatingHolidayRepository->findBy(['userId' => $uid])
-		]);
+	#[Route('/{uid<^\S+$>}/floating', name: 'get_floating_by_uid', methods: ['GET'])]
+	public function getFloatingByUid(string $uid): Response {
+		return new JsonResponse($this->missingFloatingHolidayRepository->findBy(['userId' => $uid]));
 	}
 
 	#[Route('/fixed', name: 'post_fixed', methods: ['POST'])]
