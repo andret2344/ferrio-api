@@ -32,7 +32,7 @@ class MissingFixedHoliday implements JsonSerializable {
 	private string $month;
 
 	#[ORM\OneToOne(targetEntity: FixedHolidayMetadata::class)]
-	#[ORM\Column(nullable: true)]
+	#[ORM\JoinColumn(name: 'holiday', referencedColumnName: 'id')]
 	private ?FixedHolidayMetadata $holiday;
 
 	#[ORM\Column(type: 'string', nullable: false, enumType: ReportState::class)]
