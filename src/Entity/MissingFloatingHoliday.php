@@ -97,21 +97,21 @@ class MissingFloatingHoliday implements JsonSerializable {
 	#[Override]
 	#[ArrayShape([
 		'id' => 'int|null',
-		'userId' => 'string',
+		'user_id' => 'string',
 		'name' => 'string',
 		'description' => 'string',
 		'date' => 'string',
-		'reportState' => '\App\Entity\ReportState',
+		'report_state' => '\App\Entity\ReportState',
 		'holiday_id' => 'int|null'
 	])]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,
-			'userId' => $this->userId,
+			'user_id' => $this->userId,
 			'name' => $this->name,
 			'description' => $this->description,
 			'date' => $this->date,
-			'reportState' => $this->reportState,
+			'report_state' => $this->reportState,
 			'holiday_id' => $this->holiday?->getId()
 		];
 	}
