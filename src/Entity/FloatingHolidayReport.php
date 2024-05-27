@@ -113,20 +113,20 @@ class FloatingHolidayReport implements JsonSerializable {
 
 	#[Override]
 	#[ArrayShape([
-		'id' => "int",
-		'user_id' => "string",
-		'language' => "\App\Entity\Language",
-		'metadata_id' => "int",
-		'report_type' => "\App\Entity\ReportType",
-		'description' => "null|string",
-		'datetime' => "null|string",
-		'report_state' => "\App\Entity\ReportState"
+		'id' => 'int',
+		'user_id' => 'string',
+		'language_code' => 'string',
+		'metadata_id' => 'int',
+		'report_type' => '\App\Entity\ReportType',
+		'description' => 'null|string',
+		'datetime' => 'null|string',
+		'report_state' => '\App\Entity\ReportState'
 	])]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,
 			'user_id' => $this->userId,
-			'language' => $this->language,
+			'language_code' => $this->language->getCode(),
 			'metadata_id' => $this->metadata->getId(),
 			'report_type' => $this->reportType,
 			'description' => $this->description,

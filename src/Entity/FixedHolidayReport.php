@@ -117,14 +117,14 @@ class FixedHolidayReport implements JsonSerializable {
 
 	#[Override]
 	#[ArrayShape([
-		'id' => "int",
+		'id' => 'int',
 		'user_id' => 'string',
-		'language_code' => "\App\Entity\Language",
-		'metadata_id' => "int",
-		'report_type' => "\App\Entity\ReportType",
-		'description' => "null|string",
-		'datetime' => "null|string",
-		'report_state' => "\App\Entity\ReportState"
+		'language_code' => 'string',
+		'metadata_id' => 'int',
+		'report_type' => '\App\Entity\ReportType',
+		'description' => 'null|string',
+		'datetime' => 'null|string',
+		'report_state' => '\App\Entity\ReportState'
 	])]
 	public function jsonSerialize(): array {
 		return [
