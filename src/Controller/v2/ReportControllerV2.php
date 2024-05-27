@@ -30,7 +30,7 @@ class ReportControllerV2 extends AbstractController {
 		private readonly FloatingMetadataRepository      $floatingMetadataRepository) {
 	}
 
-	#[Route('/{uid<^\S+$>}/floating', name: 'get_fixed_by_uid', methods: ['GET'])]
+	#[Route('/{uid<^\S+$>}/fixed', name: 'get_fixed_by_uid', methods: ['GET'])]
 	public function getFixedByUid(string $uid): Response {
 		return new JsonResponse($this->fixedHolidayReportRepository->findBy(['userId' => $uid]));
 	}
