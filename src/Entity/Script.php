@@ -21,7 +21,7 @@ class Script implements JsonSerializable {
 	#[ORM\Column(type: 'text', nullable: false)]
 	private string $content;
 
-	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHoliday::class, cascade: ['all'], orphanRemoval: true)]
+	#[ORM\OneToMany(targetEntity: FixedHoliday::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
 	private Collection $metadata;
 
 	#[Pure]

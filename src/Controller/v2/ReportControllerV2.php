@@ -32,12 +32,12 @@ class ReportControllerV2 extends AbstractController {
 
 	#[Route('/{uid<^\S+$>}/floating', name: 'get_fixed_by_uid', methods: ['GET'])]
 	public function getFixedByUid(string $uid): Response {
-		return new JsonResponse($this->fixedHolidayReportRepository->findOneBy(['userId' => $uid]));
+		return new JsonResponse($this->fixedHolidayReportRepository->findBy(['userId' => $uid]));
 	}
 
 	#[Route('/{uid<^\S+$>}/floating', name: 'get_floating_by_uid', methods: ['GET'])]
 	public function getFloatingByUid(string $uid): Response {
-		return new JsonResponse($this->floatingHolidayReportRepository->findOneBy(['userId' => $uid]));
+		return new JsonResponse($this->floatingHolidayReportRepository->findBy(['userId' => $uid]));
 	}
 
 	#[Route('/fixed', name: 'post_fixed', methods: ['POST'])]
