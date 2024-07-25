@@ -5,27 +5,26 @@ namespace App\Entity;
 use App\Repository\MissingFloatingHolidayRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
 #[ORM\Entity(repositoryClass: MissingFloatingHolidayRepository::class)]
 class MissingFloatingHoliday implements JsonSerializable {
 	#[ORM\Id]
-	#[ORM\Column(type: 'integer')]
+	#[ORM\Column]
 	#[ORM\GeneratedValue]
 	private ?int $id;
 
-	#[ORM\Column(type: 'string', nullable: false)]
+	#[ORM\Column(type: 'string')]
 	private string $userId;
 
-	#[ORM\Column(type: 'string', nullable: false)]
+	#[ORM\Column(type: 'string')]
 	private string $name;
 
-	#[ORM\Column(type: 'text', length: 65536, nullable: false)]
+	#[ORM\Column(type: 'text')]
 	private string $description;
 
-	#[ORM\Column(type: 'text', length: 65536, nullable: false)]
+	#[ORM\Column(type: 'text')]
 	private string $date;
 
 	#[ORM\Column(type: 'string', nullable: false, enumType: ReportState::class)]
@@ -93,7 +92,6 @@ class MissingFloatingHoliday implements JsonSerializable {
 		$this->reportState = $reportState;
 	}
 
-	#[Pure]
 	#[Override]
 	#[ArrayShape([
 		'id' => 'int|null',

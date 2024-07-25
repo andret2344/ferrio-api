@@ -12,24 +12,24 @@ use Override;
 #[ORM\Entity(repositoryClass: MissingFixedHolidayRepository::class)]
 class MissingFixedHoliday implements JsonSerializable {
 	#[ORM\Id]
-	#[ORM\Column(type: 'integer')]
+	#[ORM\Column]
 	#[ORM\GeneratedValue]
 	private ?int $id;
 
-	#[ORM\Column(type: 'string', nullable: false)]
+	#[ORM\Column]
 	private string $userId;
 
-	#[ORM\Column(type: 'string', nullable: false)]
+	#[ORM\Column]
 	private string $name;
 
-	#[ORM\Column(type: 'text', length: 65536, nullable: false)]
+	#[ORM\Column(type: 'text')]
 	private string $description;
 
-	#[ORM\Column(type: 'integer', nullable: false)]
-	private string $day;
+	#[ORM\Column]
+	private int $day;
 
-	#[ORM\Column(type: 'integer', nullable: false)]
-	private string $month;
+	#[ORM\Column]
+	private int $month;
 
 	#[ORM\OneToOne(targetEntity: FixedHolidayMetadata::class)]
 	#[ORM\JoinColumn(name: 'holiday', referencedColumnName: 'id')]
