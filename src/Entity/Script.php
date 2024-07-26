@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Repository\ScriptRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +10,7 @@ use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
-#[ORM\Entity(repositoryClass: ScriptRepository::class)]
+#[ORM\Entity]
 class Script implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\GeneratedValue]

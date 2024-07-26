@@ -11,7 +11,7 @@ use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
-#[ORM\Entity(repositoryClass: FloatingMetadataRepository::class)]
+#[ORM\Entity]
 class FloatingHolidayMetadata implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\Column(type: 'integer')]
@@ -46,14 +46,12 @@ class FloatingHolidayMetadata implements JsonSerializable {
 	private bool $matureContent;
 
 	#[Pure]
-	public function __construct(int       $id,
-								int       $usual,
+	public function __construct(int       $usual,
 								?Country  $country,
 								?Category $category,
 								?Script   $script,
 								string    $args,
 								bool      $matureContent) {
-		$this->id = $id;
 		$this->usual = $usual;
 		$this->country = $country;
 		$this->category = $category;
@@ -135,7 +133,6 @@ class FloatingHolidayMetadata implements JsonSerializable {
 		return $this;
 	}
 
-	#[Pure]
 	#[Override]
 	#[ArrayShape([
 		'id' => 'int',

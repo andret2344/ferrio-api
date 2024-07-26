@@ -4,8 +4,6 @@ namespace App\Controller\v2;
 
 use App\Entity\MissingFixedHoliday;
 use App\Entity\MissingFloatingHoliday;
-use App\Repository\MissingFixedHolidayRepository;
-use App\Repository\MissingFloatingHolidayRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,20 +13,19 @@ use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(['/missing', '/v2/missing'], name: 'v2_missing_')]
 class MissingControllerV2 extends AbstractController {
-	public function __construct(
-		private readonly EntityManagerInterface           $entityManager,
-		private readonly MissingFixedHolidayRepository    $missingFixedHolidayRepository,
-		private readonly MissingFloatingHolidayRepository $missingFloatingHolidayRepository) {
+	public function __construct(private readonly EntityManagerInterface $entityManager) {
 	}
 
 	#[Route('/{uid<^\S+$>}/fixed', name: 'get_fixed_by_uid', methods: ['GET'])]
 	public function getFixedByUid(string $uid): Response {
-		return new JsonResponse($this->missingFixedHolidayRepository->findBy(['userId' => $uid]));
+		return new JsonResponse($this->entityManager->getRepository(MissingFixedHoliday::class)
+			->findBy(['userId' => $uid]));
 	}
 
 	#[Route('/{uid<^\S+$>}/floating', name: 'get_floating_by_uid', methods: ['GET'])]
 	public function getFloatingByUid(string $uid): Response {
-		return new JsonResponse($this->missingFloatingHolidayRepository->findBy(['userId' => $uid]));
+		return new JsonResponse($this->entityManager->getRepository(MissingFloatingHoliday::class)
+			->findBy(['userId' => $uid]));
 	}
 
 	#[Route('/fixed', name: 'post_fixed', methods: ['POST'])]

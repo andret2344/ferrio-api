@@ -3,8 +3,8 @@
 namespace App\Controller\v1;
 
 use App\Entity\Language;
-use App\Repository\LanguageRepository;
 use App\Service\LoggingService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,8 +15,8 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(['/language', '/v1/language'], name: 'v1_language_')]
 class LanguageControllerV1 extends AbstractController {
 	public function __construct(
-		private readonly LanguageRepository $languageRepository,
-		private readonly LoggingService     $loggingService) {
+		private readonly EntityManagerInterface $entityManager,
+		private readonly LoggingService         $loggingService) {
 	}
 
 	#[Route('/', name: 'get_all', methods: ['GET'])]
@@ -25,7 +25,8 @@ class LanguageControllerV1 extends AbstractController {
 		/**
 		 * @var Language[] $languages
 		 */
-		$languages = $this->languageRepository->findAll();
+		$languages = $this->entityManager->getRepository(Language::class)
+			->findAll();
 		$response = new JsonResponse($languages);
 		$response->headers->set("Content-Length", strlen($response->getContent()));
 		return $response;
@@ -37,7 +38,8 @@ class LanguageControllerV1 extends AbstractController {
 		/**
 		 * @var Language $language
 		 */
-		$language = $this->languageRepository->findOneBy(['code' => $code]);
+		$language = $this->entityManager->getRepository(Language::class)
+			->findOneBy(['code' => $code]);
 		if ($language === null) {
 			throw new NotFoundHttpException();
 		}

@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\MissingFloatingHolidayRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 use Override;
 
-#[ORM\Entity(repositoryClass: MissingFloatingHolidayRepository::class)]
+#[ORM\Entity]
 class MissingFloatingHoliday implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\Column]
@@ -34,8 +33,7 @@ class MissingFloatingHoliday implements JsonSerializable {
 	#[ORM\JoinColumn(name: 'holiday', referencedColumnName: 'id')]
 	private ?FloatingHolidayMetadata $holiday;
 
-	public function __construct(?int $id, string $userId, string $name, string $description, string $date) {
-		$this->id = $id;
+	public function __construct(string $userId, string $name, string $description, string $date) {
 		$this->userId = $userId;
 		$this->name = $name;
 		$this->description = $description;
