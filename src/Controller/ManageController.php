@@ -2,14 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Country;
 use App\Entity\FixedHoliday;
 use App\Entity\FixedHolidayMetadata;
+use App\Entity\FloatingHoliday;
 use App\Entity\Language;
-use App\Repository\CountryRepository;
 use App\Repository\FixedHolidayRepository;
 use App\Repository\FixedMetadataRepository;
-use App\Repository\FloatingHolidayRepository;
-use App\Repository\LanguageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,25 +18,24 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/manage', name: 'manage_')]
 class ManageController extends AbstractController {
 	public function __construct(
-		private readonly LanguageRepository        $languageRepository,
-		private readonly FixedHolidayRepository    $fixedHolidayRepository,
-		private readonly FloatingHolidayRepository $floatingHolidayRepository,
-		private readonly FixedMetadataRepository   $fixedMetadataRepository,
-		private readonly CountryRepository         $countryRepository) {
+		private readonly EntityManagerInterface  $entityManager,
+		private readonly FixedHolidayRepository  $fixedHolidayRepository,
+		private readonly FixedMetadataRepository $fixedMetadataRepository) {
 	}
 
 	#[Route('/', name: 'index')]
 	public function index(): Response {
-		$languages = $this->languageRepository->findBy([], ['code' => 'ASC']);
+		$languages = $this->entityManager->getRepository(Language::class)
+			->findBy([], ['code' => 'ASC']);
 		return $this->render('manage/index.html.twig', [
 			'languages' => $languages
 		]);
 	}
 
 	#[Route('/translate/{page}/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'translate')]
-	public function translate(Request $request, EntityManagerInterface $entityManager,
-							  int     $page, string $from, string $to): Response {
+	public function translate(Request $request, int $page, string $from, string $to): Response {
 		$action = $request->request->get('action');
+		$repository = $this->entityManager->getRepository(Language::class);
 		if ($action === 'update') {
 			$id = $request->request->get('metadata_id');
 			$name = $request->request->get('name');
@@ -47,20 +45,20 @@ class ManageController extends AbstractController {
 			/** @var FixedHoliday|null $holiday */
 			$holiday = $this->fixedHolidayRepository->findOneBy(['metadata' => $id, 'language' => $to]);
 			/** @var Language $language */
-			$language = $this->languageRepository->findOneBy(['code' => $to]);
+			$language = $repository->findOneBy(['code' => $to]);
 			if ($holiday == null) {
-				$holiday = new FixedHoliday($language, $metadata, $name, $desc, null);
+				$holiday = new FixedHoliday($language, $metadata, $name, $desc, '');
 			} else {
 				$holiday
 					->setName($name)
 					->setDescription($desc);
 			}
-			$entityManager->persist($holiday);
-			$entityManager->flush();
+			$this->entityManager->persist($holiday);
+			$this->entityManager->flush();
 		}
-		$languageFrom = $this->languageRepository->findOneBy(['code' => $from]);
-		$languageTo = $this->languageRepository->findOneBy(['code' => $to]);
-		$languages = $this->languageRepository->findAll();
+		$languageFrom = $repository->findOneBy(['code' => $from]);
+		$languageTo = $repository->findOneBy(['code' => $to]);
+		$languages = $repository->findAll();
 		$holidays = $this->fixedHolidayRepository->findAllAggregatedById($from, $to, ($page - 1) * 100, 100);
 		$pages = ceil($this->fixedMetadataRepository->count([]) / 100);
 		return $this->render('manage/translate.html.twig', [
@@ -74,17 +72,17 @@ class ManageController extends AbstractController {
 	}
 
 	#[Route('/translate/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'translate_default')]
-	public function translateDefault(Request $request, EntityManagerInterface $entityManager, string $from, string $to): Response {
-		return $this->translate($request, $entityManager, 1, $from, $to);
+	public function translateDefault(Request $request, string $from, string $to): Response {
+		return $this->translate($request, 1, $from, $to);
 	}
 
 	#[Route('/create', name: 'create')]
-	public function create(Request $request, EntityManagerInterface $entityManager): Response {
-		return $this->createPage($request, $entityManager, 1);
+	public function create(Request $request): Response {
+		return $this->createPage($request, 1);
 	}
 
 	#[Route('/create/{page}', name: 'create_page')]
-	public function createPage(Request $request, EntityManagerInterface $entityManager, int $page): Response {
+	public function createPage(Request $request, int $page): Response {
 		$action = $request->request->get('action');
 		if ($action === 'update') {
 			$id = $request->request->get('metadata_id');
@@ -94,8 +92,8 @@ class ManageController extends AbstractController {
 			$found = $this->fixedHolidayRepository->findOneBy(['metadata' => $id, 'language' => 'pl']);
 			$found->setName($name);
 			$found->setDescription($desc);
-			$entityManager->persist($found);
-			$entityManager->flush();
+			$this->entityManager->persist($found);
+			$this->entityManager->flush();
 		}
 		if ($action === 'create') {
 			$month = $request->request->get('month');
@@ -103,17 +101,20 @@ class ManageController extends AbstractController {
 			$name = $request->request->get('name');
 			$desc = $request->request->get('description');
 			$country = $this->getCountry($request->request->get('country'));
-			$metadata = new FixedHolidayMetadata(null, $month, $day, 0, $country, null, false);
-			$entityManager->persist($metadata);
+			$metadata = new FixedHolidayMetadata($month, $day, 0, $country, null, false);
+			$this->entityManager->persist($metadata);
 			/** @var Language $language */
-			$language = $this->languageRepository->findOneBy(['code' => 'pl']);
+			$language = $this->entityManager->getRepository(Language::class)
+				->findOneBy(['code' => 'pl']);
 			$holiday = new FixedHoliday($language, $metadata, $name, $desc ?? '', '');
-			$entityManager->persist($holiday);
-			$entityManager->flush();
+			$this->entityManager->persist($holiday);
+			$this->entityManager->flush();
 		}
 		$fixedHolidays = $this->fixedHolidayRepository->findAllByLanguage('pl', ($page - 1) * 100, 100);
-		$floatingHolidays = $this->floatingHolidayRepository->findBy(['language' => 'pl']);
-		$countries = $this->countryRepository->findAll();
+		$floatingHolidays = $this->entityManager->getRepository(FloatingHoliday::class)
+			->findBy(['language' => 'pl']);
+		$countries = $this->entityManager->getRepository(Country::class)
+			->findAll();
 		$pages = ceil($this->fixedMetadataRepository->count([]) / 100);
 		return $this->render('manage/create.html.twig', [
 			'fixed_holidays' => $fixedHolidays,
@@ -139,8 +140,10 @@ class ManageController extends AbstractController {
 				$result = $this->fixedHolidayRepository->check($lang, $holidays);
 			}
 		}
-		$language = $this->languageRepository->findOneBy(['code' => $lang]);
-		$languages = $this->languageRepository->findAll();
+		$language = $this->entityManager->getRepository(Language::class)
+			->findOneBy(['code' => $lang]);
+		$languages = $this->entityManager->getRepository(Language::class)
+			->findAll();
 		return $this->render('manage/check.html.twig', [
 			'language' => $language,
 			'languages' => $languages,
@@ -152,6 +155,7 @@ class ManageController extends AbstractController {
 		if ($country === null || $country === 'null') {
 			return null;
 		}
-		return $this->countryRepository->findOneBy(['isoCode' => $country]);
+		return $this->entityManager->getRepository(Country::class)
+			->findOneBy(['isoCode' => $country]);
 	}
 }

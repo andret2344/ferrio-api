@@ -6,6 +6,7 @@ use App\Entity\FixedHolidayMetadata;
 use App\Entity\FixedHolidayReport;
 use App\Entity\FloatingHolidayMetadata;
 use App\Entity\FloatingHolidayReport;
+use App\Entity\Language;
 use App\Entity\ReportType;
 use App\Repository\FixedHolidayReportRepository;
 use App\Repository\FixedMetadataRepository;
@@ -22,34 +23,33 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(['/report', '/v2/report'], name: 'v2_report_')]
 class ReportControllerV2 extends AbstractController {
 	public function __construct(
-		private readonly EntityManagerInterface          $entityManager,
-		private readonly LanguageRepository              $languageRepository,
-		private readonly FixedHolidayReportRepository    $fixedHolidayReportRepository,
-		private readonly FixedMetadataRepository         $fixedMetadataRepository,
-		private readonly FloatingHolidayReportRepository $floatingHolidayReportRepository,
-		private readonly FloatingMetadataRepository      $floatingMetadataRepository) {
+		private readonly EntityManagerInterface  $entityManager,
+		private readonly FixedMetadataRepository $fixedMetadataRepository) {
 	}
 
 	#[Route('/{uid<^\S+$>}/fixed', name: 'get_fixed_by_uid', methods: ['GET'])]
 	public function getFixedByUid(string $uid): Response {
-		return new JsonResponse($this->fixedHolidayReportRepository->findBy(['userId' => $uid]));
+		return new JsonResponse($this->entityManager->getRepository(FixedHolidayReport::class)
+			->findBy(['userId' => $uid]));
 	}
 
 	#[Route('/{uid<^\S+$>}/floating', name: 'get_floating_by_uid', methods: ['GET'])]
 	public function getFloatingByUid(string $uid): Response {
-		return new JsonResponse($this->floatingHolidayReportRepository->findBy(['userId' => $uid]));
+		return new JsonResponse($this->entityManager->getRepository(FloatingHolidayReport::class)
+			->findBy(['userId' => $uid]));
 	}
 
 	#[Route('/fixed', name: 'post_fixed', methods: ['POST'])]
 	public function postFixed(Request $request): Response {
 		$data = json_decode($request->getContent(), true);
-		$language = $this->languageRepository->findOneBy(['code' => $data['language']]);
+		$language = $this->entityManager->getRepository(Language::class)
+			->findOneBy(['code' => $data['language']]);
 		/** @var FixedHolidayMetadata $metadata */
 		$metadata = $this->fixedMetadataRepository->findOneBy(['id' => $data['metadata']]);
 		$reportType = ReportType::from($data['report_type']);
 		$description = $data['description'] ?? null;
 		$userId = $data['user_id'] ?? null;
-		$report = new FixedHolidayReport(null, $userId, $language, $metadata, $reportType, $description);
+		$report = new FixedHolidayReport($userId, $language, $metadata, $reportType, $description);
 		$metadata->addReport($report);
 		$this->entityManager->persist($metadata);
 		$this->entityManager->flush();
@@ -59,13 +59,15 @@ class ReportControllerV2 extends AbstractController {
 	#[Route('/floating', name: 'post_floating', methods: ['POST'])]
 	public function postFloating(Request $request): Response {
 		$data = json_decode($request->getContent(), true);
-		$language = $this->languageRepository->findOneBy(['code' => $data['language']]);
+		$language = $this->entityManager->getRepository(Language::class)
+			->findOneBy(['code' => $data['language']]);
 		/** @var FloatingHolidayMetadata $metadata */
-		$metadata = $this->floatingMetadataRepository->findOneBy(['id' => $data['metadata']]);
+		$metadata = $this->entityManager->getRepository(FloatingHolidayMetadata::class)
+			->findOneBy(['id' => $data['metadata']]);
 		$reportType = ReportType::from($data['report_type']);
 		$description = $data['description'] ?? null;
 		$userId = $data['user_id'] ?? null;
-		$report = new FloatingHolidayReport(null, $userId, $language, $metadata, $reportType, $description);
+		$report = new FloatingHolidayReport($userId, $language, $metadata, $reportType, $description);
 		$metadata->addReport($report);
 		$this->entityManager->persist($metadata);
 		$this->entityManager->flush();

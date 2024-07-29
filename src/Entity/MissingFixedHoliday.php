@@ -2,34 +2,32 @@
 
 namespace App\Entity;
 
-use App\Repository\MissingFixedHolidayRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
-#[ORM\Entity(repositoryClass: MissingFixedHolidayRepository::class)]
+#[ORM\Entity]
 class MissingFixedHoliday implements JsonSerializable {
 	#[ORM\Id]
-	#[ORM\Column(type: 'integer')]
+	#[ORM\Column]
 	#[ORM\GeneratedValue]
 	private ?int $id;
 
-	#[ORM\Column(type: 'string', nullable: false)]
+	#[ORM\Column]
 	private string $userId;
 
-	#[ORM\Column(type: 'string', nullable: false)]
+	#[ORM\Column]
 	private string $name;
 
-	#[ORM\Column(type: 'text', length: 65536, nullable: false)]
+	#[ORM\Column(type: 'text')]
 	private string $description;
 
-	#[ORM\Column(type: 'integer', nullable: false)]
-	private string $day;
+	#[ORM\Column]
+	private int $day;
 
-	#[ORM\Column(type: 'integer', nullable: false)]
-	private string $month;
+	#[ORM\Column]
+	private int $month;
 
 	#[ORM\OneToOne(targetEntity: FixedHolidayMetadata::class)]
 	#[ORM\JoinColumn(name: 'holiday', referencedColumnName: 'id')]
@@ -38,8 +36,7 @@ class MissingFixedHoliday implements JsonSerializable {
 	#[ORM\Column(type: 'string', nullable: false, enumType: ReportState::class)]
 	private ReportState $reportState;
 
-	public function __construct(?int $id, string $userId, string $name, string $description, string $day, string $month) {
-		$this->id = $id;
+	public function __construct(string $userId, string $name, string $description, string $day, string $month) {
 		$this->userId = $userId;
 		$this->name = $name;
 		$this->description = $description;
@@ -105,7 +102,6 @@ class MissingFixedHoliday implements JsonSerializable {
 		$this->reportState = $reportState;
 	}
 
-	#[Pure]
 	#[Override]
 	#[ArrayShape([
 		'id' => 'int|null',

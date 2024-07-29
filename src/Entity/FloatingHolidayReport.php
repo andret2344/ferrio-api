@@ -2,21 +2,20 @@
 
 namespace App\Entity;
 
-use App\Repository\FloatingHolidayReportRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 use Override;
 
-#[ORM\Entity(repositoryClass: FloatingHolidayReportRepository::class)]
+#[ORM\Entity]
 class FloatingHolidayReport implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\Column(type: 'integer')]
 	#[ORM\GeneratedValue]
 	private ?int $id;
 
-	#[ORM\Column(type: 'string', nullable: false)]
+	#[ORM\Column(nullable: false)]
 	private string $userId;
 
 	#[ORM\ManyToOne(targetEntity: Language::class)]
@@ -39,13 +38,11 @@ class FloatingHolidayReport implements JsonSerializable {
 	#[ORM\Column(type: 'string', nullable: false, enumType: ReportState::class)]
 	private ReportState $reportState;
 
-	public function __construct(?int                    $id,
-								string                  $userId,
+	public function __construct(string                  $userId,
 								Language                $language,
 								FloatingHolidayMetadata $metadata,
 								ReportType              $reportType,
 								?string                 $additionalDescription) {
-		$this->id = $id;
 		$this->userId = $userId;
 		$this->language = $language;
 		$this->metadata = $metadata;

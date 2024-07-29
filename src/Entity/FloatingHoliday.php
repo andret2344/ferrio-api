@@ -2,14 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\FloatingHolidayRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
-#[ORM\Entity(repositoryClass: FloatingHolidayRepository::class)]
+#[ORM\Entity]
 class FloatingHoliday implements JsonSerializable {
 	#[ORM\Id]
 	#[ORM\ManyToOne(targetEntity: Language::class)]
@@ -85,7 +83,6 @@ class FloatingHoliday implements JsonSerializable {
 		return $this;
 	}
 
-	#[Pure]
 	#[Override]
 	#[ArrayShape([
 		'id' => "int",

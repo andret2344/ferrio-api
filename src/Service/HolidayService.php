@@ -7,11 +7,11 @@ use App\Entity\FloatingHoliday;
 use App\Entity\HolidayDay;
 use App\Entity\Script;
 use App\Repository\FixedHolidayRepository;
-use App\Repository\FloatingHolidayRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 readonly class HolidayService {
-	public function __construct(private FixedHolidayRepository    $holidayRepository,
-								private FloatingHolidayRepository $floatingHolidayRepository) {
+	public function __construct(private FixedHolidayRepository $holidayRepository,
+								private EntityManagerInterface $entityManager) {
 	}
 
 	/**
@@ -57,7 +57,8 @@ readonly class HolidayService {
 	 */
 	public function getFloatingHolidays(string $language): array {
 		/** @var FloatingHoliday[] $holidays */
-		$holidays = $this->floatingHolidayRepository->findBy(['language' => $language]);
+		$holidays = $this->entityManager->getRepository(FloatingHoliday::class)
+			->findBy(['language' => $language]);
 		$data = [];
 		foreach ($holidays as $holiday) {
 			$metadata = $holiday->getMetadata();

@@ -35,18 +35,17 @@ class FixedHolidayMetadata implements JsonSerializable {
 	#[ORM\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
 	private ?Country $country;
 
-	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHoliday::class, cascade: ['all'], orphanRemoval: true)]
+	#[ORM\OneToMany(targetEntity: FixedHoliday::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
 	private Collection $holidays;
 
-	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHolidayReport::class, cascade: ['all'], orphanRemoval: true)]
+	#[ORM\OneToMany(targetEntity: FixedHolidayReport::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
 	private Collection $reports;
 
-	#[ORM\Column(type: 'boolean', nullable: false)]
+	#[ORM\Column(type: 'boolean')]
 	private bool $matureContent;
 
 	#[Pure]
-	public function __construct(?int $id, int $month, int $day, int $usual, ?Country $country, ?Category $category, bool $matureContent) {
-		$this->id = $id;
+	public function __construct(int $month, int $day, int $usual, ?Country $country, ?Category $category, bool $matureContent) {
 		$this->month = $month;
 		$this->day = $day;
 		$this->usual = $usual;
@@ -131,7 +130,6 @@ class FixedHolidayMetadata implements JsonSerializable {
 		$this->matureContent = $matureContent;
 	}
 
-	#[Pure]
 	#[Override]
 	#[ArrayShape([
 		'id' => 'int|null',

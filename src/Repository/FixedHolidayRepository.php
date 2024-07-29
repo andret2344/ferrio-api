@@ -108,7 +108,8 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 						 INNER JOIN fixed_holiday_metadata m1 ON h1.metadata_id = m1.id
 				ORDER BY month, day
 				LIMIT :limit OFFSET :offset;";
-		$query = $this->_em->createNativeQuery($sql, $rsm);
+		$query = $this->getEntityManager()
+			->createNativeQuery($sql, $rsm);
 		$query->setParameter('langFrom', $languageFrom);
 		$query->setParameter('langTo', $languageTo);
 		$query->setParameter('limit', $limit, ParameterType::INTEGER);
