@@ -15,7 +15,7 @@ class FloatingHolidayReport implements JsonSerializable {
 	#[ORM\GeneratedValue]
 	private ?int $id;
 
-	#[ORM\Column(type: 'string', nullable: false)]
+	#[ORM\Column(nullable: false)]
 	private string $userId;
 
 	#[ORM\ManyToOne(targetEntity: Language::class)]
