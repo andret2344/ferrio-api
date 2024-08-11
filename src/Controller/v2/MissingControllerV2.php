@@ -36,7 +36,7 @@ class MissingControllerV2 extends AbstractController {
 		$day = $data['day'] ?? null;
 		$month = $data['month'] ?? null;
 		$description = $data['description'] ?? null;
-		$report = new MissingFixedHoliday(null, $userId, $name, $description, $day, $month);
+		$report = new MissingFixedHoliday($userId, $name, $description, $day, $month);
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();
 		return new Response(null, 204);
@@ -49,7 +49,7 @@ class MissingControllerV2 extends AbstractController {
 		$name = $data['name'] ?? null;
 		$date = $data['date'] ?? null;
 		$description = $data['description'] ?? null;
-		$report = new MissingFloatingHoliday(null, $userId, $name, $description, $date);
+		$report = new MissingFloatingHoliday($userId, $name, $description, $date);
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();
 		return new Response(null, 204);
