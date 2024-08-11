@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
@@ -29,6 +30,9 @@ class MissingFixedHoliday implements JsonSerializable {
 	#[ORM\Column]
 	private int $month;
 
+	#[ORM\Column(type: 'datetimetz_immutable', nullable: false)]
+	private readonly DateTimeImmutable $datetime;
+
 	#[ORM\OneToOne(targetEntity: FixedHolidayMetadata::class)]
 	#[ORM\JoinColumn(name: 'holiday', referencedColumnName: 'id')]
 	private ?FixedHolidayMetadata $holiday;
@@ -36,12 +40,13 @@ class MissingFixedHoliday implements JsonSerializable {
 	#[ORM\Column(type: 'string', nullable: false, enumType: ReportState::class)]
 	private ReportState $reportState;
 
-	public function __construct(string $userId, string $name, string $description, string $day, string $month) {
+	public function __construct(string $userId, string $name, string $description, string $day, string $month, DateTimeImmutable $datetime) {
 		$this->userId = $userId;
 		$this->name = $name;
 		$this->description = $description;
 		$this->day = $day;
 		$this->month = $month;
+		$this->datetime = $datetime;
 		$this->reportState = ReportState::REPORTED;
 		$this->holiday = null;
 	}
@@ -94,6 +99,10 @@ class MissingFixedHoliday implements JsonSerializable {
 		$this->description = $description;
 	}
 
+	public function getDatetime(): DateTimeImmutable {
+		return $this->datetime;
+	}
+
 	public function getReportState(): ReportState {
 		return $this->reportState;
 	}
@@ -110,6 +119,7 @@ class MissingFixedHoliday implements JsonSerializable {
 		'month' => 'integer',
 		'name' => 'string',
 		'description' => 'string',
+		'datetime' => 'string',
 		'report_state' => '\App\Entity\ReportState',
 		'holiday_id' => 'int|null'
 	])]
@@ -121,6 +131,7 @@ class MissingFixedHoliday implements JsonSerializable {
 			'month' => $this->month,
 			'name' => $this->name,
 			'description' => $this->description,
+			'datetime' => $this->datetime->format('Y-m-d H:i:s'),
 			'report_state' => $this->reportState,
 			'holiday_id' => $this->holiday?->getId()
 		];

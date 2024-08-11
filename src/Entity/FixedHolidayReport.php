@@ -120,7 +120,7 @@ class FixedHolidayReport implements JsonSerializable {
 		'metadata_id' => 'int',
 		'report_type' => '\App\Entity\ReportType',
 		'description' => 'null|string',
-		'datetime' => 'null|string',
+		'datetime' => 'string',
 		'report_state' => '\App\Entity\ReportState'
 	])]
 	public function jsonSerialize(): array {

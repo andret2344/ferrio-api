@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
@@ -26,6 +27,9 @@ class MissingFloatingHoliday implements JsonSerializable {
 	#[ORM\Column(type: 'text')]
 	private string $date;
 
+	#[ORM\Column(type: 'datetimetz_immutable', nullable: false)]
+	private readonly DateTimeImmutable $datetime;
+
 	#[ORM\Column(type: 'string', nullable: false, enumType: ReportState::class)]
 	private ReportState $reportState;
 
@@ -33,11 +37,12 @@ class MissingFloatingHoliday implements JsonSerializable {
 	#[ORM\JoinColumn(name: 'holiday', referencedColumnName: 'id')]
 	private ?FloatingHolidayMetadata $holiday;
 
-	public function __construct(string $userId, string $name, string $description, string $date) {
+	public function __construct(string $userId, string $name, string $description, string $date, DateTimeImmutable $datetime) {
 		$this->userId = $userId;
 		$this->name = $name;
 		$this->description = $description;
 		$this->date = $date;
+		$this->datetime = $datetime;
 		$this->reportState = ReportState::REPORTED;
 		$this->holiday = null;
 	}
@@ -82,6 +87,10 @@ class MissingFloatingHoliday implements JsonSerializable {
 		$this->description = $description;
 	}
 
+	public function getDatetime(): DateTimeImmutable {
+		return $this->datetime;
+	}
+
 	public function getReportState(): ReportState {
 		return $this->reportState;
 	}
@@ -97,6 +106,7 @@ class MissingFloatingHoliday implements JsonSerializable {
 		'name' => 'string',
 		'description' => 'string',
 		'date' => 'string',
+		'datetime' => 'string',
 		'report_state' => '\App\Entity\ReportState',
 		'holiday_id' => 'int|null'
 	])]
@@ -107,6 +117,7 @@ class MissingFloatingHoliday implements JsonSerializable {
 			'name' => $this->name,
 			'description' => $this->description,
 			'date' => $this->date,
+			'datetime' => $this->datetime->format('Y-m-d H:i:s'),
 			'report_state' => $this->reportState,
 			'holiday_id' => $this->holiday?->getId()
 		];
