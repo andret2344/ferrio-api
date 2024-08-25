@@ -8,11 +8,8 @@ use App\Entity\FloatingHolidayMetadata;
 use App\Entity\FloatingHolidayReport;
 use App\Entity\Language;
 use App\Entity\ReportType;
-use App\Repository\FixedHolidayReportRepository;
 use App\Repository\FixedMetadataRepository;
-use App\Repository\FloatingHolidayReportRepository;
-use App\Repository\FloatingMetadataRepository;
-use App\Repository\LanguageRepository;
+use App\Service\BanService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,7 +21,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class ReportControllerV2 extends AbstractController {
 	public function __construct(
 		private readonly EntityManagerInterface  $entityManager,
-		private readonly FixedMetadataRepository $fixedMetadataRepository) {
+		private readonly FixedMetadataRepository $fixedMetadataRepository,
+		private readonly BanService              $banService) {
 	}
 
 	#[Route('/{uid<^\S+$>}/fixed', name: 'get_fixed_by_uid', methods: ['GET'])]
@@ -49,6 +47,10 @@ class ReportControllerV2 extends AbstractController {
 		$reportType = ReportType::from($data['report_type']);
 		$description = $data['description'] ?? null;
 		$userId = $data['user_id'] ?? null;
+		$banInfo = $this->banService->getBanInfo($userId);
+		if ($banInfo) {
+			return new JsonResponse($banInfo, Response::HTTP_FORBIDDEN);
+		}
 		$report = new FixedHolidayReport($userId, $language, $metadata, $reportType, $description);
 		$metadata->addReport($report);
 		$this->entityManager->persist($metadata);
@@ -67,6 +69,10 @@ class ReportControllerV2 extends AbstractController {
 		$reportType = ReportType::from($data['report_type']);
 		$description = $data['description'] ?? null;
 		$userId = $data['user_id'] ?? null;
+		$banInfo = $this->banService->getBanInfo($userId);
+		if ($banInfo) {
+			return new JsonResponse($banInfo, Response::HTTP_FORBIDDEN);
+		}
 		$report = new FloatingHolidayReport($userId, $language, $metadata, $reportType, $description);
 		$metadata->addReport($report);
 		$this->entityManager->persist($metadata);
