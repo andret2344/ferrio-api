@@ -4,6 +4,7 @@ namespace App\Controller\v2;
 
 use App\Entity\MissingFixedHoliday;
 use App\Entity\MissingFloatingHoliday;
+use App\Service\BanService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,7 +15,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(['/missing', '/v2/missing'], name: 'v2_missing_')]
 class MissingControllerV2 extends AbstractController {
-	public function __construct(private readonly EntityManagerInterface $entityManager) {
+	public function __construct(
+		private readonly EntityManagerInterface $entityManager,
+		private readonly BanService             $banService) {
 	}
 
 	#[Route('/{uid<^\S+$>}/fixed', name: 'get_fixed_by_uid', methods: ['GET'])]
@@ -37,6 +40,10 @@ class MissingControllerV2 extends AbstractController {
 		$day = $data['day'] ?? null;
 		$month = $data['month'] ?? null;
 		$description = $data['description'] ?? null;
+		$banInfo = $this->banService->getBanInfo($userId);
+		if ($banInfo) {
+			return new JsonResponse(['reason' => $banInfo->getReason()], Response::HTTP_FORBIDDEN);
+		}
 		$report = new MissingFixedHoliday($userId, $name, $description, $day, $month, new DateTimeImmutable());
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();
@@ -50,6 +57,10 @@ class MissingControllerV2 extends AbstractController {
 		$name = $data['name'] ?? null;
 		$date = $data['date'] ?? null;
 		$description = $data['description'] ?? null;
+		$banInfo = $this->banService->getBanInfo($userId);
+		if ($banInfo) {
+			return new JsonResponse($banInfo, Response::HTTP_FORBIDDEN);
+		}
 		$report = new MissingFloatingHoliday($userId, $name, $description, $date, new DateTimeImmutable());
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();
