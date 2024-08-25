@@ -21,7 +21,7 @@ class Ban implements JsonSerializable {
 	#[ORM\Column(length: 2047)]
 	private string $reason;
 
-	#[ORM\Column(length: 2047)]
+	#[ORM\Column]
 	private DateTimeImmutable $datetime;
 
 	public function __construct(string $uuid, string $reason, DateTimeImmutable $datetime) {
@@ -34,28 +34,8 @@ class Ban implements JsonSerializable {
 		return $this->id;
 	}
 
-	public function getUuid(): string {
-		return $this->uuid;
-	}
-
-	public function setUuid(string $uuid): void {
-		$this->uuid = $uuid;
-	}
-
 	public function getReason(): string {
 		return $this->reason;
-	}
-
-	public function setReason(string $reason): void {
-		$this->reason = $reason;
-	}
-
-	public function getDatetime(): DateTimeImmutable {
-		return $this->datetime;
-	}
-
-	public function setDatetime(DateTimeImmutable $datetime): void {
-		$this->datetime = $datetime;
 	}
 
 	#[Override]
