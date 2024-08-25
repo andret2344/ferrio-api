@@ -15,23 +15,19 @@ class Ban implements JsonSerializable {
 	#[ORM\Column(type: 'integer')]
 	private int $id;
 
-	#[ORM\Column(length: 63, unique: true)]
+	#[ORM\Column(unique: true)]
 	private string $uuid;
 
 	#[ORM\Column(length: 2047)]
 	private string $reason;
 
-	#[ORM\Column]
+	#[ORM\Column(type: 'datetimetz_immutable')]
 	private DateTimeImmutable $datetime;
 
 	public function __construct(string $uuid, string $reason, DateTimeImmutable $datetime) {
 		$this->uuid = $uuid;
 		$this->reason = $reason;
 		$this->datetime = $datetime;
-	}
-
-	public function getId(): string {
-		return $this->id;
 	}
 
 	public function getReason(): string {
