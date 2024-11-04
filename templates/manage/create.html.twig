@@ -18,6 +18,7 @@
 			<tr>
 				<th scope="col">#</th>
 				<th scope="col" style='min-width: 142px'>Country</th>
+				<th scope="col">+18</th>
 				<th scope="col">Month</th>
 				<th scope="col">Day</th>
 				<th scope="col" class='w-25'>Name</th>
@@ -40,6 +41,17 @@
 						{% else %}
 							International
 						{% endif %}
+					</td>
+					<td>
+						<label for='{{ 'mature-' ~ element.id }}' class='d-none'>Mature content</label>
+						<input
+								id='{{ 'mature-' ~ element.id }}'
+								class="w-100"
+								type="checkbox"
+								name="mature"
+								form='{{ form_id }}'
+								{{ (element.matureContent ? 'checked')|raw }}
+						/>
 					</td>
 					<td>{{ element.month }}</td>
 					<td>{{ element.day }}</td>
@@ -77,6 +89,7 @@
 			<tr>
 				<th scope="col">#</th>
 				<th scope="col">Country</th>
+				<th scope="col">+18</th>
 				<th scope="col">Month</th>
 				<th scope="col">Day</th>
 				<th scope="col" class='w-25'>Name</th>
@@ -101,6 +114,16 @@
 								- {{ country.englishName }}</option>
 						{% endfor %}
 					</select>
+				</td>
+				<td>
+					<label for="mature-create" class='d-none'>Mature content</label>
+					<input
+							id="mature-create"
+							class="w-100"
+							type="checkbox"
+							name="mature"
+							form='create'
+					/>
 				</td>
 				<td>
 					<label for='month-create' class='d-none'>Month</label>
