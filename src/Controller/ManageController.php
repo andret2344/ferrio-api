@@ -88,10 +88,13 @@ class ManageController extends AbstractController {
 			$id = $request->request->get('metadata_id');
 			$name = $request->request->get('name');
 			$desc = $request->request->get('description');
+			$mature = (bool)$request->request->get('mature');
 			/** @var FixedHoliday $found */
 			$found = $this->fixedHolidayRepository->findOneBy(['metadata' => $id, 'language' => 'pl']);
 			$found->setName($name);
 			$found->setDescription($desc);
+			$found->getMetadata()
+				->setMatureContent($mature);
 			$this->entityManager->persist($found);
 			$this->entityManager->flush();
 		}
@@ -101,7 +104,8 @@ class ManageController extends AbstractController {
 			$name = $request->request->get('name');
 			$desc = $request->request->get('description');
 			$country = $this->getCountry($request->request->get('country'));
-			$metadata = new FixedHolidayMetadata($month, $day, 0, $country, null, false);
+			$mature = (bool)$request->request->get('mature');
+			$metadata = new FixedHolidayMetadata($month, $day, 0, $country, null, $mature);
 			$this->entityManager->persist($metadata);
 			/** @var Language $language */
 			$language = $this->entityManager->getRepository(Language::class)
@@ -110,7 +114,7 @@ class ManageController extends AbstractController {
 			$this->entityManager->persist($holiday);
 			$this->entityManager->flush();
 		}
-		$fixedHolidays = $this->fixedHolidayRepository->findAllByLanguage('pl', ($page - 1) * 100, 100);
+		$fixedHolidays = $this->fixedHolidayRepository->findAllByLanguage('pl', ($page - 1) * 100, 100, true);
 		$floatingHolidays = $this->entityManager->getRepository(FloatingHoliday::class)
 			->findBy(['language' => 'pl']);
 		$countries = $this->entityManager->getRepository(Country::class)
