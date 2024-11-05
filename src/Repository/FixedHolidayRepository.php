@@ -9,8 +9,10 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
+use Override;
 
 class FixedHolidayRepository extends ServiceEntityRepository {
+	#[Override]
 	public function __construct(ManagerRegistry $registry) {
 		parent::__construct($registry, FixedHoliday::class);
 	}
@@ -19,24 +21,43 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 	 * @param string $language
 	 * @param int $day
 	 * @param int $month
+	 * @param bool $matureContent
 	 *
 	 * @return array|FixedHoliday[]
 	 */
-	public function findAt(string $language, int $day, int $month): array {
+	public function findAt(string $language, int $day, int $month, bool $matureContent = false): array {
 		return $this->createQueryBuilder('h')
+			->select([
+				'm.id',
+				'm.month',
+				'm.day',
+				'h.name',
+				'm.usual',
+				'h.description',
+				'h.url',
+				'c.englishName AS countryName',
+				'c.isoCode AS countryCode',
+				'm.matureContent AS matureContent'
+			])
 			->join(FixedHolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
+			->leftJoin(Country::class, 'c', 'WITH', 'c.isoCode = m.country')
 			->where('h.language = :language')
 			->andWhere('m.day = :day')
 			->andWhere('m.month = :month')
+			->andWhere('m.matureContent IN (false, :matureContent)')
 			->setParameter('language', $language)
 			->setParameter('day', $day)
 			->setParameter('month', $month)
+			->setParameter('matureContent', $matureContent)
 			->getQuery()
 			->getResult();
 	}
 
 	/**
 	 * @param string $language
+	 * @param int $offset
+	 * @param int $limit
+	 * @param bool $matureContent
 	 *
 	 * @return array
 	 */
