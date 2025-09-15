@@ -3,13 +3,15 @@
 namespace App\Service;
 
 use App\Repository\FixedMetadataRepository;
-use App\Repository\FloatingMetadataRepository;
 
-readonly class TranslationService {
-	public function __construct(private FixedMetadataRepository $fixedMetadataRepository) {
+readonly class TranslationService
+{
+	public function __construct(private FixedMetadataRepository $fixedMetadataRepository)
+	{
 	}
 
-	public function get(string $language): array {
+	public function get(string $language): array
+	{
 		return $this->fixedMetadataRepository->findAllByLanguage($language);
 	}
 }

@@ -4,8 +4,7 @@
 /shelf/
 /sonarlint/
 
-/*.iml
-
+/data_source_mapping.xml
 /dataSources.local.xml
 /dataSources.xml
 /dbnavigator.xml
@@ -14,8 +13,6 @@
 /git_toolbox_prj.xml
 /jsLibraryMappings.xml
 /kubernetes-settings.xml
-/modules.xml
-/php.xml
-/symfony2.xml
+/sshConfigs.xml
 /watcherTasks.xml
 /workspace.xml

@@ -15,12 +15,11 @@ security:
       pattern: ^/
       http_basic: ~
   access_control:
+    - { path: ^/v1/language, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/v2/report, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/v2/missing, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/v3/users, roles: [ PUBLIC_ACCESS ] }
     - { path: ^/v\d+/holiday, roles: [ PUBLIC_ACCESS ] }
-    - { path: ^/holiday, roles: [ PUBLIC_ACCESS ] }
-    - { path: ^/v\d+/report, roles: [ PUBLIC_ACCESS ] }
-    - { path: ^/report, roles: [ PUBLIC_ACCESS ] }
-    - { path: ^/v\d+/missing, roles: [ PUBLIC_ACCESS ] }
-    - { path: ^/missing, roles: [ PUBLIC_ACCESS ] }
     - { path: ^/, roles: [ ROLE_USER ] }
 
 when@test:

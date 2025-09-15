@@ -7,33 +7,19 @@ use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
-class HolidayDay implements JsonSerializable {
-	private string $id;
-	private int $day;
-	private int $month;
-	private array $holidays;
+class HolidayDay implements JsonSerializable
+{
+	private(set) string $id;
+	private(set) int $day;
+	private(set) int $month;
+	private(set) array $holidays;
 
-	public function __construct(string $id, int $day, int $month, array $holidays = []) {
+	public function __construct(string $id, int $day, int $month, array $holidays = [])
+	{
 		$this->id = $id;
 		$this->day = $day;
 		$this->month = $month;
 		$this->holidays = $holidays;
-	}
-
-	public function getId(): string {
-		return $this->id;
-	}
-
-	public function getDay(): int {
-		return $this->day;
-	}
-
-	public function getMonth(): int {
-		return $this->month;
-	}
-
-	public function getHolidays(): array {
-		return $this->holidays;
 	}
 
 	#[Pure]
@@ -44,7 +30,8 @@ class HolidayDay implements JsonSerializable {
 		'month' => 'int',
 		'holidays' => 'array'
 	])]
-	public function jsonSerialize(): array {
+	public function jsonSerialize(): array
+	{
 		return [
 			'id' => $this->id,
 			'day' => $this->day,

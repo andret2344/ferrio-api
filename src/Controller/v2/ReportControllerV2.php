@@ -2,81 +2,60 @@
 
 namespace App\Controller\v2;
 
-use App\Entity\FixedHolidayMetadata;
-use App\Entity\FixedHolidayReport;
-use App\Entity\FloatingHolidayMetadata;
-use App\Entity\FloatingHolidayReport;
-use App\Entity\Language;
-use App\Entity\ReportType;
-use App\Repository\FixedMetadataRepository;
+use App\Handler\FixedHolidayErrorHandler;
+use App\Handler\FloatingHolidayErrorHandler;
 use App\Service\BanService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route(['/report', '/v2/report'], name: 'v2_report_')]
-class ReportControllerV2 extends AbstractController {
+#[Route('/v2/report', name: 'v2_report_')]
+class ReportControllerV2 extends AbstractController
+{
 	public function __construct(
-		private readonly EntityManagerInterface  $entityManager,
-		private readonly FixedMetadataRepository $fixedMetadataRepository,
-		private readonly BanService              $banService) {
+		private readonly BanService                  $banService,
+		private readonly FixedHolidayErrorHandler    $fixedHolidayErrorHandler,
+		private readonly FloatingHolidayErrorHandler $floatingHolidayErrorHandler)
+	{
 	}
 
-	#[Route('/{uid<^\S+$>}/fixed', name: 'get_fixed_by_uid', methods: ['GET'])]
-	public function getFixedByUid(string $uid): Response {
-		return new JsonResponse($this->entityManager->getRepository(FixedHolidayReport::class)
-			->findBy(['userId' => $uid]));
+	#[Route('/{userId<^\S+$>}/fixed', name: 'get_fixed_by_userid', methods: ['GET'])]
+	public function getFixedByUserId(string $userId): Response
+	{
+		return new JsonResponse($this->fixedHolidayErrorHandler->list($userId));
 	}
 
-	#[Route('/{uid<^\S+$>}/floating', name: 'get_floating_by_uid', methods: ['GET'])]
-	public function getFloatingByUid(string $uid): Response {
-		return new JsonResponse($this->entityManager->getRepository(FloatingHolidayReport::class)
-			->findBy(['userId' => $uid]));
+	#[Route('/{userId<^\S+$>}/floating', name: 'get_floating_by_userid', methods: ['GET'])]
+	public function getFloatingByUserId(string $userId): Response
+	{
+		return new JsonResponse($this->floatingHolidayErrorHandler->list($userId));
 	}
 
 	#[Route('/fixed', name: 'post_fixed', methods: ['POST'])]
-	public function postFixed(Request $request): Response {
+	public function postFixed(Request $request): Response
+	{
 		$data = json_decode($request->getContent(), true);
-		$language = $this->entityManager->getRepository(Language::class)
-			->findOneBy(['code' => $data['language']]);
-		/** @var FixedHolidayMetadata $metadata */
-		$metadata = $this->fixedMetadataRepository->findOneBy(['id' => $data['metadata']]);
-		$reportType = ReportType::from($data['report_type']);
-		$description = $data['description'] ?? null;
 		$userId = $data['user_id'] ?? null;
 		$banInfo = $this->banService->getBanInfo($userId);
 		if ($banInfo) {
-			return new JsonResponse($banInfo, Response::HTTP_FORBIDDEN);
+			return new JsonResponse(['reason' => $banInfo->reason], Response::HTTP_FORBIDDEN);
 		}
-		$report = new FixedHolidayReport($userId, $language, $metadata, $reportType, $description);
-		$metadata->addReport($report);
-		$this->entityManager->persist($metadata);
-		$this->entityManager->flush();
+		$this->fixedHolidayErrorHandler->create($userId, $data);
 		return new Response(null, 204);
 	}
 
 	#[Route('/floating', name: 'post_floating', methods: ['POST'])]
-	public function postFloating(Request $request): Response {
+	public function postFloating(Request $request): Response
+	{
 		$data = json_decode($request->getContent(), true);
-		$language = $this->entityManager->getRepository(Language::class)
-			->findOneBy(['code' => $data['language']]);
-		/** @var FloatingHolidayMetadata $metadata */
-		$metadata = $this->entityManager->getRepository(FloatingHolidayMetadata::class)
-			->findOneBy(['id' => $data['metadata']]);
-		$reportType = ReportType::from($data['report_type']);
-		$description = $data['description'] ?? null;
 		$userId = $data['user_id'] ?? null;
 		$banInfo = $this->banService->getBanInfo($userId);
 		if ($banInfo) {
-			return new JsonResponse($banInfo, Response::HTTP_FORBIDDEN);
+			return new JsonResponse(['reason' => $banInfo->reason], Response::HTTP_FORBIDDEN);
 		}
-		$report = new FloatingHolidayReport($userId, $language, $metadata, $reportType, $description);
-		$metadata->addReport($report);
-		$this->entityManager->persist($metadata);
-		$this->entityManager->flush();
+		$this->floatingHolidayErrorHandler->create($userId, $data);
 		return new Response(null, 204);
 	}
 }

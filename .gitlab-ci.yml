@@ -1,0 +1,12 @@
+stages:
+  - test
+
+phpunit:
+  stage: test
+  image: php:8.4-cli
+  before_script:
+    - apt-get update && apt-get install -y git unzip zip libsqlite3-dev
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    - composer install --prefer-dist --no-interaction --no-progress
+  script:
+    - vendor/bin/phpunit

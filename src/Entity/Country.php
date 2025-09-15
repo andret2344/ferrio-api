@@ -12,73 +12,60 @@ use Override;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[ORM\Entity]
-class Country extends AbstractController implements JsonSerializable {
+class Country extends AbstractController implements JsonSerializable
+{
 	#[ORM\Id]
 	#[ORM\Column(type: 'string', length: 2, unique: true)]
-	private string $isoCode;
+	public string $isoCode;
 
 	#[ORM\Column(type: 'string', length: 255, unique: true)]
-	private string $englishName;
+	public string $englishName;
 
-	#[ORM\OneToMany(mappedBy: 'country', targetEntity: FixedHolidayMetadata::class, orphanRemoval: true)]
-	private Collection $fixedHolidays;
+	#[ORM\OneToMany(targetEntity: FixedHolidayMetadata::class, mappedBy: 'country', orphanRemoval: true)]
+	private(set) Collection $fixedHolidays;
 
-	#[ORM\OneToMany(mappedBy: 'country', targetEntity: FloatingHolidayMetadata::class, orphanRemoval: true)]
-	private Collection $floatingHolidays;
+	#[ORM\OneToMany(targetEntity: FloatingHolidayMetadata::class, mappedBy: 'country', orphanRemoval: true)]
+	private(set) Collection $floatingHolidays;
 
-	public function __construct(string $isoCode, string $englishName) {
+	#[Pure]
+	public function __construct(string $isoCode, string $englishName)
+	{
 		$this->isoCode = $isoCode;
 		$this->englishName = $englishName;
 		$this->fixedHolidays = new ArrayCollection();
 		$this->floatingHolidays = new ArrayCollection();
 	}
 
-	public function getIsoCode(): string {
-		return $this->isoCode;
-	}
-
-	public function setIsoCode(string $isoCode): void {
-		$this->isoCode = $isoCode;
-	}
-
-	public function getEnglishName(): string {
-		return $this->englishName;
-	}
-
-	public function setEnglishName(string $englishName): void {
-		$this->englishName = $englishName;
-	}
-
-	public function addFixedHoliday(FixedHolidayMetadata $fixedMetadata): self {
+	public function addFixedHoliday(FixedHolidayMetadata $fixedMetadata): self
+	{
 		if (!$this->fixedHolidays->contains($fixedMetadata)) {
 			$this->fixedHolidays[] = $fixedMetadata;
-			$fixedMetadata->setCountry($this);
+			$fixedMetadata->country = $this;
 		}
 		return $this;
 	}
 
-	public function removeHoliday(FixedHolidayMetadata $fixedMetadata): self {
-		if ($this->fixedHolidays->removeElement($fixedMetadata) && $fixedMetadata->getCountry() === $this) {
-			$fixedMetadata->setCountry(null);
+	public function removeHoliday(FixedHolidayMetadata $fixedMetadata): self
+	{
+		if ($this->fixedHolidays->removeElement($fixedMetadata) && $fixedMetadata->country === $this) {
+			$fixedMetadata->country = null;
 		}
 		return $this;
 	}
 
-	public function getFloatingHolidays(): Collection {
-		return $this->floatingHolidays;
-	}
-
-	public function addFloatingHoliday(FloatingHolidayMetadata $floatingMetadata): self {
-		if (!$this->fixedHolidays->contains($floatingMetadata)) {
-			$this->fixedHolidays[] = $floatingMetadata;
-			$floatingMetadata->setCountry($this);
+	public function addFloatingHoliday(FloatingHolidayMetadata $floatingMetadata): self
+	{
+		if (!$this->floatingHolidays->contains($floatingMetadata)) {
+			$this->floatingHolidays[] = $floatingMetadata;
+			$floatingMetadata->country = $this;
 		}
 		return $this;
 	}
 
-	public function removeFloatingHoliday(FloatingHolidayMetadata $floatingMetadata): self {
-		if ($this->fixedHolidays->removeElement($floatingMetadata) && $floatingMetadata->getCountry() === $this) {
-			$floatingMetadata->setCountry(null);
+	public function removeFloatingHoliday(FloatingHolidayMetadata $floatingMetadata): self
+	{
+		if ($this->floatingHolidays->removeElement($floatingMetadata) && $floatingMetadata->country === $this) {
+			$floatingMetadata->country = null;
 		}
 		return $this;
 	}
@@ -89,7 +76,8 @@ class Country extends AbstractController implements JsonSerializable {
 		'isoCode' => 'string',
 		'englishName' => 'string'
 	])]
-	public function jsonSerialize(): array {
+	public function jsonSerialize(): array
+	{
 		return [
 			'isoCode' => $this->isoCode,
 			'englishName' => $this->englishName
