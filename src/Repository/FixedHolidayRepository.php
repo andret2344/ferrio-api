@@ -10,8 +10,10 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
-class FixedHolidayRepository extends ServiceEntityRepository {
-	public function __construct(ManagerRegistry $registry) {
+class FixedHolidayRepository extends ServiceEntityRepository
+{
+	public function __construct(ManagerRegistry $registry)
+	{
 		parent::__construct($registry, FixedHoliday::class);
 	}
 
@@ -23,7 +25,8 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 	 *
 	 * @return array|FixedHoliday[]
 	 */
-	public function findAt(string $language, int $day, int $month, bool $matureContent = false): array {
+	public function findAt(string $language, int $day, int $month, bool $matureContent = false): array
+	{
 		return $this->createQueryBuilder('h')
 			->select([
 				'm.id',
@@ -59,7 +62,8 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 	 *
 	 * @return array
 	 */
-	public function findAllByLanguage(string $language, int $offset = 0, int $limit = 1_000_000, bool $matureContent = false): array {
+	public function findAllByLanguage(string $language, int $offset = 0, int $limit = 1_000_000, bool $matureContent = false): array
+	{
 		return $this->createQueryBuilder('h')
 			->select([
 				'm.id',
@@ -93,7 +97,8 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 	 *
 	 * @return array|string[]
 	 */
-	public function check(string $language, array $array): array {
+	public function check(string $language, array $array): array
+	{
 		$existingNames = $this->createQueryBuilder('h2')
 			->select('h2.name')
 			->join('h2.metadata', 'm')
@@ -106,7 +111,8 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 		return array_diff($array, $existingNames);
 	}
 
-	public function findAllAggregatedById(string $languageFrom, string $languageTo, int $offset = 0, int $limit = 1_000_000) {
+	public function findAllAggregatedById(string $languageFrom, string $languageTo, int $offset = 0, int $limit = 1_000_000)
+	{
 		$rsm = new ResultSetMapping();
 		$rsm->addEntityResult(FixedHoliday::class, 'h');
 		$rsm->addScalarResult('id', 'id');

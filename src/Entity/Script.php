@@ -11,52 +11,40 @@ use JsonSerializable;
 use Override;
 
 #[ORM\Entity]
-class Script implements JsonSerializable {
+class Script implements JsonSerializable
+{
 	#[ORM\Id]
 	#[ORM\GeneratedValue]
 	#[ORM\Column(type: 'integer', nullable: false)]
-	private string $id;
+	private(set) int $id;
 
 	#[ORM\Column(type: 'text', nullable: false)]
-	private string $content;
+	public string $content;
 
 	#[ORM\OneToMany(targetEntity: FixedHoliday::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
-	private Collection $metadata;
+	private(set) Collection $metadata;
 
 	#[Pure]
-	public function __construct(string $id, string $content) {
+	public function __construct(int $id, string $content)
+	{
 		$this->id = $id;
 		$this->content = $content;
 		$this->metadata = new ArrayCollection();
 	}
 
-	public function getId(): string {
-		return $this->id;
-	}
-
-	public function getContent(): string {
-		return $this->content;
-	}
-
-	public function setContent(string $content): void {
-		$this->content = $content;
-	}
-
-	public function getMetadata(): Collection {
-		return $this->metadata;
-	}
-
-	public function addMetadata(FloatingHolidayMetadata $metadata): self {
+	public function addMetadata(FloatingHolidayMetadata $metadata): self
+	{
 		if (!$this->metadata->contains($metadata)) {
 			$this->metadata[] = $metadata;
-			$metadata->setScript($this);
+			$metadata->script = $this;
 		}
 		return $this;
 	}
 
-	public function removeMetadata(FloatingHolidayMetadata $metadata): self {
-		if ($this->metadata->removeElement($metadata) && $metadata->getScript() === $this) {
-			$metadata->setScript(null);
+	public function removeMetadata(FloatingHolidayMetadata $metadata): self
+	{
+		if ($this->metadata->removeElement($metadata) && $metadata->script === $this) {
+			$metadata->script = null;
 		}
 		return $this;
 	}
@@ -67,7 +55,8 @@ class Script implements JsonSerializable {
 		'id' => 'integer',
 		'content' => 'string',
 	])]
-	public function jsonSerialize(): array {
+	public function jsonSerialize(): array
+	{
 		return [
 			'id' => $this->id,
 			'content' => $this->content,

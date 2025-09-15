@@ -12,15 +12,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route(['/language', '/v1/language'], name: 'v1_language_')]
-class LanguageControllerV1 extends AbstractController {
+#[Route('/v1/language', name: 'v1_language_')]
+class LanguageControllerV1 extends AbstractController
+{
 	public function __construct(
 		private readonly EntityManagerInterface $entityManager,
-		private readonly LoggingService         $loggingService) {
+		private readonly LoggingService         $loggingService)
+	{
 	}
 
 	#[Route('/', name: 'get_all', methods: ['GET'])]
-	public function getAll(Request $request): Response {
+	public function getAll(Request $request): Response
+	{
 		$this->loggingService->route($request);
 		/**
 		 * @var Language[] $languages
@@ -33,7 +36,8 @@ class LanguageControllerV1 extends AbstractController {
 	}
 
 	#[Route('/{code}', name: 'get_one', methods: ['GET'])]
-	public function getOne(Request $request, string $code): Response {
+	public function getOne(Request $request, string $code): Response
+	{
 		$this->loggingService->route($request);
 		/**
 		 * @var Language $language

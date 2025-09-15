@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\Tests\Fixture\:
+    resource: '../../tests/Fixture/'
+    public: true
+    tags: [ 'doctrine.fixture.orm' ]

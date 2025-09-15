@@ -9,9 +9,11 @@ use App\Entity\Script;
 use App\Repository\FixedHolidayRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-readonly class HolidayService {
+readonly class HolidayService
+{
 	public function __construct(private FixedHolidayRepository $holidayRepository,
-								private EntityManagerInterface $entityManager) {
+								private EntityManagerInterface $entityManager)
+	{
 	}
 
 	/**
@@ -19,7 +21,8 @@ readonly class HolidayService {
 	 *
 	 * @return array|HolidayDay[]
 	 */
-	public function getHolidays(string $language): array {
+	public function getHolidays(string $language): array
+	{
 		/** @var FixedHoliday[] $holidays */
 		$holidays = $this->holidayRepository->findAllByLanguage($language);
 		$days = [];
@@ -55,28 +58,30 @@ readonly class HolidayService {
 	 *
 	 * @return array
 	 */
-	public function getFloatingHolidays(string $language): array {
+	public function getFloatingHolidays(string $language): array
+	{
 		/** @var FloatingHoliday[] $holidays */
 		$holidays = $this->entityManager->getRepository(FloatingHoliday::class)
 			->findBy(['language' => $language]);
 		$data = [];
 		foreach ($holidays as $holiday) {
 			$metadata = $holiday->getMetadata();
-			$script = $metadata->getScript();
-			$args = implode(', ', json_decode($metadata->getArgs()));
-			$script = new Script($script->getId(), $script->getContent() . "\n\ncalculate($args);");
-			$country = $metadata->getCountry();
+			$script = $metadata->script;
+			$args = implode(', ', json_decode($metadata->args));
+			$script = new Script($script->id, $script->content . "\n\ncalculate($args);");
+			$country = $metadata->country;
 			$data[] = [
 				...$holiday->jsonSerialize(),
-				'country_code' => $country?->getIsoCode(),
-				'country_name' => $country?->getEnglishName(),
-				'script' => $script->getContent()
+				'country_code' => $country->isoCode,
+				'country_name' => $country->englishName,
+				'script' => $script->content
 			];
 		}
 		return $data;
 	}
 
-	public function getHolidayDay(string $language, int $day, int $month): ?HolidayDay {
+	public function getHolidayDay(string $language, int $day, int $month): ?HolidayDay
+	{
 		$id = sprintf('%02d', $month) . sprintf('%02d', $day);
 		$holidays = $this->holidayRepository->findAt($language, $day, $month);
 		return new HolidayDay($id, $day, $month, $holidays);

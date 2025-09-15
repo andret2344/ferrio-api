@@ -16,15 +16,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/manage', name: 'manage_')]
-class ManageController extends AbstractController {
+class ManageController extends AbstractController
+{
 	public function __construct(
 		private readonly EntityManagerInterface  $entityManager,
 		private readonly FixedHolidayRepository  $fixedHolidayRepository,
-		private readonly FixedMetadataRepository $fixedMetadataRepository) {
+		private readonly FixedMetadataRepository $fixedMetadataRepository)
+	{
 	}
 
 	#[Route('/', name: 'index')]
-	public function index(): Response {
+	public function index(): Response
+	{
 		$languages = $this->entityManager->getRepository(Language::class)
 			->findBy([], ['code' => 'ASC']);
 		return $this->render('manage/index.html.twig', [
@@ -33,7 +36,8 @@ class ManageController extends AbstractController {
 	}
 
 	#[Route('/translate/{page}/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'translate')]
-	public function translate(Request $request, int $page, string $from, string $to): Response {
+	public function translate(Request $request, int $page, string $from, string $to): Response
+	{
 		$action = $request->request->get('action');
 		$repository = $this->entityManager->getRepository(Language::class);
 		if ($action === 'update') {
@@ -60,7 +64,7 @@ class ManageController extends AbstractController {
 		$languageTo = $repository->findOneBy(['code' => $to]);
 		$languages = $repository->findAll();
 		$holidays = $this->fixedHolidayRepository->findAllAggregatedById($from, $to, ($page - 1) * 100, 100);
-		$pages = ceil($this->fixedMetadataRepository->count([]) / 100);
+		$pages = ceil($this->fixedMetadataRepository->count() / 100);
 		return $this->render('manage/translate.html.twig', [
 			'languageFrom' => $languageFrom,
 			'languageTo' => $languageTo,
@@ -72,17 +76,20 @@ class ManageController extends AbstractController {
 	}
 
 	#[Route('/translate/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'translate_default')]
-	public function translateDefault(Request $request, string $from, string $to): Response {
+	public function translateDefault(Request $request, string $from, string $to): Response
+	{
 		return $this->translate($request, 1, $from, $to);
 	}
 
 	#[Route('/create', name: 'create')]
-	public function create(Request $request): Response {
+	public function create(Request $request): Response
+	{
 		return $this->createPage($request, 1);
 	}
 
 	#[Route('/create/{page}', name: 'create_page')]
-	public function createPage(Request $request, int $page): Response {
+	public function createPage(Request $request, int $page): Response
+	{
 		$action = $request->request->get('action');
 		if ($action === 'update') {
 			$id = $request->request->get('metadata_id');
@@ -93,8 +100,7 @@ class ManageController extends AbstractController {
 			$found = $this->fixedHolidayRepository->findOneBy(['metadata' => $id, 'language' => 'pl']);
 			$found->setName($name);
 			$found->setDescription($desc);
-			$found->getMetadata()
-				->setMatureContent($mature);
+			$found->getMetadata()->matureContent = $mature;
 			$this->entityManager->persist($found);
 			$this->entityManager->flush();
 		}
@@ -119,7 +125,7 @@ class ManageController extends AbstractController {
 			->findBy(['language' => 'pl']);
 		$countries = $this->entityManager->getRepository(Country::class)
 			->findAll();
-		$pages = ceil($this->fixedMetadataRepository->count([]) / 100);
+		$pages = ceil($this->fixedMetadataRepository->count() / 100);
 		return $this->render('manage/create.html.twig', [
 			'fixed_holidays' => $fixedHolidays,
 			'floating_holidays' => $floatingHolidays,
@@ -130,12 +136,14 @@ class ManageController extends AbstractController {
 	}
 
 	#[Route('/check', name: 'check')]
-	public function check(Request $request): Response {
+	public function check(Request $request): Response
+	{
 		return $this->checkLanguage($request, 'pl');
 	}
 
 	#[Route('/check/{lang<^\S{2}$>}', name: 'check_language')]
-	public function checkLanguage(Request $request, string $lang): Response {
+	public function checkLanguage(Request $request, string $lang): Response
+	{
 		$action = $request->request->get('action');
 		$result = [];
 		if ($action === 'check') {
@@ -155,7 +163,8 @@ class ManageController extends AbstractController {
 		]);
 	}
 
-	private function getCountry(?string $country) {
+	private function getCountry(?string $country): Country|null
+	{
 		if ($country === null || $country === 'null') {
 			return null;
 		}

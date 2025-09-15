@@ -9,40 +9,42 @@ use JsonSerializable;
 use Override;
 
 #[ORM\Entity]
-class FloatingHolidayReport implements JsonSerializable {
+class FloatingHolidayError implements JsonSerializable
+{
 	#[ORM\Id]
 	#[ORM\Column(type: 'integer')]
 	#[ORM\GeneratedValue]
-	private ?int $id;
+	private(set) ?int $id;
 
 	#[ORM\Column(nullable: false)]
-	private string $userId;
+	private(set) string $userId;
 
 	#[ORM\ManyToOne(targetEntity: Language::class)]
 	#[ORM\JoinColumn(name: 'language_code', referencedColumnName: 'code', nullable: false)]
-	private Language $language;
+	private(set) Language $language;
 
 	#[ORM\ManyToOne(targetEntity: FloatingHolidayMetadata::class, inversedBy: 'reports')]
 	#[ORM\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
 	private ?FloatingHolidayMetadata $metadata;
 
 	#[ORM\Column(type: 'string', nullable: false, enumType: ReportType::class)]
-	private ReportType $reportType;
+	private(set) ReportType $reportType;
 
 	#[ORM\Column(type: 'text', length: 65536, nullable: true)]
-	private ?string $description;
+	private(set) ?string $description;
 
 	#[ORM\Column(type: 'datetimetz_immutable', nullable: false)]
-	private readonly DateTimeImmutable $datetime;
+	private(set) DateTimeImmutable $datetime;
 
 	#[ORM\Column(type: 'string', nullable: false, enumType: ReportState::class)]
-	private ReportState $reportState;
+	private(set) ReportState $reportState;
 
 	public function __construct(string                  $userId,
 								Language                $language,
 								FloatingHolidayMetadata $metadata,
 								ReportType              $reportType,
-								?string                 $additionalDescription) {
+								?string                 $additionalDescription)
+	{
 		$this->userId = $userId;
 		$this->language = $language;
 		$this->metadata = $metadata;
@@ -52,60 +54,14 @@ class FloatingHolidayReport implements JsonSerializable {
 		$this->reportState = ReportState::REPORTED;
 	}
 
-	public function getId(): int {
-		return $this->id;
-	}
-
-	public function setId(int $id): void {
-		$this->id = $id;
-	}
-
-	public function getUserId(): string {
-		return $this->userId;
-	}
-
-	public function setUserId(string $userId): void {
-		$this->userId = $userId;
-	}
-
-	public function getLanguage(): Language {
-		return $this->language;
-	}
-
-	public function setLanguage(Language $language): void {
-		$this->language = $language;
-	}
-
-	public function getMetadata(): FloatingHolidayMetadata {
+	public function getMetadata(): ?FloatingHolidayMetadata
+	{
 		return $this->metadata;
 	}
 
-	public function setMetadata(?FloatingHolidayMetadata $metadata): void {
+	public function setMetadata(?FloatingHolidayMetadata $metadata): void
+	{
 		$this->metadata = $metadata;
-	}
-
-	public function getReportType(): ReportType {
-		return $this->reportType;
-	}
-
-	public function setReportType(ReportType $reportType): void {
-		$this->reportType = $reportType;
-	}
-
-	public function getDescription(): ?string {
-		return $this->description;
-	}
-
-	public function setDescription(?string $description): void {
-		$this->description = $description;
-	}
-
-	public function getReportState(): ReportState {
-		return $this->reportState;
-	}
-
-	public function setReportState(ReportState $reportState): void {
-		$this->reportState = $reportState;
 	}
 
 	#[Override]
@@ -119,12 +75,13 @@ class FloatingHolidayReport implements JsonSerializable {
 		'datetime' => 'string',
 		'report_state' => '\App\Entity\ReportState'
 	])]
-	public function jsonSerialize(): array {
+	public function jsonSerialize(): array
+	{
 		return [
 			'id' => $this->id,
 			'user_id' => $this->userId,
-			'language_code' => $this->language->getCode(),
-			'metadata_id' => $this->metadata->getId(),
+			'language_code' => $this->language->code,
+			'metadata_id' => $this->metadata->id,
 			'report_type' => $this->reportType,
 			'description' => $this->description,
 			'datetime' => $this->datetime->format('Y-m-d H:i:s'),

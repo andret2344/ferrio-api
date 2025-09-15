@@ -10,7 +10,8 @@ use JsonSerializable;
 use Override;
 
 #[ORM\Entity(repositoryClass: FixedHolidayRepository::class)]
-class FixedHoliday implements JsonSerializable {
+class FixedHoliday implements JsonSerializable
+{
 	#[ORM\Id]
 	#[ORM\ManyToOne(targetEntity: Language::class, inversedBy: 'holidays')]
 	#[ORM\JoinColumn(name: 'language_code', referencedColumnName: 'code', nullable: false)]
@@ -31,7 +32,8 @@ class FixedHoliday implements JsonSerializable {
 	private ?string $url;
 
 	public function __construct(Language $language, FixedHolidayMetadata $metadata, ?string $name,
-								?string  $description, ?string $url) {
+								?string  $description, ?string $url)
+	{
 		$this->language = $language;
 		$this->metadata = $metadata;
 		$this->name = $name;
@@ -39,47 +41,57 @@ class FixedHoliday implements JsonSerializable {
 		$this->url = $url;
 	}
 
-	public function getLanguage(): ?Language {
+	public function getLanguage(): ?Language
+	{
 		return $this->language;
 	}
 
-	public function setLanguage(?Language $language): static {
+	public function setLanguage(?Language $language): static
+	{
 		$this->language = $language;
 		return $this;
 	}
 
-	public function getMetadata(): ?FixedHolidayMetadata {
+	public function getMetadata(): ?FixedHolidayMetadata
+	{
 		return $this->metadata;
 	}
 
-	public function setMetadata(?FixedHolidayMetadata $holidayMetadata): static {
+	public function setMetadata(?FixedHolidayMetadata $holidayMetadata): static
+	{
 		$this->metadata = $holidayMetadata;
 		return $this;
 	}
 
-	public function getName(): ?string {
+	public function getName(): ?string
+	{
 		return $this->name;
 	}
 
-	public function setName(?string $name): static {
+	public function setName(?string $name): static
+	{
 		$this->name = $name;
 		return $this;
 	}
 
-	public function getDescription(): ?string {
+	public function getDescription(): ?string
+	{
 		return $this->description;
 	}
 
-	public function setDescription(?string $description): static {
+	public function setDescription(?string $description): static
+	{
 		$this->description = $description;
 		return $this;
 	}
 
-	public function getUrl(): ?string {
+	public function getUrl(): ?string
+	{
 		return $this->url;
 	}
 
-	public function setUrl(?string $url): static {
+	public function setUrl(?string $url): static
+	{
 		$this->url = $url;
 		return $this;
 	}
@@ -93,10 +105,11 @@ class FixedHoliday implements JsonSerializable {
 		'description' => 'null|string',
 		'url' => 'null|string'
 	])]
-	public function jsonSerialize(): array {
+	public function jsonSerialize(): array
+	{
 		return [
-			'id' => $this->metadata->getId(),
-			'usual' => (bool)$this->metadata->getUsual(),
+			'id' => $this->metadata->id,
+			'usual' => (bool)$this->metadata,
 			'name' => $this->name,
 			'description' => $this->description,
 			'url' => $this->url
