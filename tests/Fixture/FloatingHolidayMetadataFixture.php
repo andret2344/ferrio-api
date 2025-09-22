@@ -9,9 +9,11 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Override;
 
-class FloatingHolidayMetadataFixture extends Fixture implements DependentFixtureInterface {
+class FloatingHolidayMetadataFixture extends Fixture implements DependentFixtureInterface
+{
 	#[Override]
-	public function load(ObjectManager $manager): void {
+	public function load(ObjectManager $manager): void
+	{
 		$script = $this->getReference('script', Script::class);
 		$metadata = new FloatingHolidayMetadata(1, null, null, $script, '[]', false);
 		$manager->persist($metadata);
@@ -20,7 +22,8 @@ class FloatingHolidayMetadataFixture extends Fixture implements DependentFixture
 	}
 
 	#[Override]
-	public function getDependencies(): array {
+	public function getDependencies(): array
+	{
 		return [
 			ScriptFixture::class
 		];

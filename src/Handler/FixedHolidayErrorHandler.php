@@ -33,7 +33,7 @@ readonly class FixedHolidayErrorHandler implements ReportHandlerInterface
 		$reportType = ReportType::from($payload['report_type']);
 		$description = $payload['description'] ?? null;
 		$report = new FixedHolidayError($userId, $language, $metadata, $reportType, $description);
-		$metadata->addReport($report);
+		$metadata->reports->add($report);
 		$this->entityManager->persist($metadata);
 		$this->entityManager->flush();
 	}

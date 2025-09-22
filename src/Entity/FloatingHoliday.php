@@ -12,22 +12,22 @@ class FloatingHoliday implements JsonSerializable
 {
 	#[ORM\Id]
 	#[ORM\ManyToOne(targetEntity: Language::class)]
-	#[ORM\JoinColumn(name: 'language_code', referencedColumnName: 'code', nullable: false)]
-	private Language $language;
+	#[ORM\JoinColumn(name: 'language_code', referencedColumnName: 'code')]
+	private(set) Language $language;
 
 	#[ORM\Id]
 	#[ORM\ManyToOne(targetEntity: FloatingHolidayMetadata::class, inversedBy: 'holidays')]
-	#[ORM\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
-	private FloatingHolidayMetadata $metadata;
+	#[ORM\JoinColumn(name: 'metadata_id', referencedColumnName: 'id')]
+	private(set) FloatingHolidayMetadata $metadata;
 
-	#[ORM\Column(type: 'text', nullable: false)]
-	private ?string $name;
+	#[ORM\Column(type: 'text')]
+	private(set) ?string $name;
 
-	#[ORM\Column(type: 'text', nullable: false)]
-	private ?string $description;
+	#[ORM\Column(type: 'text')]
+	private(set) ?string $description;
 
-	#[ORM\Column(type: 'text', nullable: false)]
-	private ?string $url;
+	#[ORM\Column(type: 'text')]
+	private(set) ?string $url;
 
 	public function __construct(Language $language, FloatingHolidayMetadata $metadata,
 								?string  $name, ?string $description, ?string $url)
@@ -37,62 +37,6 @@ class FloatingHoliday implements JsonSerializable
 		$this->name = $name;
 		$this->description = $description;
 		$this->url = $url;
-	}
-
-
-	public function getLanguage(): Language
-	{
-		return $this->language;
-	}
-
-	public function setLanguage(Language $language): self
-	{
-		$this->language = $language;
-		return $this;
-	}
-
-	public function getMetadata(): ?FloatingHolidayMetadata
-	{
-		return $this->metadata;
-	}
-
-	public function setMetadata(?FloatingHolidayMetadata $metadata): self
-	{
-		$this->metadata = $metadata;
-		return $this;
-	}
-
-	public function getName(): ?string
-	{
-		return $this->name;
-	}
-
-	public function setName(?string $name): self
-	{
-		$this->name = $name;
-		return $this;
-	}
-
-	public function getDescription(): ?string
-	{
-		return $this->description;
-	}
-
-	public function setDescription(?string $description): self
-	{
-		$this->description = $description;
-		return $this;
-	}
-
-	public function getUrl(): ?string
-	{
-		return $this->url;
-	}
-
-	public function setUrl(?string $url): self
-	{
-		$this->url = $url;
-		return $this;
 	}
 
 	#[Override]

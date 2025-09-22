@@ -13,9 +13,11 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Override;
 
-class FloatingHolidayErrorFixture extends Fixture implements DependentFixtureInterface {
+class FloatingHolidayErrorFixture extends Fixture implements DependentFixtureInterface
+{
 	#[Override]
-	public function load(ObjectManager $manager): void {
+	public function load(ObjectManager $manager): void
+	{
 		$language = $this->getReference('language-en', Language::class);
 		$metadata = $this->getReference('floating-holiday-metadata', FloatingHolidayMetadata::class);
 		$error = new FloatingHolidayError('user-id', $language, $metadata, ReportType::OTHER, 'Test desc');
@@ -25,7 +27,8 @@ class FloatingHolidayErrorFixture extends Fixture implements DependentFixtureInt
 	}
 
 	#[Override]
-	public function getDependencies(): array {
+	public function getDependencies(): array
+	{
 		return [
 			LanguageFixture::class,
 			FloatingHolidayMetadataFixture::class,

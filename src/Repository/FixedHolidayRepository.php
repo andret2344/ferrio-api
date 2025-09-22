@@ -17,14 +17,6 @@ class FixedHolidayRepository extends ServiceEntityRepository
 		parent::__construct($registry, FixedHoliday::class);
 	}
 
-	/**
-	 * @param string $language
-	 * @param int $day
-	 * @param int $month
-	 * @param bool $matureContent
-	 *
-	 * @return array|FixedHoliday[]
-	 */
 	public function findAt(string $language, int $day, int $month, bool $matureContent = false): array
 	{
 		return $this->createQueryBuilder('h')
@@ -54,14 +46,6 @@ class FixedHolidayRepository extends ServiceEntityRepository
 			->getResult();
 	}
 
-	/**
-	 * @param string $language
-	 * @param int $offset
-	 * @param int $limit
-	 * @param bool $matureContent
-	 *
-	 * @return array
-	 */
 	public function findAllByLanguage(string $language, int $offset = 0, int $limit = 1_000_000, bool $matureContent = false): array
 	{
 		return $this->createQueryBuilder('h')
@@ -91,12 +75,6 @@ class FixedHolidayRepository extends ServiceEntityRepository
 			->getResult();
 	}
 
-	/**
-	 * @param string $language
-	 * @param array $array
-	 *
-	 * @return array|string[]
-	 */
 	public function check(string $language, array $array): array
 	{
 		$existingNames = $this->createQueryBuilder('h2')

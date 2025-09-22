@@ -16,27 +16,30 @@ class FixedHolidayError implements JsonSerializable
 	#[ORM\GeneratedValue]
 	private(set) ?int $id;
 
-	#[ORM\Column(type: 'string', nullable: false)]
+	#[ORM\Column(type: 'string')]
 	private(set) string $userId;
 
 	#[ORM\ManyToOne(targetEntity: Language::class)]
-	#[ORM\JoinColumn(name: 'language_code', referencedColumnName: 'code', nullable: false)]
+	#[ORM\JoinColumn(name: 'language_code', referencedColumnName: 'code')]
 	private(set) Language $language;
 
 	#[ORM\ManyToOne(targetEntity: FixedHolidayMetadata::class, inversedBy: 'reports')]
-	#[ORM\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
-	private ?FixedHolidayMetadata $metadata;
+	#[ORM\JoinColumn(name: 'metadata_id', referencedColumnName: 'id')]
+	public ?FixedHolidayMetadata $metadata {
+		get => $this->metadata;
+		set => $this->metadata = $value;
+	}
 
-	#[ORM\Column(type: 'string', nullable: false, enumType: ReportType::class)]
+	#[ORM\Column(type: 'string', enumType: ReportType::class)]
 	private(set) ReportType $reportType;
 
 	#[ORM\Column(type: 'text', length: 65536, nullable: true)]
 	private(set) ?string $description;
 
-	#[ORM\Column(type: 'datetimetz_immutable', nullable: false)]
+	#[ORM\Column(type: 'datetimetz_immutable')]
 	private(set) DateTimeImmutable $datetime;
 
-	#[ORM\Column(type: 'string', nullable: false, enumType: ReportState::class)]
+	#[ORM\Column(type: 'string', enumType: ReportState::class)]
 	private(set) ReportState $reportState;
 
 	public function __construct(string               $userId,
@@ -52,16 +55,6 @@ class FixedHolidayError implements JsonSerializable
 		$this->description = $description;
 		$this->datetime = new DateTimeImmutable();
 		$this->reportState = ReportState::REPORTED;
-	}
-
-	public function getMetadata(): ?FixedHolidayMetadata
-	{
-		return $this->metadata;
-	}
-
-	public function setMetadata(?FixedHolidayMetadata $metadata): void
-	{
-		$this->metadata = $metadata;
 	}
 
 	#[Override]

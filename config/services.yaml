@@ -22,7 +22,7 @@ services:
       - '../src/Kernel.php'
       - '../src/Tests/'
 
-  App\Controller\v3\UserControllerV3:
+  App\Controller\v2\UserControllerV2:
     arguments:
       $floatingSuggestionHandler: '@App\Handler\FloatingHolidaySuggestionHandler'
       $floatingErrorHandler: '@App\Handler\FloatingHolidayErrorHandler'

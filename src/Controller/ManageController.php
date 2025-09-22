@@ -53,9 +53,8 @@ class ManageController extends AbstractController
 			if ($holiday == null) {
 				$holiday = new FixedHoliday($language, $metadata, $name, $desc, '');
 			} else {
-				$holiday
-					->setName($name)
-					->setDescription($desc);
+				$holiday->name = $name;
+				$holiday->description = $desc;
 			}
 			$this->entityManager->persist($holiday);
 			$this->entityManager->flush();
@@ -90,6 +89,9 @@ class ManageController extends AbstractController
 	#[Route('/create/{page}', name: 'create_page')]
 	public function createPage(Request $request, int $page): Response
 	{
+		$repository = $this->entityManager->getRepository(Language::class);
+		/** @var Language $language */
+		$language = $repository->findOneBy(['code' => 'pl']);
 		$action = $request->request->get('action');
 		if ($action === 'update') {
 			$id = $request->request->get('metadata_id');
@@ -98,9 +100,9 @@ class ManageController extends AbstractController
 			$mature = (bool)$request->request->get('mature');
 			/** @var FixedHoliday $found */
 			$found = $this->fixedHolidayRepository->findOneBy(['metadata' => $id, 'language' => 'pl']);
-			$found->setName($name);
-			$found->setDescription($desc);
-			$found->getMetadata()->matureContent = $mature;
+			$found->name = $name;
+			$found->description = $desc;
+			$found->metadata->matureContent = $mature;
 			$this->entityManager->persist($found);
 			$this->entityManager->flush();
 		}
@@ -113,9 +115,6 @@ class ManageController extends AbstractController
 			$mature = (bool)$request->request->get('mature');
 			$metadata = new FixedHolidayMetadata($month, $day, 0, $country, null, $mature);
 			$this->entityManager->persist($metadata);
-			/** @var Language $language */
-			$language = $this->entityManager->getRepository(Language::class)
-				->findOneBy(['code' => 'pl']);
 			$holiday = new FixedHoliday($language, $metadata, $name, $desc ?? '', '');
 			$this->entityManager->persist($holiday);
 			$this->entityManager->flush();
