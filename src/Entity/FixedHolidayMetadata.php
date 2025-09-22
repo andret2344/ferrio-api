@@ -30,23 +30,32 @@ class FixedHolidayMetadata implements JsonSerializable
 
 	#[ORM\ManyToOne(targetEntity: Category::class)]
 	#[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
-	public ?Category $category;
+	public ?Category $category {
+		get => $this->category;
+		set => $this->category = $value;
+	}
 
 	#[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'fixedHolidays')]
 	#[ORM\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
-	public ?Country $country;
+	public ?Country $country {
+		get => $this->country;
+		set => $this->country = $value;
+	}
 
 	#[ORM\OneToMany(targetEntity: FixedHoliday::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
-	private Collection $holidays;
+	private(set) Collection $holidays;
 
 	#[ORM\OneToMany(targetEntity: FixedHolidayError::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
-	private Collection $reports;
+	private(set) Collection $reports;
 
 	#[ORM\Column(type: 'boolean')]
-	public bool $matureContent;
+	public bool $matureContent {
+		get => $this->matureContent;
+		set => $this->matureContent = $value;
+	}
 
 	#[Pure]
-	public function __construct(int $month, int $day, int $usual, ?Country $country, ?Category $category, bool $matureContent)
+	public function __construct(int $month, int $day, bool $usual, ?Country $country, ?Category $category, bool $matureContent)
 	{
 		$this->month = $month;
 		$this->day = $day;
@@ -58,46 +67,12 @@ class FixedHolidayMetadata implements JsonSerializable
 		$this->matureContent = $matureContent;
 	}
 
-	public function addHoliday(FixedHoliday $holiday): self
-	{
-		if (!$this->holidays->contains($holiday)) {
-			$this->holidays[] = $holiday;
-			$holiday->setMetadata($this);
-		}
-		return $this;
-	}
-
-	public function removeHoliday(FixedHoliday $holiday): self
-	{
-		if ($this->holidays->removeElement($holiday) && $holiday->getMetadata() === $this) {
-			$holiday->setMetadata(null);
-		}
-		return $this;
-	}
-
-	public function addReport(FixedHolidayError $report): self
-	{
-		if (!$this->reports->contains($report)) {
-			$this->reports[] = $report;
-			$report->setMetadata($this);
-		}
-		return $this;
-	}
-
-	public function removeReport(FixedHolidayError $report): self
-	{
-		if ($this->reports->removeElement($report) && $report->getMetadata() === $this) {
-			$report->setMetadata(null);
-		}
-		return $this;
-	}
-
 	#[Override]
 	#[ArrayShape([
 		'id' => 'int|null',
 		'month' => 'int',
 		'day' => 'int',
-		'usual' => 'int',
+		'usual' => 'bool',
 		'country' => 'string|null',
 		'category' => 'string',
 		'mature_content' => 'bool',

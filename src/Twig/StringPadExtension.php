@@ -12,7 +12,7 @@ class StringPadExtension extends AbstractExtension
 	public function getFilters(): array
 	{
 		return [
-			new TwigFilter('pad', [$this, 'pad']),
+			new TwigFilter('pad', $this->pad(...)),
 		];
 	}
 

@@ -30,7 +30,7 @@ class FloatingHolidayMetadata implements JsonSerializable
 	public ?Country $country;
 
 	#[ORM\ManyToOne(targetEntity: Script::class)]
-	#[ORM\JoinColumn(name: 'script_id', referencedColumnName: 'id', nullable: false)]
+	#[ORM\JoinColumn(name: 'script_id', referencedColumnName: 'id')]
 	public ?Script $script;
 
 	#[ORM\Column(type: 'string')]
@@ -42,7 +42,7 @@ class FloatingHolidayMetadata implements JsonSerializable
 	#[ORM\OneToMany(targetEntity: FloatingHolidayError::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
 	private(set) Collection $reports;
 
-	#[ORM\Column(type: 'boolean', nullable: false)]
+	#[ORM\Column(type: 'boolean')]
 	private(set) bool $matureContent;
 
 	#[Pure]
@@ -61,40 +61,6 @@ class FloatingHolidayMetadata implements JsonSerializable
 		$this->holidays = new ArrayCollection();
 		$this->reports = new ArrayCollection();
 		$this->matureContent = $matureContent;
-	}
-
-	public function addHoliday(FloatingHoliday $holiday): self
-	{
-		if (!$this->holidays->contains($holiday)) {
-			$this->holidays[] = $holiday;
-			$holiday->setMetadata($this);
-		}
-		return $this;
-	}
-
-	public function removeHoliday(FloatingHoliday $holiday): self
-	{
-		if ($this->holidays->removeElement($holiday) && $holiday->getMetadata() === $this) {
-			$holiday->setMetadata(null);
-		}
-		return $this;
-	}
-
-	public function addReport(FloatingHolidayError $report): self
-	{
-		if (!$this->reports->contains($report)) {
-			$this->reports[] = $report;
-			$report->setMetadata($this);
-		}
-		return $this;
-	}
-
-	public function removeReport(FloatingHolidayError $report): self
-	{
-		if ($this->holidays->removeElement($report) && $report->getMetadata() === $this) {
-			$report->setMetadata(null);
-		}
-		return $this;
 	}
 
 	#[Override]

@@ -14,118 +14,50 @@ class FixedHolidaySuggestion implements JsonSerializable
 	#[ORM\Id]
 	#[ORM\Column]
 	#[ORM\GeneratedValue]
-	private ?int $id;
+	private(set) ?int $id;
 
 	#[ORM\Column]
-	private string $userId;
+	private(set) string $userId;
 
 	#[ORM\Column]
-	private string $name;
+	private(set) string $name;
 
 	#[ORM\Column(type: 'text')]
-	private string $description;
+	private(set) string $description;
 
 	#[ORM\Column]
-	private int $day;
+	private(set) int $day;
 
 	#[ORM\Column]
-	private int $month;
+	private(set) int $month;
 
-	#[ORM\Column(type: 'datetimetz_immutable', nullable: false)]
-	private readonly DateTimeImmutable $datetime;
+	#[ORM\ManyToOne(targetEntity: Country::class)]
+	#[ORM\JoinColumn(name: 'country', referencedColumnName: 'iso_code', nullable: true)]
+	private(set) ?Country $country;
+
+	#[ORM\Column(type: 'datetimetz_immutable')]
+	private(set) DateTimeImmutable $datetime;
+
+	#[ORM\Column(type: 'string', enumType: ReportState::class)]
+	private(set) ReportState $reportState;
 
 	#[ORM\OneToOne(targetEntity: FixedHolidayMetadata::class)]
 	#[ORM\JoinColumn(name: 'holiday', referencedColumnName: 'id')]
-	private ?FixedHolidayMetadata $holiday;
+	private(set) ?FixedHolidayMetadata $holiday;
 
-	#[ORM\Column(type: 'string', nullable: false, enumType: ReportState::class)]
-	private ReportState $reportState;
-
-	public function __construct(string $userId, string $name, string $description, int $day, int $month, DateTimeImmutable $datetime)
+	public function __construct(string      $userId, string $name, string $description, int $day, int $month,
+								?Country    $country = null, DateTimeImmutable $datetime = new DateTimeImmutable(),
+								ReportState $reportState = ReportState::REPORTED, ?FixedHolidayMetadata $holiday = null)
 	{
 		$this->userId = $userId;
 		$this->name = $name;
 		$this->description = $description;
 		$this->day = $day;
 		$this->month = $month;
+		$this->country = $country;
 		$this->datetime = $datetime;
-		$this->reportState = ReportState::REPORTED;
-		$this->holiday = null;
-	}
-
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
-
-	public function setId(?int $id): void
-	{
-		$this->id = $id;
-	}
-
-	public function getUserId(): string
-	{
-		return $this->userId;
-	}
-
-	public function setUserId(string $userId): void
-	{
-		$this->userId = $userId;
-	}
-
-	public function getDay(): int
-	{
-		return $this->day;
-	}
-
-	public function setDay(string $day): void
-	{
-		$this->day = $day;
-	}
-
-	public function getMonth(): int
-	{
-		return $this->month;
-	}
-
-	public function setMonth(string $month): void
-	{
-		$this->month = $month;
-	}
-
-	public function getName(): string
-	{
-		return $this->name;
-	}
-
-	public function setName(string $name): void
-	{
-		$this->name = $name;
-	}
-
-	public function getDescription(): string
-	{
-		return $this->description;
-	}
-
-	public function setDescription(string $description): void
-	{
-		$this->description = $description;
-	}
-
-	public function getDatetime(): DateTimeImmutable
-	{
-		return $this->datetime;
-	}
-
-	public function getReportState(): ReportState
-	{
-		return $this->reportState;
-	}
-
-	public function setReportState(ReportState $reportState): void
-	{
 		$this->reportState = $reportState;
+		$this->holiday = $holiday;
 	}
 
 	#[Override]
@@ -137,6 +69,7 @@ class FixedHolidaySuggestion implements JsonSerializable
 		'name' => 'string',
 		'description' => 'string',
 		'datetime' => 'string',
+		'country' => 'null|string',
 		'report_state' => '\App\Entity\ReportState',
 		'holiday_id' => 'int|null'
 	])]
@@ -150,6 +83,7 @@ class FixedHolidaySuggestion implements JsonSerializable
 			'name' => $this->name,
 			'description' => $this->description,
 			'datetime' => $this->datetime->format('Y-m-d H:i:s'),
+			'country' => $this->country->isoCode,
 			'report_state' => $this->reportState,
 			'holiday_id' => $this->holiday?->id
 		];

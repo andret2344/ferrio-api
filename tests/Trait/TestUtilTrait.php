@@ -5,13 +5,15 @@ namespace App\Tests\Trait;
 use JsonException;
 use Symfony\Component\BrowserKit\AbstractBrowser;
 
-trait TestUtilTrait {
+trait TestUtilTrait
+{
 	protected AbstractBrowser $client;
 
 	/**
 	 * @throws JsonException
 	 */
-	protected function request(string $method, string $path, array $params = [], array $body = []): void {
+	protected function request(string $method, string $path, array $params = [], array $body = []): void
+	{
 		$url = $this->buildUrl($path, $params);
 		$content = null;
 		$server = ['HTTP_ACCEPT' => 'application/json'];
@@ -24,12 +26,14 @@ trait TestUtilTrait {
 		$this->client->request($method, $url, [], [], $server, $content);
 	}
 
-	protected function getFixture(string $id, string $class): object {
+	protected function getFixture(string $id, string $class): object
+	{
 		return $this->fixtures->getReferenceRepository()
 			->getReference($id, $class);
 	}
 
-	private function buildUrl(string $path, array $query): string {
+	private function buildUrl(string $path, array $query): string
+	{
 		if ($query === []) {
 			return $path;
 		}

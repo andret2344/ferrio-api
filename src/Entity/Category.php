@@ -36,40 +36,6 @@ class Category implements JsonSerializable
 		$this->floatingHolidays = new ArrayCollection();
 	}
 
-	public function addFixedHoliday(FixedHolidayMetadata $fixedMetadata): self
-	{
-		if (!$this->fixedHolidays->contains($fixedMetadata)) {
-			$this->fixedHolidays[] = $fixedMetadata;
-			$fixedMetadata->category = $this;
-		}
-		return $this;
-	}
-
-	public function removeHoliday(FixedHolidayMetadata $fixedMetadata): self
-	{
-		if ($this->fixedHolidays->removeElement($fixedMetadata) && $fixedMetadata->category === $this) {
-			$fixedMetadata->category = null;
-		}
-		return $this;
-	}
-
-	public function addFloatingHoliday(FloatingHolidayMetadata $floatingMetadata): self
-	{
-		if (!$this->fixedHolidays->contains($floatingMetadata)) {
-			$this->fixedHolidays[] = $floatingMetadata;
-			$floatingMetadata->category = $this;
-		}
-		return $this;
-	}
-
-	public function removeFloatingHoliday(FloatingHolidayMetadata $floatingMetadata): self
-	{
-		if ($this->fixedHolidays->removeElement($floatingMetadata) && $floatingMetadata->category === $this) {
-			$floatingMetadata->category = null;
-		}
-		return $this;
-	}
-
 	#[Pure]
 	#[Override]
 	#[ArrayShape([

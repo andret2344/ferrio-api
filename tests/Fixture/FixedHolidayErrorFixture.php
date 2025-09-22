@@ -13,11 +13,13 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Override;
 
-class FixedHolidayErrorFixture extends Fixture implements DependentFixtureInterface {
+class FixedHolidayErrorFixture extends Fixture implements DependentFixtureInterface
+{
 	#[Override]
-	public function load(ObjectManager $manager): void {
+	public function load(ObjectManager $manager): void
+	{
 		$language = $this->getReference('language-en', Language::class);
-		$metadata = $this->getReference('fixed-holiday-metadata', FixedHolidayMetadata::class);
+		$metadata = $this->getReference(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
 		$error = new FixedHolidayError('user-id', $language, $metadata, ReportType::OTHER, 'Test desc');
 		$manager->persist($error);
 		$this->addReference('fixed-holiday-error', $error);
@@ -25,7 +27,8 @@ class FixedHolidayErrorFixture extends Fixture implements DependentFixtureInterf
 	}
 
 	#[Override]
-	public function getDependencies(): array {
+	public function getDependencies(): array
+	{
 		return [
 			LanguageFixture::class,
 			FixedHolidayMetadataFixture::class,

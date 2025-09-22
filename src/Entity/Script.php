@@ -15,11 +15,14 @@ class Script implements JsonSerializable
 {
 	#[ORM\Id]
 	#[ORM\GeneratedValue]
-	#[ORM\Column(type: 'integer', nullable: false)]
+	#[ORM\Column(type: 'integer')]
 	private(set) int $id;
 
-	#[ORM\Column(type: 'text', nullable: false)]
-	public string $content;
+	#[ORM\Column(type: 'text')]
+	public string $content {
+		get => $this->content;
+		set => $this->content = $value;
+	}
 
 	#[ORM\OneToMany(targetEntity: FixedHoliday::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
 	private(set) Collection $metadata;

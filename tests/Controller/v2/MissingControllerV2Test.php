@@ -21,7 +21,8 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class MissingControllerV2Test extends WebTestCase {
+class MissingControllerV2Test extends WebTestCase
+{
 	use TestUtilTrait;
 
 	private EntityManagerInterface $em;
@@ -29,7 +30,8 @@ class MissingControllerV2Test extends WebTestCase {
 	private AbstractExecutor $fixtures;
 
 	#[Override]
-	protected function setUp(): void {
+	protected function setUp(): void
+	{
 		parent::setUp();
 
 		$this->client = static::createClient();
@@ -49,38 +51,42 @@ class MissingControllerV2Test extends WebTestCase {
 	}
 
 	#[Override]
-	protected function tearDown(): void {
+	protected function tearDown(): void
+	{
 		parent::tearDown();
 		unset($this->databaseTool);
 	}
 
 	/**
-	 * @throws TransportExceptionInterface
 	 * @throws ClientExceptionInterface
 	 * @throws RedirectionExceptionInterface
 	 * @throws ServerExceptionInterface
 	 * @throws JsonException
 	 */
-	public function testPostFixedMissing(): void {
+	public function testPostFixedMissing(): void
+	{
 		$this->request('POST', '/v2/missing/fixed', [], [
 			'user_id' => 'user-id',
 			'day' => 1,
 			'month' => 1,
 			'name' => 'Test name',
 			'description' => 'Test description',
+			'country' => 'GB'
 		]);
 
 		$this->assertResponseStatusCodeSame(204);
 
 		$repo = $this->em->getRepository(FixedHolidaySuggestion::class);
+		/** @var FixedHolidaySuggestion $entity */
 		$entity = $repo->findOneBy(['userId' => 'user-id']);
 
 		$this->assertNotNull($entity, 'Entity not stored in the DB');
-		$this->assertSame('user-id', $entity->getUserId());
-		$this->assertSame(1, $entity->getDay());
-		$this->assertSame(1, $entity->getMonth());
-		$this->assertSame('Test name', $entity->getName());
-		$this->assertSame('Test description', $entity->getDescription());
+		$this->assertSame('user-id', $entity->userId);
+		$this->assertSame(1, $entity->day);
+		$this->assertSame(1, $entity->month);
+		$this->assertSame('Test name', $entity->name);
+		$this->assertSame('Test description', $entity->description);
+		$this->assertSame('GB', $entity->country->isoCode);
 	}
 
 	/**
@@ -90,7 +96,8 @@ class MissingControllerV2Test extends WebTestCase {
 	 * @throws ServerExceptionInterface
 	 * @throws JsonException
 	 */
-	public function testGetNonEmptyFixedMissingResponse(): void {
+	public function testGetNonEmptyFixedMissingResponse(): void
+	{
 		/** @var FixedHolidaySuggestion $suggestion */
 		$suggestion = $this->getFixture('fixed-holiday-suggestion', FixedHolidaySuggestion::class);
 
@@ -101,13 +108,13 @@ class MissingControllerV2Test extends WebTestCase {
 			->getContent();
 		$expected = json_encode([
 			[
-				'id' => $suggestion->getId(),
+				'id' => $suggestion->id,
 				'day' => 1,
 				'month' => 1,
 				'name' => 'Test name',
 				'description' => 'Test description',
-				'datetime' => $suggestion->getDatetime()
-					->format('Y-m-d H:i:s'),
+				'datetime' => $suggestion->datetime->format('Y-m-d H:i:s'),
+				'country' => 'GB',
 				'holiday_id' => null,
 				'report_state' => 'REPORTED',
 				'user_id' => 'user-id'
@@ -124,7 +131,8 @@ class MissingControllerV2Test extends WebTestCase {
 	 * @throws ServerExceptionInterface
 	 * @throws JsonException
 	 */
-	public function testPostFixedErrorBannedUser(): void {
+	public function testPostFixedErrorBannedUser(): void
+	{
 		/** @var Ban $ban */
 		$ban = $this->getFixture('ban', Ban::class);
 
@@ -134,6 +142,7 @@ class MissingControllerV2Test extends WebTestCase {
 			'month' => 1,
 			'name' => 'Test name',
 			'description' => 'Test description',
+			'country' => 'GB'
 		]);
 
 		$this->assertResponseStatusCodeSame(403);
@@ -147,24 +156,28 @@ class MissingControllerV2Test extends WebTestCase {
 	/**
 	 * @throws JsonException
 	 */
-	public function testPostFloatingMissing(): void {
+	public function testPostFloatingMissing(): void
+	{
 		$this->request('POST', '/v2/missing/floating', [], [
 			'user_id' => 'user-id',
 			'date' => '01.01',
 			'name' => 'Test name',
 			'description' => 'Test description',
+			'country' => 'GB'
 		]);
 
 		$this->assertResponseStatusCodeSame(204);
 
 		$repo = $this->em->getRepository(FloatingHolidaySuggestion::class);
+		/** @var FloatingHolidaySuggestion $entity */
 		$entity = $repo->findOneBy(['userId' => 'user-id']);
 
 		$this->assertNotNull($entity, 'Entity not stored in the DB');
-		$this->assertSame('user-id', $entity->getUserId());
-		$this->assertSame('01.01', $entity->getDate());
-		$this->assertSame('Test name', $entity->getName());
-		$this->assertSame('Test description', $entity->getDescription());
+		$this->assertSame('user-id', $entity->userId);
+		$this->assertSame('01.01', $entity->date);
+		$this->assertSame('Test name', $entity->name);
+		$this->assertSame('Test description', $entity->description);
+		$this->assertSame('GB', $entity->country->isoCode);
 	}
 
 	/**
@@ -174,7 +187,8 @@ class MissingControllerV2Test extends WebTestCase {
 	 * @throws ServerExceptionInterface
 	 * @throws JsonException
 	 */
-	public function testGetNonEmptyFloatingMissingResponse(): void {
+	public function testGetNonEmptyFloatingMissingResponse(): void
+	{
 		/** @var FloatingHolidaySuggestion $suggestion */
 		$suggestion = $this->getFixture('floating-holiday-suggestion', FloatingHolidaySuggestion::class);
 
@@ -185,13 +199,13 @@ class MissingControllerV2Test extends WebTestCase {
 			->getContent();
 		$expected = json_encode([
 			[
-				'id' => $suggestion->getId(),
+				'id' => $suggestion->id,
 				'date' => '01.01',
 				'name' => 'Test name',
 				'description' => 'Test description',
-				'datetime' => $suggestion->getDatetime()
-					->format('Y-m-d H:i:s'),
+				'datetime' => $suggestion->datetime->format('Y-m-d H:i:s'),
 				'holiday_id' => null,
+				'country' => 'GB',
 				'report_state' => 'REPORTED',
 				'user_id' => 'user-id'
 			]
@@ -207,7 +221,8 @@ class MissingControllerV2Test extends WebTestCase {
 	 * @throws ServerExceptionInterface
 	 * @throws JsonException
 	 */
-	public function testPostFloatingErrorBannedUser(): void {
+	public function testPostFloatingErrorBannedUser(): void
+	{
 		/** @var Ban $ban */
 		$ban = $this->getFixture('ban', Ban::class);
 
@@ -215,7 +230,8 @@ class MissingControllerV2Test extends WebTestCase {
 			'user_id' => 'user-id-banned',
 			'date' => '01.01',
 			'name' => 'Test name',
-			'description' => 'Test description'
+			'description' => 'Test description',
+			'country' => 'GB'
 		]);
 
 		$this->assertResponseStatusCodeSame(403);

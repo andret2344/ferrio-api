@@ -23,7 +23,7 @@ class Ban implements JsonSerializable
 	private(set) string $reason;
 
 	#[ORM\Column(type: 'datetimetz_immutable')]
-	private DateTimeImmutable $datetime;
+	private(set) DateTimeImmutable $datetime;
 
 	public function __construct(string $userId, string $reason, DateTimeImmutable $datetime)
 	{

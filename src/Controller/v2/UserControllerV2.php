@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\v3;
+namespace App\Controller\v2;
 
 use App\Handler\ReportHandlerInterface;
 use App\Service\BanService;
@@ -11,10 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/v3/users/', name: 'v3_users_')]
-class UserControllerV3 extends AbstractController
+#[Route('/v2/users', name: 'v2_users_')]
+class UserControllerV2 extends AbstractController
 {
-	/** @var array<string, array<string, ReportHandlerInterface>> */
+	/** @var ReportHandlerInterface */
 	private array $handlers;
 
 	public function __construct(
@@ -37,7 +37,7 @@ class UserControllerV3 extends AbstractController
 		];
 	}
 
-	#[Route('{userId<^\S+$>}/reports', name: 'reports', methods: ['GET', 'POST'])]
+	#[Route('/{userId<^\S+$>}/reports', name: 'reports', methods: ['GET', 'POST'])]
 	public function handle(string $userId, Request $request): JsonResponse
 	{
 		$banInfo = $this->banService->getBanInfo($userId);

@@ -31,23 +31,6 @@ class Language implements JsonSerializable
 		$this->holidays = new ArrayCollection();
 	}
 
-	public function addHoliday(FixedHoliday $holiday): self
-	{
-		if (!$this->holidays->contains($holiday)) {
-			$this->holidays[] = $holiday;
-			$holiday->setLanguage($this);
-		}
-		return $this;
-	}
-
-	public function removeHoliday(FixedHoliday $holiday): self
-	{
-		if ($this->holidays->removeElement($holiday) && $holiday->getLanguage() === $this) {
-			$holiday->setLanguage(null);
-		}
-		return $this;
-	}
-
 	#[Pure]
 	#[Override]
 	#[ArrayShape([

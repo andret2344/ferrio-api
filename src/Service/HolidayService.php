@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 readonly class HolidayService
 {
-	public function __construct(private FixedHolidayRepository $holidayRepository,
+	public function __construct(private FixedHolidayRepository $fixedHolidayRepository,
 								private EntityManagerInterface $entityManager)
 	{
 	}
@@ -24,7 +24,7 @@ readonly class HolidayService
 	public function getHolidays(string $language): array
 	{
 		/** @var FixedHoliday[] $holidays */
-		$holidays = $this->holidayRepository->findAllByLanguage($language);
+		$holidays = $this->fixedHolidayRepository->findAllByLanguage($language);
 		$days = [];
 		$day = 1;
 		$month = 1;
@@ -65,7 +65,7 @@ readonly class HolidayService
 			->findBy(['language' => $language]);
 		$data = [];
 		foreach ($holidays as $holiday) {
-			$metadata = $holiday->getMetadata();
+			$metadata = $holiday->metadata;
 			$script = $metadata->script;
 			$args = implode(', ', json_decode($metadata->args));
 			$script = new Script($script->id, $script->content . "\n\ncalculate($args);");
@@ -83,7 +83,8 @@ readonly class HolidayService
 	public function getHolidayDay(string $language, int $day, int $month): ?HolidayDay
 	{
 		$id = sprintf('%02d', $month) . sprintf('%02d', $day);
-		$holidays = $this->holidayRepository->findAt($language, $day, $month);
+		$holidays = $this->fixedHolidayRepository->findAt($language, $day, $month);
+		var_dump($holidays);
 		return new HolidayDay($id, $day, $month, $holidays);
 	}
 }

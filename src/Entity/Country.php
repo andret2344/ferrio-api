@@ -16,10 +16,10 @@ class Country extends AbstractController implements JsonSerializable
 {
 	#[ORM\Id]
 	#[ORM\Column(type: 'string', length: 2, unique: true)]
-	public string $isoCode;
+	private(set) string $isoCode;
 
 	#[ORM\Column(type: 'string', length: 255, unique: true)]
-	public string $englishName;
+	private(set) string $englishName;
 
 	#[ORM\OneToMany(targetEntity: FixedHolidayMetadata::class, mappedBy: 'country', orphanRemoval: true)]
 	private(set) Collection $fixedHolidays;

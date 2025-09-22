@@ -2,8 +2,8 @@
 
 namespace App\Handler;
 
+use App\Entity\Country;
 use App\Entity\FixedHolidaySuggestion;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 
@@ -27,8 +27,17 @@ readonly class FixedHolidaySuggestionHandler implements ReportHandlerInterface
 		$day = $payload['day'] ?? null;
 		$month = $payload['month'] ?? null;
 		$description = $payload['description'] ?? null;
-		$report = new FixedHolidaySuggestion($userId, $name, $description, $day, $month, new DateTimeImmutable());
+		$report = new FixedHolidaySuggestion($userId, $name, $description, $day, $month, $this->getCountry($payload['country']));
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();
+	}
+
+	public function getCountry(?string $country): ?Country
+	{
+		if ($country === null) {
+			return null;
+		}
+		$repo = $this->entityManager->getRepository(Country::class);
+		return $repo->findOneBy(['isoCode' => $country]);
 	}
 }

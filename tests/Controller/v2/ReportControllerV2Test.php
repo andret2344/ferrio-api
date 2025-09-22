@@ -10,6 +10,7 @@ use App\Entity\FloatingHolidayMetadata;
 use App\Entity\Language;
 use App\Tests\Fixture\BanFixture;
 use App\Tests\Fixture\FixedHolidayErrorFixture;
+use App\Tests\Fixture\FixedHolidayMetadataFixture;
 use App\Tests\Fixture\FloatingHolidayErrorFixture;
 use App\Tests\Trait\TestUtilTrait;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
@@ -24,7 +25,8 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class ReportControllerV2Test extends WebTestCase {
+class ReportControllerV2Test extends WebTestCase
+{
 	use TestUtilTrait;
 
 	private EntityManagerInterface $em;
@@ -32,7 +34,8 @@ class ReportControllerV2Test extends WebTestCase {
 	private AbstractExecutor $fixtures;
 
 	#[Override]
-	protected function setUp(): void {
+	protected function setUp(): void
+	{
 		parent::setUp();
 
 		$this->client = static::createClient();
@@ -52,23 +55,24 @@ class ReportControllerV2Test extends WebTestCase {
 	}
 
 	#[Override]
-	protected function tearDown(): void {
+	protected function tearDown(): void
+	{
 		parent::tearDown();
 		unset($this->databaseTool);
 	}
 
 	/**
-	 * @throws TransportExceptionInterface
 	 * @throws ClientExceptionInterface
 	 * @throws RedirectionExceptionInterface
 	 * @throws ServerExceptionInterface
 	 * @throws JsonException
 	 */
-	public function testPostFixedReport(): void {
+	public function testPostFixedReport(): void
+	{
 		/** @var Language $language */
 		$language = $this->getFixture('language-en', Language::class);
 		/** @var FixedHolidayMetadata $metadata */
-		$metadata = $this->getFixture('fixed-holiday-metadata', FixedHolidayMetadata::class);
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
 
 		$this->request('POST', '/v2/report/fixed', [], [
 			'user_id' => 'user-id',
@@ -94,11 +98,12 @@ class ReportControllerV2Test extends WebTestCase {
 	 * @throws ServerExceptionInterface
 	 * @throws JsonException
 	 */
-	public function testGetNonEmptyFixedReportsResponse(): void {
+	public function testGetNonEmptyFixedReportsResponse(): void
+	{
 		/** @var Language $language */
 		$language = $this->getFixture('language-en', Language::class);
 		/** @var FixedHolidayMetadata $metadata */
-		$metadata = $this->getFixture('fixed-holiday-metadata', FixedHolidayMetadata::class);
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
 		/** @var FixedHolidayError $error */
 		$error = $this->getFixture('fixed-holiday-error', FixedHolidayError::class);
 
@@ -130,11 +135,12 @@ class ReportControllerV2Test extends WebTestCase {
 	 * @throws ServerExceptionInterface
 	 * @throws JsonException
 	 */
-	public function testPostFixedErrorBannedUser(): void {
+	public function testPostFixedErrorBannedUser(): void
+	{
 		/** @var Ban $ban */
 		$ban = $this->getFixture('ban', Ban::class);
 		/** @var FixedHolidayMetadata $metadata */
-		$metadata = $this->getFixture('fixed-holiday-metadata', FixedHolidayMetadata::class);
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
 
 		$this->request('POST', '/v2/report/fixed', [], [
 			'user_id' => 'user-id-banned',
@@ -155,7 +161,8 @@ class ReportControllerV2Test extends WebTestCase {
 	/**
 	 * @throws JsonException
 	 */
-	public function testPostFloatingReport(): void {
+	public function testPostFloatingReport(): void
+	{
 		/** @var Language $language */
 		$language = $this->getFixture('language-en', Language::class);
 		/** @var FloatingHolidayMetadata $metadata */
@@ -185,7 +192,8 @@ class ReportControllerV2Test extends WebTestCase {
 	 * @throws ServerExceptionInterface
 	 * @throws JsonException
 	 */
-	public function testGetNonEmptyFloatingReportsResponse(): void {
+	public function testGetNonEmptyFloatingReportsResponse(): void
+	{
 		/** @var Language $language */
 		$language = $this->getFixture('language-en', Language::class);
 		/** @var FloatingHolidayMetadata $metadata */
@@ -221,7 +229,8 @@ class ReportControllerV2Test extends WebTestCase {
 	 * @throws ServerExceptionInterface
 	 * @throws JsonException
 	 */
-	public function testPostFloatingErrorBannedUser(): void {
+	public function testPostFloatingErrorBannedUser(): void
+	{
 		/** @var Ban $ban */
 		$ban = $this->getFixture('ban', Ban::class);
 		/** @var FloatingHolidayMetadata $metadata */

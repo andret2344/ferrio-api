@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/v1/language', name: 'v1_language_')]
@@ -30,9 +29,7 @@ class LanguageControllerV1 extends AbstractController
 		 */
 		$languages = $this->entityManager->getRepository(Language::class)
 			->findAll();
-		$response = new JsonResponse($languages);
-		$response->headers->set("Content-Length", strlen($response->getContent()));
-		return $response;
+		return new JsonResponse($languages);
 	}
 
 	#[Route('/{code}', name: 'get_one', methods: ['GET'])]
@@ -45,10 +42,8 @@ class LanguageControllerV1 extends AbstractController
 		$language = $this->entityManager->getRepository(Language::class)
 			->findOneBy(['code' => $code]);
 		if ($language === null) {
-			throw new NotFoundHttpException();
+			throw $this->createNotFoundException();
 		}
-		$response = new JsonResponse($language);
-		$response->headers->set("Content-Length", strlen($response->getContent()));
-		return $response;
+		return new JsonResponse($language);
 	}
 }
