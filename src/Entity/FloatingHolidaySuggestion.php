@@ -77,7 +77,7 @@ class FloatingHolidaySuggestion implements JsonSerializable
 			'description' => $this->description,
 			'date' => $this->date,
 			'datetime' => $this->datetime->format('Y-m-d H:i:s'),
-			'country' => $this->country->isoCode,
+			'country' => $this->country?->isoCode,
 			'report_state' => $this->reportState,
 			'holiday_id' => $this->holiday?->id
 		];

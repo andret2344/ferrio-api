@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\FixedHoliday;
 use App\Entity\FloatingHoliday;
 use App\Entity\HolidayDay;
 use App\Entity\Script;
@@ -23,7 +22,6 @@ readonly class HolidayService
 	 */
 	public function getHolidays(string $language): array
 	{
-		/** @var FixedHoliday[] $holidays */
 		$holidays = $this->fixedHolidayRepository->findAllByLanguage($language);
 		$days = [];
 		$day = 1;
@@ -42,8 +40,7 @@ readonly class HolidayService
 				'name' => $holiday['name'],
 				'usual' => $holiday['usual'],
 				'description' => '', //$holiday['description'],
-				'country_name' => $holiday['countryName'],
-				'country_code' => $holiday['countryCode'],
+				'country' => $holiday['countryCode'],
 				'url' => $holiday['url'],
 				'mature_content' => $holiday['matureContent'],
 			];
@@ -72,8 +69,7 @@ readonly class HolidayService
 			$country = $metadata->country;
 			$data[] = [
 				...$holiday->jsonSerialize(),
-				'country_code' => $country->isoCode,
-				'country_name' => $country->englishName,
+				'country' => $country?->isoCode,
 				'script' => $script->content
 			];
 		}
