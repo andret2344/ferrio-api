@@ -80,7 +80,6 @@ readonly class HolidayService
 	{
 		$id = sprintf('%02d', $month) . sprintf('%02d', $day);
 		$holidays = $this->fixedHolidayRepository->findAt($language, $day, $month);
-		var_dump($holidays);
 		return new HolidayDay($id, $day, $month, $holidays);
 	}
 }

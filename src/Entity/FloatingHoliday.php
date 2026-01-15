@@ -52,7 +52,7 @@ class FloatingHoliday implements JsonSerializable
 	{
 		return [
 			'id' => $this->metadata->id,
-			'usual' => (bool)$this->metadata,
+			'usual' => $this->metadata->usual,
 			'name' => $this->name,
 			'description' => $this->description,
 			'url' => $this->url,
