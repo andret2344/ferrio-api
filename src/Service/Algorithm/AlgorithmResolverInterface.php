@@ -11,8 +11,8 @@ interface AlgorithmResolverInterface
 	/**
 	 * @param array<string, mixed> $args
 	 *
-	 * @return array{day: int, month: int}
+	 * @return array{day: int, month: int}|null
 	 */
 	#[ArrayShape(['day' => "int", 'month' => "int"])]
-	public function calculate(array $args, int $year): array;
+	public function calculate(array $args, int $year): ?array;
 }

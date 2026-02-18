@@ -9,7 +9,6 @@ use App\Service\Algorithm\LastNthDayOfWeekInMonthResolver;
 use App\Service\Algorithm\LeapYearDateResolver;
 use App\Service\Algorithm\NthDayOfWeekInMonthResolver;
 use App\Service\Algorithm\NthDayThenNextDayOfWeekResolver;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class AlgorithmResolverTest extends TestCase
@@ -230,14 +229,14 @@ class AlgorithmResolverTest extends TestCase
 		$this->assertSame(4, $result['month']);
 	}
 
-	public function testHardcodedDatesMissingYear(): void
+	public function testHardcodedDatesMissingYearReturnsNull(): void
 	{
 		$resolver = new HardcodedDatesResolver();
 
-		$this->expectException(InvalidArgumentException::class);
-
-		$resolver->calculate([
+		$result = $resolver->calculate([
 			'dates' => ['2025' => '14.4'],
 		], 2030);
+
+		$this->assertNull($result);
 	}
 }

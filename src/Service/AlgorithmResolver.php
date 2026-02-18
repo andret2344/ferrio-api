@@ -19,9 +19,9 @@ readonly class AlgorithmResolver
 	/**
 	 * @param array<string, mixed> $args
 	 *
-	 * @return array{day: int, month: int}
+	 * @return array{day: int, month: int}|null
 	 */
-	public function resolve(Algorithm $algorithm, array $args, int $year): array
+	public function resolve(Algorithm $algorithm, array $args, int $year): ?array
 	{
 		return $this->resolvers->get($algorithm->resolverClass())
 			->calculate($args, $year);

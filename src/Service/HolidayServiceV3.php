@@ -87,6 +87,10 @@ readonly class HolidayServiceV3
 			$args = json_decode($metadata->algorithmArgs, true);
 			$resolved = $this->algorithmResolver->resolve($metadata->algorithm, $args, $year);
 
+			if ($resolved === null) {
+				continue;
+			}
+
 			$result[] = [
 				'id' => 'floating-' . $metadata->id,
 				'day' => $resolved['day'],
