@@ -19,6 +19,7 @@
 		"symfony/flex": "^v2.10.0",
 		"symfony/form": "*",
 		"symfony/framework-bundle": "*",
+		"symfony/monolog-bundle": "^v4.0.1",
 		"symfony/property-access": "*",
 		"symfony/property-info": "*",
 		"symfony/runtime": "*",

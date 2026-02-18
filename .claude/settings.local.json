@@ -1,12 +1,13 @@
 {
-	"permissions": {
-		"allow": [
-			"WebSearch",
-			"Bash(composer require:*)",
-			"Bash(/c/Tools/php85-ts/composer.bat require:*)",
-			"Bash(php vendor/bin/phpunit:*)",
-			"Bash(php bin/console:*)",
-			"Bash(ls:*)"
-		]
-	}
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(composer require:*)",
+      "Bash(/c/Tools/php85-ts/composer.bat require:*)",
+      "Bash(php vendor/bin/phpunit:*)",
+      "Bash(php bin/console:*)",
+      "Bash(ls:*)",
+      "Bash(\"C:/Tools/php85-ts/composer.bat\" require symfony/monolog-bundle --no-interaction)"
+    ]
+  }
 }
