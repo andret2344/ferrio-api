@@ -20,16 +20,18 @@
 				</button>
 				<ul class="dropdown-menu">
 					{% for language in languages %}
-					<li>
-						<a
-								class="dropdown-item"
-								href="{{ path('manage_check_language', {'lang': language.code}) }}"
-						>{{ language.name }}</a>
-						{% endfor %}
+						<li>
+							<a
+									class="dropdown-item"
+									href="{{ path('manage_check_language', {'lang': language.code}) }}"
+							>{{ language.name }}</a>
+						</li>
+					{% endfor %}
 				</ul>
 			</div>
 			<hr/>
 			<form method='post'>
+				{{ form_widget(checkForm._token) }}
 				<label for='holidays' class='d-none'>Holidays</label>
 				<textarea
 						id='holidays'

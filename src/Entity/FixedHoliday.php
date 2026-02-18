@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\FixedHolidayRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
@@ -23,22 +22,13 @@ class FixedHoliday implements JsonSerializable
 	private(set) FixedHolidayMetadata $metadata;
 
 	#[ORM\Column(type: 'text')]
-	public string $name {
-		get => $this->name;
-		set => $this->name = $value;
-	}
-
-	#[ORM\Column(type: 'text')]
-	public ?string $description {
-		get => $this->description;
-		set => $this->description = $value;
-	}
+	public string $name;
 
 	#[ORM\Column(type: 'text', nullable: true)]
-	private(set) ?string $url {
-		get => $this->url;
-		set => $this->url = $value;
-	}
+	public ?string $description;
+
+	#[ORM\Column(type: 'text', nullable: true)]
+	private(set) ?string $url;
 
 	public function __construct(Language $language, FixedHolidayMetadata $metadata, string $name,
 								?string  $description = null, ?string $url = null)
@@ -50,7 +40,6 @@ class FixedHoliday implements JsonSerializable
 		$this->url = $url;
 	}
 
-	#[Pure]
 	#[Override]
 	#[ArrayShape([
 		'id' => 'int',
@@ -63,7 +52,7 @@ class FixedHoliday implements JsonSerializable
 	{
 		return [
 			'id' => $this->metadata->id,
-			'usual' => (bool)$this->metadata,
+			'usual' => $this->metadata->usual,
 			'name' => $this->name,
 			'description' => $this->description,
 			'url' => $this->url

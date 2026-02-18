@@ -82,7 +82,7 @@ class ReportControllerV2Test extends WebTestCase
 			'description' => 'Test description',
 		]);
 
-		$this->assertResponseStatusCodeSame(204);
+		$this->assertResponseStatusCodeSame(201);
 
 		$repo = $this->em->getRepository(FixedHolidayError::class);
 		$entity = $repo->findOneBy(['userId' => 'user-id']);
@@ -176,7 +176,7 @@ class ReportControllerV2Test extends WebTestCase
 			'description' => 'Test description',
 		]);
 
-		$this->assertResponseStatusCodeSame(204);
+		$this->assertResponseStatusCodeSame(201);
 
 		$repo = $this->em->getRepository(FloatingHolidayError::class);
 		$entity = $repo->findOneBy(['userId' => 'user-id']);
@@ -250,5 +250,49 @@ class ReportControllerV2Test extends WebTestCase
 
 		$actual = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
 		$this->assertSame(['reason' => $ban->reason], $actual);
+	}
+
+	public function testPostFixedReportMissingRequiredFields(): void
+	{
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+		]);
+
+		$this->assertResponseStatusCodeSame(422);
+	}
+
+	public function testPostFixedReportInvalidJson(): void
+	{
+		$this->client->request('POST', '/v2/report/fixed', [], [], [
+			'CONTENT_TYPE' => 'application/json',
+			'HTTP_ACCEPT' => 'application/json',
+		], 'not-json');
+
+		$this->assertResponseStatusCodeSame(400);
+	}
+
+	public function testPostFloatingReportMissingRequiredFields(): void
+	{
+		$this->request('POST', '/v2/report/floating', [], [
+			'user_id' => 'user-id',
+		]);
+
+		$this->assertResponseStatusCodeSame(422);
+	}
+
+	public function testPostFloatingReportInvalidReportType(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/floating', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'INVALID_TYPE',
+			'description' => 'Test description',
+		]);
+
+		$this->assertResponseStatusCodeSame(422);
 	}
 }

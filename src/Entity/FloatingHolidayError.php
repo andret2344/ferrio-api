@@ -25,10 +25,7 @@ class FloatingHolidayError implements JsonSerializable
 
 	#[ORM\ManyToOne(targetEntity: FloatingHolidayMetadata::class, inversedBy: 'reports')]
 	#[ORM\JoinColumn(name: 'metadata_id', referencedColumnName: 'id')]
-	public ?FloatingHolidayMetadata $metadata {
-		get => $this->metadata;
-		set => $this->metadata = $value;
-	}
+	public ?FloatingHolidayMetadata $metadata;
 
 	#[ORM\Column(type: 'string', enumType: ReportType::class)]
 	private(set) ReportType $reportType;

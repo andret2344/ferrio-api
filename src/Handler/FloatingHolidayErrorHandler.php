@@ -2,6 +2,7 @@
 
 namespace App\Handler;
 
+use App\DTO\FloatingReportDTO;
 use App\Entity\FloatingHolidayError;
 use App\Entity\FloatingHolidayMetadata;
 use App\Entity\Language;
@@ -23,16 +24,16 @@ readonly class FloatingHolidayErrorHandler implements ReportHandlerInterface
 	}
 
 	#[Override]
-	public function create(string $userId, array $payload): void
+	public function create(string $userId, object $payload): void
 	{
+		assert($payload instanceof FloatingReportDTO);
 		$language = $this->entityManager->getRepository(Language::class)
-			->findOneBy(['code' => $payload['language']]);
+			->findOneBy(['code' => $payload->language]);
 		/** @var FloatingHolidayMetadata $metadata */
 		$metadata = $this->entityManager->getRepository(FloatingHolidayMetadata::class)
-			->findOneBy(['id' => $payload['metadata']]);
-		$reportType = ReportType::from($payload['report_type']);
-		$description = $payload['description'] ?? null;
-		$report = new FloatingHolidayError($userId, $language, $metadata, $reportType, $description);
+			->findOneBy(['id' => $payload->metadata]);
+		$reportType = ReportType::from($payload->reportType);
+		$report = new FloatingHolidayError($userId, $language, $metadata, $reportType, $payload->description);
 		$metadata->reports->add($report);
 		$this->entityManager->persist($metadata);
 		$this->entityManager->flush();

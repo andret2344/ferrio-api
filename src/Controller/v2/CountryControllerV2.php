@@ -23,7 +23,7 @@ class CountryControllerV2 extends AbstractController
 		$format = (string)$request->query->get('format', '');
 
 		$countries = $this->getCountries($format);
-		if (!$countries) {
+		if ($countries === null) {
 			return new JsonResponse(['error' => 'Invalid format, use `code`, `name` or `all`, or skip format'], Response::HTTP_BAD_REQUEST);
 		}
 		return new JsonResponse($countries);
@@ -34,7 +34,7 @@ class CountryControllerV2 extends AbstractController
 	 *
 	 * @return Country[]|null
 	 */
-	public function getCountries(string $format): array|null
+	private function getCountries(string $format): array|null
 	{
 		$countries = $this->entityManager->getRepository(Country::class)
 			->findAll();

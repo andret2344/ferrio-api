@@ -2,6 +2,10 @@
 
 namespace App\Controller\v2;
 
+use App\DTO\FixedReportDTO;
+use App\DTO\FixedSuggestionDTO;
+use App\DTO\FloatingReportDTO;
+use App\DTO\FloatingSuggestionDTO;
 use App\Handler\ReportHandlerInterface;
 use App\Service\BanService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/v2/users', name: 'v2_users_')]
 class UserControllerV2 extends AbstractController
@@ -17,12 +23,17 @@ class UserControllerV2 extends AbstractController
 	/** @var ReportHandlerInterface */
 	private array $handlers;
 
+	/** @var array<string, array<string, class-string>> */
+	private array $dtoMap;
+
 	public function __construct(
-		private readonly BanService $banService,
-		ReportHandlerInterface      $floatingSuggestionHandler,
-		ReportHandlerInterface      $floatingErrorHandler,
-		ReportHandlerInterface      $fixedSuggestionHandler,
-		ReportHandlerInterface      $fixedErrorHandler,
+		private readonly BanService          $banService,
+		private readonly SerializerInterface $serializer,
+		private readonly ValidatorInterface  $validator,
+		ReportHandlerInterface               $floatingSuggestionHandler,
+		ReportHandlerInterface               $floatingErrorHandler,
+		ReportHandlerInterface               $fixedSuggestionHandler,
+		ReportHandlerInterface               $fixedErrorHandler,
 	)
 	{
 		$this->handlers = [
@@ -33,6 +44,17 @@ class UserControllerV2 extends AbstractController
 			'error' => [
 				'floating' => $floatingErrorHandler,
 				'fixed' => $fixedErrorHandler,
+			],
+		];
+
+		$this->dtoMap = [
+			'suggestion' => [
+				'floating' => FloatingSuggestionDTO::class,
+				'fixed' => FixedSuggestionDTO::class,
+			],
+			'error' => [
+				'floating' => FloatingReportDTO::class,
+				'fixed' => FixedReportDTO::class,
 			],
 		];
 	}
@@ -57,8 +79,26 @@ class UserControllerV2 extends AbstractController
 			return $this->json($handler->list($userId));
 		}
 
-		$payload = (array)json_decode($request->getContent(), true);
-		$handler->create($userId, $payload);
+		$dtoClass = $this->dtoMap[$reportType][$holidayType];
+		$data = json_decode($request->getContent(), true);
+		if (!is_array($data)) {
+			return new JsonResponse(['error' => 'Invalid JSON'], Response::HTTP_BAD_REQUEST);
+		}
+		$data['user_id'] = $userId;
+		$dto = $this->serializer->denormalize($data, $dtoClass);
+		$violations = $this->validator->validate($dto);
+		if ($violations->count() > 0) {
+			$errors = [];
+			foreach ($violations as $violation) {
+				$errors[] = [
+					'property' => $violation->getPropertyPath(),
+					'message' => $violation->getMessage(),
+				];
+			}
+			return new JsonResponse(['errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY);
+		}
+
+		$handler->create($userId, $dto);
 		return $this->json(null, Response::HTTP_CREATED);
 	}
 }

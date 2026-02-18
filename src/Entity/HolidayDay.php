@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
@@ -22,7 +21,6 @@ class HolidayDay implements JsonSerializable
 		$this->holidays = $holidays;
 	}
 
-	#[Pure]
 	#[Override]
 	#[ArrayShape([
 		'id' => 'string',

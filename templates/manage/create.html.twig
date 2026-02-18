@@ -37,6 +37,7 @@
 				<form id='{{ form_id }}' method='post'>
 					<input type='hidden' name='action' value='update' form='{{ form_id }}'/>
 					<input type='hidden' name='metadata_id' value='{{ element.id }}' form='{{ form_id }}'/>
+					{{ form_widget(updateForms[element.id]._token) }}
 				</form>
 				<tr class='tr-holiday'>
 					<th scope="row">{{ element.id }}</th>
@@ -87,6 +88,7 @@
 		</table>
 		<form id='create' method='post'>
 			<input type='hidden' name='action' value='create' form='create'/>
+			{{ form_widget(createForm._token) }}
 		</form>
 		<table class='table table-dark table-bordered'>
 			<caption>Adding</caption>
@@ -143,7 +145,7 @@
 					/>
 				</td>
 				<td>
-					<label for='day-create' class='d-none'>Month</label>
+					<label for='day-create' class='d-none'>Day</label>
 					<input
 							required
 							type='number'

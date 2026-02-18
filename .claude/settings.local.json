@@ -1,0 +1,12 @@
+{
+	"permissions": {
+		"allow": [
+			"WebSearch",
+			"Bash(composer require:*)",
+			"Bash(/c/Tools/php85-ts/composer.bat require:*)",
+			"Bash(php vendor/bin/phpunit:*)",
+			"Bash(php bin/console:*)",
+			"Bash(ls:*)"
+		]
+	}
+}

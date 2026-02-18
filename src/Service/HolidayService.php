@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\FloatingHoliday;
 use App\Entity\HolidayDay;
-use App\Entity\Script;
 use App\Repository\FixedHolidayRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -23,9 +22,12 @@ readonly class HolidayService
 	public function getHolidays(string $language): array
 	{
 		$holidays = $this->fixedHolidayRepository->findAllByLanguage($language);
+		if (empty($holidays)) {
+			return [];
+		}
 		$days = [];
-		$day = 1;
-		$month = 1;
+		$day = $holidays[0]['day'];
+		$month = $holidays[0]['month'];
 		$array = [];
 		foreach ($holidays as $holiday) {
 			if ($day != $holiday['day'] || $month != $holiday['month']) {
@@ -39,6 +41,7 @@ readonly class HolidayService
 				'id' => $holiday['id'],
 				'name' => $holiday['name'],
 				'usual' => $holiday['usual'],
+				// frontend doesn't work with description, commented-out on purpose
 				'description' => '', //$holiday['description'],
 				'country' => $holiday['countryCode'],
 				'url' => $holiday['url'],
@@ -63,14 +66,13 @@ readonly class HolidayService
 		$data = [];
 		foreach ($holidays as $holiday) {
 			$metadata = $holiday->metadata;
-			$script = $metadata->script;
 			$args = implode(', ', json_decode($metadata->args));
-			$script = new Script($script->id, $script->content . "\n\ncalculate($args);");
+			$scriptContent = $metadata->script->content . "\n\ncalculate($args);";
 			$country = $metadata->country;
 			$data[] = [
 				...$holiday->jsonSerialize(),
 				'country' => $country?->isoCode,
-				'script' => $script->content
+				'script' => $scriptContent
 			];
 		}
 		return $data;

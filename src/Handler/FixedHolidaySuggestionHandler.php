@@ -2,13 +2,15 @@
 
 namespace App\Handler;
 
-use App\Entity\Country;
+use App\DTO\FixedSuggestionDTO;
 use App\Entity\FixedHolidaySuggestion;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 
 readonly class FixedHolidaySuggestionHandler implements ReportHandlerInterface
 {
+	use CountryLookupTrait;
+
 	public function __construct(private EntityManagerInterface $entityManager)
 	{
 	}
@@ -21,23 +23,12 @@ readonly class FixedHolidaySuggestionHandler implements ReportHandlerInterface
 	}
 
 	#[Override]
-	public function create(string $userId, array $payload): void
+	public function create(string $userId, object $payload): void
 	{
-		$name = $payload['name'] ?? null;
-		$day = $payload['day'] ?? null;
-		$month = $payload['month'] ?? null;
-		$description = $payload['description'] ?? null;
-		$report = new FixedHolidaySuggestion($userId, $name, $description, $day, $month, $this->getCountry($payload['country']));
+		assert($payload instanceof FixedSuggestionDTO);
+		$report = new FixedHolidaySuggestion($userId, $payload->name, $payload->description, $payload->day, $payload->month, $this->getCountry($payload->country));
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();
 	}
 
-	public function getCountry(?string $country): ?Country
-	{
-		if ($country === null) {
-			return null;
-		}
-		$repo = $this->entityManager->getRepository(Country::class);
-		return $repo->findOneBy(['isoCode' => $country]);
-	}
 }

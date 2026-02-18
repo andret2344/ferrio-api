@@ -2,13 +2,15 @@
 
 namespace App\Handler;
 
-use App\Entity\Country;
+use App\DTO\FloatingSuggestionDTO;
 use App\Entity\FloatingHolidaySuggestion;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 
 readonly class FloatingHolidaySuggestionHandler implements ReportHandlerInterface
 {
+	use CountryLookupTrait;
+
 	public function __construct(private EntityManagerInterface $entityManager)
 	{
 	}
@@ -21,22 +23,12 @@ readonly class FloatingHolidaySuggestionHandler implements ReportHandlerInterfac
 	}
 
 	#[Override]
-	public function create(string $userId, array $payload): void
+	public function create(string $userId, object $payload): void
 	{
-		$name = $payload['name'] ?? null;
-		$date = $payload['date'] ?? null;
-		$description = $payload['description'] ?? null;
-		$report = new FloatingHolidaySuggestion($userId, $name, $description, $date, $this->getCountry($payload['country']));
+		assert($payload instanceof FloatingSuggestionDTO);
+		$report = new FloatingHolidaySuggestion($userId, $payload->name, $payload->description, $payload->date, $this->getCountry($payload->country));
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();
 	}
 
-	public function getCountry(?string $country): ?Country
-	{
-		if ($country === null) {
-			return null;
-		}
-		$repo = $this->entityManager->getRepository(Country::class);
-		return $repo->findOneBy(['isoCode' => $country]);
-	}
 }

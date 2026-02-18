@@ -2,13 +2,15 @@
 
 namespace App\Controller\v2;
 
+use App\DTO\FixedSuggestionDTO;
+use App\DTO\FloatingSuggestionDTO;
 use App\Handler\FixedHolidaySuggestionHandler;
 use App\Handler\FloatingHolidaySuggestionHandler;
 use App\Service\BanService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/v2/missing', name: 'v2_missing_')]
@@ -34,28 +36,24 @@ class MissingControllerV2 extends AbstractController
 	}
 
 	#[Route('/fixed', name: 'post_fixed', methods: ['POST'])]
-	public function postFixed(Request $request): Response
+	public function postFixed(#[MapRequestPayload] FixedSuggestionDTO $dto): Response
 	{
-		$data = json_decode($request->getContent(), true);
-		$userId = $data['user_id'] ?? null;
-		$banInfo = $this->banService->getBanInfo($userId);
+		$banInfo = $this->banService->getBanInfo($dto->userId);
 		if ($banInfo) {
 			return new JsonResponse(['reason' => $banInfo->reason], Response::HTTP_FORBIDDEN);
 		}
-		$this->fixedHolidaySuggestionHandler->create($userId, $data);
-		return new Response(null, 204);
+		$this->fixedHolidaySuggestionHandler->create($dto->userId, $dto);
+		return new Response(null, Response::HTTP_CREATED);
 	}
 
 	#[Route('/floating', name: 'post_floating', methods: ['POST'])]
-	public function postFloating(Request $request): Response
+	public function postFloating(#[MapRequestPayload] FloatingSuggestionDTO $dto): Response
 	{
-		$data = json_decode($request->getContent(), true);
-		$userId = $data['user_id'] ?? null;
-		$banInfo = $this->banService->getBanInfo($userId);
+		$banInfo = $this->banService->getBanInfo($dto->userId);
 		if ($banInfo) {
 			return new JsonResponse(['reason' => $banInfo->reason], Response::HTTP_FORBIDDEN);
 		}
-		$this->floatingHolidaySuggestionHandler->create($userId, $data);
-		return new Response(null, 204);
+		$this->floatingHolidaySuggestionHandler->create($dto->userId, $dto);
+		return new Response(null, Response::HTTP_CREATED);
 	}
 }

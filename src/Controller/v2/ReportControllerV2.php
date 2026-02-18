@@ -2,13 +2,15 @@
 
 namespace App\Controller\v2;
 
+use App\DTO\FixedReportDTO;
+use App\DTO\FloatingReportDTO;
 use App\Handler\FixedHolidayErrorHandler;
 use App\Handler\FloatingHolidayErrorHandler;
 use App\Service\BanService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/v2/report', name: 'v2_report_')]
@@ -34,28 +36,24 @@ class ReportControllerV2 extends AbstractController
 	}
 
 	#[Route('/fixed', name: 'post_fixed', methods: ['POST'])]
-	public function postFixed(Request $request): Response
+	public function postFixed(#[MapRequestPayload] FixedReportDTO $dto): Response
 	{
-		$data = json_decode($request->getContent(), true);
-		$userId = $data['user_id'] ?? null;
-		$banInfo = $this->banService->getBanInfo($userId);
+		$banInfo = $this->banService->getBanInfo($dto->userId);
 		if ($banInfo) {
 			return new JsonResponse(['reason' => $banInfo->reason], Response::HTTP_FORBIDDEN);
 		}
-		$this->fixedHolidayErrorHandler->create($userId, $data);
-		return new Response(null, 204);
+		$this->fixedHolidayErrorHandler->create($dto->userId, $dto);
+		return new Response(null, Response::HTTP_CREATED);
 	}
 
 	#[Route('/floating', name: 'post_floating', methods: ['POST'])]
-	public function postFloating(Request $request): Response
+	public function postFloating(#[MapRequestPayload] FloatingReportDTO $dto): Response
 	{
-		$data = json_decode($request->getContent(), true);
-		$userId = $data['user_id'] ?? null;
-		$banInfo = $this->banService->getBanInfo($userId);
+		$banInfo = $this->banService->getBanInfo($dto->userId);
 		if ($banInfo) {
 			return new JsonResponse(['reason' => $banInfo->reason], Response::HTTP_FORBIDDEN);
 		}
-		$this->floatingHolidayErrorHandler->create($userId, $data);
-		return new Response(null, 204);
+		$this->floatingHolidayErrorHandler->create($dto->userId, $dto);
+		return new Response(null, Response::HTTP_CREATED);
 	}
 }

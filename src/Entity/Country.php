@@ -6,13 +6,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[ORM\Entity]
-class Country extends AbstractController implements JsonSerializable
+class Country implements JsonSerializable
 {
 	#[ORM\Id]
 	#[ORM\Column(type: 'string', length: 2, unique: true)]
@@ -27,7 +25,6 @@ class Country extends AbstractController implements JsonSerializable
 	#[ORM\OneToMany(targetEntity: FloatingHolidayMetadata::class, mappedBy: 'country', orphanRemoval: true)]
 	private(set) Collection $floatingHolidays;
 
-	#[Pure]
 	public function __construct(string $isoCode, string $englishName)
 	{
 		$this->isoCode = $isoCode;
@@ -70,7 +67,6 @@ class Country extends AbstractController implements JsonSerializable
 		return $this;
 	}
 
-	#[Pure]
 	#[Override]
 	#[ArrayShape([
 		'isoCode' => 'string',

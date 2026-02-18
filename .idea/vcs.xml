@@ -5,7 +5,7 @@
       <list>
         <IssueNavigationLink>
           <option name="issueRegexp" value="#(\d+)" />
-          <option name="linkRegexp" value="https://gitlab.com/unusual-holidays-calendar/uhc-api/-/issues/$1" />
+          <option name="linkRegexp" value="https://github.com/andret2344/ferrio-api/issues/$1" />
         </IssueNavigationLink>
       </list>
     </option>

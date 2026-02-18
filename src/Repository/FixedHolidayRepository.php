@@ -32,8 +32,8 @@ class FixedHolidayRepository extends ServiceEntityRepository
 				'c.isoCode AS countryCode',
 				'm.matureContent AS matureContent'
 			])
-			->join(FixedHolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
-			->leftJoin(Country::class, 'c', 'WITH', 'c.isoCode = m.country')
+			->join(FixedHolidayMetadata::class, 'm', 'ON', 'h.metadata = m.id')
+			->leftJoin(Country::class, 'c', 'ON', 'c.isoCode = m.country')
 			->where('h.language = :language')
 			->andWhere('m.day = :day')
 			->andWhere('m.month = :month')
@@ -61,8 +61,8 @@ class FixedHolidayRepository extends ServiceEntityRepository
 				'c.isoCode AS countryCode',
 				'm.matureContent AS matureContent'
 			])
-			->join(FixedHolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
-			->leftJoin(Country::class, 'c', 'WITH', 'c.isoCode = m.country')
+			->join(FixedHolidayMetadata::class, 'm', 'ON', 'h.metadata = m.id')
+			->leftJoin(Country::class, 'c', 'ON', 'c.isoCode = m.country')
 			->where('h.language = :language')
 			->andWhere('m.matureContent IN (false, :matureContent)')
 			->setFirstResult($offset)
@@ -89,7 +89,7 @@ class FixedHolidayRepository extends ServiceEntityRepository
 		return array_diff($array, $existingNames);
 	}
 
-	public function findAllAggregatedById(string $languageFrom, string $languageTo, int $offset = 0, int $limit = 1_000_000)
+	public function findAllAggregatedById(string $languageFrom, string $languageTo, int $offset = 0, int $limit = 1_000_000): array
 	{
 		$rsm = new ResultSetMapping();
 		$rsm->addEntityResult(FixedHoliday::class, 'h');
