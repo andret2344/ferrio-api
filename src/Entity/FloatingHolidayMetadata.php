@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
+use App\Enum\Algorithm;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 use Override;
 
@@ -35,11 +35,17 @@ class FloatingHolidayMetadata implements JsonSerializable
 	#[ORM\Column(type: 'string')]
 	private(set) string $args;
 
+	#[ORM\Column(type: 'string', nullable: true)]
+	private(set) ?string $algorithmArgs;
+
 	#[ORM\OneToMany(targetEntity: FloatingHoliday::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
 	private(set) Collection $holidays;
 
 	#[ORM\OneToMany(targetEntity: FloatingHolidayError::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
 	private(set) Collection $reports;
+
+	#[ORM\Column(type: 'string', enumType: Algorithm::class)]
+	private(set) Algorithm $algorithm;
 
 	#[ORM\Column(type: 'boolean')]
 	private(set) bool $matureContent;
@@ -49,7 +55,9 @@ class FloatingHolidayMetadata implements JsonSerializable
 								?Category $category,
 								Script    $script,
 								string    $args,
-								bool      $matureContent)
+								bool      $matureContent,
+								Algorithm $algorithm,
+								?string   $algorithmArgs = null)
 	{
 		$this->usual = $usual;
 		$this->country = $country;
@@ -59,18 +67,11 @@ class FloatingHolidayMetadata implements JsonSerializable
 		$this->holidays = new ArrayCollection();
 		$this->reports = new ArrayCollection();
 		$this->matureContent = $matureContent;
+		$this->algorithm = $algorithm;
+		$this->algorithmArgs = $algorithmArgs;
 	}
 
 	#[Override]
-	#[ArrayShape([
-		'id' => 'int',
-		'usual' => 'bool',
-		'category' => 'string|null',
-		'country' => 'array|null',
-		'script' => '\App\Entity\Script|null',
-		'args' => 'string',
-		'mature_content' => 'bool'
-	])]
 	public function jsonSerialize(): array
 	{
 		return [
@@ -80,6 +81,8 @@ class FloatingHolidayMetadata implements JsonSerializable
 			'country' => $this->country?->jsonSerialize(),
 			'script' => $this->script,
 			'args' => $this->args,
+			'algorithm_args' => $this->algorithmArgs,
+			'algorithm' => $this->algorithm->value,
 			'mature_content' => $this->matureContent
 		];
 	}

@@ -7,7 +7,9 @@
       "Bash(php vendor/bin/phpunit:*)",
       "Bash(php bin/console:*)",
       "Bash(ls:*)",
-      "Bash(\"C:/Tools/php85-ts/composer.bat\" require symfony/monolog-bundle --no-interaction)"
+      "Bash(\"C:/Tools/php85-ts/composer.bat\" require symfony/monolog-bundle --no-interaction)",
+      "Bash(vendor/bin/phpunit:*)",
+      "Bash(php -r:*)"
     ]
   }
 }
