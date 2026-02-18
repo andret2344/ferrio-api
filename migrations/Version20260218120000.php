@@ -20,7 +20,6 @@ final class Version20260218120000 extends AbstractMigration
 	public function up(Schema $schema): void
 	{
 		$this->addSql('ALTER TABLE floating_holiday_metadata ADD algorithm VARCHAR(255) NOT NULL');
-		$this->addSql('ALTER TABLE floating_holiday_metadata ALTER algorithm DROP DEFAULT');
 		$this->addSql('ALTER TABLE floating_holiday_metadata ADD algorithm_args VARCHAR(255) DEFAULT NULL');
 	}
 
