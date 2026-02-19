@@ -219,10 +219,8 @@ class AlgorithmResolverTest extends TestCase
 		$resolver = new HardcodedDatesResolver();
 
 		$result = $resolver->calculate([
-			'dates' => [
-				'2025' => '14.4',
-				'2026' => '15.4',
-			],
+			'2025' => '14.4',
+			'2026' => '15.4',
 		], 2026);
 
 		$this->assertSame(15, $result['day']);
@@ -234,7 +232,7 @@ class AlgorithmResolverTest extends TestCase
 		$resolver = new HardcodedDatesResolver();
 
 		$result = $resolver->calculate([
-			'dates' => ['2025' => '14.4'],
+			'2025' => '14.4',
 		], 2030);
 
 		$this->assertNull($result);

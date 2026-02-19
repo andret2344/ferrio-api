@@ -54,7 +54,7 @@ API output.
 `FloatingHolidayMetadata` has two args columns:
 
 - `args` — JSON array for v1/v2 script-based calculation (e.g., `[2026, 4]`)
-- `algorithmArgs` — JSON object for v3 algorithm-based calculation (e.g., `{"dates": {"2026": "15.4"}}`)
+- `algorithmArgs` — JSON object for v3 algorithm-based calculation (e.g., `{"2026": "15.4"}`)
 
 ### API Versioning
 
@@ -83,15 +83,15 @@ Floating holiday dates in v3 are computed by polymorphic resolver classes in `sr
 `AlgorithmResolver` is a thin factory using Symfony's `#[AutowireLocator]` to inject all resolvers via a
 `ServiceLocator`.
 
-Available algorithms with v1/v2 `args` → v3 `algorithmArgs` mapping:
+Available algorithms with v1/v2 `args` → v3 `algorithmArgs` mapping (dayOfWeek uses ISO 1-7, Mon-Sun):
 
-- `nth_day_of_week_in_month` — `[month, dayOfWeek, nth]` → `{"nth", "dayOfWeek", "month"}`
-- `last_nth_day_of_week_in_month` — similar to above but finds last occurrence
-- `first_day_of_week_after_date` — hardcoded date in script → `{"dayOfWeek", "month", "afterDay"}`
-- `last_day_of_week_before_date` — hardcoded date in script → `{"dayOfWeek", "month", "beforeDay"}`
-- `nth_day_then_next_day_of_week` — `[month, dayOfWeek, nth, after]` → `{"nth", "dayOfWeek", "month", "afterDayOfWeek"}`
-- `leap_year_date` — for dates that only exist in leap years
-- `hardcoded_dates` — `{"2024": "12.9", "2025": "20.9", ...}` (year keys map directly to `day.month` strings)
+- `nth_day_of_week_in_month` — nth occurrence of a weekday in a month. v1/v2: `[month, dayOfWeek, nth]` → v3: `{"nth": 4, "dayOfWeek": 4, "month": 11}` (4th Thursday of November = Thanksgiving)
+- `last_nth_day_of_week_in_month` — nth-to-last occurrence of a weekday in a month. Same keys as above: `{"nth": 1, "dayOfWeek": 1, "month": 5}` (last Monday of May = Memorial Day)
+- `first_day_of_week_after_date` — first weekday on or after a date. v1/v2: hardcoded in script → v3: `{"dayOfWeek": 6, "month": 5, "day": 19}` (first Saturday on or after May 19). Optional `"inclusive": false` to exclude the start date.
+- `last_day_of_week_before_date` — last weekday on or before a date. v1/v2: hardcoded in script → v3: `{"dayOfWeek": 5, "month": 3, "day": 20}` (last Friday on or before March 20). Optional `"inclusive": false` to exclude the start date.
+- `nth_day_then_next_day_of_week` — finds nth weekday, then the next occurrence of another weekday after it. v1/v2: `[month, dayOfWeek, nth, after]` → v3: `{"nth": 1, "dayOfWeek": 1, "month": 7, "afterDayOfWeek": 2}` (Tuesday after the 1st Monday of July)
+- `leap_year_date` — returns different dates for leap/non-leap years. `{"leapDay": 29, "leapMonth": 2, "nonLeapDay": 1, "nonLeapMonth": 3}` (Feb 29 in leap years, Mar 1 otherwise)
+- `hardcoded_dates` — year-to-date lookup, for holidays with no algorithmic pattern. `{"2024": "12.9", "2025": "20.9", "2026": "19.9"}` (year keys map to `day.month` strings). Returns null for missing years.
 
 `algorithmArgs` is stored as a JSON column. Common pitfalls: JSON keys must always be quoted strings (e.g., `"2026"` not
 `2026`) and trailing commas are not allowed.

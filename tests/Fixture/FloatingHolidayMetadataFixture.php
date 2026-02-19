@@ -24,7 +24,7 @@ class FloatingHolidayMetadataFixture extends Fixture implements DependentFixture
 			json_encode([2026, 4]),
 			false,
 			Algorithm::HARDCODED_DATES,
-			json_encode(['dates' => ['2026' => '15.4', '2025' => '14.4']]),
+			json_encode(['2026' => '15.4', '2025' => '14.4']),
 		);
 		$manager->persist($metadata);
 		$this->addReference('floating-holiday-metadata', $metadata);
