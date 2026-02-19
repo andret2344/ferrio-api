@@ -11,14 +11,13 @@ readonly class HardcodedDatesResolver implements AlgorithmResolverInterface
 	#[ArrayShape(['day' => "int", 'month' => "int"])]
 	public function calculate(array $args, int $year): ?array
 	{
-		$dates = $args['dates'] ?? [];
 		$yearStr = (string)$year;
 
-		if (!isset($dates[$yearStr])) {
+		if (!isset($args[$yearStr])) {
 			return null;
 		}
 
-		$parts = explode('.', $dates[$yearStr]);
+		$parts = explode('.', $args[$yearStr]);
 
 		return [
 			'day' => (int)$parts[0],
