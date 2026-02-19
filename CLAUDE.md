@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Ferrio API is a Symfony 7.3 / PHP 8.5 application that serves holiday data (fixed and floating) across multiple languages and countries. It exposes a versioned JSON REST API (v1, v2) and includes a Twig-based admin UI (`/manage`) protected by HTTP Basic Auth.
+Ferrio API is a Symfony 7.3 / PHP 8.5 application that serves holiday data (fixed and floating) across multiple languages and countries. It exposes a versioned JSON REST API (v1, v2, v3) and includes a Twig-based admin UI (`/manage`) protected by HTTP Basic Auth.
 
 ## Commands
 
@@ -40,13 +40,35 @@ php bin/console cache:clear
 
 Two holiday types with parallel structures:
 - **Fixed holidays** — tied to a specific month/day (e.g., Christmas). Entities: `FixedHoliday`, `FixedHolidayMetadata`, `FixedHolidaySuggestion`, `FixedHolidayError`
-- **Floating holidays** — date varies per year, computed by a `Script` entity. Entities: `FloatingHoliday`, `FloatingHolidayMetadata`, `FloatingHolidaySuggestion`, `FloatingHolidayError`
+- **Floating holidays** — date varies per year. In v1/v2, computed by a `Script` entity using `args` (JSON array for JS scripts). In v3, computed by `AlgorithmResolver` using `algorithmArgs` (JSON object with named keys). Entities: `FloatingHoliday`, `FloatingHolidayMetadata`, `FloatingHolidaySuggestion`, `FloatingHolidayError`
 
 Holidays are keyed by a composite ID of `Language` + `Metadata`. Each holiday entity implements `JsonSerializable` for API output.
 
+`FloatingHolidayMetadata` has two args columns:
+- `args` — JSON array for v1/v2 script-based calculation (e.g., `[2026, 4]`)
+- `algorithmArgs` — JSON object for v3 algorithm-based calculation (e.g., `{"dates": {"2026": "15.4"}}`)
+
 ### API Versioning
 
-Controllers are organized in `src/Controller/v1/` and `src/Controller/v2/` with route prefixes `/v1/` and `/v2/`. Routes use PHP 8 attributes (`#[Route]`) with inline regex constraints (e.g., `{language<^\S{2}$>}`).
+Controllers are organized in `src/Controller/v1/`, `src/Controller/v2/`, and `src/Controller/v3/` with route prefixes `/v1/`, `/v2/`, and `/v3/`. v1/v2 routes use path parameters with inline regex constraints (e.g., `{language<^\S{2}$>}`). v3 uses query parameters exclusively.
+
+### v3 API
+
+Single endpoint: `GET /v3/holidays` with query parameters:
+- `lang` (required, case-insensitive) — language code
+- `year` (optional, defaults to current year)
+- `day` (optional) — filter by day of month
+- `month` (optional) — filter by month
+- `country` (optional, case-insensitive) — filter by country ISO code
+- `grouping` (optional, default `false`) — when `true`, groups holidays by day in v2-compatible `HolidayDay` format
+
+v3 merges fixed and floating holidays into a unified flat list sorted by date. Each item has a prefixed `id` (`fixed-*` or `floating-*`).
+
+### Algorithm Resolver (v3)
+
+Floating holiday dates in v3 are computed by polymorphic resolver classes in `src/Service/Algorithm/`, each implementing `AlgorithmResolverInterface`. The `Algorithm` enum maps each case to its resolver class via `resolverClass()`. `AlgorithmResolver` is a thin factory using Symfony's `#[AutowireLocator]` to inject all resolvers via a `ServiceLocator`.
+
+Available algorithms: `nth_day_of_week_in_month`, `last_nth_day_of_week_in_month`, `first_day_of_week_after_date`, `last_day_of_week_before_date`, `nth_day_then_next_day_of_week`, `leap_year_date`, `hardcoded_dates`.
 
 ### User Reports (Suggestions & Errors)
 

@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route('/v2/users', name: 'v2_users_')]
 class UserControllerV2 extends AbstractController
 {
-	/** @var ReportHandlerInterface */
+	/** @var ReportHandlerInterface[] */
 	private array $handlers;
 
 	/** @var array<string, array<string, class-string>> */
