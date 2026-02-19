@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller\v2;
+namespace App\Tests\Controller\v3;
 
 use App\Entity\Ban;
 use App\Entity\FixedHolidayError;
@@ -25,7 +25,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class UserControllerV2Test extends WebTestCase
+class UserControllerV3Test extends WebTestCase
 {
 	use TestUtilTrait;
 
@@ -76,14 +76,15 @@ class UserControllerV2Test extends WebTestCase
 
 		$this->request(
 			'POST',
-			'/v2/users/user-id/reports',
+			'/v3/users/reports',
 			['reportType' => 'error', 'holidayType' => 'fixed'],
 			[
 				'language' => $language->code,
 				'metadata' => $metadata->id,
 				'report_type' => 'OTHER',
 				'description' => 'Test description',
-			]
+			],
+			['Authorization' => 'Bearer test-token']
 		);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -113,8 +114,10 @@ class UserControllerV2Test extends WebTestCase
 
 		$this->request(
 			'GET',
-			'/v2/users/user-id/reports',
-			['reportType' => 'error', 'holidayType' => 'fixed']
+			'/v3/users/reports',
+			['reportType' => 'error', 'holidayType' => 'fixed'],
+			[],
+			['Authorization' => 'Bearer test-token']
 		);
 
 		$this->assertResponseIsSuccessful();
@@ -153,14 +156,15 @@ class UserControllerV2Test extends WebTestCase
 
 		$this->request(
 			'POST',
-			'/v2/users/user-id-banned/reports',
+			'/v3/users/reports',
 			['reportType' => 'error', 'holidayType' => 'fixed'],
 			[
 				'language' => 'en',
 				'metadata' => $metadata->id,
 				'report_type' => 'OTHER',
 				'description' => 'Test description',
-			]
+			],
+			['Authorization' => 'Bearer banned-token']
 		);
 
 		$this->assertResponseStatusCodeSame(403);
@@ -183,14 +187,15 @@ class UserControllerV2Test extends WebTestCase
 
 		$this->request(
 			'POST',
-			'/v2/users/user-id/reports',
+			'/v3/users/reports',
 			['reportType' => 'error', 'holidayType' => 'floating'],
 			[
 				'language' => $language->code,
 				'metadata' => $metadata->id,
 				'report_type' => 'OTHER',
 				'description' => 'Test description',
-			]
+			],
+			['Authorization' => 'Bearer test-token']
 		);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -220,8 +225,10 @@ class UserControllerV2Test extends WebTestCase
 
 		$this->request(
 			'GET',
-			'/v2/users/user-id/reports',
-			['reportType' => 'error', 'holidayType' => 'floating']
+			'/v3/users/reports',
+			['reportType' => 'error', 'holidayType' => 'floating'],
+			[],
+			['Authorization' => 'Bearer test-token']
 		);
 
 		$this->assertResponseIsSuccessful();
@@ -260,14 +267,15 @@ class UserControllerV2Test extends WebTestCase
 
 		$this->request(
 			'POST',
-			'/v2/users/user-id-banned/reports',
+			'/v3/users/reports',
 			['reportType' => 'error', 'holidayType' => 'floating'],
 			[
 				'language' => 'en',
 				'metadata' => $metadata->id,
 				'report_type' => 'OTHER',
 				'description' => 'Test description',
-			]
+			],
+			['Authorization' => 'Bearer banned-token']
 		);
 
 		$this->assertResponseStatusCodeSame(403);
@@ -276,5 +284,45 @@ class UserControllerV2Test extends WebTestCase
 
 		$actual = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
 		$this->assertSame(['reason' => $ban->reason], $actual);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testMissingAuthorizationHeader(): void
+	{
+		$this->request(
+			'GET',
+			'/v3/users/reports',
+			['reportType' => 'error', 'holidayType' => 'fixed']
+		);
+
+		$this->assertResponseStatusCodeSame(401);
+		$response = $this->client->getResponse()
+			->getContent();
+
+		$actual = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+		$this->assertSame(['error' => 'Missing or invalid Authorization header'], $actual);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testInvalidToken(): void
+	{
+		$this->request(
+			'GET',
+			'/v3/users/reports',
+			['reportType' => 'error', 'holidayType' => 'fixed'],
+			[],
+			['Authorization' => 'Bearer invalid-token']
+		);
+
+		$this->assertResponseStatusCodeSame(401);
+		$response = $this->client->getResponse()
+			->getContent();
+
+		$actual = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+		$this->assertSame(['error' => 'Invalid token'], $actual);
 	}
 }

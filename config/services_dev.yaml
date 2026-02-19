@@ -1,0 +1,3 @@
+services:
+  App\Service\FirebaseTokenVerifier:
+    class: App\Service\DevFirebaseTokenVerifier

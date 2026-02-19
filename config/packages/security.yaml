@@ -19,7 +19,7 @@ security:
     - { path: ^/v2/countries, roles: [ PUBLIC_ACCESS ] }
     - { path: ^/v2/missing, roles: [ PUBLIC_ACCESS ] }
     - { path: ^/v2/report, roles: [ PUBLIC_ACCESS ] }
-    - { path: ^/v2/users, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/v3/users, roles: [ PUBLIC_ACCESS ] }
     - { path: ^/v\d+/holiday, roles: [ PUBLIC_ACCESS ] }
     - { path: ^/, roles: [ ROLE_USER ] }
 

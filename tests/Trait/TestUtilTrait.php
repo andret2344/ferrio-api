@@ -12,11 +12,15 @@ trait TestUtilTrait
 	/**
 	 * @throws JsonException
 	 */
-	protected function request(string $method, string $path, array $params = [], array $body = []): void
+	protected function request(string $method, string $path, array $params = [], array $body = [], array $headers = []): void
 	{
 		$url = $this->buildUrl($path, $params);
 		$content = null;
 		$server = ['HTTP_ACCEPT' => 'application/json'];
+
+		foreach ($headers as $name => $value) {
+			$server['HTTP_' . strtoupper(str_replace('-', '_', $name))] = $value;
+		}
 
 		if (!empty($body) && in_array(strtoupper($method), ['POST', 'PUT', 'PATCH'], true)) {
 			$content = json_encode($body, JSON_THROW_ON_ERROR);

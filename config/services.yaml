@@ -5,14 +5,14 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
   logging_level: '%env(LOGGING_LEVEL)%'
+  firebase_project_id: '%env(FIREBASE_PROJECT_ID)%'
 
 services:
   _defaults:
     autowire: true
     autoconfigure: true
-  App\EventListener\RequestLoggerListener:
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    bind:
+      $firebaseProjectId: '%firebase_project_id%'
 
   App\:
     resource: '../src/'
@@ -22,7 +22,7 @@ services:
       - '../src/Kernel.php'
       - '../src/Tests/'
 
-  App\Controller\v2\UserControllerV2:
+  App\Controller\v3\UserControllerV3:
     arguments:
       $floatingSuggestionHandler: '@App\Handler\FloatingHolidaySuggestionHandler'
       $floatingErrorHandler: '@App\Handler\FloatingHolidayErrorHandler'

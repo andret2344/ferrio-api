@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller\v2;
+namespace App\Controller\v3;
 
+use App\Attribute\FirebaseAuth;
 use App\DTO\FixedReportDTO;
 use App\DTO\FixedSuggestionDTO;
 use App\DTO\FloatingReportDTO;
@@ -17,8 +18,8 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/v2/users', name: 'v2_users_')]
-class UserControllerV2 extends AbstractController
+#[Route('/v3/users', name: 'v3_users_')]
+class UserControllerV3 extends AbstractController
 {
 	/** @var ReportHandlerInterface[] */
 	private array $handlers;
@@ -59,16 +60,18 @@ class UserControllerV2 extends AbstractController
 		];
 	}
 
-	#[Route('/{userId<^\S+$>}/reports', name: 'reports', methods: ['GET', 'POST'])]
-	public function handle(string $userId, Request $request): JsonResponse
+	#[FirebaseAuth]
+	#[Route('/reports', name: 'reports', methods: ['GET', 'POST'])]
+	public function handle(Request $request): JsonResponse
 	{
+		$userId = $request->attributes->get('firebaseUid');
 		$banInfo = $this->banService->getBanInfo($userId);
 		if ($banInfo) {
 			return new JsonResponse(['reason' => $banInfo->reason], Response::HTTP_FORBIDDEN);
 		}
 
-		$reportType = (string)$request->query->get('reportType', '');
-		$holidayType = (string)$request->query->get('holidayType', '');
+		$reportType = $request->query->getString('reportType');
+		$holidayType = $request->query->getString('holidayType');
 
 		$handler = $this->handlers[$reportType][$holidayType] ?? null;
 		if (!$handler) {
