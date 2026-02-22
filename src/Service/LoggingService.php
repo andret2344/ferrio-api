@@ -16,7 +16,8 @@ readonly class LoggingService
 	public function __construct(ParameterBagInterface $params)
 	{
 		$this->log = new Logger('Ferrio');
-		$this->log->pushHandler(new StreamHandler('log/latest.log', Level::fromName($params->get('logging_level'))));
+		$projectDir = $params->get('kernel.project_dir');
+		$this->log->pushHandler(new StreamHandler($projectDir . '/log/latest.log', Level::fromName($params->get('logging_level'))));
 	}
 
 	public function route(Request $request): void

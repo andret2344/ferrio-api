@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
@@ -23,7 +22,6 @@ class Language implements JsonSerializable
 	#[ORM\OneToMany(targetEntity: FixedHoliday::class, mappedBy: 'language', orphanRemoval: true)]
 	private(set) Collection $holidays;
 
-	#[Pure]
 	public function __construct(string $code, string $name)
 	{
 		$this->code = $code;
@@ -31,7 +29,6 @@ class Language implements JsonSerializable
 		$this->holidays = new ArrayCollection();
 	}
 
-	#[Pure]
 	#[Override]
 	#[ArrayShape([
 		'code' => 'string',

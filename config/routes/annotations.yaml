@@ -2,14 +2,6 @@ controllers:
   resource: ../../src/Controller/
   type: attribute
 
-controllers_v1:
-  resource: ../../src/Controller/v1/
-  type: attribute
-
-controllers_v2:
-  resource: ../../src/Controller/v2/
-  type: attribute
-
 kernel:
   resource: ../../src/Kernel.php
   type: attribute

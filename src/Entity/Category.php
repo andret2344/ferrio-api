@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
@@ -27,8 +26,7 @@ class Category implements JsonSerializable
 	#[ORM\OneToMany(targetEntity: FloatingHolidayMetadata::class, mappedBy: 'category', orphanRemoval: true)]
 	private(set) Collection $floatingHolidays;
 
-	#[Pure]
-	public function __construct(string $id, string $name)
+	public function __construct(int $id, string $name)
 	{
 		$this->id = $id;
 		$this->name = $name;
@@ -36,7 +34,6 @@ class Category implements JsonSerializable
 		$this->floatingHolidays = new ArrayCollection();
 	}
 
-	#[Pure]
 	#[Override]
 	#[ArrayShape([
 		'id' => 'integer',

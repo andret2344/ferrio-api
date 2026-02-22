@@ -21,16 +21,15 @@ class FloatingHoliday implements JsonSerializable
 	private(set) FloatingHolidayMetadata $metadata;
 
 	#[ORM\Column(type: 'text')]
-	private(set) ?string $name;
+	private(set) string $name;
 
-	#[ORM\Column(type: 'text')]
+	#[ORM\Column(type: 'text', nullable: true)]
 	private(set) ?string $description;
 
-	#[ORM\Column(type: 'text')]
+	#[ORM\Column(type: 'text', nullable: true)]
 	private(set) ?string $url;
 
-	public function __construct(Language $language, FloatingHolidayMetadata $metadata,
-								?string  $name, ?string $description, ?string $url)
+	public function __construct(Language $language, FloatingHolidayMetadata $metadata, string $name, ?string $description, ?string $url)
 	{
 		$this->language = $language;
 		$this->metadata = $metadata;

@@ -6,5 +6,5 @@ interface ReportHandlerInterface
 {
 	public function list(string $userId): array;
 
-	public function create(string $userId, array $payload): void;
+	public function create(string $userId, object $payload): void;
 }

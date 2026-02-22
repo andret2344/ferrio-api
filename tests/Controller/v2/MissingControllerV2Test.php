@@ -74,7 +74,7 @@ class MissingControllerV2Test extends WebTestCase
 			'country' => 'GB'
 		]);
 
-		$this->assertResponseStatusCodeSame(204);
+		$this->assertResponseStatusCodeSame(201);
 
 		$repo = $this->em->getRepository(FixedHolidaySuggestion::class);
 		/** @var FixedHolidaySuggestion $entity */
@@ -166,7 +166,7 @@ class MissingControllerV2Test extends WebTestCase
 			'country' => 'GB'
 		]);
 
-		$this->assertResponseStatusCodeSame(204);
+		$this->assertResponseStatusCodeSame(201);
 
 		$repo = $this->em->getRepository(FloatingHolidaySuggestion::class);
 		/** @var FloatingHolidaySuggestion $entity */
@@ -240,5 +240,43 @@ class MissingControllerV2Test extends WebTestCase
 
 		$actual = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
 		$this->assertSame(['reason' => $ban->reason], $actual);
+	}
+
+	public function testPostFixedMissingRequiredFields(): void
+	{
+		$this->request('POST', '/v2/missing/fixed', [], [
+			'user_id' => 'user-id',
+		]);
+
+		$this->assertResponseStatusCodeSame(422);
+	}
+
+	public function testPostFixedInvalidJson(): void
+	{
+		$this->client->request('POST', '/v2/missing/fixed', [], [], [
+			'CONTENT_TYPE' => 'application/json',
+			'HTTP_ACCEPT' => 'application/json',
+		], 'not-json');
+
+		$this->assertResponseStatusCodeSame(400);
+	}
+
+	public function testPostFloatingMissingRequiredFields(): void
+	{
+		$this->request('POST', '/v2/missing/floating', [], [
+			'user_id' => 'user-id',
+		]);
+
+		$this->assertResponseStatusCodeSame(422);
+	}
+
+	public function testPostFloatingInvalidJson(): void
+	{
+		$this->client->request('POST', '/v2/missing/floating', [], [], [
+			'CONTENT_TYPE' => 'application/json',
+			'HTTP_ACCEPT' => 'application/json',
+		], 'not-json');
+
+		$this->assertResponseStatusCodeSame(400);
 	}
 }

@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
@@ -19,15 +18,11 @@ class Script implements JsonSerializable
 	private(set) int $id;
 
 	#[ORM\Column(type: 'text')]
-	public string $content {
-		get => $this->content;
-		set => $this->content = $value;
-	}
+	public string $content;
 
-	#[ORM\OneToMany(targetEntity: FixedHoliday::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
+	#[ORM\OneToMany(targetEntity: FloatingHolidayMetadata::class, mappedBy: 'script', cascade: ['all'], orphanRemoval: true)]
 	private(set) Collection $metadata;
 
-	#[Pure]
 	public function __construct(int $id, string $content)
 	{
 		$this->id = $id;
@@ -52,7 +47,6 @@ class Script implements JsonSerializable
 		return $this;
 	}
 
-	#[Pure]
 	#[Override]
 	#[ArrayShape([
 		'id' => 'integer',

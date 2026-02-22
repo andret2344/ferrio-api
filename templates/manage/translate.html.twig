@@ -75,6 +75,7 @@
 				<form id='{{ form_id }}' method='post'>
 					<input type='hidden' name='action' value='update' form='{{ form_id }}'/>
 					<input type='hidden' name='metadata_id' value='{{ element.id }}' form='{{ form_id }}'/>
+					{{ form_widget(forms[element.id]._token) }}
 				</form>
 				<tr>
 					<td rowspan='2'>{{ element.id }}</td>

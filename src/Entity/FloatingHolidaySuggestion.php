@@ -44,7 +44,7 @@ class FloatingHolidaySuggestion implements JsonSerializable
 
 	public function __construct(string      $userId, string $name, string $description, string $date,
 								?Country    $country = null, DateTimeImmutable $datetime = new DateTimeImmutable(),
-								ReportState $reportState = ReportState::REPORTED, ?FixedHolidayMetadata $fixedHolidayMetadata = null)
+								ReportState $reportState = ReportState::REPORTED, ?FloatingHolidayMetadata $floatingHolidayMetadata = null)
 	{
 		$this->userId = $userId;
 		$this->name = $name;
@@ -53,7 +53,7 @@ class FloatingHolidaySuggestion implements JsonSerializable
 		$this->country = $country;
 		$this->datetime = $datetime;
 		$this->reportState = $reportState;
-		$this->holiday = $fixedHolidayMetadata;
+		$this->holiday = $floatingHolidayMetadata;
 	}
 
 	#[Override]

@@ -14,14 +14,14 @@ class FixedMetadataRepository extends ServiceEntityRepository
 		parent::__construct($registry, FixedHolidayMetadata::class);
 	}
 
-	public function findAllByLanguage(string $language)
+	public function findAllByLanguage(string $language): array
 	{
 		return $this->createQueryBuilder('m')
-			->innerJoin(FixedHoliday::class, 'h', 'WITH', 'm.id = h.metadata')
+			->innerJoin(FixedHoliday::class, 'h', 'ON', 'm.id = h.metadata')
 			->select(['m.id', 'm.day', 'm.month', 'h.name', 'h.description', 'm.matureContent'])
 			->where('h.language = :code')
 			->setParameter('code', $language)
 			->getQuery()
-			->execute();
+			->getResult();
 	}
 }

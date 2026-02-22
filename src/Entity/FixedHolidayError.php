@@ -25,10 +25,7 @@ class FixedHolidayError implements JsonSerializable
 
 	#[ORM\ManyToOne(targetEntity: FixedHolidayMetadata::class, inversedBy: 'reports')]
 	#[ORM\JoinColumn(name: 'metadata_id', referencedColumnName: 'id')]
-	public ?FixedHolidayMetadata $metadata {
-		get => $this->metadata;
-		set => $this->metadata = $value;
-	}
+	public ?FixedHolidayMetadata $metadata;
 
 	#[ORM\Column(type: 'string', enumType: ReportType::class)]
 	private(set) ReportType $reportType;
