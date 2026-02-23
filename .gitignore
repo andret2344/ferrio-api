@@ -9,3 +9,12 @@
 /node_modules/
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
+
+###> claude ###
+.claude/settings.local.json
+###< claude ###

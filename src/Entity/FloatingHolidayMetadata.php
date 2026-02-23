@@ -2,56 +2,63 @@
 
 namespace App\Entity;
 
-use App\Repository\FloatingMetadataRepository;
+use App\Enum\Algorithm;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
 #[ORM\Entity]
-class FloatingHolidayMetadata implements JsonSerializable {
+class FloatingHolidayMetadata implements JsonSerializable
+{
 	#[ORM\Id]
 	#[ORM\Column(type: 'integer')]
 	#[ORM\GeneratedValue]
-	private int $id;
+	private(set) ?int $id;
 
 	#[ORM\Column(type: 'boolean')]
-	private bool $usual;
+	private(set) bool $usual;
 
-	#[ORM\ManyToOne(targetEntity: Category::class)]
+	#[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'floatingHolidays')]
 	#[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
-	private ?Category $category;
+	public ?Category $category;
 
 	#[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'floatingHolidays')]
 	#[ORM\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
-	private ?Country $country;
+	public ?Country $country;
 
 	#[ORM\ManyToOne(targetEntity: Script::class)]
-	#[ORM\JoinColumn(name: 'script_id', referencedColumnName: 'id', nullable: false)]
-	private ?Script $script;
+	#[ORM\JoinColumn(name: 'script_id', referencedColumnName: 'id')]
+	public ?Script $script;
 
 	#[ORM\Column(type: 'string')]
-	private string $args;
+	private(set) string $args;
 
-	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FixedHoliday::class, cascade: ['all'], orphanRemoval: true)]
-	private Collection $holidays;
+	#[ORM\Column(type: 'string', nullable: true)]
+	private(set) ?string $algorithmArgs;
 
-	#[ORM\OneToMany(mappedBy: 'metadata', targetEntity: FloatingHolidayReport::class, cascade: ['all'], orphanRemoval: true)]
-	private Collection $reports;
+	#[ORM\OneToMany(targetEntity: FloatingHoliday::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
+	private(set) Collection $holidays;
 
-	#[ORM\Column(type: 'boolean', nullable: false)]
-	private bool $matureContent;
+	#[ORM\OneToMany(targetEntity: FloatingHolidayError::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
+	private(set) Collection $reports;
 
-	#[Pure]
-	public function __construct(int       $usual,
+	#[ORM\Column(type: 'string', enumType: Algorithm::class)]
+	private(set) Algorithm $algorithm;
+
+	#[ORM\Column(type: 'boolean')]
+	private(set) bool $matureContent;
+
+	public function __construct(bool      $usual,
 								?Country  $country,
 								?Category $category,
-								?Script   $script,
+								Script    $script,
 								string    $args,
-								bool      $matureContent) {
+								bool      $matureContent,
+								Algorithm $algorithm,
+								?string   $algorithmArgs = null)
+	{
 		$this->usual = $usual;
 		$this->country = $country;
 		$this->category = $category;
@@ -60,97 +67,22 @@ class FloatingHolidayMetadata implements JsonSerializable {
 		$this->holidays = new ArrayCollection();
 		$this->reports = new ArrayCollection();
 		$this->matureContent = $matureContent;
-	}
-
-	public function getId(): int {
-		return $this->id;
-	}
-
-	public function getUsual(): int {
-		return $this->usual;
-	}
-
-	public function getCategory(): ?Category {
-		return $this->category;
-	}
-
-	public function setCategory(?Category $category): void {
-		$this->category = $category;
-	}
-
-	public function getCountry(): ?Country {
-		return $this->country;
-	}
-
-	public function setCountry(?Country $country): void {
-		$this->country = $country;
-	}
-
-	public function getHolidays(): Collection {
-		return $this->holidays;
-	}
-
-	public function getArgs(): string {
-		return $this->args;
-	}
-
-	public function addHoliday(FloatingHoliday $holiday): self {
-		if (!$this->holidays->contains($holiday)) {
-			$this->holidays[] = $holiday;
-			$holiday->setMetadata($this);
-		}
-		return $this;
-	}
-
-	public function removeHoliday(FloatingHoliday $holiday): self {
-		if ($this->holidays->removeElement($holiday) && $holiday->getMetadata() === $this) {
-			$holiday->setMetadata(null);
-		}
-		return $this;
-	}
-
-	public function addReport(FloatingHolidayReport $report): self {
-		if (!$this->reports->contains($report)) {
-			$this->reports[] = $report;
-			$report->setMetadata($this);
-		}
-		return $this;
-	}
-
-	public function removeReport(FloatingHolidayReport $report): self {
-		if ($this->holidays->removeElement($report) && $report->getMetadata() === $this) {
-			$report->setMetadata(null);
-		}
-		return $this;
-	}
-
-	public function getScript(): ?Script {
-		return $this->script;
-	}
-
-	public function setScript(?Script $script): self {
-		$this->script = $script;
-		return $this;
+		$this->algorithm = $algorithm;
+		$this->algorithmArgs = $algorithmArgs;
 	}
 
 	#[Override]
-	#[ArrayShape([
-		'id' => 'int',
-		'usual' => 'int',
-		'category' => 'string',
-		'country' => 'string|null',
-		'script' => '\App\Entity\Script|null',
-		'args' => 'string',
-		'mature_content' => 'bool'
-	])]
-	public function jsonSerialize(): array {
+	public function jsonSerialize(): array
+	{
 		return [
 			'id' => $this->id,
 			'usual' => $this->usual,
-			'category' => $this->category->getName(),
-			'country' => $this->country?->getEnglishName(),
+			'category' => $this->category?->name,
+			'country' => $this->country?->jsonSerialize(),
 			'script' => $this->script,
 			'args' => $this->args,
+			'algorithm_args' => $this->algorithmArgs,
+			'algorithm' => $this->algorithm->value,
 			'mature_content' => $this->matureContent
 		];
 	}

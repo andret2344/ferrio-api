@@ -4,17 +4,17 @@
 /shelf/
 /sonarlint/
 
-/*.iml
-
+/data_source_mapping.xml
 /dataSources.local.xml
 /dataSources.xml
 /dbnavigator.xml
+/db-forest-config.xml
 /discord.xml
 /git_toolbox_blame.xml
 /git_toolbox_prj.xml
 /jsLibraryMappings.xml
+/laravel-idea.xml
 /kubernetes-settings.xml
-/modules.xml
-/symfony2.xml
+/sshConfigs.xml
 /watcherTasks.xml
 /workspace.xml

@@ -3,48 +3,41 @@
 namespace App\Controller\v1;
 
 use App\Entity\Language;
-use App\Service\LoggingService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route(['/language', '/v1/language'], name: 'v1_language_')]
-class LanguageControllerV1 extends AbstractController {
-	public function __construct(
-		private readonly EntityManagerInterface $entityManager,
-		private readonly LoggingService         $loggingService) {
+#[Route('/v1/language', name: 'v1_language_')]
+class LanguageControllerV1 extends AbstractController
+{
+	public function __construct(private readonly EntityManagerInterface $entityManager)
+	{
 	}
 
 	#[Route('/', name: 'get_all', methods: ['GET'])]
-	public function getAll(Request $request): Response {
-		$this->loggingService->route($request);
+	public function getAll(): Response
+	{
 		/**
 		 * @var Language[] $languages
 		 */
 		$languages = $this->entityManager->getRepository(Language::class)
 			->findAll();
-		$response = new JsonResponse($languages);
-		$response->headers->set("Content-Length", strlen($response->getContent()));
-		return $response;
+		return new JsonResponse($languages);
 	}
 
 	#[Route('/{code}', name: 'get_one', methods: ['GET'])]
-	public function getOne(Request $request, string $code): Response {
-		$this->loggingService->route($request);
+	public function getOne(string $code): Response
+	{
 		/**
 		 * @var Language $language
 		 */
 		$language = $this->entityManager->getRepository(Language::class)
 			->findOneBy(['code' => $code]);
 		if ($language === null) {
-			throw new NotFoundHttpException();
+			throw $this->createNotFoundException();
 		}
-		$response = new JsonResponse($language);
-		$response->headers->set("Content-Length", strlen($response->getContent()));
-		return $response;
+		return new JsonResponse($language);
 	}
 }

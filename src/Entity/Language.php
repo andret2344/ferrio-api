@@ -6,63 +6,36 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use Override;
 
 #[ORM\Entity]
-class Language implements JsonSerializable {
+class Language implements JsonSerializable
+{
 	#[ORM\Id]
 	#[ORM\Column(type: 'string', length: 31)]
-	private string $code;
+	private(set) string $code;
 
 	#[ORM\Column(type: 'string', length: 63, unique: true)]
-	private string $name;
+	private(set) string $name;
 
-	#[ORM\OneToMany(mappedBy: 'language', targetEntity: FixedHoliday::class, orphanRemoval: true)]
-	private Collection $holidays;
+	#[ORM\OneToMany(targetEntity: FixedHoliday::class, mappedBy: 'language', orphanRemoval: true)]
+	private(set) Collection $holidays;
 
-	#[Pure]
-	public function __construct(string $code, string $name) {
+	public function __construct(string $code, string $name)
+	{
 		$this->code = $code;
 		$this->name = $name;
 		$this->holidays = new ArrayCollection();
 	}
 
-	public function getCode(): string {
-		return $this->code;
-	}
-
-	public function getName(): string {
-		return $this->name;
-	}
-
-	public function getHolidays(): Collection {
-		return $this->holidays;
-	}
-
-	public function addHoliday(FixedHoliday $holiday): self {
-		if (!$this->holidays->contains($holiday)) {
-			$this->holidays[] = $holiday;
-			$holiday->setLanguage($this);
-		}
-		return $this;
-	}
-
-	public function removeHoliday(FixedHoliday $holiday): self {
-		if ($this->holidays->removeElement($holiday) && $holiday->getLanguage() === $this) {
-			$holiday->setLanguage(null);
-		}
-		return $this;
-	}
-
-	#[Pure]
 	#[Override]
 	#[ArrayShape([
 		'code' => 'string',
 		'name' => 'string'
 	])]
-	public function jsonSerialize(): array {
+	public function jsonSerialize(): array
+	{
 		return [
 			'code' => $this->code,
 			'name' => $this->name

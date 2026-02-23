@@ -10,37 +10,15 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
-class FixedHolidayRepository extends ServiceEntityRepository {
-	public function __construct(ManagerRegistry $registry) {
+class FixedHolidayRepository extends ServiceEntityRepository
+{
+	public function __construct(ManagerRegistry $registry)
+	{
 		parent::__construct($registry, FixedHoliday::class);
 	}
 
-	/**
-	 * @param string $language
-	 * @param int $day
-	 * @param int $month
-	 *
-	 * @return array|FixedHoliday[]
-	 */
-	public function findAt(string $language, int $day, int $month): array {
-		return $this->createQueryBuilder('h')
-			->join(FixedHolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
-			->where('h.language = :language')
-			->andWhere('m.day = :day')
-			->andWhere('m.month = :month')
-			->setParameter('language', $language)
-			->setParameter('day', $day)
-			->setParameter('month', $month)
-			->getQuery()
-			->getResult();
-	}
-
-	/**
-	 * @param string $language
-	 *
-	 * @return array
-	 */
-	public function findAllByLanguage(string $language, int $offset = 0, int $limit = 1_000_000): array {
+	public function findAt(string $language, int $day, int $month, bool $matureContent = false): array
+	{
 		return $this->createQueryBuilder('h')
 			->select([
 				'm.id',
@@ -54,25 +32,51 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 				'c.isoCode AS countryCode',
 				'm.matureContent AS matureContent'
 			])
-			->join(FixedHolidayMetadata::class, 'm', 'WITH', 'h.metadata = m.id')
-			->leftJoin(Country::class, 'c', 'WITH', 'c.isoCode = m.country')
+			->join(FixedHolidayMetadata::class, 'm', 'ON', 'h.metadata = m.id')
+			->leftJoin(Country::class, 'c', 'ON', 'c.isoCode = m.country')
 			->where('h.language = :language')
+			->andWhere('m.day = :day')
+			->andWhere('m.month = :month')
+			->andWhere('m.matureContent IN (false, :matureContent)')
+			->setParameter('language', $language)
+			->setParameter('day', $day)
+			->setParameter('month', $month)
+			->setParameter('matureContent', $matureContent)
+			->getQuery()
+			->getResult();
+	}
+
+	public function findAllByLanguage(string $language, int $offset = 0, int $limit = 1_000_000, bool $matureContent = false): array
+	{
+		return $this->createQueryBuilder('h')
+			->select([
+				'm.id',
+				'm.month',
+				'm.day',
+				'h.name',
+				'm.usual',
+				'h.description',
+				'h.url',
+				'c.englishName AS countryName',
+				'c.isoCode AS countryCode',
+				'm.matureContent AS matureContent'
+			])
+			->join(FixedHolidayMetadata::class, 'm', 'ON', 'h.metadata = m.id')
+			->leftJoin(Country::class, 'c', 'ON', 'c.isoCode = m.country')
+			->where('h.language = :language')
+			->andWhere('m.matureContent IN (false, :matureContent)')
 			->setFirstResult($offset)
 			->setMaxResults($limit)
 			->setParameter('language', $language)
+			->setParameter('matureContent', $matureContent)
 			->orderBy('m.month', 'ASC')
 			->addOrderBy('m.day', 'ASC')
 			->getQuery()
 			->getResult();
 	}
 
-	/**
-	 * @param string $language
-	 * @param array $array
-	 *
-	 * @return array|string[]
-	 */
-	public function check(string $language, array $array): array {
+	public function check(string $language, array $array): array
+	{
 		$existingNames = $this->createQueryBuilder('h2')
 			->select('h2.name')
 			->join('h2.metadata', 'm')
@@ -85,7 +89,8 @@ class FixedHolidayRepository extends ServiceEntityRepository {
 		return array_diff($array, $existingNames);
 	}
 
-	public function findAllAggregatedById(string $languageFrom, string $languageTo, int $offset = 0, int $limit = 1_000_000) {
+	public function findAllAggregatedById(string $languageFrom, string $languageTo, int $offset = 0, int $limit = 1_000_000): array
+	{
 		$rsm = new ResultSetMapping();
 		$rsm->addEntityResult(FixedHoliday::class, 'h');
 		$rsm->addScalarResult('id', 'id');

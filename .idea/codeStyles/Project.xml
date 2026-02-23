@@ -1,18 +1,22 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
+    <option name="AUTODETECT_INDENTS" value="false" />
     <JavaCodeStyleSettings>
       <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="9999" />
       <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="9999" />
     </JavaCodeStyleSettings>
     <PHPCodeStyleSettings>
+      <option name="ALIGN_NAMED_ARGUMENTS" value="true" />
       <option name="PHPDOC_BLANK_LINE_BEFORE_TAGS" value="true" />
       <option name="PHPDOC_BLANK_LINES_AROUND_PARAMETERS" value="true" />
+      <option name="ANONYMOUS_BRACE_STYLE" value="2" />
       <option name="LOWER_CASE_BOOLEAN_CONST" value="true" />
       <option name="LOWER_CASE_NULL_CONST" value="true" />
       <option name="ELSE_IF_STYLE" value="SEPARATE" />
       <option name="VARIABLE_NAMING_STYLE" value="CAMEL_CASE" />
       <option name="FORCE_SHORT_DECLARATION_ARRAY_STYLE" value="true" />
-      <option name="ATTRIBUTES_WRAP" value="2" />
+      <option name="NAMESPACE_BRACE_STYLE" value="2" />
+      <option name="PLACE_PARENS_FOR_CONSTRUCTOR" value="1" />
     </PHPCodeStyleSettings>
     <codeStyleSettings language="Groovy">
       <indentOptions>
@@ -42,8 +46,6 @@
     </codeStyleSettings>
     <codeStyleSettings language="PHP">
       <option name="RIGHT_MARGIN" value="180" />
-      <option name="CLASS_BRACE_STYLE" value="1" />
-      <option name="METHOD_BRACE_STYLE" value="1" />
       <option name="ALIGN_MULTILINE_ARRAY_INITIALIZER_EXPRESSION" value="true" />
       <option name="METHOD_CALL_CHAIN_WRAP" value="2" />
       <option name="ARRAY_INITIALIZER_WRAP" value="5" />

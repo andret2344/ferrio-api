@@ -2,7 +2,7 @@
 {% block body %}
 	<nav class="navbar bg-body-tertiary">
 		<div class="container-fluid">
-			<a class="navbar-brand">UHC Checking UI</a>
+			<a class="navbar-brand">Ferrio Checking UI</a>
 		</div>
 	</nav>
 	<section class='section-main'>
@@ -20,16 +20,18 @@
 				</button>
 				<ul class="dropdown-menu">
 					{% for language in languages %}
-					<li>
-						<a
-								class="dropdown-item"
-								href="{{ path('manage_check_language', {'lang': language.code}) }}"
-						>{{ language.name }}</a>
-						{% endfor %}
+						<li>
+							<a
+									class="dropdown-item"
+									href="{{ path('manage_check_language', {'lang': language.code}) }}"
+							>{{ language.name }}</a>
+						</li>
+					{% endfor %}
 				</ul>
 			</div>
 			<hr/>
 			<form method='post'>
+				{{ form_widget(checkForm._token) }}
 				<label for='holidays' class='d-none'>Holidays</label>
 				<textarea
 						id='holidays'

@@ -1,0 +1,25 @@
+nelmio_cors:
+  defaults:
+    origin_regex: true
+    allow_origin: [ '%env(CORS_ALLOW_ORIGIN)%' ]
+    allow_methods: [ 'GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE' ]
+    allow_headers: [ 'Content-Type', 'Authorization' ]
+    expose_headers: [ 'Link' ]
+    max_age: 3600
+  paths:
+    '^/v2/holiday':
+      allow_origin: [ '*' ]
+      allow_methods: [ 'GET', 'OPTIONS' ]
+      allow_headers: [ 'Content-Type', 'Authorization' ]
+      max_age: 3600
+    '^/v2/country':
+      allow_origin: [ '*' ]
+      allow_methods: [ 'GET', 'OPTIONS' ]
+      allow_headers: [ 'Content-Type', 'Authorization' ]
+      max_age: 3600
+    '^/v3/holidays':
+      allow_origin: [ '*' ]
+      allow_methods: [ 'GET', 'OPTIONS' ]
+      allow_headers: [ 'Content-Type', 'Authorization' ]
+      max_age: 3600
+    '^/': null
