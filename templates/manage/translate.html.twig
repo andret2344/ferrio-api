@@ -2,7 +2,8 @@
 {% block body %}
 	<nav class="navbar bg-body-tertiary">
 		<div class="container-fluid">
-			<a class="navbar-brand">Ferrio Translation UI</a>
+			<a class="navbar-brand" href="{{ path('manage_index') }}">← Back</a>
+			<a href="{{ path('manage_index') }}" class="btn btn-outline-secondary btn-sm me-2">Main</a>
 			<div style='display: inline-flex'>
 				<div class="dropdown">
 					<button

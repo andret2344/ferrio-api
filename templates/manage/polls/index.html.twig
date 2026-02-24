@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+{% block title %}Polls — Ferrio Admin{% endblock %}
+{% block body %}
+	<nav class="navbar bg-body-tertiary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="{{ path('manage_index') }}">Ferrio Manage</a>
+			<a href="{{ path('manage_polls_new') }}" class="btn btn-primary btn-sm">+ New Poll</a>
+		</div>
+	</nav>
+	<section class="section-main">
+		<span class="heading my-5">Polls</span>
+		<table class="table table-dark table-bordered">
+			<thead>
+			<tr>
+				<th>#</th>
+				<th>Name</th>
+				<th>Question</th>
+				<th>Start</th>
+				<th>End</th>
+				<th>Active</th>
+				<th>Votes</th>
+				<th>Results</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for poll in polls %}
+				<tr>
+					<td>{{ poll.id }}</td>
+					<td>{{ poll.name }}</td>
+					<td>{{ poll.question }}</td>
+					<td>{{ poll.start|date('Y-m-d H:i') }}</td>
+					<td>{{ poll.end|date('Y-m-d H:i') }}</td>
+					<td>{{ poll.active ? 'Yes' : 'No' }}</td>
+					<td>{{ voteCounts[poll.id] ?? 0 }}</td>
+					<td><a href="{{ path('manage_polls_show', {id: poll.id}) }}" class="btn btn-sm btn-outline-light">View</a></td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="8" class="text-center">No polls yet.</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</section>
+{% endblock %}

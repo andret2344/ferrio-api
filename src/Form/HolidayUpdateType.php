@@ -33,6 +33,7 @@ class HolidayUpdateType extends AbstractType
 	{
 		$resolver->setDefaults([
 			'csrf_protection' => true,
+			'csrf_token_id' => 'holiday_update',
 			'allow_extra_fields' => true,
 		]);
 	}

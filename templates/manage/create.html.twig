@@ -2,7 +2,8 @@
 {% block body %}
 	<nav class="navbar bg-body-tertiary">
 		<div class="container-fluid">
-			<a class="navbar-brand">Ferrio Create UI</a>
+			<a class="navbar-brand" href="{{ path('manage_index') }}">← Back</a>
+			<a href="{{ path('manage_index') }}" class="btn btn-outline-secondary btn-sm me-auto">Main</a>
 			<div class="form-check form-switch">
 				<label class="form-check-label" for="hideDescribedHolidays">Hide described holidays</label>
 				<input
@@ -16,6 +17,18 @@
 	</nav>
 	<section class='section-main'>
 		<span class='heading my-5'>Welcome to creation UI!</span>
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success alert-dismissible fade show" role="alert">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			</div>
+		{% endfor %}
+		{% for message in app.flashes('danger') %}
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			</div>
+		{% endfor %}
 		{% include 'components/navigation.html.twig' with {'page': page, 'url': '/manage/create/%page%'} %}
 		<table class="table table-dark table-bordered">
 			<caption>Translations</caption>
