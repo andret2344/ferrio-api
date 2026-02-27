@@ -81,7 +81,8 @@ class ManageController extends AbstractController
 				'metadata_id' => $holiday['id'],
 				'name' => $holiday['nameTo'],
 				'description' => $holiday['descriptionTo'],
-			])->createView();
+			])
+				->createView();
 		}
 		return $this->render('manage/translate.html.twig', [
 			'languageFrom' => $languageFrom,
@@ -110,7 +111,6 @@ class ManageController extends AbstractController
 	public function createPage(Request $request, int $page): Response
 	{
 		$repository = $this->entityManager->getRepository(Language::class);
-		/** @var Language $language */
 		$language = $repository->findOneBy(['code' => 'pl']);
 		$action = $request->request->get('action');
 		if ($request->isMethod('POST') && $action === 'update') {
@@ -135,6 +135,10 @@ class ManageController extends AbstractController
 			$form = $this->createForm(HolidayCreateType::class);
 			$form->handleRequest($request);
 			if ($form->isSubmitted() && $form->isValid()) {
+				if ($language === null) {
+					$this->addFlash('danger', 'Language "pl" not found in the database. Please seed the language table first.');
+					return $this->redirectToRoute('manage_create_page', ['page' => $page]);
+				}
 				$data = $form->getData();
 				$month = $data['month'];
 				$day = $data['day'];
@@ -147,6 +151,11 @@ class ManageController extends AbstractController
 				$holiday = new FixedHoliday($language, $metadata, $name, $desc ?? '', '');
 				$this->entityManager->persist($holiday);
 				$this->entityManager->flush();
+				$this->addFlash('success', sprintf('Holiday "%s" created (ID=%d).', $name, $metadata->id));
+				return $this->redirectToRoute('manage_create_page', ['page' => $page]);
+			}
+			foreach ($form->getErrors(true) as $error) {
+				$this->addFlash('danger', $error->getMessage());
 			}
 		}
 		$fixedHolidays = $this->fixedHolidayRepository->findAllByLanguage('pl', ($page - 1) * 100, 100, true);
@@ -162,9 +171,11 @@ class ManageController extends AbstractController
 				'name' => $holiday['name'],
 				'description' => $holiday['description'],
 				'mature' => $holiday['matureContent'],
-			])->createView();
+			])
+				->createView();
 		}
-		$createForm = $this->createForm(HolidayCreateType::class)->createView();
+		$createForm = $this->createForm(HolidayCreateType::class)
+			->createView();
 		return $this->render('manage/create.html.twig', [
 			'fixed_holidays' => $fixedHolidays,
 			'floating_holidays' => $floatingHolidays,

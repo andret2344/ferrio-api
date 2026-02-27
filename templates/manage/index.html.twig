@@ -9,7 +9,12 @@
 						Let me write some descriptions and maybe add a cool holiday.
 					</a>
 				</div>
-				<div class='row col-5 m-4 mx-auto tile'>
+				<div class='col-5 m-4 mx-auto tile'>
+				<a href='{{ path('manage_polls_index') }}' class='d-block text-center py-5 no-a title-create'>
+					Manage polls and view results.
+				</a>
+			</div>
+			<div class='row col-5 m-4 mx-auto tile'>
 					<div class='text-center m-3 title-translate'>I want to translate.</div>
 					{% for language in languages %}
 						{% if language.code != 'pl' %}
