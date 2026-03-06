@@ -11,6 +11,11 @@ security:
             password: '%env(HTTP_BASIC_AUTH_PASSWORD)%'
             roles: [ ROLE_USER ]
   firewalls:
+    firebase:
+      pattern: "^/v3/(users|polls)"
+      stateless: true
+      custom_authenticators:
+        - App\Security\FirebaseAuthenticator
     main:
       pattern: ^/
       http_basic: ~
@@ -19,8 +24,8 @@ security:
     - { path: ^/v2/countries, roles: [ PUBLIC_ACCESS ] }
     - { path: ^/v2/missing, roles: [ PUBLIC_ACCESS ] }
     - { path: ^/v2/report, roles: [ PUBLIC_ACCESS ] }
-    - { path: ^/v3/polls, roles: [ PUBLIC_ACCESS ] }
-    - { path: ^/v3/users, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/v3/polls, roles: [ ROLE_FIREBASE_USER ] }
+    - { path: ^/v3/users, roles: [ ROLE_FIREBASE_USER ] }
     - { path: ^/v\d+/holiday, roles: [ PUBLIC_ACCESS ] }
     - { path: ^/, roles: [ ROLE_USER ] }
 

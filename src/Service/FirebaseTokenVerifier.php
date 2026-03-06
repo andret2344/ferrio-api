@@ -2,15 +2,20 @@
 
 namespace App\Service;
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
+use Kreait\Firebase\Contract\Auth;
+use Kreait\Firebase\Exception\Auth\FailedToVerifyToken;
+use Kreait\Firebase\Exception\AuthException;
+use Psr\SimpleCache\CacheInterface;
 use UnexpectedValueException;
 
 class FirebaseTokenVerifier
 {
-	private const string GOOGLE_KEYS_URL = 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com';
+	private const int UID_CACHE_TTL = 300; // 5 minutes
 
-	public function __construct(private readonly string $firebaseProjectId)
+	public function __construct(
+		private readonly Auth           $auth,
+		private readonly CacheInterface $cache,
+	)
 	{
 	}
 
@@ -21,43 +26,42 @@ class FirebaseTokenVerifier
 	 */
 	public function verify(string $token): string
 	{
-		$keys = $this->fetchPublicKeys();
+		try {
+			$verifiedToken = $this->auth->verifyIdToken($token);
+			$uid = $verifiedToken->claims()->get('sub');
 
-		$jwkKeys = array_map(fn($cert) => new Key($cert, 'RS256'), $keys);
+			if (empty($uid)) {
+				throw new UnexpectedValueException('Missing subject');
+			}
 
-		$decoded = JWT::decode($token, $jwkKeys);
-
-		$issuer = "https://securetoken.google.com/{$this->firebaseProjectId}";
-		if ($decoded->iss !== $issuer) {
-			throw new UnexpectedValueException('Invalid issuer');
+			return $uid;
+		} catch (FailedToVerifyToken $e) {
+			throw new UnexpectedValueException('Invalid token: ' . $e->getMessage(), 0, $e);
 		}
-
-		if ($decoded->aud !== $this->firebaseProjectId) {
-			throw new UnexpectedValueException('Invalid audience');
-		}
-
-		if (empty($decoded->sub)) {
-			throw new UnexpectedValueException('Missing subject');
-		}
-
-		return $decoded->sub;
 	}
 
 	/**
-	 * @return array<string, string>
+	 * Verifies that a raw Firebase UID exists via the Admin SDK (cached).
+	 *
+	 * @throws UnexpectedValueException if the UID does not exist in Firebase
 	 */
-	protected function fetchPublicKeys(): array
+	public function verifyUid(string $uid): string
 	{
-		$response = file_get_contents(self::GOOGLE_KEYS_URL);
-		if ($response === false) {
-			throw new UnexpectedValueException('Failed to fetch Google public keys');
+		$cacheKey = 'firebase_uid_' . preg_replace('/[^a-zA-Z0-9_.]/', '_', $uid);
+
+		if ($this->cache->has($cacheKey)) {
+			return $this->cache->get($cacheKey);
 		}
 
-		$keys = json_decode($response, true);
-		if (!is_array($keys)) {
-			throw new UnexpectedValueException('Invalid public keys response');
-		}
+		try {
+			$userRecord = $this->auth->getUser($uid);
+			$verifiedUid = $userRecord->uid;
 
-		return $keys;
+			$this->cache->set($cacheKey, $verifiedUid, self::UID_CACHE_TTL);
+
+			return $verifiedUid;
+		} catch (AuthException $e) {
+			throw new UnexpectedValueException('Invalid UID: ' . $e->getMessage(), 0, $e);
+		}
 	}
 }

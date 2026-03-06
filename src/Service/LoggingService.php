@@ -31,6 +31,6 @@ readonly class LoggingService
 			$queryString ? '?' . $queryString : ''
 		);
 
-		$this->log->debug($line);
+		$this->log->info($line);
 	}
 }

@@ -6,6 +6,7 @@
 parameters:
   logging_level: '%env(LOGGING_LEVEL)%'
   firebase_project_id: '%env(FIREBASE_PROJECT_ID)%'
+  firebase_credentials: '%env(FIREBASE_CREDENTIALS)%'
 
 services:
   _defaults:
@@ -21,6 +22,19 @@ services:
       - '../src/Entity/'
       - '../src/Kernel.php'
       - '../src/Tests/'
+
+  Psr\SimpleCache\CacheInterface:
+    class: Symfony\Component\Cache\Psr16Cache
+    arguments:
+      - '@cache.app'
+
+  Kreait\Firebase\Factory:
+    arguments:
+      - '%firebase_credentials%'
+    factory: ['App\Factory\FirebaseFactory', 'create']
+
+  Kreait\Firebase\Contract\Auth:
+    factory: ['@Kreait\Firebase\Factory', 'createAuth']
 
   App\Controller\v3\UserControllerV3:
     arguments:

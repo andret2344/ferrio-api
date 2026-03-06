@@ -3,21 +3,31 @@
 namespace App\Tests\Double;
 
 use App\Service\FirebaseTokenVerifier;
+use Override;
 use UnexpectedValueException;
 
 class TestFirebaseTokenVerifier extends FirebaseTokenVerifier
 {
 	public function __construct()
 	{
-		parent::__construct('test-project-id');
 	}
 
+	#[Override]
 	public function verify(string $token): string
 	{
 		return match ($token) {
 			'banned-token' => 'user-id-banned',
 			'invalid-token' => throw new UnexpectedValueException('Invalid token'),
 			default => 'user-id',
+		};
+	}
+
+	#[Override]
+	public function verifyUid(string $uid): string
+	{
+		return match ($uid) {
+			'invalid-token' => throw new UnexpectedValueException('Invalid UID'),
+			default => $uid,
 		};
 	}
 }

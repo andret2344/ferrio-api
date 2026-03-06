@@ -298,11 +298,6 @@ class UserControllerV3Test extends WebTestCase
 		);
 
 		$this->assertResponseStatusCodeSame(401);
-		$response = $this->client->getResponse()
-			->getContent();
-
-		$actual = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-		$this->assertSame(['error' => 'Missing or invalid Authorization header'], $actual);
 	}
 
 	/**

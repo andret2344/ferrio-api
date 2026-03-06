@@ -21,17 +21,19 @@ use Symfony\Component\Routing\Attribute\Route;
 class PollControllerV3 extends AbstractController
 {
 	public function __construct(
-		private readonly PollRepository        $pollRepository,
-		private readonly PollVoteRepository    $pollVoteRepository,
+		private readonly PollRepository         $pollRepository,
+		private readonly PollVoteRepository     $pollVoteRepository,
 		private readonly EntityManagerInterface $entityManager,
-		private readonly BanService            $banService,
-	) {
+		private readonly BanService             $banService,
+	)
+	{
 	}
 
 	#[Route('', name: 'list', methods: ['GET'])]
 	public function list(Request $request): JsonResponse
 	{
-		$userId = $request->attributes->get('firebaseUid');
+		$userId = $this->getUser()
+			->getUserIdentifier();
 		$polls = $this->pollRepository->findActive();
 
 		$result = array_map(fn(Poll $poll) => $this->serializePoll($poll, $userId), $polls);
@@ -40,9 +42,11 @@ class PollControllerV3 extends AbstractController
 	}
 
 	#[Route('/{id}', name: 'get', methods: ['GET'])]
-	public function get(Request $request, int $id): JsonResponse
+	public function get(int $id): JsonResponse
 	{
-		$userId = $request->attributes->get('firebaseUid');
+		$userId = $this->getUser()
+			->getUserIdentifier();
+		/** @var Poll $poll */
 		$poll = $this->pollRepository->find($id);
 
 		if (!$poll || !$poll->isActive()) {
@@ -55,13 +59,15 @@ class PollControllerV3 extends AbstractController
 	#[Route('/{id}/vote', name: 'vote', methods: ['POST'])]
 	public function vote(Request $request, int $id): JsonResponse
 	{
-		$userId = $request->attributes->get('firebaseUid');
+		$userId = $this->getUser()
+			->getUserIdentifier();
 
 		$banInfo = $this->banService->getBanInfo($userId);
 		if ($banInfo) {
 			return $this->json(['reason' => $banInfo->reason], Response::HTTP_FORBIDDEN);
 		}
 
+		/** @var Poll $poll */
 		$poll = $this->pollRepository->find($id);
 		if (!$poll || !$poll->isActive()) {
 			return $this->json(['error' => 'Poll not found'], Response::HTTP_NOT_FOUND);

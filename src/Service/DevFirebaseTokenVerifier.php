@@ -8,12 +8,17 @@ class DevFirebaseTokenVerifier extends FirebaseTokenVerifier
 {
 	public function __construct()
 	{
-		parent::__construct('dev');
 	}
 
 	#[Override]
 	public function verify(string $token): string
 	{
 		return $token;
+	}
+
+	#[Override]
+	public function verifyUid(string $uid): string
+	{
+		return $uid;
 	}
 }

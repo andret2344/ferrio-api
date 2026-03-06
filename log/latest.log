@@ -1,0 +1,6 @@
+[2026-03-06T08:53:00.677133+00:00] Ferrio.DEBUG: [2026-03-06 08:53:00] GET /v3/users/reports?reportType=suggestion&holidayType=fixed [] []
+[2026-03-06T08:53:10.474482+00:00] Ferrio.DEBUG: [2026-03-06 08:53:10] GET /v3/users/reports?reportType=suggestion&holidayType=fixed [] []
+[2026-03-06T08:57:46.938837+00:00] Ferrio.DEBUG: [2026-03-06 08:57:46] GET /_profiler/latest?type=request&panel=logger [] []
+[2026-03-06T08:57:49.674048+00:00] Ferrio.DEBUG: [2026-03-06 08:57:49] GET /_profiler/ [] []
+[2026-03-06T08:57:49.784899+00:00] Ferrio.DEBUG: [2026-03-06 08:57:49] GET /_profiler/empty/search/results?limit=10 [] []
+[2026-03-06T08:58:05.274973+00:00] Ferrio.DEBUG: [2026-03-06 08:58:05] GET /_profiler/empty/search/results?limit=10 [] []

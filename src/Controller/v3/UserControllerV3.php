@@ -64,7 +64,8 @@ class UserControllerV3 extends AbstractController
 	#[Route('/reports', name: 'reports', methods: ['GET', 'POST'])]
 	public function handle(Request $request): JsonResponse
 	{
-		$userId = $request->attributes->get('firebaseUid');
+		$userId = $this->getUser()
+			->getUserIdentifier();
 		$banInfo = $this->banService->getBanInfo($userId);
 		if ($banInfo) {
 			return new JsonResponse(['reason' => $banInfo->reason], Response::HTTP_FORBIDDEN);
