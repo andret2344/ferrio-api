@@ -4,8 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Country;
 use App\Entity\FixedHoliday;
+use App\Entity\FixedHolidayError;
 use App\Entity\FixedHolidayMetadata;
+use App\Entity\FixedHolidaySuggestion;
 use App\Entity\FloatingHoliday;
+use App\Entity\FloatingHolidayError;
+use App\Entity\FloatingHolidaySuggestion;
 use App\Entity\Language;
 use App\Form\HolidayCheckType;
 use App\Form\HolidayCreateType;
@@ -14,6 +18,7 @@ use App\Form\TranslateType;
 use App\Handler\CountryLookupTrait;
 use App\Repository\FixedHolidayRepository;
 use App\Repository\FixedMetadataRepository;
+use App\Service\FirebaseUserLookup;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +33,9 @@ class ManageController extends AbstractController
 	public function __construct(
 		private readonly EntityManagerInterface  $entityManager,
 		private readonly FixedHolidayRepository  $fixedHolidayRepository,
-		private readonly FixedMetadataRepository $fixedMetadataRepository)
+		private readonly FixedMetadataRepository $fixedMetadataRepository,
+		private readonly FirebaseUserLookup      $firebaseUserLookup,
+	)
 	{
 	}
 
@@ -184,6 +191,35 @@ class ManageController extends AbstractController
 			'pages' => $pages,
 			'updateForms' => $updateForms,
 			'createForm' => $createForm
+		]);
+	}
+
+	#[Route('/reports', name: 'reports')]
+	public function reports(): Response
+	{
+		$fixedSuggestions = $this->entityManager->getRepository(FixedHolidaySuggestion::class)
+			->findBy([], ['datetime' => 'DESC']);
+		$floatingSuggestions = $this->entityManager->getRepository(FloatingHolidaySuggestion::class)
+			->findBy([], ['datetime' => 'DESC']);
+		$fixedErrors = $this->entityManager->getRepository(FixedHolidayError::class)
+			->findBy([], ['datetime' => 'DESC']);
+		$floatingErrors = $this->entityManager->getRepository(FloatingHolidayError::class)
+			->findBy([], ['datetime' => 'DESC']);
+
+		$uids = array_merge(
+			array_map(fn($s) => $s->userId, $fixedSuggestions),
+			array_map(fn($s) => $s->userId, $floatingSuggestions),
+			array_map(fn($e) => $e->userId, $fixedErrors),
+			array_map(fn($e) => $e->userId, $floatingErrors),
+		);
+		$users = $this->firebaseUserLookup->lookup($uids);
+
+		return $this->render('manage/reports.html.twig', [
+			'fixedSuggestions' => $fixedSuggestions,
+			'floatingSuggestions' => $floatingSuggestions,
+			'fixedErrors' => $fixedErrors,
+			'floatingErrors' => $floatingErrors,
+			'users' => $users,
 		]);
 	}
 

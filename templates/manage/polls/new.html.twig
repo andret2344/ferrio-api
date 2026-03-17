@@ -1,39 +1,36 @@
 {% extends 'base.html.twig' %}
 {% block title %}New Poll — Ferrio Admin{% endblock %}
 {% block body %}
-	<nav class="navbar bg-body-tertiary">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="{{ path('manage_polls_index') }}">← Back</a>
-			<a href="{{ path('manage_index') }}" class="btn btn-outline-secondary btn-sm">Main</a>
+	<main class='section-manage-main'>
+		{% include 'components/topbar.html.twig' %}
+		<div class='manage-content'>
+			<h2 class='manage-page-title'>Create Poll</h2>
+			<div style="max-width: 600px; margin: 0 auto">
+				{{ form_start(form, {method: 'POST'}) }}
+				<div class="mb-3">
+					{{ form_label(form.name, 'Name (admin label)', {label_attr: {class: 'form-label'}}) }}
+					{{ form_widget(form.name, {attr: {class: 'form-control manage-input'}}) }}
+				</div>
+				<div class="mb-3">
+					{{ form_label(form.question, 'Question', {label_attr: {class: 'form-label'}}) }}
+					{{ form_widget(form.question, {attr: {class: 'form-control manage-input', rows: 3}}) }}
+				</div>
+				<div class="mb-3">
+					{{ form_label(form.start, 'Start', {label_attr: {class: 'form-label'}}) }}
+					{{ form_widget(form.start, {attr: {class: 'form-control manage-input'}}) }}
+				</div>
+				<div class="mb-3">
+					{{ form_label(form.end, 'End', {label_attr: {class: 'form-label'}}) }}
+					{{ form_widget(form.end, {attr: {class: 'form-control manage-input'}}) }}
+				</div>
+				<div class="mb-3">
+					{{ form_label(form.optionsText, null, {label_attr: {class: 'form-label'}}) }}
+					{{ form_widget(form.optionsText, {attr: {class: 'form-control manage-input', rows: 5, placeholder: "Yes\nNo"}}) }}
+					<div class="form-text text-muted">One option per line.</div>
+				</div>
+				<button type="submit" class="btn btn-outline-light w-100">Create Poll</button>
+				{{ form_end(form) }}
+			</div>
 		</div>
-	</nav>
-	<section class="section-main">
-		<span class="heading my-5">Create Poll</span>
-		<div class="container" style="max-width: 600px">
-			{{ form_start(form, {method: 'POST'}) }}
-			<div class="mb-3">
-				{{ form_label(form.name, 'Name (admin label)', {label_attr: {class: 'form-label'}}) }}
-				{{ form_widget(form.name, {attr: {class: 'form-control'}}) }}
-			</div>
-			<div class="mb-3">
-				{{ form_label(form.question, 'Question', {label_attr: {class: 'form-label'}}) }}
-				{{ form_widget(form.question, {attr: {class: 'form-control', rows: 3}}) }}
-			</div>
-			<div class="mb-3">
-				{{ form_label(form.start, 'Start', {label_attr: {class: 'form-label'}}) }}
-				{{ form_widget(form.start, {attr: {class: 'form-control'}}) }}
-			</div>
-			<div class="mb-3">
-				{{ form_label(form.end, 'End', {label_attr: {class: 'form-label'}}) }}
-				{{ form_widget(form.end, {attr: {class: 'form-control'}}) }}
-			</div>
-			<div class="mb-3">
-				{{ form_label(form.optionsText, null, {label_attr: {class: 'form-label'}}) }}
-				{{ form_widget(form.optionsText, {attr: {class: 'form-control', rows: 5, placeholder: "Yes\nNo"}}) }}
-				<div class="form-text text-muted">One option per line.</div>
-			</div>
-			<button type="submit" class="btn btn-primary">Create Poll</button>
-			{{ form_end(form) }}
-		</div>
-	</section>
+	</main>
 {% endblock %}

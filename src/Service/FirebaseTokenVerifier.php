@@ -20,21 +20,28 @@ class FirebaseTokenVerifier
 	}
 
 	/**
-	 * Verifies a Firebase ID token and returns the UID.
+	 * Verifies a Firebase ID token, checks the user exists and is not anonymous.
 	 *
-	 * @throws UnexpectedValueException if the token is invalid
+	 * @throws UnexpectedValueException if the token is invalid, user doesn't exist, or is anonymous
 	 */
 	public function verify(string $token): string
 	{
 		try {
 			$verifiedToken = $this->auth->verifyIdToken($token);
-			$uid = $verifiedToken->claims()->get('sub');
+			$uid = $verifiedToken->claims()
+				->get('sub');
 
 			if (empty($uid)) {
 				throw new UnexpectedValueException('Missing subject');
 			}
 
-			return $uid;
+			$firebase = $verifiedToken->claims()
+				->get('firebase');
+			if (is_array($firebase) && ($firebase['sign_in_provider'] ?? null) === 'anonymous') {
+				throw new UnexpectedValueException('Anonymous users are not allowed');
+			}
+
+			return $this->verifyUid($uid);
 		} catch (FailedToVerifyToken $e) {
 			throw new UnexpectedValueException('Invalid token: ' . $e->getMessage(), 0, $e);
 		}
@@ -43,7 +50,7 @@ class FirebaseTokenVerifier
 	/**
 	 * Verifies that a raw Firebase UID exists via the Admin SDK (cached).
 	 *
-	 * @throws UnexpectedValueException if the UID does not exist in Firebase
+	 * @throws UnexpectedValueException if the UID does not exist in Firebase or belongs to an anonymous user
 	 */
 	public function verifyUid(string $uid): string
 	{
@@ -56,6 +63,10 @@ class FirebaseTokenVerifier
 		try {
 			$userRecord = $this->auth->getUser($uid);
 			$verifiedUid = $userRecord->uid;
+
+			if ($userRecord->providerData === [] && $userRecord->email === null) {
+				throw new UnexpectedValueException('Anonymous users are not allowed');
+			}
 
 			$this->cache->set($cacheKey, $verifiedUid, self::UID_CACHE_TTL);
 

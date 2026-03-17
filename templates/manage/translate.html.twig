@@ -1,119 +1,120 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-	<nav class="navbar bg-body-tertiary">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="{{ path('manage_index') }}">← Back</a>
-			<a href="{{ path('manage_index') }}" class="btn btn-outline-secondary btn-sm me-2">Main</a>
-			<div style='display: inline-flex'>
-				<div class="dropdown">
-					<button
-							class="btn btn-secondary dropdown-toggle"
-							type="button"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							style='width: 150px'
-					>
-						{{ languageFrom.name }}
-					</button>
-					<ul class="dropdown-menu">
-						{% for language in languages %}
-							{% if language != languageFrom and language != languageTo %}
-								<li>
-									<a
-											class="dropdown-item"
-											href='{{ path('manage_translate', {'page': page, 'from': language.code, 'to': languageTo.code }) }}'
-									>{{ language.name }}</a>
-								</li>
-							{% endif %}
-						{% endfor %}
-					</ul>
-				</div>
-				<i class="bi bi-arrow-left-right swap" style='font-size: 26px; cursor: pointer'></i>
-				<div class="dropdown">
-					<button
-							class="btn btn-secondary dropdown-toggle"
-							type="button"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							style='width: 150px'
-					>
-						{{ languageTo.name }}
-					</button>
-					<ul class="dropdown-menu">
-						{% for language in languages %}
-							{% if language != languageFrom and language != languageTo %}
-								<li>
-									<a
-											class="dropdown-item"
-											href="/manage/translate/{{ languageFrom.code }}/{{ language.code }}"
-									>{{ language.name }}</a>
-								</li>
-							{% endif %}
-						{% endfor %}
-					</ul>
-				</div>
+	{% set toolbar_html %}
+		<div class='d-flex align-items-center gap-2'>
+			<div class="dropdown">
+				<button
+						class="btn btn-sm btn-outline-light dropdown-toggle"
+						type="button"
+						data-bs-toggle="dropdown"
+						aria-expanded="false"
+						style='min-width: 130px'
+				>
+					{{ languageFrom.name }}
+				</button>
+				<ul class="dropdown-menu dropdown-menu-dark">
+					{% for language in languages %}
+						{% if language != languageFrom and language != languageTo %}
+							<li>
+								<a class="dropdown-item"
+								   href='{{ path('manage_translate', {'page': page, 'from': language.code, 'to': languageTo.code }) }}'>
+									{{ language.name }}
+								</a>
+							</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
+			<i class="bi bi-arrow-left-right swap" style='font-size: 18px; cursor: pointer; color: #888'></i>
+			<div class="dropdown">
+				<button
+						class="btn btn-sm btn-outline-light dropdown-toggle"
+						type="button"
+						data-bs-toggle="dropdown"
+						aria-expanded="false"
+						style='min-width: 130px'
+				>
+					{{ languageTo.name }}
+				</button>
+				<ul class="dropdown-menu dropdown-menu-dark">
+					{% for language in languages %}
+						{% if language != languageFrom and language != languageTo %}
+							<li>
+								<a class="dropdown-item"
+								   href="/manage/translate/{{ page }}/{{ languageFrom.code }}/{{ language.code }}">
+									{{ language.name }}
+								</a>
+							</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
 			</div>
 		</div>
-	</nav>
-	<section class='section-main'>
-		<span class='heading my-5'>Welcome to translation from {{ languageFrom.name }} to {{ languageTo.name }}!</span>
-		{% set url = '/manage/translate/%page%/' ~ languageFrom.code ~ '/' ~ languageTo.code %}
-		{% include 'components/navigation.html.twig' with {'page': page, 'url': url} %}
-		<table class="table table-dark table-bordered">
-			<caption>Translations</caption>
-			<thead>
-			<tr>
-				<th scope='col'>#</th>
-				<th scope='col'>Date</th>
-				<th scope='col' class='w-50'>From</th>
-				<th scope='col' class='w-50'>To</th>
-				<th scope='col'></th>
-			</tr>
-			</thead>
-			<tbody>
-			{% for element in holidays %}
-				{% set form_id = 'form-' ~ element.id %}
-				<form id='{{ form_id }}' method='post'>
-					<input type='hidden' name='action' value='update' form='{{ form_id }}'/>
-					<input type='hidden' name='metadata_id' value='{{ element.id }}' form='{{ form_id }}'/>
-					{{ form_widget(forms[element.id]._token) }}
-				</form>
-				<tr>
-					<td rowspan='2'>{{ element.id }}</td>
-					<td rowspan='2'>{{ element.month | pad(2, '0') }}.{{ element.day | pad(2, '0') }}</td>
-					<td>{{ element.nameFrom }}</td>
-					<td>
-						<label for='{{ 'name-' ~ element.id }}' class='d-none'>Name</label>
-						<input
-								name='name'
-								class='w-100 textarea-holiday-name'
-								form='{{ form_id }}'
-								id='{{ 'name-' ~ element.id }}'
-								value='{{ element.nameTo }}'
-						/>
-					</td>
-					<td rowspan='2'>
-						<input type='submit' value='Send' form='{{ form_id }}'>
-					</td>
-				</tr>
-				<tr>
-					<td>{{ element.descriptionFrom }}</td>
-					<td>
-						<label for='{{ 'description-' ~ element.id }}' class='d-none'>Description</label>
-						<textarea
-								style='min-height: 72px'
-								name='description'
-								class='w-100 textarea-holiday-description'
-								form='{{ form_id }}'
-								id='{{ 'description-' ~ element.id }}'
-						>{{ element.descriptionTo }}</textarea>
-					</td>
-				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
-		{% include 'components/navigation.html.twig' with {'page': page, 'url': url} %}
-	</section>
+	{% endset %}
+	<main class='section-manage-main'>
+		{% include 'components/topbar.html.twig' with {toolbar: toolbar_html} %}
+		<div class='manage-content'>
+			<h2 class='manage-page-title'>{{ languageFrom.name }} → {{ languageTo.name }}</h2>
+			{% set url = '/manage/translate/%page%/' ~ languageFrom.code ~ '/' ~ languageTo.code %}
+			{% include 'components/navigation.html.twig' with {'page': page, 'url': url} %}
+			<div class='table-responsive'>
+				<table class="table table-dark table-striped table-hover align-middle">
+					<caption>Translations</caption>
+					<thead>
+					<tr>
+						<th scope='col'>#</th>
+						<th scope='col'>Date</th>
+						<th scope='col' class='w-50'>From</th>
+						<th scope='col' class='w-50'>To</th>
+						<th scope='col'></th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for element in holidays %}
+						{% set form_id = 'form-' ~ element.id %}
+						<form id='{{ form_id }}' method='post'>
+							<input type='hidden' name='action' value='update' form='{{ form_id }}'/>
+							<input type='hidden' name='metadata_id' value='{{ element.id }}' form='{{ form_id }}'/>
+							{{ form_widget(forms[element.id]._token) }}
+						</form>
+						<tr>
+							<td rowspan='2'>{{ element.id }}</td>
+							<td rowspan='2'>{{ element.month | pad(2, '0') }}.{{ element.day | pad(2, '0') }}</td>
+							<td>{{ element.nameFrom }}</td>
+							<td>
+								<label for='{{ 'name-' ~ element.id }}' class='d-none'>Name</label>
+								<input
+										name='name'
+										class='w-100 manage-input'
+										form='{{ form_id }}'
+										id='{{ 'name-' ~ element.id }}'
+										value='{{ element.nameTo }}'
+								/>
+							</td>
+							<td rowspan='2'>
+								<input type='submit' value='Send' form='{{ form_id }}' class='btn btn-sm btn-outline-light'>
+							</td>
+						</tr>
+						<tr>
+							<td>{{ element.descriptionFrom }}</td>
+							<td>
+								<label for='{{ 'description-' ~ element.id }}' class='d-none'>Description</label>
+								<textarea
+										style='min-height: 72px'
+										name='description'
+										class='w-100 manage-input'
+										form='{{ form_id }}'
+										id='{{ 'description-' ~ element.id }}'
+								>{{ element.descriptionTo }}</textarea>
+							</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			{% include 'components/navigation.html.twig' with {'page': page, 'url': url} %}
+		</div>
+	</main>
 	<script>
 		const swapIcon = document.querySelector('.swap');
 		swapIcon.addEventListener('click', () => {

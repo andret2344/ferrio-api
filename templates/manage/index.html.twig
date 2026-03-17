@@ -1,33 +1,56 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 	<main class='section-manage-main'>
-		<div class='container container-main mt-5 py-3'>
-			<span class='heading my-2 py-2'>Where do you start?</span>
-			<div class='row'>
-				<div class='col-5 m-4 mx-auto tile'>
-					<a href='{{ path('manage_create') }}' class='d-block text-center py-5 no-a title-create'>
-						Let me write some descriptions and maybe add a cool holiday.
+		{% include 'components/topbar.html.twig' %}
+		<div class='container container-main py-4 px-5'>
+			<span class='heading mt-3 mb-4'>Where do you start?</span>
+			<div class='row g-4 justify-content-center pb-4'>
+				<div class='col-lg-4 col-md-6'>
+					<a
+							href='{{ path('manage_create') }}'
+							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
+					>
+						<i class='bi bi-pencil-square tile-icon'></i>
+						<span class='tile-title'>Holidays</span>
+						<span class='tile-desc'>Write descriptions and add new holidays.</span>
 					</a>
 				</div>
-				<div class='col-5 m-4 mx-auto tile'>
-				<a href='{{ path('manage_polls_index') }}' class='d-block text-center py-5 no-a title-create'>
-					Manage polls and view results.
-				</a>
-			</div>
-			<div class='row col-5 m-4 mx-auto tile'>
-					<div class='text-center m-3 title-translate'>I want to translate.</div>
-					{% for language in languages %}
-						{% if language.code != 'pl' %}
-							<div class='col-4'>
-								<div class='text-center language'>
-									<a
-											href='{{ path('manage_translate_default', {'from': 'pl', 'to': language.code}) }}'
-											class='d-block p-4 no-a language-link'
-									>{{ language.name }}</a>
-								</div>
-							</div>
-						{% endif %}
-					{% endfor %}
+				<div class='col-lg-4 col-md-6'>
+					<a
+							href='{{ path('manage_polls_index') }}'
+							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
+					>
+						<i class='bi bi-bar-chart-line tile-icon'></i>
+						<span class='tile-title'>Polls</span>
+						<span class='tile-desc'>Manage polls and view results.</span>
+					</a>
+				</div>
+				<div class='col-lg-4 col-md-6'>
+					<a
+							href='{{ path('manage_reports') }}'
+							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
+					>
+						<i class='bi bi-flag tile-icon'></i>
+						<span class='tile-title'>Reports</span>
+						<span class='tile-desc'>View user suggestions and error reports.</span>
+					</a>
+				</div>
+				<div class='col-lg-8 col-md-12'>
+					<div class='tile tile-translate p-4'>
+						<div class='text-center mb-3 tile-title'>Translate</div>
+						<div class='row g-3 justify-content-center'>
+							{% for language in languages %}
+								{% if language.code != 'pl' %}
+									<div class='col-lg-3 col-md-4 col-6'>
+										<a href='{{ path('manage_translate_default', {'from': 'pl', 'to': language.code}) }}'
+										   class='language no-a d-block text-center py-3'>
+											{{ language.name }}
+										</a>
+									</div>
+								{% endif %}
+							{% endfor %}
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

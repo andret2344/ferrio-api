@@ -303,6 +303,46 @@ class UserControllerV3Test extends WebTestCase
 	/**
 	 * @throws JsonException
 	 */
+	public function testAnonymousTokenRejected(): void
+	{
+		$this->request(
+			'GET',
+			'/v3/users/reports',
+			['reportType' => 'error', 'holidayType' => 'fixed'],
+			[],
+			['Authorization' => 'Bearer anonymous-token']
+		);
+
+		$this->assertResponseStatusCodeSame(401);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testAnonymousTokenRejectedOnPost(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request(
+			'POST',
+			'/v3/users/reports',
+			['reportType' => 'error', 'holidayType' => 'fixed'],
+			[
+				'language' => 'en',
+				'metadata' => $metadata->id,
+				'report_type' => 'OTHER',
+				'description' => 'Test description',
+			],
+			['Authorization' => 'Bearer anonymous-token']
+		);
+
+		$this->assertResponseStatusCodeSame(401);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
 	public function testInvalidToken(): void
 	{
 		$this->request(

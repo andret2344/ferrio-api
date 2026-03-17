@@ -61,7 +61,8 @@ class PollControllerV3Test extends WebTestCase
 		$this->request('GET', '/v3/polls', [], [], ['Authorization' => 'Bearer test-token']);
 
 		$this->assertResponseIsSuccessful();
-		$data = json_decode($this->client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+		$data = json_decode($this->client->getResponse()
+			->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
 		$ids = array_column($data, 'id');
 		$this->assertContains($activePoll->id, $ids);
@@ -79,7 +80,8 @@ class PollControllerV3Test extends WebTestCase
 		$this->request('GET', "/v3/polls/{$poll->id}", [], [], ['Authorization' => 'Bearer test-token']);
 
 		$this->assertResponseStatusCodeSame(200);
-		$data = json_decode($this->client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+		$data = json_decode($this->client->getResponse()
+			->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
 		$this->assertSame($poll->id, $data['id']);
 		$this->assertSame($poll->question, $data['question']);
@@ -111,6 +113,16 @@ class PollControllerV3Test extends WebTestCase
 		$poll = $this->getFixture('active-poll', Poll::class);
 
 		$this->request('GET', "/v3/polls/{$poll->id}");
+
+		$this->assertResponseStatusCodeSame(401);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testAnonymousTokenRejected(): void
+	{
+		$this->request('GET', '/v3/polls', [], [], ['Authorization' => 'Bearer anonymous-token']);
 
 		$this->assertResponseStatusCodeSame(401);
 	}
@@ -227,7 +239,8 @@ class PollControllerV3Test extends WebTestCase
 		$this->request('GET', '/v3/polls', [], [], ['Authorization' => 'Bearer test-token']);
 		$this->assertResponseIsSuccessful();
 
-		$data = json_decode($this->client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+		$data = json_decode($this->client->getResponse()
+			->getContent(), true, 512, JSON_THROW_ON_ERROR);
 		$activePollData = null;
 		foreach ($data as $item) {
 			if ($item['id'] === $poll->id) {

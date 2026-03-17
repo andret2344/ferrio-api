@@ -1,0 +1,10 @@
+<nav class='manage-topbar'>
+	<div class='d-flex align-items-center px-4 py-3'>
+		<a href='{{ path('manage_index') }}' class='topbar-brand no-a'>Ferrio Manage</a>
+		{% if toolbar is defined and toolbar %}
+			<div class='topbar-toolbar ms-auto d-flex align-items-center gap-2'>
+				{{ toolbar|raw }}
+			</div>
+		{% endif %}
+	</div>
+</nav>

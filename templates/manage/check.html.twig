@@ -1,68 +1,66 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-	<nav class="navbar bg-body-tertiary">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="{{ path('manage_index') }}">← Back</a>
-			<a href="{{ path('manage_index') }}" class="btn btn-outline-secondary btn-sm">Main</a>
+	{% set toolbar_html %}
+		<div class="dropdown">
+			<button
+					class="btn btn-sm btn-outline-light dropdown-toggle"
+					type="button"
+					data-bs-toggle="dropdown"
+					aria-expanded="false"
+					style='min-width: 130px'
+			>
+				{{ language.name }}
+			</button>
+			<ul class="dropdown-menu dropdown-menu-dark">
+				{% for language in languages %}
+					<li>
+						<a class="dropdown-item"
+						   href="{{ path('manage_check_language', {'lang': language.code}) }}">
+							{{ language.name }}
+						</a>
+					</li>
+				{% endfor %}
+			</ul>
 		</div>
-	</nav>
-	<section class='section-main'>
-		<span class='heading my-5'>Welcome to checking UI!</span>
-		<div class='container text-center'>
-			<div class="dropdown">
-				<button
-						class="btn btn-secondary dropdown-toggle"
-						type="button"
-						data-bs-toggle="dropdown"
-						aria-expanded="false"
-						style='width: 150px'
-				>
-					{{ language.name }}
-				</button>
-				<ul class="dropdown-menu">
-					{% for language in languages %}
-						<li>
-							<a
-									class="dropdown-item"
-									href="{{ path('manage_check_language', {'lang': language.code}) }}"
-							>{{ language.name }}</a>
-						</li>
-					{% endfor %}
-				</ul>
+	{% endset %}
+	<main class='section-manage-main'>
+		{% include 'components/topbar.html.twig' with {toolbar: toolbar_html} %}
+		<div class='manage-content'>
+			<h2 class='manage-page-title'>Check holidays</h2>
+			<div style='max-width: 700px; margin: 0 auto'>
+				<form method='post'>
+					{{ form_widget(checkForm._token) }}
+					<label for='holidays' class='d-none'>Holidays</label>
+					<textarea
+							id='holidays'
+							name='holidays'
+							class='manage-input w-100 mb-3'
+							rows='15'
+							placeholder='One holiday per row, no commas.'
+					></textarea>
+					<input type='hidden' name='action' value='check'/>
+					<button type='submit' class='btn btn-outline-light w-100'>Check 'em all!</button>
+				</form>
+				{% if result is not empty %}
+					<div class='table-responsive mt-4'>
+						<table class="table table-dark table-striped table-hover align-middle">
+							<caption>Results</caption>
+							<thead>
+							<tr>
+								<th scope='col'>Name</th>
+							</tr>
+							</thead>
+							<tbody>
+							{% for holiday in result %}
+								<tr>
+									<td>{{ holiday }}</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				{% endif %}
 			</div>
-			<hr/>
-			<form method='post'>
-				{{ form_widget(checkForm._token) }}
-				<label for='holidays' class='d-none'>Holidays</label>
-				<textarea
-						id='holidays'
-						name='holidays'
-						cols='100'
-						rows='20'
-						placeholder='One holiday per row, no commas.'
-				></textarea>
-				<br/>
-				<input type='submit' value="Check 'em all!" id='check' class='btn btn-info'/>
-				<input type='hidden' name='action' value='check'/>
-			</form>
-			<hr/>
-			{% if result is not empty %}
-				<table class="table table-dark table-bordered">
-					<caption>Translations</caption>
-					<thead>
-					<tr>
-						<th scope='col'>Name</th>
-					</tr>
-					</thead>
-					<tbody>
-					{% for holiday in result %}
-						<tr>
-							<td>{{ holiday }}</td>
-						</tr>
-					{% endfor %}
-					</tbody>
-				</table>
-			{% endif %}
 		</div>
-	</section>
+	</main>
 {% endblock %}

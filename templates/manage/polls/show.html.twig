@@ -1,43 +1,42 @@
 {% extends 'base.html.twig' %}
 {% block title %}Poll Results — Ferrio Admin{% endblock %}
 {% block body %}
-	<nav class="navbar bg-body-tertiary">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="{{ path('manage_polls_index') }}">← Back</a>
-			<a href="{{ path('manage_index') }}" class="btn btn-outline-secondary btn-sm">Main</a>
+	<main class='section-manage-main'>
+		{% include 'components/topbar.html.twig' %}
+		<div class='manage-content'>
+			<h2 class='manage-page-title'>{{ poll.name }}</h2>
+			<p class="text-muted">{{ poll.question }}</p>
+			<p>
+				<strong>Period:</strong> {{ poll.start|date('Y-m-d H:i') }} → {{ poll.end|date('Y-m-d H:i') }}
+				&nbsp;|&nbsp;
+				<strong>Active:</strong> {{ poll.active ? 'Yes' : 'No' }}
+				&nbsp;|&nbsp;
+				<strong>Total votes:</strong> {{ total }}
+			</p>
+			<div class='table-responsive' style="max-width: 600px">
+				<table class="table table-dark table-striped table-hover align-middle">
+					<thead>
+					<tr>
+						<th>#</th>
+						<th>Option</th>
+						<th>Votes</th>
+						<th>%</th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for option in poll.options %}
+						{% set optionCount = counts[option.id] ?? 0 %}
+						{% set pct = total > 0 ? ((optionCount / total) * 100)|round(1) : 0 %}
+						<tr>
+							<td>{{ option.id }}</td>
+							<td>{{ option.text }}</td>
+							<td>{{ optionCount }}</td>
+							<td>{{ pct }}%</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
 		</div>
-	</nav>
-	<section class="section-main">
-		<span class="heading my-5">{{ poll.name }}</span>
-		<p class="text-muted">{{ poll.question }}</p>
-		<p>
-			<strong>Period:</strong> {{ poll.start|date('Y-m-d H:i') }} → {{ poll.end|date('Y-m-d H:i') }}
-			&nbsp;|&nbsp;
-			<strong>Active:</strong> {{ poll.active ? 'Yes' : 'No' }}
-			&nbsp;|&nbsp;
-			<strong>Total votes:</strong> {{ total }}
-		</p>
-		<table class="table table-dark table-bordered" style="max-width: 600px">
-			<thead>
-			<tr>
-				<th>#</th>
-				<th>Option</th>
-				<th>Votes</th>
-				<th>%</th>
-			</tr>
-			</thead>
-			<tbody>
-			{% for option in poll.options %}
-				{% set optionCount = counts[option.id] ?? 0 %}
-				{% set pct = total > 0 ? ((optionCount / total) * 100)|round(1) : 0 %}
-				<tr>
-					<td>{{ option.id }}</td>
-					<td>{{ option.text }}</td>
-					<td>{{ optionCount }}</td>
-					<td>{{ pct }}%</td>
-				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
-	</section>
+	</main>
 {% endblock %}

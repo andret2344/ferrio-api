@@ -1,0 +1,256 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+	<main class='section-manage-main'>
+		{% include 'components/topbar.html.twig' %}
+		<div class='manage-content'>
+			<h2 class='manage-page-title'>User Reports</h2>
+
+			<ul class='nav nav-tabs reports-tabs' id='reportsTabs'>
+				<li class='nav-item'>
+					<button
+							class='nav-link active'
+							id='fixed-suggestions-tab'
+							data-bs-toggle='tab'
+							data-bs-target='#fixed-suggestions'
+							type='button'
+					>Fixed Suggestions
+					</button>
+				</li>
+				<li class='nav-item'>
+					<button
+							class='nav-link'
+							id='floating-suggestions-tab'
+							data-bs-toggle='tab'
+							data-bs-target='#floating-suggestions'
+							type='button'
+					>Floating Suggestions
+					</button>
+				</li>
+				<li class='nav-item'>
+					<button
+							class='nav-link'
+							id='fixed-errors-tab'
+							data-bs-toggle='tab'
+							data-bs-target='#fixed-errors'
+							type='button'
+					>Fixed Errors
+					</button>
+				</li>
+				<li class='nav-item'>
+					<button
+							class='nav-link'
+							id='floating-errors-tab'
+							data-bs-toggle='tab'
+							data-bs-target='#floating-errors'
+							type='button'
+					>Floating Errors
+					</button>
+				</li>
+			</ul>
+
+			<div class='tab-content mt-3' id='reportsTabContent'>
+				{# Fixed Suggestions #}
+				<div class='tab-pane fade show active' id='fixed-suggestions'>
+					<div class='report-count'>{{ fixedSuggestions|length }} {{ fixedSuggestions|length == 1 ? 'entry' : 'entries' }}</div>
+					{% if fixedSuggestions is empty %}
+						<div class='text-center text-muted py-5'>No fixed holiday suggestions.</div>
+					{% else %}
+						<div class='table-responsive'>
+							<table class='table table-dark table-striped table-hover align-middle'>
+								<thead>
+								<tr>
+									<th>ID</th>
+									<th>Name</th>
+									<th>Date</th>
+									<th>Description</th>
+									<th>Country</th>
+									<th>State</th>
+									<th>Reported</th>
+									<th>User</th>
+								</tr>
+								</thead>
+								<tbody>
+								{% for s in fixedSuggestions %}
+									<tr>
+										<td>{{ s.id }}</td>
+										<td>{{ s.name }}</td>
+										<td>{{ '%02d.%02d'|format(s.day, s.month) }}</td>
+										<td class='text-truncate' style='max-width: 250px;'>{{ s.description }}</td>
+										<td>{{ s.country ? s.country.isoCode : '-' }}</td>
+										<td>
+											<span class='badge report-state report-state-{{ s.reportState.value|lower }}'>
+												{{ s.reportState.value }}
+											</span>
+										</td>
+										<td>{{ s.datetime|date('Y-m-d H:i') }}</td>
+										<td class='user-cell'>
+											{% set u = users[s.userId] ?? null %}
+											{% if u and (u.name or u.email) %}
+												<div class='user-name'>{{ u.name ?? '-' }}</div>
+												<div class='user-email'>{{ u.email ?? '-' }}</div>
+											{% endif %}
+											<div class='user-uid'>{{ s.userId }}</div>
+										</td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					{% endif %}
+				</div>
+
+				{# Floating Suggestions #}
+				<div class='tab-pane fade' id='floating-suggestions'>
+					<div class='report-count'>{{ floatingSuggestions|length }} {{ floatingSuggestions|length == 1 ? 'entry' : 'entries' }}</div>
+					{% if floatingSuggestions is empty %}
+						<div class='text-center text-muted py-5'>No floating holiday suggestions.</div>
+					{% else %}
+						<div class='table-responsive'>
+							<table class='table table-dark table-striped table-hover align-middle'>
+								<thead>
+								<tr>
+									<th>ID</th>
+									<th>Name</th>
+									<th>Date</th>
+									<th>Description</th>
+									<th>Country</th>
+									<th>State</th>
+									<th>Reported</th>
+									<th>User</th>
+								</tr>
+								</thead>
+								<tbody>
+								{% for s in floatingSuggestions %}
+									<tr>
+										<td>{{ s.id }}</td>
+										<td>{{ s.name }}</td>
+										<td>{{ s.date }}</td>
+										<td class='text-truncate' style='max-width: 250px;'>{{ s.description }}</td>
+										<td>{{ s.country ? s.country.isoCode : '-' }}</td>
+										<td>
+											<span class='badge report-state report-state-{{ s.reportState.value|lower }}'>
+												{{ s.reportState.value }}
+											</span>
+										</td>
+										<td>{{ s.datetime|date('Y-m-d H:i') }}</td>
+										<td class='user-cell'>
+											{% set u = users[s.userId] ?? null %}
+											{% if u and (u.name or u.email) %}
+												<div class='user-name'>{{ u.name ?? '-' }}</div>
+												<div class='user-email'>{{ u.email ?? '-' }}</div>
+											{% endif %}
+											<div class='user-uid'>{{ s.userId }}</div>
+										</td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					{% endif %}
+				</div>
+
+				{# Fixed Errors #}
+				<div class='tab-pane fade' id='fixed-errors'>
+					<div class='report-count'>{{ fixedErrors|length }} {{ fixedErrors|length == 1 ? 'entry' : 'entries' }}</div>
+					{% if fixedErrors is empty %}
+						<div class='text-center text-muted py-5'>No fixed holiday error reports.</div>
+					{% else %}
+						<div class='table-responsive'>
+							<table class='table table-dark table-striped table-hover align-middle'>
+								<thead>
+								<tr>
+									<th>ID</th>
+									<th>Metadata</th>
+									<th>Language</th>
+									<th>Type</th>
+									<th>Description</th>
+									<th>State</th>
+									<th>Reported</th>
+									<th>User</th>
+								</tr>
+								</thead>
+								<tbody>
+								{% for e in fixedErrors %}
+									<tr>
+										<td>{{ e.id }}</td>
+										<td>{{ e.metadata ? e.metadata.id : '-' }}</td>
+										<td>{{ e.language.code }}</td>
+										<td><span class='badge bg-light text-dark'>{{ e.reportType.value }}</span></td>
+										<td class='text-truncate'
+											style='max-width: 250px;'>{{ e.description ?? '-' }}</td>
+										<td>
+											<span class='badge report-state report-state-{{ e.reportState.value|lower }}'>
+												{{ e.reportState.value }}
+											</span>
+										</td>
+										<td>{{ e.datetime|date('Y-m-d H:i') }}</td>
+										<td class='user-cell'>
+											{% set u = users[e.userId] ?? null %}
+											{% if u and (u.name or u.email) %}
+												<div class='user-name'>{{ u.name ?? '-' }}</div>
+												<div class='user-email'>{{ u.email ?? '-' }}</div>
+											{% endif %}
+											<div class='user-uid'>{{ e.userId }}</div>
+										</td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					{% endif %}
+				</div>
+
+				{# Floating Errors #}
+				<div class='tab-pane fade' id='floating-errors'>
+					<div class='report-count'>{{ floatingErrors|length }} {{ floatingErrors|length == 1 ? 'entry' : 'entries' }}</div>
+					{% if floatingErrors is empty %}
+						<div class='text-center text-muted py-5'>No floating holiday error reports.</div>
+					{% else %}
+						<div class='table-responsive'>
+							<table class='table table-dark table-striped table-hover align-middle'>
+								<thead>
+								<tr>
+									<th>ID</th>
+									<th>Metadata</th>
+									<th>Language</th>
+									<th>Type</th>
+									<th>Description</th>
+									<th>State</th>
+									<th>Reported</th>
+									<th>User</th>
+								</tr>
+								</thead>
+								<tbody>
+								{% for e in floatingErrors %}
+									<tr>
+										<td>{{ e.id }}</td>
+										<td>{{ e.metadata ? e.metadata.id : '-' }}</td>
+										<td>{{ e.language.code }}</td>
+										<td><span class='badge bg-light text-dark'>{{ e.reportType.value }}</span></td>
+										<td class='text-truncate'
+											style='max-width: 250px;'>{{ e.description ?? '-' }}</td>
+										<td>
+											<span class='badge report-state report-state-{{ e.reportState.value|lower }}'>
+												{{ e.reportState.value }}
+											</span>
+										</td>
+										<td>{{ e.datetime|date('Y-m-d H:i') }}</td>
+										<td class='user-cell'>
+											{% set u = users[e.userId] ?? null %}
+											{% if u and (u.name or u.email) %}
+												<div class='user-name'>{{ u.name ?? '-' }}</div>
+												<div class='user-email'>{{ u.email ?? '-' }}</div>
+											{% endif %}
+											<div class='user-uid'>{{ e.userId }}</div>
+										</td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</main>
+{% endblock %}
