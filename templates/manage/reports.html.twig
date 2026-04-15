@@ -175,9 +175,14 @@
 										<td>{{ e.id }}</td>
 										<td>{{ e.metadata ? e.metadata.id : '-' }}</td>
 										<td>{{ e.language.code }}</td>
-										<td><span class='badge bg-light text-dark'>{{ e.reportType.value }}</span></td>
-										<td class='text-truncate'
-											style='max-width: 250px;'>{{ e.description ?? '-' }}</td>
+										<td>
+											<span class='badge bg-light text-dark'>{{ e.reportType.value|lower|replace({'_': ' '})|capitalize }}</span>
+										</td>
+										<td
+												class='text-truncate'
+												style='max-width: 250px;'>
+											{{ e.description ?? '-' }}
+										</td>
 										<td>
 											<span class='badge report-state report-state-{{ e.reportState.value|lower }}'>
 												{{ e.reportState.value }}
@@ -226,9 +231,14 @@
 										<td>{{ e.id }}</td>
 										<td>{{ e.metadata ? e.metadata.id : '-' }}</td>
 										<td>{{ e.language.code }}</td>
-										<td><span class='badge bg-light text-dark'>{{ e.reportType.value }}</span></td>
-										<td class='text-truncate'
-											style='max-width: 250px;'>{{ e.description ?? '-' }}</td>
+										<td>
+											<span class='badge bg-light text-dark'>{{ e.reportType.value|lower|replace({'_': ' '})|capitalize }}</span>
+										</td>
+										<td
+												class='text-truncate'
+												style='max-width: 250px;'>
+											{{ e.description ?? '-' }}
+										</td>
 										<td>
 											<span class='badge report-state report-state-{{ e.reportState.value|lower }}'>
 												{{ e.reportState.value }}
