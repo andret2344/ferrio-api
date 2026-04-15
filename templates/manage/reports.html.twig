@@ -263,4 +263,33 @@
 			</div>
 		</div>
 	</main>
+
+	<script>
+		(function () {
+			const tabIds = ['fixed-suggestions', 'floating-suggestions', 'fixed-errors', 'floating-errors'];
+			const setHash = (id) => history.replaceState(null, '', '#' + id);
+
+			const raw = window.location.hash.replace(/^#/, '');
+			const initial = tabIds.includes(raw) ? raw : tabIds[0];
+
+			if (raw !== initial) {
+				setHash(initial);
+			}
+
+			if (initial !== tabIds[0]) {
+				const trigger = document.querySelector('[data-bs-target="#' + initial + '"]');
+				if (trigger) {
+					trigger.click();
+					setHash(initial);
+				}
+			}
+
+			document.querySelectorAll('#reportsTabs [data-bs-toggle="tab"]').forEach((btn) => {
+				btn.addEventListener('shown.bs.tab', (e) => {
+					const target = e.target.getAttribute('data-bs-target') || '';
+					setHash(target.replace(/^#/, ''));
+				});
+			});
+		})();
+	</script>
 {% endblock %}
