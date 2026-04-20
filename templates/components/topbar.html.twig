@@ -1,6 +1,9 @@
 <nav class='manage-topbar'>
 	<div class='d-flex align-items-center px-4 py-3'>
-		<a href='{{ path('manage_index') }}' class='topbar-brand no-a'>Ferrio Manage</a>
+		<a href='{{ path('manage_index') }}' class='topbar-brand no-a d-flex align-items-center gap-2'>
+			<i class='bi bi-calendar2-heart' style='font-size: 20px; color: #5050aa'></i>
+			Ferrio
+		</a>
 		{% if toolbar is defined and toolbar %}
 			<div class='topbar-toolbar ms-auto d-flex align-items-center gap-2'>
 				{{ toolbar|raw }}

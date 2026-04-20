@@ -41,8 +41,7 @@ readonly class HolidayService
 				'id' => $holiday['id'],
 				'name' => $holiday['name'],
 				'usual' => $holiday['usual'],
-				// frontend doesn't work with description, commented-out on purpose
-				'description' => '', //$holiday['description'],
+				'description' => '',
 				'country' => $holiday['countryCode'],
 				'url' => $holiday['url'],
 				'mature_content' => $holiday['matureContent'],

@@ -237,4 +237,136 @@ class AlgorithmResolverTest extends TestCase
 
 		$this->assertNull($result);
 	}
+
+	public function testNthDayOfWeekInMonthFourthThursdayNovember(): void
+	{
+		$resolver = new NthDayOfWeekInMonthResolver();
+
+		// Thanksgiving 2026 — 4th Thursday of November
+		$result = $resolver->calculate([
+			'nth' => 4,
+			'dayOfWeek' => 4,
+			'month' => 11,
+		], 2026);
+
+		$this->assertSame(26, $result['day']);
+		$this->assertSame(11, $result['month']);
+	}
+
+	public function testNthDayOfWeekInMonthWhenFirstDayIsTarget(): void
+	{
+		$resolver = new NthDayOfWeekInMonthResolver();
+
+		// 1st Thursday of January 2026 (Jan 1 is Thursday)
+		$result = $resolver->calculate([
+			'nth' => 1,
+			'dayOfWeek' => 4,
+			'month' => 1,
+		], 2026);
+
+		$this->assertSame(1, $result['day']);
+		$this->assertSame(1, $result['month']);
+	}
+
+	public function testLastNthDayOfWeekInMonthLastFridayDecember(): void
+	{
+		$resolver = new LastNthDayOfWeekInMonthResolver();
+
+		// Last Friday of December 2026 (Dec 31 is Thursday → last Friday is Dec 25)
+		$result = $resolver->calculate([
+			'nth' => 1,
+			'dayOfWeek' => 5,
+			'month' => 12,
+		], 2026);
+
+		$this->assertSame(25, $result['day']);
+		$this->assertSame(12, $result['month']);
+	}
+
+	public function testFirstDayOfWeekAfterDateCrossesMonthBoundary(): void
+	{
+		$resolver = new FirstDayOfWeekAfterDateResolver();
+
+		// First Monday on or after Jan 30, 2026 (Friday) → Feb 2
+		$result = $resolver->calculate([
+			'dayOfWeek' => 1,
+			'month' => 1,
+			'day' => 30,
+		], 2026);
+
+		$this->assertSame(2, $result['day']);
+		$this->assertSame(2, $result['month']);
+	}
+
+	public function testLastDayOfWeekBeforeDateCrossesMonthBoundary(): void
+	{
+		$resolver = new LastDayOfWeekBeforeDateResolver();
+
+		// Last Friday on or before March 3, 2026 (Tuesday) → Feb 27
+		$result = $resolver->calculate([
+			'dayOfWeek' => 5,
+			'month' => 3,
+			'day' => 3,
+		], 2026);
+
+		$this->assertSame(27, $result['day']);
+		$this->assertSame(2, $result['month']);
+	}
+
+	public function testNthDayThenNextDayOfWeekTuesdayAfterFirstMonday(): void
+	{
+		$resolver = new NthDayThenNextDayOfWeekResolver(new NthDayOfWeekInMonthResolver());
+
+		// Tuesday after 1st Monday of July 2026 (July 6) → July 7
+		$result = $resolver->calculate([
+			'nth' => 1,
+			'dayOfWeek' => 1,
+			'month' => 7,
+			'afterDayOfWeek' => 2,
+		], 2026);
+
+		$this->assertSame(7, $result['day']);
+		$this->assertSame(7, $result['month']);
+	}
+
+	public function testLeapYearDateCenturyLeapYear(): void
+	{
+		$resolver = new LeapYearDateResolver();
+
+		// 2000 is a leap year (divisible by 400)
+		$result = $resolver->calculate([
+			'leapDay' => 29,
+			'leapMonth' => 2,
+			'nonLeapDay' => 1,
+			'nonLeapMonth' => 3,
+		], 2000);
+
+		$this->assertSame(29, $result['day']);
+		$this->assertSame(2, $result['month']);
+	}
+
+	public function testLeapYearDateCenturyNonLeapYear(): void
+	{
+		$resolver = new LeapYearDateResolver();
+
+		// 1900 is NOT a leap year (divisible by 100 but not 400)
+		$result = $resolver->calculate([
+			'leapDay' => 29,
+			'leapMonth' => 2,
+			'nonLeapDay' => 1,
+			'nonLeapMonth' => 3,
+		], 1900);
+
+		$this->assertSame(1, $result['day']);
+		$this->assertSame(3, $result['month']);
+	}
+
+	public function testHardcodedDatesEmptyArgsReturnsNull(): void
+	{
+		$resolver = new HardcodedDatesResolver();
+
+		$result = $resolver->calculate([], 2026);
+
+		$this->assertNull($result);
+	}
 }

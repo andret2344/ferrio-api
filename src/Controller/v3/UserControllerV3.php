@@ -83,7 +83,10 @@ class UserControllerV3 extends AbstractController
 			return $this->json($handler->list($userId));
 		}
 
-		$dtoClass = $this->dtoMap[$reportType][$holidayType];
+		$dtoClass = $this->dtoMap[$reportType][$holidayType] ?? null;
+		if (!$dtoClass) {
+			throw new BadRequestHttpException('Invalid reportType or holidayType');
+		}
 		$data = json_decode($request->getContent(), true);
 		if (!is_array($data)) {
 			return new JsonResponse(['error' => 'Invalid JSON'], Response::HTTP_BAD_REQUEST);

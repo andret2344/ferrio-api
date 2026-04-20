@@ -7,35 +7,39 @@ use App\Entity\FloatingHolidayError;
 use App\Entity\FloatingHolidayMetadata;
 use App\Entity\Language;
 use App\Entity\ReportType;
-use Doctrine\ORM\EntityManagerInterface;
 use Override;
 
-readonly class FloatingHolidayErrorHandler implements ReportHandlerInterface
+readonly class FloatingHolidayErrorHandler extends AbstractErrorReportHandler
 {
-	public function __construct(private EntityManagerInterface $entityManager)
+	#[Override]
+	protected function validatePayload(object $payload): array
 	{
+		if (!$payload instanceof FloatingReportDTO) {
+			throw new \InvalidArgumentException('Expected FloatingReportDTO');
+		}
+		return [
+			'language' => $payload->language,
+			'metadata' => $payload->metadata,
+			'reportType' => $payload->reportType,
+			'description' => $payload->description,
+		];
 	}
 
 	#[Override]
-	public function list(string $userId): array
+	protected function getErrorEntityClass(): string
 	{
-		return $this->entityManager->getRepository(FloatingHolidayError::class)
-			->findBy(['userId' => $userId]);
+		return FloatingHolidayError::class;
 	}
 
 	#[Override]
-	public function create(string $userId, object $payload): void
+	protected function getMetadataEntityClass(): string
 	{
-		assert($payload instanceof FloatingReportDTO);
-		$language = $this->entityManager->getRepository(Language::class)
-			->findOneBy(['code' => $payload->language]);
-		/** @var FloatingHolidayMetadata $metadata */
-		$metadata = $this->entityManager->getRepository(FloatingHolidayMetadata::class)
-			->findOneBy(['id' => $payload->metadata]);
-		$reportType = ReportType::from($payload->reportType);
-		$report = new FloatingHolidayError($userId, $language, $metadata, $reportType, $payload->description);
-		$metadata->reports->add($report);
-		$this->entityManager->persist($metadata);
-		$this->entityManager->flush();
+		return FloatingHolidayMetadata::class;
+	}
+
+	#[Override]
+	protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description): object
+	{
+		return new FloatingHolidayError($userId, $language, $metadata, $reportType, $description);
 	}
 }

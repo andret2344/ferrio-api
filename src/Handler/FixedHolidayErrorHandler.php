@@ -7,35 +7,39 @@ use App\Entity\FixedHolidayError;
 use App\Entity\FixedHolidayMetadata;
 use App\Entity\Language;
 use App\Entity\ReportType;
-use Doctrine\ORM\EntityManagerInterface;
 use Override;
 
-readonly class FixedHolidayErrorHandler implements ReportHandlerInterface
+readonly class FixedHolidayErrorHandler extends AbstractErrorReportHandler
 {
-	public function __construct(private EntityManagerInterface $entityManager)
+	#[Override]
+	protected function validatePayload(object $payload): array
 	{
+		if (!$payload instanceof FixedReportDTO) {
+			throw new \InvalidArgumentException('Expected FixedReportDTO');
+		}
+		return [
+			'language' => $payload->language,
+			'metadata' => $payload->metadata,
+			'reportType' => $payload->reportType,
+			'description' => $payload->description,
+		];
 	}
 
 	#[Override]
-	public function list(string $userId): array
+	protected function getErrorEntityClass(): string
 	{
-		return $this->entityManager->getRepository(FixedHolidayError::class)
-			->findBy(['userId' => $userId]);
+		return FixedHolidayError::class;
 	}
 
 	#[Override]
-	public function create(string $userId, object $payload): void
+	protected function getMetadataEntityClass(): string
 	{
-		assert($payload instanceof FixedReportDTO);
-		$language = $this->entityManager->getRepository(Language::class)
-			->findOneBy(['code' => $payload->language]);
-		/** @var FixedHolidayMetadata $metadata */
-		$metadata = $this->entityManager->getRepository(FixedHolidayMetadata::class)
-			->findOneBy(['id' => $payload->metadata]);
-		$reportType = ReportType::from($payload->reportType);
-		$report = new FixedHolidayError($userId, $language, $metadata, $reportType, $payload->description);
-		$metadata->reports->add($report);
-		$this->entityManager->persist($metadata);
-		$this->entityManager->flush();
+		return FixedHolidayMetadata::class;
+	}
+
+	#[Override]
+	protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description): object
+	{
+		return new FixedHolidayError($userId, $language, $metadata, $reportType, $description);
 	}
 }

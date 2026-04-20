@@ -6,8 +6,6 @@ use App\Entity\Country;
 use App\Entity\FixedHoliday;
 use App\Entity\FixedHolidayMetadata;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\ParameterType;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
 class FixedHolidayRepository extends ServiceEntityRepository
@@ -46,9 +44,9 @@ class FixedHolidayRepository extends ServiceEntityRepository
 			->getResult();
 	}
 
-	public function findAllByLanguage(string $language, int $offset = 0, int $limit = 1_000_000, bool $matureContent = false): array
+	public function findAllByLanguage(string $language, int $offset = 0, int $limit = 1_000_000, bool $matureContent = false, ?int $day = null, ?int $month = null, ?string $country = null): array
 	{
-		return $this->createQueryBuilder('h')
+		$qb = $this->createQueryBuilder('h')
 			->select([
 				'm.id',
 				'm.month',
@@ -70,9 +68,19 @@ class FixedHolidayRepository extends ServiceEntityRepository
 			->setParameter('language', $language)
 			->setParameter('matureContent', $matureContent)
 			->orderBy('m.month', 'ASC')
-			->addOrderBy('m.day', 'ASC')
-			->getQuery()
-			->getResult();
+			->addOrderBy('m.day', 'ASC');
+
+		if ($month !== null) {
+			$qb->andWhere('m.month = :month')->setParameter('month', $month);
+		}
+		if ($day !== null) {
+			$qb->andWhere('m.day = :day')->setParameter('day', $day);
+		}
+		if ($country !== null) {
+			$qb->andWhere('c.isoCode = :country')->setParameter('country', $country);
+		}
+
+		return $qb->getQuery()->getResult();
 	}
 
 	public function check(string $language, array $array): array
@@ -91,34 +99,27 @@ class FixedHolidayRepository extends ServiceEntityRepository
 
 	public function findAllAggregatedById(string $languageFrom, string $languageTo, int $offset = 0, int $limit = 1_000_000): array
 	{
-		$rsm = new ResultSetMapping();
-		$rsm->addEntityResult(FixedHoliday::class, 'h');
-		$rsm->addScalarResult('id', 'id');
-		$rsm->addScalarResult('day', 'day');
-		$rsm->addScalarResult('month', 'month');
-		$rsm->addScalarResult('name_from', 'nameFrom');
-		$rsm->addScalarResult('description_from', 'descriptionFrom');
-		$rsm->addScalarResult('name_to', 'nameTo');
-		$rsm->addScalarResult('description_to', 'descriptionTo');
-		$sql = "SELECT m1.day         AS day,
-					   m1.month       AS month,
-					   h1.metadata_id AS id,
-					   h1.name        AS name_from,
-					   h1.description AS description_from,
-					   h2.name        AS name_to,
-					   h2.description AS description_to
-				FROM (SELECT * FROM fixed_holiday WHERE fixed_holiday.language_code = :langFrom) as h1
-						 LEFT JOIN (SELECT * FROM fixed_holiday WHERE fixed_holiday.language_code = :langTo) as h2
-								   ON h1.metadata_id = h2.metadata_id
-						 INNER JOIN fixed_holiday_metadata m1 ON h1.metadata_id = m1.id
-				ORDER BY month, day
-				LIMIT :limit OFFSET :offset;";
-		$query = $this->getEntityManager()
-			->createNativeQuery($sql, $rsm);
-		$query->setParameter('langFrom', $languageFrom);
-		$query->setParameter('langTo', $languageTo);
-		$query->setParameter('limit', $limit, ParameterType::INTEGER);
-		$query->setParameter('offset', $offset, ParameterType::INTEGER);
-		return $query->getResult();
+		return $this->getEntityManager()->createQueryBuilder()
+			->select([
+				'm.day AS day',
+				'm.month AS month',
+				'm.id AS id',
+				'h1.name AS nameFrom',
+				'h1.description AS descriptionFrom',
+				'h2.name AS nameTo',
+				'h2.description AS descriptionTo',
+			])
+			->from(FixedHoliday::class, 'h1')
+			->join('h1.metadata', 'm')
+			->leftJoin(FixedHoliday::class, 'h2', 'WITH', 'h2.metadata = m.id AND h2.language = :langTo')
+			->where('h1.language = :langFrom')
+			->setParameter('langFrom', $languageFrom)
+			->setParameter('langTo', $languageTo)
+			->orderBy('m.month', 'ASC')
+			->addOrderBy('m.day', 'ASC')
+			->setFirstResult($offset)
+			->setMaxResults($limit)
+			->getQuery()
+			->getResult();
 	}
 }

@@ -39,7 +39,9 @@
 							placeholder='One holiday per row, no commas.'
 					></textarea>
 					<input type='hidden' name='action' value='check'/>
-					<button type='submit' class='btn btn-outline-light w-100'>Check 'em all!</button>
+					<button type='submit' class='btn btn-outline-light w-100'>
+							<i class='bi bi-search me-2'></i>Check 'em all!
+						</button>
 				</form>
 				{% if result is not empty %}
 					<div class='table-responsive mt-4'>

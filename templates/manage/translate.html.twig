@@ -25,7 +25,7 @@
 					{% endfor %}
 				</ul>
 			</div>
-			<i class="bi bi-arrow-left-right swap" style='font-size: 18px; cursor: pointer; color: #888'></i>
+			<i class="bi bi-arrow-left-right swap" style='font-size: 16px; cursor: pointer; color: #5050aa; transition: color 0.2s'></i>
 			<div class="dropdown">
 				<button
 						class="btn btn-sm btn-outline-light dropdown-toggle"
@@ -55,6 +55,7 @@
 		{% include 'components/topbar.html.twig' with {toolbar: toolbar_html} %}
 		<div class='manage-content'>
 			<h2 class='manage-page-title'>{{ languageFrom.name }} → {{ languageTo.name }}</h2>
+			<div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
 			{% set url = '/manage/translate/%page%/' ~ languageFrom.code ~ '/' ~ languageTo.code %}
 			{% include 'components/navigation.html.twig' with {'page': page, 'url': url} %}
 			<div class='table-responsive'>
@@ -83,29 +84,54 @@
 							<td>{{ element.nameFrom }}</td>
 							<td>
 								<label for='{{ 'name-' ~ element.id }}' class='d-none'>Name</label>
-								<input
-										name='name'
-										class='w-100 manage-input'
-										form='{{ form_id }}'
-										id='{{ 'name-' ~ element.id }}'
-										value='{{ element.nameTo }}'
-								/>
+								<div class='d-flex align-items-center gap-1'>
+									<input
+											name='name'
+											class='w-100 manage-input'
+											form='{{ form_id }}'
+											id='{{ 'name-' ~ element.id }}'
+											value='{{ element.nameTo }}'
+									/>
+									<button
+											type='button'
+											class='btn btn-sm btn-outline-light btn-generate-desc flex-shrink-0'
+											title='Generate name with AI'
+											data-gen-type='name'
+											data-target='{{ 'name-' ~ element.id }}'
+											data-polish-name='{{ element.nameFrom }}'
+											data-month='{{ element.month }}'
+											data-day='{{ element.day }}'
+									><i class='bi bi-stars'></i></button>
+								</div>
 							</td>
 							<td rowspan='2'>
-								<input type='submit' value='Send' form='{{ form_id }}' class='btn btn-sm btn-outline-light'>
+								<button type='submit' form='{{ form_id }}' class='btn btn-sm btn-outline-light'><i class='bi bi-check-lg'></i></button>
 							</td>
 						</tr>
 						<tr>
-							<td>{{ element.descriptionFrom }}</td>
+							<td>{{ element.descriptionFrom | nl2br }}</td>
 							<td>
 								<label for='{{ 'description-' ~ element.id }}' class='d-none'>Description</label>
-								<textarea
-										style='min-height: 72px'
-										name='description'
-										class='w-100 manage-input'
-										form='{{ form_id }}'
-										id='{{ 'description-' ~ element.id }}'
-								>{{ element.descriptionTo }}</textarea>
+								<div class='d-flex align-items-center gap-1'>
+									<textarea
+											style='min-height: 72px'
+											name='description'
+											class='w-100 manage-input'
+											form='{{ form_id }}'
+											id='{{ 'description-' ~ element.id }}'
+									>{{ element.descriptionTo }}</textarea>
+									<button
+											type='button'
+											class='btn btn-sm btn-outline-light btn-generate-desc flex-shrink-0'
+											title='Generate description with AI'
+											data-gen-type='description'
+											data-target='{{ 'description-' ~ element.id }}'
+											data-name-source='{{ 'name-' ~ element.id }}'
+											data-polish-name='{{ element.nameFrom }}'
+											data-month='{{ element.month }}'
+											data-day='{{ element.day }}'
+									><i class='bi bi-stars'></i></button>
+								</div>
 							</td>
 						</tr>
 					{% endfor %}
@@ -116,9 +142,106 @@
 		</div>
 	</main>
 	<script>
+		document.addEventListener('DOMContentLoaded', () => {
 		const swapIcon = document.querySelector('.swap');
 		swapIcon.addEventListener('click', () => {
 			window.location.href = '/manage/translate/{{ page }}/{{ languageTo.code }}/{{ languageFrom.code }}';
+		});
+
+		function showToast(type, message) {
+			const container = document.getElementById('toast-container');
+			const toast = document.createElement('div');
+			toast.className = `toast align-items-center text-bg-${type} border-0`;
+			toast.setAttribute('role', 'alert');
+			toast.innerHTML = `<div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
+			container.appendChild(toast);
+			const bsToast = new bootstrap.Toast(toast, {delay: 3000});
+			bsToast.show();
+			toast.addEventListener('hidden.bs.toast', () => toast.remove());
+		}
+
+		function setButtonLoading(btn, loading) {
+			const icon = btn.querySelector('i');
+			if (loading) {
+				btn.disabled = true;
+				icon.className = 'bi bi-arrow-repeat spin-icon';
+			} else {
+				btn.disabled = false;
+				icon.className = icon.dataset.originalClass || 'bi bi-check-lg';
+			}
+		}
+
+		document.querySelectorAll('form[id^="form-"]').forEach(form => {
+			const btn = document.querySelector(`button[type="submit"][form="${form.id}"]`);
+			const icon = btn.querySelector('i');
+			icon.dataset.originalClass = icon.className;
+
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				setButtonLoading(btn, true);
+				try {
+					const res = await axios.post('/manage/api/translation/{{ languageTo.code }}', new FormData(form));
+					if (res.data.success) {
+						showToast('success', 'Translation saved.');
+					}
+				} catch (err) {
+					const errors = err.response?.data?.errors;
+					showToast('danger', errors ? errors.join(', ') : 'Failed to save translation.');
+				} finally {
+					setButtonLoading(btn, false);
+				}
+			});
+		});
+
+		const targetLanguage = '{{ languageTo.name }}';
+
+		document.querySelectorAll('.btn-generate-desc').forEach(btn => {
+			btn.addEventListener('click', async () => {
+				const target = document.getElementById(btn.dataset.target);
+				const genType = btn.dataset.genType;
+				const month = parseInt(btn.dataset.month);
+				const day = parseInt(btn.dataset.day);
+				const polishName = btn.dataset.polishName;
+
+				let name;
+				if (genType === 'description') {
+					const nameEl = document.getElementById(btn.dataset.nameSource);
+					const translatedName = nameEl ? nameEl.value.trim() : '';
+					name = translatedName || polishName;
+				} else {
+					name = polishName;
+				}
+
+				if (!name) {
+					alert('Holiday name is missing.');
+					return;
+				}
+
+				const icon = btn.querySelector('i');
+				icon.className = 'bi bi-arrow-repeat spin-icon';
+				btn.disabled = true;
+
+				try {
+					const res = await axios.post('/manage/api/generate', {
+						type: genType,
+						day,
+						month,
+						name,
+						language: targetLanguage,
+					});
+					if (res.data.error) {
+						alert(res.data.error);
+					} else {
+						target.value = res.data.result;
+					}
+				} catch (e) {
+					alert('Failed to generate content.');
+				} finally {
+					icon.className = 'bi bi-stars';
+					btn.disabled = false;
+				}
+			});
+		});
 		});
 	</script>
 {% endblock %}

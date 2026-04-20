@@ -2,35 +2,27 @@
 
 namespace App\Service;
 
-use DateTimeImmutable;
-use Monolog\Handler\StreamHandler;
-use Monolog\Level;
-use Monolog\Logger;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 readonly class LoggingService
 {
-	private Logger $log;
-
-	public function __construct(ParameterBagInterface $params)
+	public function __construct(private LoggerInterface $logger)
 	{
-		$this->log = new Logger('Ferrio');
-		$projectDir = $params->get('kernel.project_dir');
-		$this->log->pushHandler(new StreamHandler($projectDir . '/log/latest.log', Level::fromName($params->get('logging_level'))));
 	}
 
 	public function route(Request $request): void
 	{
-		$queryString = http_build_query($request->query->all());
-		$line = sprintf(
-			'[%s] %s %s%s',
-			new DateTimeImmutable()->format('Y-m-d H:i:s'),
-			$request->getMethod(),
-			$request->getPathInfo(),
-			$queryString ? '?' . $queryString : ''
-		);
+		$requestId = bin2hex(random_bytes(8));
+		$request->attributes->set('request_id', $requestId);
 
-		$this->log->info($line);
+		$this->logger->info('Incoming request', [
+			'request_id' => $requestId,
+			'method' => $request->getMethod(),
+			'path' => $request->getPathInfo(),
+			'query' => $request->query->all(),
+			'ip' => $request->getClientIp(),
+			'user_agent' => $request->headers->get('User-Agent'),
+		]);
 	}
 }

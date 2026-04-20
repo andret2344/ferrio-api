@@ -25,7 +25,9 @@ readonly class FloatingHolidaySuggestionHandler implements ReportHandlerInterfac
 	#[Override]
 	public function create(string $userId, object $payload): void
 	{
-		assert($payload instanceof FloatingSuggestionDTO);
+		if (!$payload instanceof FloatingSuggestionDTO) {
+			throw new \InvalidArgumentException('Expected FloatingSuggestionDTO');
+		}
 		$report = new FloatingHolidaySuggestion($userId, $payload->name, $payload->description, $payload->date, $this->getCountry($payload->country));
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();

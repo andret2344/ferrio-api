@@ -4,9 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-  logging_level: '%env(LOGGING_LEVEL)%'
   firebase_project_id: '%env(FIREBASE_PROJECT_ID)%'
   firebase_credentials: '%env(FIREBASE_CREDENTIALS)%'
+  anthropic_api_key: '%env(ANTHROPIC_API_KEY)%'
 
 services:
   _defaults:
@@ -14,6 +14,7 @@ services:
     autoconfigure: true
     bind:
       $firebaseProjectId: '%firebase_project_id%'
+      $anthropicApiKey: '%anthropic_api_key%'
 
   App\:
     resource: '../src/'

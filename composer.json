@@ -8,7 +8,7 @@
 		"doctrine/doctrine-bundle": "^3.2.2",
 		"doctrine/doctrine-migrations-bundle": "^4.0.0",
 		"doctrine/migrations": "^3.9.6",
-		"doctrine/orm": "^3.6.2",
+		"doctrine/orm": "^3.6.3",
 		"kreait/firebase-php": "^8.2",
 		"monolog/monolog": "^3.10.0",
 		"nelmio/cors-bundle": "^2.6.1",
@@ -87,7 +87,7 @@
 		"phpunit/phpunit": "^13.0.3",
 		"symfony/browser-kit": "*",
 		"symfony/css-selector": "*",
-		"symfony/http-client": "*",
+		"symfony/http-client": "^7.4",
 		"symfony/maker-bundle": "^v1.64.0",
 		"symfony/stopwatch": "*",
 		"symfony/web-profiler-bundle": "*"

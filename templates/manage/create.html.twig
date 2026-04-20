@@ -14,18 +14,7 @@
 		{% include 'components/topbar.html.twig' with {toolbar: toolbar_html} %}
 		<div class='manage-content'>
 			<h2 class='manage-page-title'>Holidays</h2>
-			{% for message in app.flashes('success') %}
-				<div class="alert alert-success alert-dismissible fade show" role="alert">
-					{{ message }}
-					<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-				</div>
-			{% endfor %}
-			{% for message in app.flashes('danger') %}
-				<div class="alert alert-danger alert-dismissible fade show" role="alert">
-					{{ message }}
-					<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-				</div>
-			{% endfor %}
+			<div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
 			{% include 'components/navigation.html.twig' with {'page': page, 'url': '/manage/create/%page%'} %}
 			<div class='table-responsive'>
 				<table class="table table-dark table-striped table-hover align-middle">
@@ -84,15 +73,26 @@
 							</td>
 							<td>
 								<label for='{{ 'description-' ~ element.id }}' class='d-none'>Description</label>
-								<textarea
-										style='min-height: 72px'
-										name='description'
-										class='w-100 manage-input textarea-holiday-description'
-										form='{{ form_id }}'
-										id='{{ 'description-' ~ element.id }}'
-								>{{ element.description }}</textarea>
+								<div class='d-flex align-items-center gap-1'>
+									<textarea
+											style='min-height: 72px'
+											name='description'
+											class='w-100 manage-input textarea-holiday-description'
+											form='{{ form_id }}'
+											id='{{ 'description-' ~ element.id }}'
+									>{{ element.description }}</textarea>
+									<button
+											type='button'
+											class='btn btn-sm btn-outline-light btn-generate-desc flex-shrink-0'
+											title='Generate description with AI'
+											data-target='{{ 'description-' ~ element.id }}'
+											data-name-source='{{ 'name-' ~ element.id }}'
+											data-month='{{ element.month }}'
+											data-day='{{ element.day }}'
+									><i class='bi bi-stars'></i></button>
+								</div>
 							</td>
-							<td><input type='submit' form='{{ form_id }}' class='btn btn-sm btn-outline-light'></td>
+							<td><button type='submit' form='{{ form_id }}' class='btn btn-sm btn-outline-light'><i class='bi bi-check-lg'></i></button></td>
 						</tr>
 					{% endfor %}
 					</tbody>
@@ -184,15 +184,26 @@
 						</td>
 						<td>
 							<label for='description-create' class='d-none'>Description</label>
-							<textarea
-									style='min-height: 72px'
-									name='description'
-									class='w-100 manage-input'
-									form='create'
-									id='description-create'
-							></textarea>
+							<div class='d-flex align-items-center gap-1'>
+								<textarea
+										style='min-height: 72px'
+										name='description'
+										class='w-100 manage-input'
+										form='create'
+										id='description-create'
+								></textarea>
+								<button
+										type='button'
+										class='btn btn-sm btn-outline-light btn-generate-desc flex-shrink-0'
+										title='Generate description with AI'
+										data-target='description-create'
+										data-name-source='name-create'
+										data-month-source='month-create'
+										data-day-source='day-create'
+								><i class='bi bi-stars'></i></button>
+							</div>
 						</td>
-						<td><input type='submit' form='create' class='btn btn-sm btn-outline-light'></td>
+						<td><button type='submit' form='create' class='btn btn-sm btn-outline-light'><i class='bi bi-plus-lg'></i></button></td>
 					</tr>
 					</tbody>
 				</table>
@@ -201,6 +212,7 @@
 		</div>
 	</main>
 	<script type='text/javascript'>
+		document.addEventListener('DOMContentLoaded', () => {
 		const hidingSwitch = document.querySelector('#hideDescribedHolidays');
 		if (localStorage.getItem('hide') === 'true') {
 			hidingSwitch.checked = true;
@@ -224,5 +236,118 @@
 				}
 			});
 		}
+
+		function showToast(type, message) {
+			const container = document.getElementById('toast-container');
+			const toast = document.createElement('div');
+			toast.className = `toast align-items-center text-bg-${type} border-0`;
+			toast.setAttribute('role', 'alert');
+			toast.innerHTML = `<div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
+			container.appendChild(toast);
+			const bsToast = new bootstrap.Toast(toast, {delay: 3000});
+			bsToast.show();
+			toast.addEventListener('hidden.bs.toast', () => toast.remove());
+		}
+
+		function setButtonLoading(btn, loading) {
+			const icon = btn.querySelector('i');
+			if (loading) {
+				btn.disabled = true;
+				icon.className = 'bi bi-arrow-repeat spin-icon';
+			} else {
+				btn.disabled = false;
+				icon.className = icon.dataset.originalClass || 'bi bi-check-lg';
+			}
+		}
+
+		document.querySelectorAll('form[id^="form-"]').forEach(form => {
+			const btn = document.querySelector(`button[type="submit"][form="${form.id}"]`);
+			const icon = btn.querySelector('i');
+			icon.dataset.originalClass = icon.className;
+
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				setButtonLoading(btn, true);
+				try {
+					const res = await axios.post('/manage/api/holiday/update', new FormData(form));
+					if (res.data.success) {
+						showToast('success', 'Holiday updated.');
+					}
+				} catch (err) {
+					const errors = err.response?.data?.errors;
+					showToast('danger', errors ? errors.join(', ') : 'Failed to update holiday.');
+				} finally {
+					setButtonLoading(btn, false);
+				}
+			});
+		});
+
+		const createForm = document.getElementById('create');
+		const createBtn = document.querySelector('button[type="submit"][form="create"]');
+		const createIcon = createBtn.querySelector('i');
+		createIcon.dataset.originalClass = createIcon.className;
+
+		createForm.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			setButtonLoading(createBtn, true);
+			try {
+				const res = await axios.post('/manage/api/holiday', new FormData(createForm));
+				if (res.data.success) {
+					showToast('success', res.data.message);
+					createForm.reset();
+				}
+			} catch (err) {
+				const errors = err.response?.data?.errors;
+				showToast('danger', errors ? errors.join(', ') : 'Failed to create holiday.');
+			} finally {
+				setButtonLoading(createBtn, false);
+			}
+		});
+
+		document.querySelectorAll('.btn-generate-desc').forEach(btn => {
+			btn.addEventListener('click', async () => {
+				const target = document.getElementById(btn.dataset.target);
+				const nameEl = document.getElementById(btn.dataset.nameSource);
+				const name = nameEl ? nameEl.value.trim() : '';
+
+				let month, day;
+				if (btn.dataset.monthSource) {
+					month = document.getElementById(btn.dataset.monthSource)?.value;
+					day = document.getElementById(btn.dataset.daySource)?.value;
+				} else {
+					month = btn.dataset.month;
+					day = btn.dataset.day;
+				}
+
+				if (!name || !month || !day) {
+					alert('Fill in day, month and name first.');
+					return;
+				}
+
+				const icon = btn.querySelector('i');
+				icon.className = 'bi bi-arrow-repeat spin-icon';
+				btn.disabled = true;
+
+				try {
+					const res = await axios.post('/manage/api/generate', {
+						type: 'description_pl',
+						day: parseInt(day),
+						month: parseInt(month),
+						name,
+					});
+					if (res.data.error) {
+						alert(res.data.error);
+					} else {
+						target.value = res.data.result;
+					}
+				} catch (e) {
+					alert('Failed to generate description.');
+				} finally {
+					icon.className = 'bi bi-stars';
+					btn.disabled = false;
+				}
+			});
+		});
+		});
 	</script>
 {% endblock %}

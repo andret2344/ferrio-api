@@ -106,6 +106,12 @@ Available algorithms with v1/v2 `args` → v3 `algorithmArgs` mapping (dayOfWeek
 `ManageController` + `WebController` serve Twig templates under `/manage` for managing holiday data (create, translate,
 check). Protected by `ROLE_USER` via HTTP Basic Auth.
 
+`GenerateDescriptionController` (`POST /manage/generate-description`) calls the Anthropic API (Claude Haiku 4.5) to
+generate Polish holiday descriptions. It accepts `{day, month, name}` JSON and returns `{description}`. The system
+prompt enforces Ferrio's copywriting style (150-250 words, informative tone, Polish language). The API key is configured
+via `ANTHROPIC_API_KEY` env var. The create/update forms in `create.html.twig` have an AI generate button (sparkle icon)
+next to each description textarea that calls this endpoint via fetch.
+
 ### Testing
 
 - Tests extend `WebTestCase` and use `Liip\TestFixturesBundle` with `DAMA\DoctrineTestBundle` for transactional test
@@ -118,5 +124,6 @@ check). Protected by `ROLE_USER` via HTTP Basic Auth.
 
 - PHP 8.5 property hooks and `private(set)` visibility are used in entities.
 - Doctrine mapping uses PHP 8 attributes (not XML/YAML).
-- Frontend uses Webpack Encore with TypeScript and Bootstrap 5 / MDB UI Kit.
+- Frontend uses Webpack Encore with TypeScript and Bootstrap 5 / MDB UI Kit. Icons: Bootstrap Icons, Unicons, Font Awesome 5.
 - CI runs on GitHub Actions (`.github/workflows/ci.yml`), executing PHPUnit on PHP 8.5.
+- Composer is at `C:\Tools\php85-ts\composer.bat` (not on PATH in bash).
