@@ -1,0 +1,2 @@
+Write a description for the holiday "{name}" celebrated on {day}.{month} (day.month). Write in {language}.
+Do NOT include the holiday name, date, or any title/header. Start directly with the description text.

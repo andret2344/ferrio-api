@@ -1,0 +1,2 @@
+Napisz opis święta "{name}" obchodzonego {day}.{month} (dzień.miesiąc). Pisz w języku: {language}.
+NIE zawieraj nazwy święta, daty ani żadnego tytułu ani nagłówka. Zacznij bezpośrednio z tekstem opisu.

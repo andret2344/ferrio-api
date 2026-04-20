@@ -2,6 +2,7 @@
 
 namespace App\Tests\Service;
 
+use App\Service\Algorithm\EarthHourResolver;
 use App\Service\Algorithm\FirstDayOfWeekAfterDateResolver;
 use App\Service\Algorithm\HardcodedDatesResolver;
 use App\Service\Algorithm\LastDayOfWeekBeforeDateResolver;
@@ -368,5 +369,49 @@ class AlgorithmResolverTest extends TestCase
 		$result = $resolver->calculate([], 2026);
 
 		$this->assertNull($result);
+	}
+
+	public function testEarthHourNormalYear(): void
+	{
+		$resolver = new EarthHourResolver();
+
+		// 2026: Easter Apr 5, Holy Saturday Apr 4, last Sat of March = Mar 28 → no clash
+		$result = $resolver->calculate([], 2026);
+
+		$this->assertSame(28, $result['day']);
+		$this->assertSame(3, $result['month']);
+	}
+
+	public function testEarthHourClashWithHolySaturday(): void
+	{
+		$resolver = new EarthHourResolver();
+
+		// 2024: Easter Mar 31, Holy Saturday Mar 30, last Sat of March = Mar 30 → clash, shift to Mar 23
+		$result = $resolver->calculate([], 2024);
+
+		$this->assertSame(23, $result['day']);
+		$this->assertSame(3, $result['month']);
+	}
+
+	public function testEarthHourClash2027(): void
+	{
+		$resolver = new EarthHourResolver();
+
+		// 2027: Easter Mar 28, Holy Saturday Mar 27, last Sat of March = Mar 27 → clash, shift to Mar 20
+		$result = $resolver->calculate([], 2027);
+
+		$this->assertSame(20, $result['day']);
+		$this->assertSame(3, $result['month']);
+	}
+
+	public function testEarthHourNoClash2025(): void
+	{
+		$resolver = new EarthHourResolver();
+
+		// 2025: Easter Apr 20, last Sat of March = Mar 29 → no clash
+		$result = $resolver->calculate([], 2025);
+
+		$this->assertSame(29, $result['day']);
+		$this->assertSame(3, $result['month']);
 	}
 }

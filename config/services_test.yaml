@@ -4,3 +4,6 @@ services:
 
   App\Service\FirebaseUserLookup:
     class: App\Tests\Double\TestFirebaseUserLookup
+
+  Symfony\Contracts\HttpClient\HttpClientInterface:
+    public: true
