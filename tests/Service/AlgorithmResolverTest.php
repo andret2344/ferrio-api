@@ -2,6 +2,7 @@
 
 namespace App\Tests\Service;
 
+use App\Service\Algorithm\FixedDateWithChangesResolver;
 use App\Service\Algorithm\EarthHourResolver;
 use App\Service\Algorithm\FirstDayOfWeekAfterDateResolver;
 use App\Service\Algorithm\HardcodedDatesResolver;
@@ -413,5 +414,85 @@ class AlgorithmResolverTest extends TestCase
 
 		$this->assertSame(29, $result['day']);
 		$this->assertSame(3, $result['month']);
+	}
+
+	public function testDateChangedFromYearBeforeAnyChange(): void
+	{
+		$resolver = new FixedDateWithChangesResolver();
+
+		// World Table Tennis Day before 2023 → April 6
+		$result = $resolver->calculate([
+			'defaultDay' => 6,
+			'defaultMonth' => 4,
+			'changes' => [
+				['fromYear' => 2023, 'day' => 23, 'month' => 4],
+			],
+		], 2022);
+
+		$this->assertSame(6, $result['day']);
+		$this->assertSame(4, $result['month']);
+	}
+
+	public function testDateChangedFromYearAtChangeYear(): void
+	{
+		$resolver = new FixedDateWithChangesResolver();
+
+		// World Table Tennis Day from 2023 → April 23
+		$result = $resolver->calculate([
+			'defaultDay' => 6,
+			'defaultMonth' => 4,
+			'changes' => [
+				['fromYear' => 2023, 'day' => 23, 'month' => 4],
+			],
+		], 2023);
+
+		$this->assertSame(23, $result['day']);
+		$this->assertSame(4, $result['month']);
+	}
+
+	public function testDateChangedFromYearAfterChange(): void
+	{
+		$resolver = new FixedDateWithChangesResolver();
+
+		// World Table Tennis Day after 2023 → April 23
+		$result = $resolver->calculate([
+			'defaultDay' => 6,
+			'defaultMonth' => 4,
+			'changes' => [
+				['fromYear' => 2023, 'day' => 23, 'month' => 4],
+			],
+		], 2026);
+
+		$this->assertSame(23, $result['day']);
+		$this->assertSame(4, $result['month']);
+	}
+
+	public function testDateChangedFromYearMultipleChanges(): void
+	{
+		$resolver = new FixedDateWithChangesResolver();
+
+		$args = [
+			'defaultDay' => 1,
+			'defaultMonth' => 3,
+			'changes' => [
+				['fromYear' => 2010, 'day' => 15, 'month' => 3],
+				['fromYear' => 2020, 'day' => 22, 'month' => 6],
+			],
+		];
+
+		// Before first change → default
+		$result = $resolver->calculate($args, 2005);
+		$this->assertSame(1, $result['day']);
+		$this->assertSame(3, $result['month']);
+
+		// Between first and second change → first change
+		$result = $resolver->calculate($args, 2015);
+		$this->assertSame(15, $result['day']);
+		$this->assertSame(3, $result['month']);
+
+		// After second change → second change
+		$result = $resolver->calculate($args, 2026);
+		$this->assertSame(22, $result['day']);
+		$this->assertSame(6, $result['month']);
 	}
 }

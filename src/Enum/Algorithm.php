@@ -2,6 +2,7 @@
 
 namespace App\Enum;
 
+use App\Service\Algorithm\FixedDateWithChangesResolver;
 use App\Service\Algorithm\FirstDayOfWeekAfterDateResolver;
 use App\Service\Algorithm\EarthHourResolver;
 use App\Service\Algorithm\HardcodedDatesResolver;
@@ -21,6 +22,7 @@ enum Algorithm: string
 	case LEAP_YEAR_DATE = 'leap_year_date';
 	case EARTH_HOUR = 'earth_hour';
 	case HARDCODED_DATES = 'hardcoded_dates';
+	case FIXED_DATE_WITH_CHANGES = 'fixed_date_with_changes';
 
 	/**
 	 * @return class-string<\App\Service\Algorithm\AlgorithmResolverInterface>
@@ -36,6 +38,7 @@ enum Algorithm: string
 			self::LEAP_YEAR_DATE => LeapYearDateResolver::class,
 			self::EARTH_HOUR => EarthHourResolver::class,
 			self::HARDCODED_DATES => HardcodedDatesResolver::class,
+			self::FIXED_DATE_WITH_CHANGES => FixedDateWithChangesResolver::class,
 		};
 	}
 }
