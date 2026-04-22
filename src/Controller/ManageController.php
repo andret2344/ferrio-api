@@ -44,15 +44,16 @@ class ManageController extends AbstractController
 		]);
 	}
 
-	#[Route('/translate/{page}/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'translate')]
-	public function translate(Request $request, int $page, string $from, string $to): Response
+	#[Route('/translate/{month<^([1-9]|1[0-2])$>}', name: 'translate')]
+	public function translate(Request $request, int $month): Response
 	{
+		$from = $request->query->getString('from', 'pl');
+		$to = $request->query->getString('to', 'en');
 		$repository = $this->entityManager->getRepository(Language::class);
 		$languageFrom = $repository->findOneBy(['code' => $from]);
 		$languageTo = $repository->findOneBy(['code' => $to]);
 		$languages = $repository->findAll();
-		$holidays = $this->fixedHolidayRepository->findAllAggregatedById($from, $to, ($page - 1) * 100, 100);
-		$pages = ceil($this->fixedMetadataRepository->count() / 100);
+		$holidays = $this->fixedHolidayRepository->findAllAggregatedById($from, $to, $month);
 		$forms = [];
 		foreach ($holidays as $holiday) {
 			$forms[$holiday['id']] = $this->createForm(TranslateType::class, [
@@ -67,33 +68,31 @@ class ManageController extends AbstractController
 			'languageTo' => $languageTo,
 			'languages' => $languages,
 			'holidays' => $holidays,
-			'page' => $page,
-			'pages' => $pages,
+			'month' => $month,
 			'forms' => $forms
 		]);
 	}
 
-	#[Route('/translate/{from<^\S{2}$>}/{to<^\S{2}$>}', name: 'translate_default')]
-	public function translateDefault(Request $request, string $from, string $to): Response
+	#[Route('/translate', name: 'translate_default')]
+	public function translateDefault(Request $request): Response
 	{
-		return $this->translate($request, 1, $from, $to);
+		return $this->translate($request, 1);
 	}
 
 	#[Route('/create', name: 'create')]
 	public function create(Request $request): Response
 	{
-		return $this->createPage($request, 1);
+		return $this->createMonth($request, (int) date('n'));
 	}
 
-	#[Route('/create/{page}', name: 'create_page')]
-	public function createPage(Request $request, int $page): Response
+	#[Route('/create/{month<^([1-9]|1[0-2])$>}', name: 'create_month')]
+	public function createMonth(Request $request, int $month): Response
 	{
-		$fixedHolidays = $this->fixedHolidayRepository->findAllByLanguage('pl', ($page - 1) * 100, 100, true);
+		$fixedHolidays = $this->fixedHolidayRepository->findAllByLanguage('pl', matureContent: true, month: $month);
 		$floatingHolidays = $this->entityManager->getRepository(FloatingHoliday::class)
 			->findBy(['language' => 'pl']);
 		$countries = $this->entityManager->getRepository(Country::class)
 			->findAll();
-		$pages = ceil($this->fixedMetadataRepository->count() / 100);
 		$updateForms = [];
 		foreach ($fixedHolidays as $holiday) {
 			$updateForms[$holiday['id']] = $this->createForm(HolidayUpdateType::class, [
@@ -110,8 +109,7 @@ class ManageController extends AbstractController
 			'fixed_holidays' => $fixedHolidays,
 			'floating_holidays' => $floatingHolidays,
 			'countries' => $countries,
-			'page' => $page,
-			'pages' => $pages,
+			'month' => $month,
 			'updateForms' => $updateForms,
 			'createForm' => $createForm
 		]);

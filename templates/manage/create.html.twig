@@ -15,7 +15,7 @@
 		<div class='manage-content'>
 			<h2 class='manage-page-title'>Holidays</h2>
 			<div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
-			{% include 'components/navigation.html.twig' with {'page': page, 'url': '/manage/create/%page%'} %}
+			{% include 'components/month-navigation.html.twig' with {'month': month, 'url': '/manage/create/'} %}
 			<div class='table-responsive'>
 				<table class="table table-dark table-striped table-hover align-middle">
 					<caption>Translations</caption>
@@ -159,6 +159,7 @@
 									form='create'
 									id='month-create'
 									class='manage-input'
+									value='{{ month }}'
 							/>
 						</td>
 						<td>
@@ -214,7 +215,7 @@
 					</tbody>
 				</table>
 			</div>
-			{% include 'components/navigation.html.twig' with {'page': page, 'url': '/manage/create/%page%'} %}
+			{% include 'components/month-navigation.html.twig' with {'month': month, 'url': '/manage/create/'} %}
 		</div>
 	</main>
 	<script type='text/javascript'>
@@ -266,7 +267,11 @@
 				}
 			}
 
-			document.querySelectorAll('form[id^="form-"]').forEach(form => {
+			document.querySelectorAll('form[id^="form-"]').forEach(form => attachUpdateHandler(form));
+
+			const currentMonth = {{ month }};
+
+			function attachUpdateHandler(form) {
 				const btn = document.querySelector(`button[type="submit"][form="${form.id}"]`);
 				const icon = btn.querySelector('i');
 				icon.dataset.originalClass = icon.className;
@@ -286,7 +291,7 @@
 						setButtonLoading(btn, false);
 					}
 				});
-			});
+			}
 
 			const createForm = document.getElementById('create');
 			const createBtn = document.querySelector('button[type="submit"][form="create"]');
@@ -299,8 +304,12 @@
 				try {
 					const res = await axios.post('/manage/api/holiday', new FormData(createForm));
 					if (res.data.success) {
-						showToast('success', res.data.message);
-						createForm.reset();
+						if (res.data.month === currentMonth) {
+							window.location.reload();
+						} else {
+							showToast('success', res.data.message);
+							createForm.reset();
+						}
 					}
 				} catch (err) {
 					const errors = err.response?.data?.errors;
@@ -310,7 +319,7 @@
 				}
 			});
 
-			document.querySelectorAll('.btn-generate-desc').forEach(btn =>
+			function attachGenerateHandler(btn) {
 				btn.addEventListener('click', async () => {
 					const target = document.getElementById(btn.dataset.target);
 					const nameEl = document.getElementById(btn.dataset.nameSource);
@@ -352,7 +361,10 @@
 						icon.className = 'bi bi-stars';
 						btn.disabled = false;
 					}
-				}));
+				});
+			}
+
+			document.querySelectorAll('.btn-generate-desc').forEach(btn => attachGenerateHandler(btn));
 		});
 	</script>
 {% endblock %}

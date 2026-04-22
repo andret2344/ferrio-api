@@ -97,9 +97,9 @@ class FixedHolidayRepository extends ServiceEntityRepository
 		return array_diff($array, $existingNames);
 	}
 
-	public function findAllAggregatedById(string $languageFrom, string $languageTo, int $offset = 0, int $limit = 1_000_000): array
+	public function findAllAggregatedById(string $languageFrom, string $languageTo, ?int $month = null): array
 	{
-		return $this->getEntityManager()->createQueryBuilder()
+		$qb = $this->getEntityManager()->createQueryBuilder()
 			->select([
 				'm.day AS day',
 				'm.month AS month',
@@ -116,10 +116,12 @@ class FixedHolidayRepository extends ServiceEntityRepository
 			->setParameter('langFrom', $languageFrom)
 			->setParameter('langTo', $languageTo)
 			->orderBy('m.month', 'ASC')
-			->addOrderBy('m.day', 'ASC')
-			->setFirstResult($offset)
-			->setMaxResults($limit)
-			->getQuery()
-			->getResult();
+			->addOrderBy('m.day', 'ASC');
+
+		if ($month !== null) {
+			$qb->andWhere('m.month = :month')->setParameter('month', $month);
+		}
+
+		return $qb->getQuery()->getResult();
 	}
 }

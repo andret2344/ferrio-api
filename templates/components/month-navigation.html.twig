@@ -1,0 +1,11 @@
+{% set month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] %}
+{% set query = query | default('') %}
+<div class='month-navigation'>
+	{% for i in 1..12 %}
+		{% if i == month %}
+			<div class='month-button active'>{{ month_names[i - 1] }}</div>
+		{% else %}
+			<a class='month-button' href="{{ url ~ i ~ query }}">{{ month_names[i - 1] }}</a>
+		{% endif %}
+	{% endfor %}
+</div>

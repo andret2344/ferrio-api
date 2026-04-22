@@ -55,7 +55,7 @@
 							{% for language in languages %}
 								{% if language.code != 'pl' %}
 									<div class='col-lg-3 col-md-4 col-6'>
-										<a href='{{ path('manage_translate_default', {'from': 'pl', 'to': language.code}) }}'
+										<a href='/manage/translate?from=pl&to={{ language.code }}'
 										   class='language no-a d-block text-center py-3'>
 											{{ language.name }}
 										</a>

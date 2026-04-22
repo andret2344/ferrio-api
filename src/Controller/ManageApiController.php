@@ -83,6 +83,13 @@ class ManageApiController extends AbstractController
 			return new JsonResponse([
 				'success' => true,
 				'id' => $metadata->id,
+				'month' => $month,
+				'day' => $day,
+				'name' => $name,
+				'description' => $desc ?? '',
+				'countryCode' => $country?->isoCode,
+				'countryName' => $country?->englishName,
+				'mature' => $mature,
 				'message' => sprintf('Holiday "%s" created (ID=%d).', $name, $metadata->id),
 			]);
 		}
