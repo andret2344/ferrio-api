@@ -117,6 +117,7 @@ class MissingControllerV2Test extends WebTestCase
 				'country' => 'GB',
 				'holiday_id' => null,
 				'report_state' => 'REPORTED',
+				'comment' => 'Duplicate of #42',
 				'user_id' => 'user-id'
 			]
 		]);
@@ -207,6 +208,7 @@ class MissingControllerV2Test extends WebTestCase
 				'holiday_id' => null,
 				'country' => 'GB',
 				'report_state' => 'REPORTED',
+				'comment' => null,
 				'user_id' => 'user-id'
 			]
 		]);

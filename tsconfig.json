@@ -1,12 +1,14 @@
 {
 	"compilerOptions": {
-		"target": "es6",
+		"target": "es2020",
+		"lib": ["es2020", "dom"],
 		"strict": true,
-		"module": "es2015",
-		"moduleResolution": "node",
+		"module": "es2020",
+		"moduleResolution": "bundler",
 		"allowSyntheticDefaultImports": true
 	},
 	"include": [
-		"./**/*.ts"
+		"./**/*.ts",
+		"./**/*.d.ts"
 	]
 }

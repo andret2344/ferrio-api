@@ -41,13 +41,24 @@ class FixedHolidaySuggestion implements JsonSerializable
 	#[ORM\Column(type: 'string', enumType: ReportState::class)]
 	private(set) ReportState $reportState;
 
+	#[ORM\Column(type: 'text', nullable: true)]
+	private(set) ?string $comment = null;
+
 	#[ORM\OneToOne(targetEntity: FixedHolidayMetadata::class)]
 	#[ORM\JoinColumn(name: 'holiday', referencedColumnName: 'id')]
 	private(set) ?FixedHolidayMetadata $holiday;
 
-	public function __construct(string      $userId, string $name, string $description, int $day, int $month,
-								?Country    $country = null, DateTimeImmutable $datetime = new DateTimeImmutable(),
-								ReportState $reportState = ReportState::REPORTED, ?FixedHolidayMetadata $holiday = null)
+	public function __construct(
+		string                $userId,
+		string                $name,
+		string                $description,
+		int                   $day,
+		int                   $month,
+		?Country              $country = null,
+		DateTimeImmutable     $datetime = new DateTimeImmutable(),
+		ReportState           $reportState = ReportState::REPORTED,
+		?FixedHolidayMetadata $holiday = null,
+		?string               $comment = null)
 	{
 		$this->userId = $userId;
 		$this->name = $name;
@@ -58,6 +69,7 @@ class FixedHolidaySuggestion implements JsonSerializable
 		$this->datetime = $datetime;
 		$this->reportState = $reportState;
 		$this->holiday = $holiday;
+		$this->comment = $comment;
 	}
 
 	#[Override]
@@ -71,6 +83,7 @@ class FixedHolidaySuggestion implements JsonSerializable
 		'datetime' => 'string',
 		'country' => 'null|string',
 		'report_state' => '\App\Entity\ReportState',
+		'comment' => 'null|string',
 		'holiday_id' => 'int|null'
 	])]
 	public function jsonSerialize(): array
@@ -85,6 +98,7 @@ class FixedHolidaySuggestion implements JsonSerializable
 			'datetime' => $this->datetime->format('Y-m-d H:i:s'),
 			'country' => $this->country?->isoCode,
 			'report_state' => $this->reportState,
+			'comment' => $this->comment,
 			'holiday_id' => $this->holiday?->id
 		];
 	}

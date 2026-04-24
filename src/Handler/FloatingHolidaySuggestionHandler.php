@@ -28,7 +28,7 @@ readonly class FloatingHolidaySuggestionHandler implements ReportHandlerInterfac
 		if (!$payload instanceof FloatingSuggestionDTO) {
 			throw new \InvalidArgumentException('Expected FloatingSuggestionDTO');
 		}
-		$report = new FloatingHolidaySuggestion($userId, $payload->name, $payload->description, $payload->date, $this->getCountry($payload->country));
+		$report = new FloatingHolidaySuggestion($userId, $payload->name, $payload->description, $payload->date, $this->getCountry($payload->country), comment: $payload->comment);
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();
 	}

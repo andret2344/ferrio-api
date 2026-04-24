@@ -121,6 +121,7 @@ class ReportControllerV2Test extends WebTestCase
 				'report_type' => 'OTHER',
 				'datetime' => $error->datetime->format('Y-m-d H:i:s'),
 				'report_state' => 'REPORTED',
+				'comment' => null,
 				'user_id' => 'user-id'
 			]
 		]);
@@ -215,6 +216,7 @@ class ReportControllerV2Test extends WebTestCase
 				'report_type' => 'OTHER',
 				'datetime' => $error->datetime->format('Y-m-d H:i:s'),
 				'report_state' => 'REPORTED',
+				'comment' => 'Reviewed by admin',
 				'user_id' => 'user-id'
 			]
 		]);

@@ -21,7 +21,8 @@ class ManagePollController extends AbstractController
 		private readonly EntityManagerInterface $entityManager,
 		private readonly PollRepository         $pollRepository,
 		private readonly PollVoteRepository     $pollVoteRepository,
-	) {
+	)
+	{
 	}
 
 	#[Route('', name: 'index')]
@@ -57,7 +58,8 @@ class ManagePollController extends AbstractController
 				$data['end'],
 			);
 
-			$optionsText = $form->get('optionsText')->getData();
+			$optionsText = $form->get('optionsText')
+				->getData();
 			$lines = preg_split("/[\r\n]+/", $optionsText ?? '');
 			foreach ($lines as $line) {
 				$line = trim($line);
@@ -80,6 +82,7 @@ class ManagePollController extends AbstractController
 	#[Route('/{id}', name: 'show')]
 	public function show(int $id): Response
 	{
+		/** @var Poll $poll */
 		$poll = $this->pollRepository->find($id);
 		if (!$poll) {
 			throw $this->createNotFoundException('Poll not found');

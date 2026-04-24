@@ -22,6 +22,7 @@ readonly class FixedHolidayErrorHandler extends AbstractErrorReportHandler
 			'metadata' => $payload->metadata,
 			'reportType' => $payload->reportType,
 			'description' => $payload->description,
+			'comment' => $payload->comment,
 		];
 	}
 
@@ -38,8 +39,8 @@ readonly class FixedHolidayErrorHandler extends AbstractErrorReportHandler
 	}
 
 	#[Override]
-	protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description): object
+	protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description, ?string $comment): object
 	{
-		return new FixedHolidayError($userId, $language, $metadata, $reportType, $description);
+		return new FixedHolidayError($userId, $language, $metadata, $reportType, $description, $comment);
 	}
 }

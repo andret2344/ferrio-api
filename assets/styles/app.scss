@@ -1,6 +1,6 @@
 @charset "UTF-8";
-@import '~bootstrap/scss/bootstrap';
-@import '~bootstrap-icons';
+@use '~bootstrap/scss/bootstrap' as *;
+@use '~bootstrap-icons' as *;
 
 body {
   background-color: black;
@@ -201,31 +201,94 @@ body {
     }
   }
 
-  .report-state {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
+  .state-dropdown {
+    .state-dropdown-toggle {
+      background-color: #12122a;
+      border: 1px solid #22224a;
+      border-radius: 8px;
+      padding: 6px 12px;
+      color: #e0e0f0;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 180px;
+      text-align: left;
+
+      .badge.report-state {
+        margin-right: auto;
+      }
+
+      &::after {
+        color: #8888b0;
+      }
+
+      &:hover, &:focus, &.show {
+        background-color: #12122a;
+        border-color: #4040a0;
+        color: #e0e0f0;
+        box-shadow: 0 0 0 3px rgba(80, 80, 200, 0.15);
+      }
+    }
+
+    .state-dropdown-menu {
+      padding: 4px;
+      min-width: 100%;
+
+      .dropdown-item {
+        padding: 6px 10px;
+        border-radius: 6px;
+        background: transparent;
+        border: none;
+        width: 100%;
+        text-align: left;
+
+        &:hover, &:focus {
+          background-color: #1a1a40;
+        }
+      }
+    }
+  }
+
+  .state-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-comment-icon {
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: #6868b8;
+    font-size: 14px;
+    line-height: 1;
+    transition: color 0.2s;
+
+    &:hover, &:focus {
+      color: #a0a0e0;
+      box-shadow: none;
+    }
+  }
+
+  .btn-moderate {
     padding: 4px 10px;
-    border-radius: 6px;
+    border-radius: 8px;
+    background-color: #12122a;
+    border: 1px solid #22224a;
+    color: #7878c8;
+    font-size: 14px;
+    line-height: 1;
+    transition: all 0.2s;
 
-    &-reported {
-      background-color: #142a4c;
-      color: #5e9ad6;
+    &:hover {
+      background-color: #1a1a40;
+      border-color: #4040a0;
+      color: #c0c0f0;
     }
 
-    &-applied {
-      background-color: #14321f;
-      color: #4ca060;
-    }
-
-    &-declined {
-      background-color: #361414;
-      color: #c05050;
-    }
-
-    &-on_hold {
-      background-color: #302e14;
-      color: #b8a84c;
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(80, 80, 200, 0.2);
     }
   }
 
@@ -370,6 +433,139 @@ body {
     .btn-close {
       filter: invert(0.5);
     }
+  }
+
+  // Modal overrides
+  .modal-content {
+    background-color: #0a0a1a;
+    border: 1px solid #1a1a3a;
+    border-radius: 12px;
+    color: #cfcfe6;
+  }
+
+  .modal-header {
+    border-bottom: 1px solid #1a1a3a;
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #e0e0f0;
+    }
+
+    .btn-close {
+      filter: invert(0.6);
+    }
+  }
+
+  .modal-footer {
+    border-top: 1px solid #1a1a3a;
+  }
+
+  .form-label {
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: #8888b0;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .form-control, .form-select {
+    background-color: #12122a;
+    border: 1px solid #22224a;
+    color: #e0e0f0;
+    border-radius: 8px;
+
+    &:focus {
+      background-color: #12122a;
+      color: #e0e0f0;
+      border-color: #4040a0;
+      box-shadow: 0 0 0 3px rgba(80, 80, 200, 0.15);
+    }
+  }
+
+  .btn-primary {
+    background-color: #3030aa;
+    border-color: #3030aa;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 16px;
+
+    &:hover, &:focus {
+      background-color: #4040c0;
+      border-color: #4040c0;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+    }
+  }
+}
+
+// Report state badge (used both in tables and modal — must be global)
+.report-state {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
+  min-width: 120px;
+  text-align: center;
+
+  &-reported {
+    background-color: #142a4c;
+    color: #5e9ad6;
+  }
+
+  &-applied {
+    background-color: #14321f;
+    color: #4ca060;
+  }
+
+  &-declined {
+    background-color: #361414;
+    color: #c05050;
+  }
+
+  &-on_hold {
+    background-color: #302e14;
+    color: #b8a84c;
+  }
+
+  &-duplicate {
+    background-color: #2a1a3a;
+    color: #b076d9;
+  }
+
+  &-already_exists {
+    background-color: #14302e;
+    color: #4cb0a8;
+  }
+}
+
+// Popover dark theme (popovers are appended to <body> by Bootstrap, so global)
+.popover {
+  --bs-popover-bg: #0e0e24;
+  --bs-popover-border-color: #1a1a3a;
+  --bs-popover-border-radius: 10px;
+  --bs-popover-header-bg: #0e0e24;
+  --bs-popover-header-color: #e0e0f0;
+  --bs-popover-body-color: #cfcfe6;
+  --bs-popover-arrow-border: #1a1a3a;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  font-size: 13px;
+
+  .popover-header {
+    background-color: transparent;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border-bottom: 1px solid #1a1a3a;
+  }
+
+  .popover-body {
+    white-space: pre-wrap;
   }
 }
 

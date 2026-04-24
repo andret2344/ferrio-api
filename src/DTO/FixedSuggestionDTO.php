@@ -26,6 +26,8 @@ final readonly class FixedSuggestionDTO
 
 	public ?string $country;
 
+	public ?string $comment;
+
 	public function __construct(
 		string  $userId,
 		string  $name,
@@ -33,6 +35,7 @@ final readonly class FixedSuggestionDTO
 		int     $month,
 		?string $description = null,
 		?string $country = null,
+		?string $comment = null,
 	)
 	{
 		$this->userId = $userId;
@@ -41,5 +44,6 @@ final readonly class FixedSuggestionDTO
 		$this->month = $month;
 		$this->description = $description;
 		$this->country = $country;
+		$this->comment = $comment;
 	}
 }

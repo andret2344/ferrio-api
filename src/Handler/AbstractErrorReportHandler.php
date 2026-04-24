@@ -38,14 +38,14 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 		}
 
 		$reportType = ReportType::from($dto['reportType']);
-		$report = $this->createErrorEntity($userId, $language, $metadata, $reportType, $dto['description']);
+		$report = $this->createErrorEntity($userId, $language, $metadata, $reportType, $dto['description'], $dto['comment']);
 		$metadata->reports->add($report);
 		$this->entityManager->persist($metadata);
 		$this->entityManager->flush();
 	}
 
 	/**
-	 * @return array{language: string, metadata: int, reportType: string, description: ?string}
+	 * @return array{language: string, metadata: int, reportType: string, description: ?string, comment: ?string}
 	 */
 	abstract protected function validatePayload(object $payload): array;
 
@@ -55,5 +55,5 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 	/** @return class-string */
 	abstract protected function getMetadataEntityClass(): string;
 
-	abstract protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description): object;
+	abstract protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description, ?string $comment): object;
 }

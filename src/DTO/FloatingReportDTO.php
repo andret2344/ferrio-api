@@ -25,12 +25,15 @@ final readonly class FloatingReportDTO
 
 	public ?string $description;
 
+	public ?string $comment;
+
 	public function __construct(
 		string  $userId,
 		string  $language,
 		int     $metadata,
 		string  $reportType,
 		?string $description = null,
+		?string $comment = null,
 	)
 	{
 		$this->userId = $userId;
@@ -38,6 +41,7 @@ final readonly class FloatingReportDTO
 		$this->metadata = $metadata;
 		$this->reportType = $reportType;
 		$this->description = $description;
+		$this->comment = $comment;
 	}
 
 	public static function getValidReportTypes(): array

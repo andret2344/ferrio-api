@@ -22,7 +22,6 @@ Encore
 	.enableSassLoader()
 	.enableTypeScriptLoader()
 	.enableIntegrityHashes(Encore.isProduction())
-	.autoProvidejQuery()
 ;
 
 module.exports = Encore.getWebpackConfig();

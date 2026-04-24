@@ -39,11 +39,16 @@ class FixedHolidayError implements JsonSerializable
 	#[ORM\Column(type: 'string', enumType: ReportState::class)]
 	private(set) ReportState $reportState;
 
-	public function __construct(string               $userId,
-								Language             $language,
-								FixedHolidayMetadata $metadata,
-								ReportType           $reportType,
-								?string              $description)
+	#[ORM\Column(type: 'text', nullable: true)]
+	private(set) ?string $comment = null;
+
+	public function __construct(
+		string               $userId,
+		Language             $language,
+		FixedHolidayMetadata $metadata,
+		ReportType           $reportType,
+		?string              $description,
+		?string              $comment = null)
 	{
 		$this->userId = $userId;
 		$this->language = $language;
@@ -52,6 +57,7 @@ class FixedHolidayError implements JsonSerializable
 		$this->description = $description;
 		$this->datetime = new DateTimeImmutable();
 		$this->reportState = ReportState::REPORTED;
+		$this->comment = $comment;
 	}
 
 	#[Override]
@@ -63,7 +69,8 @@ class FixedHolidayError implements JsonSerializable
 		'report_type' => '\App\Entity\ReportType',
 		'description' => 'null|string',
 		'datetime' => 'string',
-		'report_state' => '\App\Entity\ReportState'
+		'report_state' => '\App\Entity\ReportState',
+		'comment' => 'null|string'
 	])]
 	public function jsonSerialize(): array
 	{
@@ -75,7 +82,8 @@ class FixedHolidayError implements JsonSerializable
 			'report_type' => $this->reportType,
 			'description' => $this->description,
 			'datetime' => $this->datetime->format('Y-m-d H:i:s'),
-			'report_state' => $this->reportState
+			'report_state' => $this->reportState,
+			'comment' => $this->comment
 		];
 	}
 }

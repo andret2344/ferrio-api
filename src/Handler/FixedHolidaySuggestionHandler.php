@@ -28,7 +28,7 @@ readonly class FixedHolidaySuggestionHandler implements ReportHandlerInterface
 		if (!$payload instanceof FixedSuggestionDTO) {
 			throw new \InvalidArgumentException('Expected FixedSuggestionDTO');
 		}
-		$report = new FixedHolidaySuggestion($userId, $payload->name, $payload->description, $payload->day, $payload->month, $this->getCountry($payload->country));
+		$report = new FixedHolidaySuggestion($userId, $payload->name, $payload->description, $payload->day, $payload->month, $this->getCountry($payload->country), comment: $payload->comment);
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();
 	}

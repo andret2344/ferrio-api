@@ -2,9 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Maintenance note:** If you notice something in this file that has become inaccurate (framework/PHP version bumps, changed commands, renamed paths, new conventions, etc.), update it in the same change — even if the user did not explicitly ask. Do not silently leave stale guidance.
+
 ## Project Overview
 
-Ferrio API is a Symfony 7.3 / PHP 8.5 application that serves holiday data (fixed and floating) across multiple
+Ferrio API is a Symfony 7.4 / PHP 8.5 application that serves holiday data (fixed and floating) across multiple
 languages and countries. It exposes a versioned JSON REST API (v1, v2, v3) and includes a Twig-based admin UI (
 `/manage`) protected by HTTP Basic Auth.
 
@@ -124,6 +126,7 @@ next to each description textarea that calls this endpoint via fetch.
 
 - PHP 8.5 property hooks and `private(set)` visibility are used in entities.
 - Doctrine mapping uses PHP 8 attributes (not XML/YAML).
+- Always use CRLF line endings in all files.
 - Frontend uses Webpack Encore with TypeScript and Bootstrap 5 / MDB UI Kit. Icons: Bootstrap Icons, Unicons, Font Awesome 5.
 - CI runs on GitHub Actions (`.github/workflows/ci.yml`), executing PHPUnit on PHP 8.5.
 - Composer is at `C:\Tools\php85-ts\composer.bat` (not on PATH in bash).

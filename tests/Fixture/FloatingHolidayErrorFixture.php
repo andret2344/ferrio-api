@@ -20,7 +20,7 @@ class FloatingHolidayErrorFixture extends Fixture implements DependentFixtureInt
 	{
 		$language = $this->getReference('language-en', Language::class);
 		$metadata = $this->getReference('floating-holiday-metadata', FloatingHolidayMetadata::class);
-		$error = new FloatingHolidayError('user-id', $language, $metadata, ReportType::OTHER, 'Test desc');
+		$error = new FloatingHolidayError('user-id', $language, $metadata, ReportType::OTHER, 'Test desc', 'Reviewed by admin');
 		$manager->persist($error);
 		$this->addReference('floating-holiday-error', $error);
 		$manager->flush();

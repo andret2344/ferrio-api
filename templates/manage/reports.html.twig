@@ -67,19 +67,33 @@
 									<th>State</th>
 									<th>Reported</th>
 									<th>User</th>
+									<th></th>
 								</tr>
 								</thead>
 								<tbody>
 								{% for s in fixedSuggestions %}
-									<tr>
+									<tr data-report-row data-kind='fixed_suggestion' data-id='{{ s.id }}'>
 										<td>{{ s.id }}</td>
 										<td>{{ s.name }}</td>
 										<td>{{ '%02d.%02d'|format(s.day, s.month) }}</td>
 										<td class='text-truncate' style='max-width: 250px;'>{{ s.description }}</td>
 										<td>{{ s.country ? s.country.isoCode : '-' }}</td>
 										<td>
-											<span class='badge report-state report-state-{{ s.reportState.value|lower }}'>
-												{{ s.reportState.value }}
+											<span class='state-cell'>
+												<span class='badge report-state report-state-{{ s.reportState.value|lower }}' data-role='state-badge'>
+													{{ s.reportState.value }}
+												</span>
+												<button type='button' class='btn btn-comment-icon {{ s.comment ? '' : 'd-none' }}'
+														data-role='comment-popover'
+														data-bs-toggle='popover'
+														data-bs-trigger='focus'
+														data-bs-placement='top'
+														data-bs-title='Comment'
+														data-bs-content='{{ s.comment ?? '' }}'
+														tabindex='0'
+														title='Show comment'>
+													<i class='bi bi-chat-left-text-fill'></i>
+												</button>
 											</span>
 										</td>
 										<td>{{ s.datetime|date('Y-m-d H:i') }}</td>
@@ -90,6 +104,17 @@
 												<div class='user-email'>{{ u.email ?? '-' }}</div>
 											{% endif %}
 											<div class='user-uid'>{{ s.userId }}</div>
+										</td>
+										<td>
+											<button type='button' class='btn btn-moderate'
+													data-bs-toggle='modal' data-bs-target='#moderateModal'
+													data-kind='fixed_suggestion'
+													data-id='{{ s.id }}'
+													data-state='{{ s.reportState.value }}'
+													data-comment='{{ s.comment ?? '' }}'
+													title='Moderate'>
+												<i class='bi bi-pencil-square'></i>
+											</button>
 										</td>
 									</tr>
 								{% endfor %}
@@ -117,19 +142,33 @@
 									<th>State</th>
 									<th>Reported</th>
 									<th>User</th>
+									<th></th>
 								</tr>
 								</thead>
 								<tbody>
 								{% for s in floatingSuggestions %}
-									<tr>
+									<tr data-report-row data-kind='floating_suggestion' data-id='{{ s.id }}'>
 										<td>{{ s.id }}</td>
 										<td>{{ s.name }}</td>
 										<td>{{ s.date }}</td>
 										<td class='text-truncate' style='max-width: 250px;'>{{ s.description }}</td>
 										<td>{{ s.country ? s.country.isoCode : '-' }}</td>
 										<td>
-											<span class='badge report-state report-state-{{ s.reportState.value|lower }}'>
-												{{ s.reportState.value }}
+											<span class='state-cell'>
+												<span class='badge report-state report-state-{{ s.reportState.value|lower }}' data-role='state-badge'>
+													{{ s.reportState.value }}
+												</span>
+												<button type='button' class='btn btn-comment-icon {{ s.comment ? '' : 'd-none' }}'
+														data-role='comment-popover'
+														data-bs-toggle='popover'
+														data-bs-trigger='focus'
+														data-bs-placement='top'
+														data-bs-title='Comment'
+														data-bs-content='{{ s.comment ?? '' }}'
+														tabindex='0'
+														title='Show comment'>
+													<i class='bi bi-chat-left-text-fill'></i>
+												</button>
 											</span>
 										</td>
 										<td>{{ s.datetime|date('Y-m-d H:i') }}</td>
@@ -140,6 +179,17 @@
 												<div class='user-email'>{{ u.email ?? '-' }}</div>
 											{% endif %}
 											<div class='user-uid'>{{ s.userId }}</div>
+										</td>
+										<td>
+											<button type='button' class='btn btn-moderate'
+													data-bs-toggle='modal' data-bs-target='#moderateModal'
+													data-kind='floating_suggestion'
+													data-id='{{ s.id }}'
+													data-state='{{ s.reportState.value }}'
+													data-comment='{{ s.comment ?? '' }}'
+													title='Moderate'>
+												<i class='bi bi-pencil-square'></i>
+											</button>
 										</td>
 									</tr>
 								{% endfor %}
@@ -167,11 +217,12 @@
 									<th>State</th>
 									<th>Reported</th>
 									<th>User</th>
+									<th></th>
 								</tr>
 								</thead>
 								<tbody>
 								{% for e in fixedErrors %}
-									<tr>
+									<tr data-report-row data-kind='fixed_error' data-id='{{ e.id }}'>
 										<td>{{ e.id }}</td>
 										<td>{{ e.metadata ? e.metadata.id : '-' }}</td>
 										<td>{{ e.language.code }}</td>
@@ -184,8 +235,21 @@
 											{{ e.description ?? '-' }}
 										</td>
 										<td>
-											<span class='badge report-state report-state-{{ e.reportState.value|lower }}'>
-												{{ e.reportState.value }}
+											<span class='state-cell'>
+												<span class='badge report-state report-state-{{ e.reportState.value|lower }}' data-role='state-badge'>
+													{{ e.reportState.value }}
+												</span>
+												<button type='button' class='btn btn-comment-icon {{ e.comment ? '' : 'd-none' }}'
+														data-role='comment-popover'
+														data-bs-toggle='popover'
+														data-bs-trigger='focus'
+														data-bs-placement='top'
+														data-bs-title='Comment'
+														data-bs-content='{{ e.comment ?? '' }}'
+														tabindex='0'
+														title='Show comment'>
+													<i class='bi bi-chat-left-text-fill'></i>
+												</button>
 											</span>
 										</td>
 										<td>{{ e.datetime|date('Y-m-d H:i') }}</td>
@@ -196,6 +260,17 @@
 												<div class='user-email'>{{ u.email ?? '-' }}</div>
 											{% endif %}
 											<div class='user-uid'>{{ e.userId }}</div>
+										</td>
+										<td>
+											<button type='button' class='btn btn-moderate'
+													data-bs-toggle='modal' data-bs-target='#moderateModal'
+													data-kind='fixed_error'
+													data-id='{{ e.id }}'
+													data-state='{{ e.reportState.value }}'
+													data-comment='{{ e.comment ?? '' }}'
+													title='Moderate'>
+												<i class='bi bi-pencil-square'></i>
+											</button>
 										</td>
 									</tr>
 								{% endfor %}
@@ -223,11 +298,12 @@
 									<th>State</th>
 									<th>Reported</th>
 									<th>User</th>
+									<th></th>
 								</tr>
 								</thead>
 								<tbody>
 								{% for e in floatingErrors %}
-									<tr>
+									<tr data-report-row data-kind='floating_error' data-id='{{ e.id }}'>
 										<td>{{ e.id }}</td>
 										<td>{{ e.metadata ? e.metadata.id : '-' }}</td>
 										<td>{{ e.language.code }}</td>
@@ -240,8 +316,21 @@
 											{{ e.description ?? '-' }}
 										</td>
 										<td>
-											<span class='badge report-state report-state-{{ e.reportState.value|lower }}'>
-												{{ e.reportState.value }}
+											<span class='state-cell'>
+												<span class='badge report-state report-state-{{ e.reportState.value|lower }}' data-role='state-badge'>
+													{{ e.reportState.value }}
+												</span>
+												<button type='button' class='btn btn-comment-icon {{ e.comment ? '' : 'd-none' }}'
+														data-role='comment-popover'
+														data-bs-toggle='popover'
+														data-bs-trigger='focus'
+														data-bs-placement='top'
+														data-bs-title='Comment'
+														data-bs-content='{{ e.comment ?? '' }}'
+														tabindex='0'
+														title='Show comment'>
+													<i class='bi bi-chat-left-text-fill'></i>
+												</button>
 											</span>
 										</td>
 										<td>{{ e.datetime|date('Y-m-d H:i') }}</td>
@@ -252,6 +341,17 @@
 												<div class='user-email'>{{ u.email ?? '-' }}</div>
 											{% endif %}
 											<div class='user-uid'>{{ e.userId }}</div>
+										</td>
+										<td>
+											<button type='button' class='btn btn-moderate'
+													data-bs-toggle='modal' data-bs-target='#moderateModal'
+													data-kind='floating_error'
+													data-id='{{ e.id }}'
+													data-state='{{ e.reportState.value }}'
+													data-comment='{{ e.comment ?? '' }}'
+													title='Moderate'>
+												<i class='bi bi-pencil-square'></i>
+											</button>
 										</td>
 									</tr>
 								{% endfor %}
@@ -264,32 +364,52 @@
 		</div>
 	</main>
 
-	<script>
-		(function () {
-			const tabIds = ['fixed-suggestions', 'floating-suggestions', 'fixed-errors', 'floating-errors'];
-			const setHash = (id) => history.replaceState(null, '', '#' + id);
+	<div class='modal fade' id='moderateModal' tabindex='-1' aria-labelledby='moderateModalLabel' aria-hidden='true'
+		 data-moderate-url='{{ path('manage_reports_moderate') }}'>
+		<div class='modal-dialog modal-dialog-centered'>
+			<div class='modal-content'>
+				<div class='modal-header'>
+					<h5 class='modal-title' id='moderateModalLabel'>Moderate report</h5>
+					<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+				</div>
+				<div class='modal-body'>
+					<form id='moderateForm'>
+						<input type='hidden' name='kind' id='moderateKind'>
+						<input type='hidden' name='id' id='moderateId'>
+						<div class='mb-3'>
+							<label class='form-label' for='moderateStateToggle'>State</label>
+							<div class='dropdown state-dropdown'>
+								<button class='btn dropdown-toggle state-dropdown-toggle' type='button'
+										id='moderateStateToggle' data-bs-toggle='dropdown' aria-expanded='false'>
+									<span class='badge report-state' data-role='state-toggle-badge'></span>
+								</button>
+								<ul class='dropdown-menu dropdown-menu-dark state-dropdown-menu' aria-labelledby='moderateStateToggle'>
+									{% for state in report_states %}
+										<li>
+											<button type='button' class='dropdown-item' data-value='{{ state }}'>
+												<span class='badge report-state report-state-{{ state|lower }}'>{{ state }}</span>
+											</button>
+										</li>
+									{% endfor %}
+								</ul>
+								<input type='hidden' id='moderateState' name='report_state'>
+							</div>
+						</div>
+						<div class='mb-3'>
+							<label for='moderateComment' class='form-label'>Comment</label>
+							<textarea class='form-control' id='moderateComment' name='comment' rows='4' placeholder='Optional note (e.g. "duplicate of #42")'></textarea>
+						</div>
+						<div class='alert alert-danger d-none' id='moderateError' role='alert'></div>
+					</form>
+				</div>
+				<div class='modal-footer'>
+					<button type='button' class='btn btn-outline-light' data-bs-dismiss='modal'>Cancel</button>
+					<button type='button' class='btn btn-primary' id='moderateSave'>
+						<i class='bi bi-check-lg me-1'></i>Save
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-			const raw = window.location.hash.replace(/^#/, '');
-			const initial = tabIds.includes(raw) ? raw : tabIds[0];
-
-			if (raw !== initial) {
-				setHash(initial);
-			}
-
-			if (initial !== tabIds[0]) {
-				const trigger = document.querySelector('[data-bs-target="#' + initial + '"]');
-				if (trigger) {
-					trigger.click();
-					setHash(initial);
-				}
-			}
-
-			document.querySelectorAll('#reportsTabs [data-bs-toggle="tab"]').forEach((btn) => {
-				btn.addEventListener('shown.bs.tab', (e) => {
-					const target = e.target.getAttribute('data-bs-target') || '';
-					setHash(target.replace(/^#/, ''));
-				});
-			});
-		})();
-	</script>
 {% endblock %}

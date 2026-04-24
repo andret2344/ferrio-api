@@ -9,27 +9,28 @@ use App\Entity\FloatingHoliday;
 use App\Entity\FloatingHolidayError;
 use App\Entity\FloatingHolidaySuggestion;
 use App\Entity\Language;
+use App\Entity\ReportState;
 use App\Form\HolidayCheckType;
 use App\Form\HolidayCreateType;
 use App\Form\HolidayUpdateType;
 use App\Form\TranslateType;
 use App\Repository\FixedHolidayRepository;
-use App\Repository\FixedMetadataRepository;
 use App\Service\FirebaseUserLookup;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/manage', name: 'manage_')]
 class ManageController extends AbstractController
 {
 	public function __construct(
-		private readonly EntityManagerInterface  $entityManager,
-		private readonly FixedHolidayRepository  $fixedHolidayRepository,
-		private readonly FixedMetadataRepository $fixedMetadataRepository,
-		private readonly FirebaseUserLookup      $firebaseUserLookup,
+		private readonly EntityManagerInterface $entityManager,
+		private readonly FixedHolidayRepository $fixedHolidayRepository,
+		private readonly FirebaseUserLookup     $firebaseUserLookup,
 	)
 	{
 	}
@@ -80,13 +81,13 @@ class ManageController extends AbstractController
 	}
 
 	#[Route('/create', name: 'create')]
-	public function create(Request $request): Response
+	public function create(): Response
 	{
-		return $this->createMonth($request, (int) date('n'));
+		return $this->redirectToRoute('manage_create_month', ['month' => (int)date('m')]);
 	}
 
 	#[Route('/create/{month<^([1-9]|1[0-2])$>}', name: 'create_month')]
-	public function createMonth(Request $request, int $month): Response
+	public function createMonth(int $month): Response
 	{
 		$fixedHolidays = $this->fixedHolidayRepository->findAllByLanguage('pl', matureContent: true, month: $month);
 		$floatingHolidays = $this->entityManager->getRepository(FloatingHoliday::class)
@@ -141,6 +142,63 @@ class ManageController extends AbstractController
 			'fixedErrors' => $fixedErrors,
 			'floatingErrors' => $floatingErrors,
 			'users' => $users,
+			'report_states' => array_column(ReportState::cases(), 'value'),
+		]);
+	}
+
+	#[Route('/reports/moderate', name: 'reports_moderate', methods: ['POST'])]
+	public function moderateReport(Request $request): JsonResponse
+	{
+		$data = json_decode($request->getContent(), true);
+		if (!is_array($data)) {
+			throw new BadRequestHttpException('Invalid JSON body');
+		}
+
+		$entityClass = match ($data['kind'] ?? null) {
+			'fixed_suggestion' => FixedHolidaySuggestion::class,
+			'floating_suggestion' => FloatingHolidaySuggestion::class,
+			'fixed_error' => FixedHolidayError::class,
+			'floating_error' => FloatingHolidayError::class,
+			default => throw new BadRequestHttpException('Invalid kind'),
+		};
+
+		$id = filter_var($data['id'] ?? null, FILTER_VALIDATE_INT);
+		if ($id === false) {
+			throw new BadRequestHttpException('Invalid id');
+		}
+
+		$state = ReportState::tryFrom((string)($data['report_state'] ?? ''));
+		if (!$state) {
+			throw new BadRequestHttpException('Invalid report_state');
+		}
+
+		$comment = $data['comment'] ?? null;
+		if ($comment !== null) {
+			$comment = trim((string)$comment);
+			if ($comment === '') {
+				$comment = null;
+			}
+		}
+
+		$affected = $this->entityManager->createQueryBuilder()
+			->update($entityClass, 'r')
+			->set('r.reportState', ':state')
+			->set('r.comment', ':comment')
+			->where('r.id = :id')
+			->setParameter('state', $state)
+			->setParameter('comment', $comment)
+			->setParameter('id', $id)
+			->getQuery()
+			->execute();
+
+		if ($affected === 0) {
+			return $this->json(['error' => 'Report not found'], Response::HTTP_NOT_FOUND);
+		}
+
+		return $this->json([
+			'id' => $id,
+			'report_state' => $state->value,
+			'comment' => $comment,
 		]);
 	}
 

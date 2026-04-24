@@ -21,12 +21,15 @@ final readonly class FloatingSuggestionDTO
 
 	public ?string $country;
 
+	public ?string $comment;
+
 	public function __construct(
 		string  $userId,
 		string  $name,
 		string  $date,
 		?string $description = null,
 		?string $country = null,
+		?string $comment = null,
 	)
 	{
 		$this->userId = $userId;
@@ -34,5 +37,6 @@ final readonly class FloatingSuggestionDTO
 		$this->date = $date;
 		$this->description = $description;
 		$this->country = $country;
+		$this->comment = $comment;
 	}
 }

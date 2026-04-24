@@ -133,6 +133,7 @@ class UserControllerV3Test extends WebTestCase
 				'report_type' => 'OTHER',
 				'datetime' => $error->datetime->format('Y-m-d H:i:s'),
 				'report_state' => 'REPORTED',
+				'comment' => null,
 				'user_id' => 'user-id'
 			]
 		], JSON_THROW_ON_ERROR);
@@ -244,6 +245,7 @@ class UserControllerV3Test extends WebTestCase
 				'report_type' => 'OTHER',
 				'datetime' => $error->datetime->format('Y-m-d H:i:s'),
 				'report_state' => 'REPORTED',
+				'comment' => 'Reviewed by admin',
 				'user_id' => 'user-id'
 			]
 		], JSON_THROW_ON_ERROR);
