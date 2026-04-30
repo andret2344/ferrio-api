@@ -17,7 +17,7 @@
 						{% if language != languageFrom and language != languageTo %}
 							<li>
 								<a class="dropdown-item"
-								   href="/manage/translate/{{ month }}?from={{ language.code }}&to={{ languageTo.code }}">
+								   href="/admin/translate/{{ month }}?from={{ language.code }}&to={{ languageTo.code }}">
 									{{ language.name }}
 								</a>
 							</li>
@@ -42,7 +42,7 @@
 						{% if language != languageFrom and language != languageTo %}
 							<li>
 								<a class="dropdown-item"
-								   href="/manage/translate/{{ month }}?from={{ languageFrom.code }}&to={{ language.code }}">
+								   href="/admin/translate/{{ month }}?from={{ languageFrom.code }}&to={{ language.code }}">
 									{{ language.name }}
 								</a>
 							</li>
@@ -57,7 +57,7 @@
 		<div class='manage-content'>
 			<h2 class='manage-page-title'>{{ languageFrom.name }} → {{ languageTo.name }}</h2>
 			<div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
-			{% include 'components/month-navigation.html.twig' with {'month': month, 'url': '/manage/translate/', 'query': '?from=' ~ languageFrom.code ~ '&to=' ~ languageTo.code} %}
+			{% include 'components/month-navigation.html.twig' with {'month': month, 'url': '/admin/translate/', 'query': '?from=' ~ languageFrom.code ~ '&to=' ~ languageTo.code} %}
 			<div class='table-responsive'>
 				<table class="table table-dark table-striped table-hover align-middle">
 					<caption>Translations</caption>
@@ -139,14 +139,14 @@
 					</tbody>
 				</table>
 			</div>
-			{% include 'components/month-navigation.html.twig' with {'month': month, 'url': '/manage/translate/', 'query': '?from=' ~ languageFrom.code ~ '&to=' ~ languageTo.code} %}
+			{% include 'components/month-navigation.html.twig' with {'month': month, 'url': '/admin/translate/', 'query': '?from=' ~ languageFrom.code ~ '&to=' ~ languageTo.code} %}
 		</div>
 	</main>
 	<script>
 		document.addEventListener('DOMContentLoaded', () => {
 			const swapIcon = document.querySelector('.swap');
 			swapIcon.addEventListener('click', () => {
-				window.location.href = '/manage/translate/{{ month }}?from={{ languageTo.code }}&to={{ languageFrom.code }}';
+				window.location.href = '/admin/translate/{{ month }}?from={{ languageTo.code }}&to={{ languageFrom.code }}';
 			});
 
 			function showToast(type, message) {
@@ -181,7 +181,7 @@
 					e.preventDefault();
 					setButtonLoading(btn, true);
 					try {
-						const res = await axios.post('/manage/api/translation/{{ languageTo.code }}', new FormData(form));
+						const res = await axios.post('/admin/api/translation/{{ languageTo.code }}', new FormData(form));
 						if (res.data.success) {
 							showToast('success', 'Translation saved.');
 						}
@@ -223,7 +223,7 @@
 					btn.disabled = true;
 
 					try {
-						const res = await axios.post('/manage/api/generate', {
+						const res = await axios.post('/admin/api/generate', {
 							type: genType,
 							day,
 							month,

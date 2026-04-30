@@ -15,7 +15,7 @@
 				{% for language in languages %}
 					<li>
 						<a class="dropdown-item"
-						   href="{{ path('manage_check_language', {'lang': language.code}) }}">
+						   href="{{ path('admin_check_language', {'lang': language.code}) }}">
 							{{ language.name }}
 						</a>
 					</li>

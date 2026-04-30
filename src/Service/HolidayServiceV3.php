@@ -3,16 +3,19 @@
 namespace App\Service;
 
 use App\Entity\FloatingHoliday;
-use App\Entity\FloatingHolidayMetadata;
 use App\Entity\HolidayDay;
 use App\Repository\FixedHolidayRepository;
+use App\Repository\FixedMetadataRepository;
+use App\Repository\FloatingMetadataRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 readonly class HolidayServiceV3
 {
-	public function __construct(private FixedHolidayRepository $fixedHolidayRepository,
-								private EntityManagerInterface $entityManager,
-								private AlgorithmResolver      $algorithmResolver)
+	public function __construct(private FixedHolidayRepository      $fixedHolidayRepository,
+								private FixedMetadataRepository     $fixedMetadataRepository,
+								private FloatingMetadataRepository  $floatingMetadataRepository,
+								private EntityManagerInterface      $entityManager,
+								private AlgorithmResolver           $algorithmResolver)
 	{
 	}
 
@@ -50,6 +53,10 @@ readonly class HolidayServiceV3
 	private function getFixedHolidays(string $language, ?int $day = null, ?int $month = null, ?string $country = null): array
 	{
 		$holidays = $this->fixedHolidayRepository->findAllByLanguage($language, day: $day, month: $month, country: $country);
+		$categoriesByMetadata = $this->fixedMetadataRepository->findCategoryNames(
+			array_column($holidays, 'id'),
+			$language,
+		);
 
 		return array_map(fn(array $h) => [
 			'id' => 'fixed-' . $h['id'],
@@ -61,6 +68,7 @@ readonly class HolidayServiceV3
 			'country' => $h['countryCode'],
 			'url' => $h['url'],
 			'mature_content' => $h['matureContent'],
+			'categories' => $categoriesByMetadata[$h['id']] ?? [],
 		], $holidays);
 	}
 
@@ -82,9 +90,17 @@ readonly class HolidayServiceV3
 		/** @var FloatingHoliday[] $holidays */
 		$holidays = $qb->getQuery()->getResult();
 
+		$categoriesByMetadata = $this->floatingMetadataRepository->findCategoryNames(
+			array_map(fn(FloatingHoliday $h) => $h->metadata->id, $holidays),
+			$language,
+		);
+
 		$result = [];
 		foreach ($holidays as $holiday) {
 			$metadata = $holiday->metadata;
+			if ($metadata->algorithmArgs === null || $metadata->algorithmArgs === '') {
+				continue;
+			}
 			$args = json_decode($metadata->algorithmArgs, true);
 			$resolved = $this->algorithmResolver->resolve($metadata->algorithm, $args, $year);
 
@@ -109,6 +125,7 @@ readonly class HolidayServiceV3
 				'country' => $metadata->country?->isoCode,
 				'url' => $holiday->url,
 				'mature_content' => $metadata->matureContent,
+				'categories' => $categoriesByMetadata[$metadata->id] ?? [],
 			];
 		}
 

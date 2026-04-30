@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Ferrio API is a Symfony 7.4 / PHP 8.5 application that serves holiday data (fixed and floating) across multiple
 languages and countries. It exposes a versioned JSON REST API (v1, v2, v3) and includes a Twig-based admin UI (
-`/manage`) protected by HTTP Basic Auth.
+`/admin`, with a 301 redirect from the legacy `/manage` prefix) protected by HTTP Basic Auth.
 
 ## Commands
 
@@ -76,7 +76,8 @@ Single endpoint: `GET /v3/holidays` with query parameters:
 - `grouping` (optional, default `false`) — when `true`, groups holidays by day in v2-compatible `HolidayDay` format
 
 The v3 merges fixed and floating holidays into a unified flat list sorted by date. Each item has a prefixed `id` (
-`fixed-*` or `floating-*`).
+`fixed-*` or `floating-*`) and includes a `categories` array of tag names translated into the requested `lang` (falling
+back to the tag slug when no translation exists). Categories are bulk-loaded once per side via DQL to avoid N+1.
 
 ### Algorithm Resolver (v3)
 
@@ -105,14 +106,19 @@ Available algorithms with v1/v2 `args` → v3 `algorithmArgs` mapping (dayOfWeek
 
 ### Admin UI
 
-`ManageController` + `WebController` serve Twig templates under `/manage` for managing holiday data (create, translate,
-check). Protected by `ROLE_USER` via HTTP Basic Auth.
+`ManageController` + `WebController` serve Twig templates under `/admin` for managing holiday data (create, translate,
+check). Protected by `ROLE_USER` via HTTP Basic Auth. `AdminTagController` (under `/admin/tags`) handles tag (category)
+management with chip UI and per-type usage counters. Legacy `/manage/*` URLs return 301 redirects to `/admin/*` via
+`ManageRedirectController`.
 
-`GenerateDescriptionController` (`POST /manage/generate-description`) calls the Anthropic API (Claude Haiku 4.5) to
-generate Polish holiday descriptions. It accepts `{day, month, name}` JSON and returns `{description}`. The system
-prompt enforces Ferrio's copywriting style (150-250 words, informative tone, Polish language). The API key is configured
-via `ANTHROPIC_API_KEY` env var. The create/update forms in `create.html.twig` have an AI generate button (sparkle icon)
-next to each description textarea that calls this endpoint via fetch.
+`GenerateDescriptionController` (`POST /admin/api/generate`) calls the Anthropic API (Claude Sonnet 4.6) to
+generate Polish holiday descriptions. It accepts `{day, month, name, type?, language?}` JSON and returns `{result}` (or
+`{error}`). `type` selects the prompt set: `description_pl` (default, Polish description), `description` (English-style
+description), or `name` (translates a Polish holiday name into the target `language`). The system prompts enforce
+Ferrio's copywriting style (150-250 words, informative tone) and live in `config/prompts/`. The API key is configured
+via `ANTHROPIC_API_KEY` env var. The create row in `create.html.twig` has an AI sparkle button next to its description
+textarea, and the per-row edit modal has sparkle buttons next to both the name and description fields. All call this
+endpoint via axios.
 
 ### Testing
 

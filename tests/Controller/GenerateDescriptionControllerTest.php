@@ -29,7 +29,7 @@ class GenerateDescriptionControllerTest extends WebTestCase
 			['http_code' => 200],
 		));
 
-		$client->request('POST', '/manage/api/generate', [], [], [
+		$client->request('POST', '/admin/api/generate', [], [], [
 			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 25, 'month' => 12, 'name' => 'Boże Narodzenie']));
@@ -38,7 +38,7 @@ class GenerateDescriptionControllerTest extends WebTestCase
 		$data = json_decode($client->getResponse()->getContent(), true);
 		$this->assertSame('Opis świąteczny.', $data['result']);
 
-		$this->assertSame('claude-haiku-4-5-20251001', $this->capturedBody['model']);
+		$this->assertSame('claude-sonnet-4-6', $this->capturedBody['model']);
 		$this->assertSame(1024, $this->capturedBody['max_tokens']);
 		$this->assertStringContainsString('Boże Narodzenie', $this->capturedBody['messages'][0]['content']);
 		$this->assertStringContainsString('25.12', $this->capturedBody['messages'][0]['content']);
@@ -52,7 +52,7 @@ class GenerateDescriptionControllerTest extends WebTestCase
 			['http_code' => 200],
 		));
 
-		$client->request('POST', '/manage/api/generate', [], [], [
+		$client->request('POST', '/admin/api/generate', [], [], [
 			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 1, 'month' => 1, 'name' => 'Nowy Rok', 'type' => 'description', 'language' => 'German']));
@@ -73,7 +73,7 @@ class GenerateDescriptionControllerTest extends WebTestCase
 			['http_code' => 200],
 		));
 
-		$client->request('POST', '/manage/api/generate', [], [], [
+		$client->request('POST', '/admin/api/generate', [], [], [
 			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 25, 'month' => 12, 'name' => 'Boże Narodzenie', 'type' => 'name', 'language' => 'English']));
@@ -90,7 +90,7 @@ class GenerateDescriptionControllerTest extends WebTestCase
 	{
 		$client = $this->createAuthenticatedClient();
 
-		$client->request('POST', '/manage/api/generate', [], [], [
+		$client->request('POST', '/admin/api/generate', [], [], [
 			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 25, 'month' => 12]));
@@ -107,7 +107,7 @@ class GenerateDescriptionControllerTest extends WebTestCase
 			['http_code' => 429],
 		));
 
-		$client->request('POST', '/manage/api/generate', [], [], [
+		$client->request('POST', '/admin/api/generate', [], [], [
 			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 1, 'month' => 1, 'name' => 'Nowy Rok']));
@@ -124,7 +124,7 @@ class GenerateDescriptionControllerTest extends WebTestCase
 			['http_code' => 200],
 		));
 
-		$client->request('POST', '/manage/api/generate', [], [], [
+		$client->request('POST', '/admin/api/generate', [], [], [
 			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 1, 'month' => 5, 'name' => 'Święto Pracy', 'type' => 'unknown_type']));
@@ -139,7 +139,7 @@ class GenerateDescriptionControllerTest extends WebTestCase
 	{
 		$client = static::createClient();
 
-		$client->request('POST', '/manage/api/generate', [], [], [
+		$client->request('POST', '/admin/api/generate', [], [], [
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 1, 'month' => 1, 'name' => 'Nowy Rok']));
 

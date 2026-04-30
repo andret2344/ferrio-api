@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/manage/polls', name: 'manage_polls_')]
+#[Route('/admin/polls', name: 'admin_polls_')]
 class ManagePollController extends AbstractController
 {
 	public function __construct(
@@ -34,7 +34,7 @@ class ManagePollController extends AbstractController
 			$counts = $this->pollVoteRepository->countByPoll($poll);
 			$voteCounts[$poll->id] = array_sum($counts);
 		}
-		return $this->render('manage/polls/index.html.twig', [
+		return $this->render('admin/polls/index.html.twig', [
 			'polls' => $polls,
 			'voteCounts' => $voteCounts,
 		]);
@@ -71,10 +71,10 @@ class ManagePollController extends AbstractController
 			$this->entityManager->persist($poll);
 			$this->entityManager->flush();
 
-			return $this->redirectToRoute('manage_polls_show', ['id' => $poll->id]);
+			return $this->redirectToRoute('admin_polls_show', ['id' => $poll->id]);
 		}
 
-		return $this->render('manage/polls/new.html.twig', [
+		return $this->render('admin/polls/new.html.twig', [
 			'form' => $form->createView(),
 		]);
 	}
@@ -91,7 +91,7 @@ class ManagePollController extends AbstractController
 		$counts = $this->pollVoteRepository->countByPoll($poll);
 		$total = array_sum($counts);
 
-		return $this->render('manage/polls/show.html.twig', [
+		return $this->render('admin/polls/show.html.twig', [
 			'poll' => $poll,
 			'counts' => $counts,
 			'total' => $total,

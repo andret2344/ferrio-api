@@ -70,6 +70,8 @@ class HolidayControllerV3Test extends WebTestCase
 			$this->assertArrayHasKey('country', $holiday);
 			$this->assertArrayHasKey('url', $holiday);
 			$this->assertArrayHasKey('mature_content', $holiday);
+			$this->assertArrayHasKey('categories', $holiday);
+			$this->assertIsArray($holiday['categories']);
 			// No 'script' key in v3
 			$this->assertArrayNotHasKey('script', $holiday);
 		}

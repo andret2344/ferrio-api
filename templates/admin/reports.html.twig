@@ -76,22 +76,33 @@
 										<td>{{ s.id }}</td>
 										<td>{{ s.name }}</td>
 										<td>{{ '%02d.%02d'|format(s.day, s.month) }}</td>
-										<td class='text-truncate' style='max-width: 250px;'>{{ s.description }}</td>
+										<td
+												class='description-cell'
+												role='button'
+												tabindex='0'
+												data-bs-toggle='modal'
+												data-bs-target='#descriptionModal'
+												data-description='{{ s.description|e('html_attr') }}'
+												data-title='{{ s.name|e('html_attr') }}'>
+											<span class='description-text'>{{ s.description }}</span>
+										</td>
 										<td>{{ s.country ? s.country.isoCode : '-' }}</td>
 										<td>
 											<span class='state-cell'>
-												<span class='badge report-state report-state-{{ s.reportState.value|lower }}' data-role='state-badge'>
+												<span class='badge report-state report-state-{{ s.reportState.value|lower }}'
+												      data-role='state-badge'>
 													{{ s.reportState.value }}
 												</span>
-												<button type='button' class='btn btn-comment-icon {{ s.comment ? '' : 'd-none' }}'
-														data-role='comment-popover'
-														data-bs-toggle='popover'
-														data-bs-trigger='focus'
-														data-bs-placement='top'
-														data-bs-title='Comment'
-														data-bs-content='{{ s.comment ?? '' }}'
-														tabindex='0'
-														title='Show comment'>
+												<button type='button'
+												        class='btn btn-comment-icon {{ s.comment ? '' : 'd-none' }}'
+												        data-role='comment-popover'
+												        data-bs-toggle='popover'
+												        data-bs-trigger='focus'
+												        data-bs-placement='top'
+												        data-bs-title='Comment'
+												        data-bs-content='{{ s.comment ?? '' }}'
+												        tabindex='0'
+												        title='Show comment'>
 													<i class='bi bi-chat-left-text-fill'></i>
 												</button>
 											</span>
@@ -106,12 +117,16 @@
 											<div class='user-uid'>{{ s.userId }}</div>
 										</td>
 										<td>
-											<button type='button' class='btn btn-moderate'
-													data-bs-toggle='modal' data-bs-target='#moderateModal'
+											<button
+													type='button'
+													class='btn btn-moderate'
+													data-bs-toggle='modal'
+													data-bs-target='#moderateModal'
 													data-kind='fixed_suggestion'
 													data-id='{{ s.id }}'
 													data-state='{{ s.reportState.value }}'
 													data-comment='{{ s.comment ?? '' }}'
+													data-holiday-id='{{ s.holiday ? s.holiday.id : '' }}'
 													title='Moderate'>
 												<i class='bi bi-pencil-square'></i>
 											</button>
@@ -151,14 +166,26 @@
 										<td>{{ s.id }}</td>
 										<td>{{ s.name }}</td>
 										<td>{{ s.date }}</td>
-										<td class='text-truncate' style='max-width: 250px;'>{{ s.description }}</td>
+										<td
+												class='description-cell'
+												role='button'
+												tabindex='0'
+												data-bs-toggle='modal'
+												data-bs-target='#descriptionModal'
+												data-description='{{ s.description|e('html_attr') }}'
+												data-title='{{ s.name|e('html_attr') }}'>
+											<span class='description-text'>{{ s.description }}</span>
+										</td>
 										<td>{{ s.country ? s.country.isoCode : '-' }}</td>
 										<td>
 											<span class='state-cell'>
-												<span class='badge report-state report-state-{{ s.reportState.value|lower }}' data-role='state-badge'>
+												<span class='badge report-state report-state-{{ s.reportState.value|lower }}'
+												      data-role='state-badge'>
 													{{ s.reportState.value }}
 												</span>
-												<button type='button' class='btn btn-comment-icon {{ s.comment ? '' : 'd-none' }}'
+												<button
+														type='button'
+														class='btn btn-comment-icon {{ s.comment ? '' : 'd-none' }}'
 														data-role='comment-popover'
 														data-bs-toggle='popover'
 														data-bs-trigger='focus'
@@ -181,12 +208,16 @@
 											<div class='user-uid'>{{ s.userId }}</div>
 										</td>
 										<td>
-											<button type='button' class='btn btn-moderate'
-													data-bs-toggle='modal' data-bs-target='#moderateModal'
+											<button
+													type='button'
+													class='btn btn-moderate'
+													data-bs-toggle='modal'
+													data-bs-target='#moderateModal'
 													data-kind='floating_suggestion'
 													data-id='{{ s.id }}'
 													data-state='{{ s.reportState.value }}'
 													data-comment='{{ s.comment ?? '' }}'
+													data-holiday-id='{{ s.holiday ? s.holiday.id : '' }}'
 													title='Moderate'>
 												<i class='bi bi-pencil-square'></i>
 											</button>
@@ -224,22 +255,34 @@
 								{% for e in fixedErrors %}
 									<tr data-report-row data-kind='fixed_error' data-id='{{ e.id }}'>
 										<td>{{ e.id }}</td>
-										<td>{{ e.metadata ? e.metadata.id : '-' }}</td>
+										<td data-role='metadata-cell'>{{ e.metadata ? e.metadata.id : '-' }}</td>
 										<td>{{ e.language.code }}</td>
 										<td>
 											<span class='badge bg-light text-dark'>{{ e.reportType.value|lower|replace({'_': ' '})|capitalize }}</span>
 										</td>
-										<td
-												class='text-truncate'
-												style='max-width: 250px;'>
-											{{ e.description ?? '-' }}
-										</td>
+										{% if e.description %}
+											<td
+													class='description-cell'
+													role='button'
+													tabindex='0'
+													data-bs-toggle='modal'
+													data-bs-target='#descriptionModal'
+													data-description='{{ e.description|e('html_attr') }}'
+													data-title='Report #{{ e.id }}'>
+												<span class='description-text'>{{ e.description }}</span>
+											</td>
+										{% else %}
+											<td>-</td>
+										{% endif %}
 										<td>
 											<span class='state-cell'>
-												<span class='badge report-state report-state-{{ e.reportState.value|lower }}' data-role='state-badge'>
+												<span class='badge report-state report-state-{{ e.reportState.value|lower }}'
+												      data-role='state-badge'>
 													{{ e.reportState.value }}
 												</span>
-												<button type='button' class='btn btn-comment-icon {{ e.comment ? '' : 'd-none' }}'
+												<button
+														type='button'
+														class='btn btn-comment-icon {{ e.comment ? '' : 'd-none' }}'
 														data-role='comment-popover'
 														data-bs-toggle='popover'
 														data-bs-trigger='focus'
@@ -262,12 +305,16 @@
 											<div class='user-uid'>{{ e.userId }}</div>
 										</td>
 										<td>
-											<button type='button' class='btn btn-moderate'
-													data-bs-toggle='modal' data-bs-target='#moderateModal'
+											<button
+													type='button'
+													class='btn btn-moderate'
+													data-bs-toggle='modal'
+													data-bs-target='#moderateModal'
 													data-kind='fixed_error'
 													data-id='{{ e.id }}'
 													data-state='{{ e.reportState.value }}'
 													data-comment='{{ e.comment ?? '' }}'
+													data-holiday-id='{{ e.metadata ? e.metadata.id : '' }}'
 													title='Moderate'>
 												<i class='bi bi-pencil-square'></i>
 											</button>
@@ -305,22 +352,34 @@
 								{% for e in floatingErrors %}
 									<tr data-report-row data-kind='floating_error' data-id='{{ e.id }}'>
 										<td>{{ e.id }}</td>
-										<td>{{ e.metadata ? e.metadata.id : '-' }}</td>
+										<td data-role='metadata-cell'>{{ e.metadata ? e.metadata.id : '-' }}</td>
 										<td>{{ e.language.code }}</td>
 										<td>
 											<span class='badge bg-light text-dark'>{{ e.reportType.value|lower|replace({'_': ' '})|capitalize }}</span>
 										</td>
-										<td
-												class='text-truncate'
-												style='max-width: 250px;'>
-											{{ e.description ?? '-' }}
-										</td>
+										{% if e.description %}
+											<td
+													class='description-cell'
+													role='button'
+													tabindex='0'
+													data-bs-toggle='modal'
+													data-bs-target='#descriptionModal'
+													data-description='{{ e.description|e('html_attr') }}'
+													data-title='Report #{{ e.id }}'>
+												<span class='description-text'>{{ e.description }}</span>
+											</td>
+										{% else %}
+											<td>-</td>
+										{% endif %}
 										<td>
 											<span class='state-cell'>
-												<span class='badge report-state report-state-{{ e.reportState.value|lower }}' data-role='state-badge'>
+												<span class='badge report-state report-state-{{ e.reportState.value|lower }}'
+												      data-role='state-badge'>
 													{{ e.reportState.value }}
 												</span>
-												<button type='button' class='btn btn-comment-icon {{ e.comment ? '' : 'd-none' }}'
+												<button
+														type='button'
+														class='btn btn-comment-icon {{ e.comment ? '' : 'd-none' }}'
 														data-role='comment-popover'
 														data-bs-toggle='popover'
 														data-bs-trigger='focus'
@@ -343,12 +402,15 @@
 											<div class='user-uid'>{{ e.userId }}</div>
 										</td>
 										<td>
-											<button type='button' class='btn btn-moderate'
+											<button
+													type='button'
+													class='btn btn-moderate'
 													data-bs-toggle='modal' data-bs-target='#moderateModal'
 													data-kind='floating_error'
 													data-id='{{ e.id }}'
 													data-state='{{ e.reportState.value }}'
 													data-comment='{{ e.comment ?? '' }}'
+													data-holiday-id='{{ e.metadata ? e.metadata.id : '' }}'
 													title='Moderate'>
 												<i class='bi bi-pencil-square'></i>
 											</button>
@@ -365,7 +427,7 @@
 	</main>
 
 	<div class='modal fade' id='moderateModal' tabindex='-1' aria-labelledby='moderateModalLabel' aria-hidden='true'
-		 data-moderate-url='{{ path('manage_reports_moderate') }}'>
+	     data-moderate-url='{{ path('admin_reports_moderate') }}'>
 		<div class='modal-dialog modal-dialog-centered'>
 			<div class='modal-content'>
 				<div class='modal-header'>
@@ -379,11 +441,16 @@
 						<div class='mb-3'>
 							<label class='form-label' for='moderateStateToggle'>State</label>
 							<div class='dropdown state-dropdown'>
-								<button class='btn dropdown-toggle state-dropdown-toggle' type='button'
-										id='moderateStateToggle' data-bs-toggle='dropdown' aria-expanded='false'>
+								<button
+										class='btn dropdown-toggle state-dropdown-toggle'
+										type='button'
+										id='moderateStateToggle'
+										data-bs-toggle='dropdown'
+										aria-expanded='false'>
 									<span class='badge report-state' data-role='state-toggle-badge'></span>
 								</button>
-								<ul class='dropdown-menu dropdown-menu-dark state-dropdown-menu' aria-labelledby='moderateStateToggle'>
+								<ul class='dropdown-menu dropdown-menu-dark state-dropdown-menu'
+								    aria-labelledby='moderateStateToggle'>
 									{% for state in report_states %}
 										<li>
 											<button type='button' class='dropdown-item' data-value='{{ state }}'>
@@ -396,8 +463,14 @@
 							</div>
 						</div>
 						<div class='mb-3'>
+							<label for='moderateHolidayId' class='form-label'>Related Holiday ID</label>
+							<input type='number' class='form-control' id='moderateHolidayId' name='holiday_id' min='1'
+							       placeholder='Leave empty to clear'>
+						</div>
+						<div class='mb-3'>
 							<label for='moderateComment' class='form-label'>Comment</label>
-							<textarea class='form-control' id='moderateComment' name='comment' rows='4' placeholder='Optional note (e.g. "duplicate of #42")'></textarea>
+							<textarea class='form-control' id='moderateComment' name='comment' rows='4'
+							          placeholder='Optional note (e.g. "duplicate of #42")'></textarea>
 						</div>
 						<div class='alert alert-danger d-none' id='moderateError' role='alert'></div>
 					</form>
@@ -408,6 +481,19 @@
 						<i class='bi bi-check-lg me-1'></i>Save
 					</button>
 				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class='modal fade' id='descriptionModal' tabindex='-1' aria-labelledby='descriptionModalLabel'
+	     aria-hidden='true'>
+		<div class='modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg'>
+			<div class='modal-content'>
+				<div class='modal-header'>
+					<h5 class='modal-title' id='descriptionModalLabel'>Description</h5>
+					<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+				</div>
+				<div class='modal-body description-modal-body' id='descriptionModalBody'></div>
 			</div>
 		</div>
 	</div>

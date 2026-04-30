@@ -292,6 +292,36 @@ body {
     }
   }
 
+  .description-cell[role='button'] {
+    max-width: 250px;
+    cursor: pointer;
+    transition: color 0.2s, background-color 0.2s;
+
+    &:hover, &:focus {
+      color: #c0c0f0;
+      background-color: rgba(80, 80, 200, 0.1);
+      outline: none;
+    }
+
+    &:hover .description-text, &:focus .description-text {
+      text-decoration: underline;
+    }
+  }
+
+  .description-text {
+    display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+  }
+
+  .description-modal-body {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
   .reports-tabs {
     border-bottom-color: #1a1a2e;
 
@@ -500,6 +530,165 @@ body {
       opacity: 0.6;
     }
   }
+
+  // Chips
+  .chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 6px 4px 4px;
+    background-color: #12122a;
+    border: 1px solid #22224a;
+    border-radius: 999px;
+    color: #cfcfe6;
+    font-size: 13px;
+    transition: border-color 0.2s, background-color 0.2s;
+
+    &:hover {
+      border-color: #4040a0;
+      background-color: #16163a;
+    }
+
+    .chip-body {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 12px 4px 10px;
+      border: none;
+      border-radius: 999px;
+      background-color: transparent;
+      color: inherit;
+      font: inherit;
+      transition: background-color 0.2s;
+      cursor: pointer;
+
+      &:hover, &:focus {
+        background-color: rgba(80, 80, 200, 0.15);
+        outline: none;
+      }
+    }
+
+    .chip-label {
+      font-weight: 500;
+
+      &.chip-label-fallback {
+        color: #8888b0;
+        font-style: italic;
+        font-family: 'SF Mono', 'Fira Code', monospace;
+        font-size: 12px;
+      }
+    }
+
+    .chip-i18n {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      color: #6868b8;
+      background-color: #0a0a1a;
+      border: 1px solid #1a1a3a;
+      padding: 2px 7px;
+      border-radius: 999px;
+      letter-spacing: 0.3px;
+
+      i {
+        font-size: 9px;
+      }
+    }
+
+    .chip-counts {
+      display: inline-flex;
+      gap: 6px;
+    }
+
+    .chip-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      color: #8888b0;
+      background-color: #0a0a1a;
+      border: 1px solid #1a1a3a;
+      padding: 2px 8px;
+      border-radius: 999px;
+
+      i {
+        font-size: 10px;
+      }
+    }
+
+    .chip-delete-form {
+      margin: 0;
+      display: inline-flex;
+    }
+
+    .chip-delete {
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      border-radius: 999px;
+      border: none;
+      background-color: transparent;
+      color: #6868b8;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s, color 0.2s;
+      line-height: 1;
+
+      &:hover, &:focus {
+        background-color: #2a0e0e;
+        color: #c45c5c;
+        outline: none;
+      }
+    }
+  }
+
+  .holiday-description {
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 1.5;
+  }
+
+  // Translation editor (modal grid)
+  .translation-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .translation-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+  }
+
+  .translation-lang {
+    flex: 0 0 44px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: #8888b0;
+    text-align: center;
+    padding: 6px 0;
+    background-color: #0a0a1a;
+    border: 1px solid #1a1a3a;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .translation-hint {
+    font-size: 11px;
+    color: #555;
+    margin: 0;
+  }
 }
 
 // Report state badge (used both in tables and modal — must be global)
@@ -566,6 +755,129 @@ body {
 
   .popover-body {
     white-space: pre-wrap;
+  }
+}
+
+// Tag picker (modal multi-select chips + add-dropdown — must be global; modals render outside .section-manage-main)
+.tag-picker-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 6px;
+  margin-bottom: 8px;
+  background-color: #0a0a1a;
+  border: 1px dashed #22224a;
+  border-radius: 10px;
+
+  &:empty::before {
+    content: 'No tags assigned';
+    padding: 0 8px;
+    font-size: 12px;
+    color: #444;
+    font-style: italic;
+  }
+}
+
+.tag-picker-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 4px 3px 10px;
+  background: linear-gradient(135deg, #1c1c4a, #25255a);
+  border: 1px solid #4040a0;
+  border-radius: 999px;
+  color: #e0e0f0;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(60, 60, 180, 0.18);
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    border-color: #6060c8;
+    box-shadow: 0 2px 8px rgba(80, 80, 220, 0.3);
+  }
+}
+
+.tag-picker-chip-icon {
+  font-size: 10px;
+  color: #9090e8;
+}
+
+.tag-picker-chip-label {
+  letter-spacing: 0.2px;
+}
+
+.tag-picker-chip-remove {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #b0b0e0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, transform 0.1s;
+
+  i {
+    font-size: 10px;
+  }
+
+  &:hover, &:focus {
+    background-color: #c45c5c;
+    color: #fff;
+    outline: none;
+    transform: scale(1.08);
+  }
+}
+
+.tag-picker-dropdown {
+  .tag-picker-add {
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    i {
+      font-size: 11px;
+    }
+  }
+
+  .tag-picker-menu {
+    max-height: 240px;
+    overflow-y: auto;
+    min-width: 220px;
+  }
+
+  .tag-picker-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i {
+      font-size: 11px;
+      color: #6868b8;
+    }
+
+    &:hover i, &:focus i {
+      color: #a0a0e0;
+    }
+  }
+
+  .tag-picker-empty {
+    padding: 8px 14px;
+    font-size: 12px;
+    color: #555;
+    font-style: italic;
   }
 }
 
