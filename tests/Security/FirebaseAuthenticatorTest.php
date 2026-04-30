@@ -5,6 +5,7 @@ namespace App\Tests\Security;
 use App\Security\FirebaseAuthenticator;
 use App\Security\FirebaseUser;
 use App\Service\FirebaseTokenVerifier;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,6 +15,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use UnexpectedValueException;
 
+#[AllowMockObjectsWithoutExpectations]
 class FirebaseAuthenticatorTest extends TestCase
 {
 	private FirebaseTokenVerifier&MockObject $tokenVerifier;

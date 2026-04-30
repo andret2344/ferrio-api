@@ -41,6 +41,7 @@ function initModerateModal(): void {
 	const stateToggleBadge = modalEl.querySelector<HTMLElement>('[data-role="state-toggle-badge"]');
 	const stateMenu = modalEl.querySelector<HTMLElement>('.state-dropdown-menu');
 	const commentInput = document.getElementById('moderateComment') as HTMLTextAreaElement;
+	const holidayIdInput = document.getElementById('moderateHolidayId') as HTMLInputElement;
 	const errorBox = document.getElementById('moderateError') as HTMLDivElement;
 	const saveBtn = document.getElementById('moderateSave') as HTMLButtonElement;
 
@@ -67,13 +68,20 @@ function initModerateModal(): void {
 		idInput.value = trigger.dataset.id || '';
 		setState(trigger.dataset.state || '');
 		commentInput.value = trigger.dataset.comment || '';
+		holidayIdInput.value = trigger.dataset.holidayId || '';
+		holidayIdInput.classList.remove('is-invalid');
 		errorBox.classList.add('d-none');
 		errorBox.textContent = '';
+	});
+
+	holidayIdInput.addEventListener('input', () => {
+		holidayIdInput.classList.remove('is-invalid');
 	});
 
 	saveBtn.addEventListener('click', async () => {
 		errorBox.classList.add('d-none');
 		errorBox.textContent = '';
+		holidayIdInput.classList.remove('is-invalid');
 		saveBtn.disabled = true;
 
 		try {
@@ -85,16 +93,20 @@ function initModerateModal(): void {
 					id: Number(idInput.value),
 					report_state: stateInput.value,
 					comment: commentInput.value,
+					holiday_id: holidayIdInput.value,
 				}),
 			});
 
 			if (!response.ok) {
 				const payload = await response.json().catch(() => ({}));
+				if (payload.field === 'holiday_id') {
+					holidayIdInput.classList.add('is-invalid');
+				}
 				throw new Error(payload.error || ('HTTP ' + response.status));
 			}
 
 			const payload = await response.json();
-			updateRow(kindInput.value, idInput.value, payload.report_state, payload.comment);
+			updateRow(kindInput.value, idInput.value, payload.report_state, payload.comment, payload.holiday_id);
 			bootstrap.Modal.getInstance(modalEl)?.hide();
 		} catch (err) {
 			errorBox.textContent = (err as Error).message || 'Request failed';
@@ -119,7 +131,7 @@ function initCommentPopovers(): void {
 	});
 }
 
-function updateRow(kind: string, id: string, state: string, comment: string | null): void {
+function updateRow(kind: string, id: string, state: string, comment: string | null, holidayId: number | null): void {
 	const row = document.querySelector<HTMLElement>(
 		'tr[data-report-row][data-kind="' + kind + '"][data-id="' + id + '"]'
 	);
@@ -136,6 +148,12 @@ function updateRow(kind: string, id: string, state: string, comment: string | nu
 	if (moderateBtn) {
 		moderateBtn.dataset.state = state;
 		moderateBtn.dataset.comment = comment ?? '';
+		moderateBtn.dataset.holidayId = holidayId != null ? String(holidayId) : '';
+	}
+
+	const metadataCell = row.querySelector<HTMLElement>('[data-role="metadata-cell"]');
+	if (metadataCell) {
+		metadataCell.textContent = holidayId != null ? String(holidayId) : '-';
 	}
 
 	const commentBtn = row.querySelector<HTMLElement>('[data-role="comment-popover"]');
@@ -152,8 +170,31 @@ function updateRow(kind: string, id: string, state: string, comment: string | nu
 	}
 }
 
+function initDescriptionModal(): void {
+	const modalEl = document.getElementById('descriptionModal');
+	if (!modalEl) return;
+	const body = document.getElementById('descriptionModalBody');
+	const title = document.getElementById('descriptionModalLabel');
+	modalEl.addEventListener('show.bs.modal', (event: Event) => {
+		const trigger = (event as unknown as { relatedTarget: HTMLElement }).relatedTarget;
+		if (!trigger) return;
+		if (body) body.textContent = trigger.dataset.description || '';
+		if (title) title.textContent = trigger.dataset.title || 'Description';
+	});
+
+	document.querySelectorAll<HTMLElement>('.description-cell[role="button"]').forEach((cell) => {
+		cell.addEventListener('keydown', (event) => {
+			if (event.key === 'Enter' || event.key === ' ') {
+				event.preventDefault();
+				cell.click();
+			}
+		});
+	});
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 	initTabHashSync();
 	initModerateModal();
 	initCommentPopovers();
+	initDescriptionModal();
 });

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\FixedHoliday;
 use App\Entity\FixedHolidayMetadata;
 use App\Entity\Language;
@@ -11,13 +12,14 @@ use App\Form\TranslateType;
 use App\Handler\CountryLookupTrait;
 use App\Repository\FixedHolidayRepository;
 use App\Repository\FixedMetadataRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/manage/api', name: 'manage_api_')]
+#[Route('/admin/api', name: 'admin_api_')]
 class ManageApiController extends AbstractController
 {
 	use CountryLookupTrait;
@@ -41,14 +43,43 @@ class ManageApiController extends AbstractController
 			$name = $data['name'];
 			$desc = $data['description'];
 			$mature = (bool)$data['mature'];
+			$month = $data['month'];
+			$day = $data['day'];
 			/** @var FixedHoliday $found */
 			$found = $this->fixedHolidayRepository->findOneBy(['metadata' => $id, 'language' => 'pl']);
 			$found->name = $name;
 			$found->description = $desc;
-			$found->metadata->matureContent = $mature;
+			$metadata = $found->metadata;
+			$metadata->matureContent = $mature;
+			if ($month !== null) {
+				$metadata->month = $month;
+			}
+			if ($day !== null) {
+				$metadata->day = $day;
+			}
+			$metadata->country = $this->getCountry($data['country']);
+			$tagIds = array_values(array_filter(array_map(
+				'intval',
+				(array)$request->request->all('tags')
+			)));
+			$categories = empty($tagIds)
+				? []
+				: $this->entityManager->getRepository(Category::class)->findBy(['id' => $tagIds]);
+			$metadata->categories = new ArrayCollection($categories);
 			$this->entityManager->persist($found);
 			$this->entityManager->flush();
-			return new JsonResponse(['success' => true]);
+			return new JsonResponse([
+				'success' => true,
+				'id' => $metadata->id,
+				'month' => $metadata->month,
+				'day' => $metadata->day,
+				'name' => $found->name,
+				'description' => $found->description,
+				'countryCode' => $metadata->country?->isoCode,
+				'countryName' => $metadata->country?->englishName,
+				'mature' => $metadata->matureContent,
+				'tags' => array_map(fn(Category $c) => $c->id, $categories),
+			]);
 		}
 		$errors = [];
 		foreach ($form->getErrors(true) as $error) {

@@ -9,8 +9,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 readonly class HolidayService
 {
-	public function __construct(private FixedHolidayRepository $fixedHolidayRepository,
-								private EntityManagerInterface $entityManager)
+	public function __construct(
+		private FixedHolidayRepository $fixedHolidayRepository,
+		private EntityManagerInterface $entityManager)
 	{
 	}
 
@@ -65,6 +66,9 @@ readonly class HolidayService
 		$data = [];
 		foreach ($holidays as $holiday) {
 			$metadata = $holiday->metadata;
+			if ($metadata->script === null || $metadata->script->content === '' || $metadata->args === '') {
+				continue;
+			}
 			$args = implode(', ', json_decode($metadata->args));
 			$scriptContent = $metadata->script->content . "\n\ncalculate($args);";
 			$country = $metadata->country;

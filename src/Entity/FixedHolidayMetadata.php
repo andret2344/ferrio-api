@@ -19,17 +19,19 @@ class FixedHolidayMetadata implements JsonSerializable
 	private(set) ?int $id;
 
 	#[ORM\Column(type: 'integer')]
-	private(set) int $month;
+	public int $month;
 
 	#[ORM\Column(type: 'integer')]
-	private(set) int $day;
+	public int $day;
 
 	#[ORM\Column(type: 'boolean')]
 	private(set) bool $usual;
 
-	#[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'fixedHolidays')]
-	#[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
-	public ?Category $category;
+	#[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'fixedHolidays')]
+	#[ORM\JoinTable(name: 'fixed_holiday_metadata_category')]
+	#[ORM\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+	#[ORM\InverseJoinColumn(name: 'category_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+	public Collection $categories;
 
 	#[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'fixedHolidays')]
 	#[ORM\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
@@ -44,13 +46,16 @@ class FixedHolidayMetadata implements JsonSerializable
 	#[ORM\Column(type: 'boolean')]
 	public bool $matureContent;
 
-	public function __construct(int $month, int $day, bool $usual, ?Country $country, ?Category $category, bool $matureContent)
+	/**
+	 * @param Category[] $categories
+	 */
+	public function __construct(int $month, int $day, bool $usual, ?Country $country, array $categories, bool $matureContent)
 	{
 		$this->month = $month;
 		$this->day = $day;
 		$this->usual = $usual;
 		$this->country = $country;
-		$this->category = $category;
+		$this->categories = new ArrayCollection($categories);
 		$this->holidays = new ArrayCollection();
 		$this->reports = new ArrayCollection();
 		$this->matureContent = $matureContent;
@@ -63,7 +68,7 @@ class FixedHolidayMetadata implements JsonSerializable
 		'day' => 'int',
 		'usual' => 'bool',
 		'country' => 'array|null',
-		'category' => 'string|null',
+		'categories' => 'string[]',
 		'mature_content' => 'bool',
 	])]
 	public function jsonSerialize(): array
@@ -74,7 +79,7 @@ class FixedHolidayMetadata implements JsonSerializable
 			'day' => $this->day,
 			'usual' => $this->usual,
 			'country' => $this->country?->jsonSerialize(),
-			'category' => $this->category?->name,
+			'categories' => $this->categories->map(fn(Category $c) => $c->name)->getValues(),
 			'mature_content' => $this->matureContent,
 		];
 	}

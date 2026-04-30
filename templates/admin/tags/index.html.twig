@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+{% block title %}Tags — Ferrio Admin{% endblock %}
+{% block body %}
+	<main class='section-manage-main'>
+		{% include 'components/topbar.html.twig' %}
+		<div class='manage-content'>
+			<h2 class='manage-page-title'>Tags</h2>
+
+			{% for label, messages in app.flashes(['success', 'error']) %}
+				{% for message in messages %}
+					<div class='alert alert-{{ label == 'error' ? 'danger' : 'success' }} alert-dismissible fade show' role='alert'>
+						{{ message }}
+						<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+					</div>
+				{% endfor %}
+			{% endfor %}
+
+			<form method='post' action='{{ path('admin_tags_create') }}' class='mb-4 d-flex gap-2' style='max-width: 480px'>
+				<input
+						type='text'
+						name='slug'
+						class='form-control manage-input'
+						placeholder='New tag slug (e.g. religious)'
+						maxlength='63'
+						required
+				>
+				<button type='submit' class='btn btn-primary'>
+					<i class='bi bi-plus-lg'></i> Add
+				</button>
+			</form>
+
+			<div class='chip-list'>
+				{% for tag in tags %}
+					{% set translatedCount = tag.category.translations|length %}
+					{% set totalLangs = languages|length %}
+					{% set displayName = tag.category.nameFor('pl') ?? tag.category.slug %}
+					{% set isFallback = tag.category.nameFor('pl') is null %}
+					<div class='chip'>
+						<button
+								type='button'
+								class='chip-body chip-edit-trigger'
+								data-bs-toggle='modal'
+								data-bs-target='#tag-modal-{{ tag.category.id }}'
+								title='Slug: {{ tag.category.slug }} · Click to edit translations'
+						>
+							<span class='chip-label{{ isFallback ? ' chip-label-fallback' : '' }}'>{{ displayName }}</span>
+							<span class='chip-i18n' title='{{ translatedCount }} of {{ totalLangs }} languages translated'>
+								<i class='bi bi-translate'></i> {{ translatedCount }}/{{ totalLangs }}
+							</span>
+						</button>
+						<span class='chip-counts'>
+							<span class='chip-count' title='Fixed holidays'>
+								<i class='bi bi-calendar-event'></i> {{ tag.fixedCount }}
+							</span>
+							<span class='chip-count' title='Floating holidays'>
+								<i class='bi bi-calendar-range'></i> {{ tag.floatingCount }}
+							</span>
+						</span>
+						<form
+								method='post'
+								action='{{ path('admin_tags_delete', {id: tag.category.id}) }}'
+								class='chip-delete-form'
+								data-confirm='Delete tag "{{ tag.category.slug }}"? It is used by {{ tag.fixedCount }} fixed and {{ tag.floatingCount }} floating holiday(s). Holidays will keep their other tags.'
+						>
+							<button type='submit' class='chip-delete' aria-label='Delete tag'>
+								<i class='bi bi-x'></i>
+							</button>
+						</form>
+					</div>
+
+					<div class='modal fade' id='tag-modal-{{ tag.category.id }}' tabindex='-1' aria-hidden='true'>
+						<div class='modal-dialog modal-dialog-centered'>
+							<div class='modal-content'>
+								<form method='post' action='{{ path('admin_tags_translations_save', {id: tag.category.id}) }}'>
+									<div class='modal-header'>
+										<h5 class='modal-title'>
+											<i class='bi bi-tag'></i>
+											<span class='text-monospace'>{{ tag.category.slug }}</span>
+										</h5>
+										<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+									</div>
+									<div class='modal-body'>
+										<p class='form-label mb-3'>Translations</p>
+										<div class='translation-grid'>
+											{% for language in languages %}
+												<label class='translation-row'>
+													<span class='translation-lang' title='{{ language.name }}'>{{ language.code|upper }}</span>
+													<input
+															type='text'
+															name='names[{{ language.code }}]'
+															class='form-control manage-input'
+															value='{{ tag.category.nameFor(language.code) ?? '' }}'
+															placeholder='— untranslated —'
+															maxlength='127'
+													>
+												</label>
+											{% endfor %}
+										</div>
+										<p class='translation-hint mt-3'>Leave a field empty to remove that translation.</p>
+									</div>
+									<div class='modal-footer'>
+										<button type='button' class='btn btn-outline-light' data-bs-dismiss='modal'>Cancel</button>
+										<button type='submit' class='btn btn-primary'>
+											<i class='bi bi-check-lg'></i> Save
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				{% else %}
+					<p class='text-muted'>No tags yet.</p>
+				{% endfor %}
+			</div>
+		</div>
+	</main>
+
+	<script>
+		document.querySelectorAll('.chip-delete-form').forEach(form => {
+			form.addEventListener('submit', e => {
+				if (!window.confirm(form.dataset.confirm)) {
+					e.preventDefault();
+				}
+			});
+		});
+	</script>
+{% endblock %}

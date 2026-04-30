@@ -7,7 +7,7 @@
 			<div class='row g-4 justify-content-center pb-4'>
 				<div class='col-lg-4 col-md-6'>
 					<a
-							href='{{ path('manage_create') }}'
+							href='{{ path('admin_create') }}'
 							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
 					>
 						<i class='bi bi-pencil-square tile-icon'></i>
@@ -17,7 +17,7 @@
 				</div>
 				<div class='col-lg-4 col-md-6'>
 					<a
-							href='{{ path('manage_polls_index') }}'
+							href='{{ path('admin_polls_index') }}'
 							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
 					>
 						<i class='bi bi-bar-chart-line tile-icon'></i>
@@ -27,7 +27,7 @@
 				</div>
 				<div class='col-lg-4 col-md-6'>
 					<a
-							href='{{ path('manage_reports') }}'
+							href='{{ path('admin_reports') }}'
 							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
 					>
 						<i class='bi bi-flag tile-icon'></i>
@@ -37,12 +37,22 @@
 				</div>
 				<div class='col-lg-4 col-md-6'>
 					<a
-							href='{{ path('manage_check') }}'
+							href='{{ path('admin_check') }}'
 							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
 					>
 						<i class='bi bi-check2-circle tile-icon'></i>
 						<span class='tile-title'>Check</span>
 						<span class='tile-desc'>Verify holidays against the database.</span>
+					</a>
+				</div>
+				<div class='col-lg-4 col-md-6'>
+					<a
+							href='{{ path('admin_tags_index') }}'
+							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
+					>
+						<i class='bi bi-tags tile-icon'></i>
+						<span class='tile-title'>Tags</span>
+						<span class='tile-desc'>Manage holiday tags.</span>
 					</a>
 				</div>
 				<div class='col-lg-8 col-md-12'>
@@ -55,7 +65,7 @@
 							{% for language in languages %}
 								{% if language.code != 'pl' %}
 									<div class='col-lg-3 col-md-4 col-6'>
-										<a href='/manage/translate?from=pl&to={{ language.code }}'
+										<a href='/admin/translate?from=pl&to={{ language.code }}'
 										   class='language no-a d-block text-center py-3'>
 											{{ language.name }}
 										</a>

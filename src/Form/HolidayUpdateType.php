@@ -6,7 +6,9 @@ use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,6 +21,9 @@ class HolidayUpdateType extends AbstractType
 			->add('metadata_id', HiddenType::class)
 			->add('name', TextareaType::class, ['required' => false])
 			->add('description', TextareaType::class, ['required' => false])
+			->add('month', IntegerType::class, ['required' => false])
+			->add('day', IntegerType::class, ['required' => false])
+			->add('country', TextType::class, ['required' => false])
 			->add('mature', CheckboxType::class, ['required' => false]);
 	}
 

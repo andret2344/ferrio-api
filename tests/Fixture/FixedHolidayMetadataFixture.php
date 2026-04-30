@@ -19,11 +19,11 @@ class FixedHolidayMetadataFixture extends Fixture implements DependentFixtureInt
 	{
 		$countryGb = $this->getReference('country-gb', Country::class);
 
-		$metadata0301 = new FixedHolidayMetadata(3, 1, false, $countryGb, null, false);
+		$metadata0301 = new FixedHolidayMetadata(3, 1, false, $countryGb, [], false);
 		$manager->persist($metadata0301);
 		$this->addReference(self::METADATA_0301, $metadata0301);
 
-		$metadata0314 = new FixedHolidayMetadata(3, 14, true, null, null, true);
+		$metadata0314 = new FixedHolidayMetadata(3, 14, true, null, [], true);
 		$manager->persist($metadata0314);
 		$this->addReference(self::METADATA_0314, $metadata0314);
 

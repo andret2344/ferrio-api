@@ -2,17 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Country;
 use App\Entity\FixedHolidayError;
+use App\Entity\FixedHolidayMetadata;
 use App\Entity\FixedHolidaySuggestion;
 use App\Entity\FloatingHoliday;
 use App\Entity\FloatingHolidayError;
+use App\Entity\FloatingHolidayMetadata;
 use App\Entity\FloatingHolidaySuggestion;
 use App\Entity\Language;
 use App\Entity\ReportState;
 use App\Form\HolidayCheckType;
 use App\Form\HolidayCreateType;
-use App\Form\HolidayUpdateType;
 use App\Form\TranslateType;
 use App\Repository\FixedHolidayRepository;
 use App\Service\FirebaseUserLookup;
@@ -24,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/manage', name: 'manage_')]
+#[Route('/admin', name: 'admin_')]
 class ManageController extends AbstractController
 {
 	public function __construct(
@@ -40,7 +42,7 @@ class ManageController extends AbstractController
 	{
 		$languages = $this->entityManager->getRepository(Language::class)
 			->findBy([], ['code' => 'ASC']);
-		return $this->render('manage/index.html.twig', [
+		return $this->render('admin/index.html.twig', [
 			'languages' => $languages
 		]);
 	}
@@ -64,7 +66,7 @@ class ManageController extends AbstractController
 			])
 				->createView();
 		}
-		return $this->render('manage/translate.html.twig', [
+		return $this->render('admin/translate.html.twig', [
 			'languageFrom' => $languageFrom,
 			'languageTo' => $languageTo,
 			'languages' => $languages,
@@ -83,7 +85,7 @@ class ManageController extends AbstractController
 	#[Route('/create', name: 'create')]
 	public function create(): Response
 	{
-		return $this->redirectToRoute('manage_create_month', ['month' => (int)date('m')]);
+		return $this->redirectToRoute('admin_create_month', ['month' => (int)date('m')]);
 	}
 
 	#[Route('/create/{month<^([1-9]|1[0-2])$>}', name: 'create_month')]
@@ -94,24 +96,36 @@ class ManageController extends AbstractController
 			->findBy(['language' => 'pl']);
 		$countries = $this->entityManager->getRepository(Country::class)
 			->findAll();
-		$updateForms = [];
-		foreach ($fixedHolidays as $holiday) {
-			$updateForms[$holiday['id']] = $this->createForm(HolidayUpdateType::class, [
-				'metadata_id' => $holiday['id'],
-				'name' => $holiday['name'],
-				'description' => $holiday['description'],
-				'mature' => $holiday['matureContent'],
-			])
-				->createView();
+		$tags = $this->entityManager->getRepository(Category::class)
+			->findBy([], ['slug' => 'ASC']);
+		$tagsByMetadata = [];
+		if (!empty($fixedHolidays)) {
+			$metadataIds = array_column($fixedHolidays, 'id');
+			/** @var FixedHolidayMetadata[] $metadatas */
+			$metadatas = $this->entityManager->getRepository(FixedHolidayMetadata::class)
+				->createQueryBuilder('m')
+				->leftJoin('m.categories', 'c')
+				->addSelect('c')
+				->where('m.id IN (:ids)')
+				->setParameter('ids', $metadataIds)
+				->getQuery()
+				->getResult();
+			foreach ($metadatas as $m) {
+				$tagsByMetadata[$m->id] = array_values(array_map(
+					fn(Category $c) => $c->id,
+					$m->categories->toArray()
+				));
+			}
 		}
 		$createForm = $this->createForm(HolidayCreateType::class)
 			->createView();
-		return $this->render('manage/create.html.twig', [
+		return $this->render('admin/create.html.twig', [
 			'fixed_holidays' => $fixedHolidays,
 			'floating_holidays' => $floatingHolidays,
 			'countries' => $countries,
+			'tags' => $tags,
+			'tags_by_metadata' => $tagsByMetadata,
 			'month' => $month,
-			'updateForms' => $updateForms,
 			'createForm' => $createForm
 		]);
 	}
@@ -136,7 +150,7 @@ class ManageController extends AbstractController
 		);
 		$users = $this->firebaseUserLookup->lookup($uids);
 
-		return $this->render('manage/reports.html.twig', [
+		return $this->render('admin/reports.html.twig', [
 			'fixedSuggestions' => $fixedSuggestions,
 			'floatingSuggestions' => $floatingSuggestions,
 			'fixedErrors' => $fixedErrors,
@@ -154,12 +168,21 @@ class ManageController extends AbstractController
 			throw new BadRequestHttpException('Invalid JSON body');
 		}
 
-		$entityClass = match ($data['kind'] ?? null) {
+		$kind = $data['kind'] ?? null;
+		$entityClass = match ($kind) {
 			'fixed_suggestion' => FixedHolidaySuggestion::class,
 			'floating_suggestion' => FloatingHolidaySuggestion::class,
 			'fixed_error' => FixedHolidayError::class,
 			'floating_error' => FloatingHolidayError::class,
 			default => throw new BadRequestHttpException('Invalid kind'),
+		};
+		$metadataClass = match ($kind) {
+			'fixed_suggestion', 'fixed_error' => FixedHolidayMetadata::class,
+			'floating_suggestion', 'floating_error' => FloatingHolidayMetadata::class,
+		};
+		$relationField = match ($kind) {
+			'fixed_suggestion', 'floating_suggestion' => 'holiday',
+			'fixed_error', 'floating_error' => 'metadata',
 		};
 
 		$id = filter_var($data['id'] ?? null, FILTER_VALIDATE_INT);
@@ -180,13 +203,28 @@ class ManageController extends AbstractController
 			}
 		}
 
+		$holidayIdRaw = $data['holiday_id'] ?? null;
+		if ($holidayIdRaw === '' || $holidayIdRaw === null) {
+			$holidayId = null;
+		} else {
+			$holidayId = filter_var($holidayIdRaw, FILTER_VALIDATE_INT);
+			if ($holidayId === false || $holidayId <= 0) {
+				return $this->json(['error' => 'Invalid holiday id', 'field' => 'holiday_id'], Response::HTTP_BAD_REQUEST);
+			}
+			if ($this->entityManager->getRepository($metadataClass)->find($holidayId) === null) {
+				return $this->json(['error' => 'Holiday does not exist', 'field' => 'holiday_id'], Response::HTTP_BAD_REQUEST);
+			}
+		}
+
 		$affected = $this->entityManager->createQueryBuilder()
 			->update($entityClass, 'r')
 			->set('r.reportState', ':state')
 			->set('r.comment', ':comment')
+			->set("r.$relationField", ':holiday')
 			->where('r.id = :id')
 			->setParameter('state', $state)
 			->setParameter('comment', $comment)
+			->setParameter('holiday', $holidayId)
 			->setParameter('id', $id)
 			->getQuery()
 			->execute();
@@ -199,6 +237,7 @@ class ManageController extends AbstractController
 			'id' => $id,
 			'report_state' => $state->value,
 			'comment' => $comment,
+			'holiday_id' => $holidayId,
 		]);
 	}
 
@@ -228,7 +267,7 @@ class ManageController extends AbstractController
 			->findOneBy(['code' => $lang]);
 		$languages = $this->entityManager->getRepository(Language::class)
 			->findAll();
-		return $this->render('manage/check.html.twig', [
+		return $this->render('admin/check.html.twig', [
 			'language' => $language,
 			'languages' => $languages,
 			'result' => $result,

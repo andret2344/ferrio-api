@@ -19,7 +19,7 @@ class FloatingHolidayMetadataFixture extends Fixture implements DependentFixture
 		$metadata = new FloatingHolidayMetadata(
 			true,
 			null,
-			null,
+			[],
 			$script,
 			json_encode([2026, 4]),
 			false,

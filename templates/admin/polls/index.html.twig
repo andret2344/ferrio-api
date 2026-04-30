@@ -2,7 +2,7 @@
 {% block title %}Polls — Ferrio Admin{% endblock %}
 {% block body %}
 	{% set toolbar_html %}
-		<a href="{{ path('manage_polls_new') }}" class="btn btn-sm btn-outline-light">+ New Poll</a>
+		<a href="{{ path('admin_polls_new') }}" class="btn btn-sm btn-outline-light">+ New Poll</a>
 	{% endset %}
 	<main class='section-manage-main'>
 		{% include 'components/topbar.html.twig' with {toolbar: toolbar_html} %}
@@ -34,7 +34,7 @@
 							<td>{{ voteCounts[poll.id] ?? 0 }}</td>
 							<td>
 								<a
-										href="{{ path('manage_polls_show', {id: poll.id}) }}"
+										href="{{ path('admin_polls_show', {id: poll.id}) }}"
 										class="btn btn-sm btn-outline-light"
 								>View</a></td>
 						</tr>

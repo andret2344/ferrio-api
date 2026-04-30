@@ -2,17 +2,17 @@
 
 namespace App\Repository;
 
-use App\Entity\FixedHolidayMetadata;
+use App\Entity\FloatingHolidayMetadata;
 use App\Repository\Trait\CategoryNamesQueryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class FixedMetadataRepository extends ServiceEntityRepository
+class FloatingMetadataRepository extends ServiceEntityRepository
 {
 	use CategoryNamesQueryTrait;
 
 	public function __construct(ManagerRegistry $registry)
 	{
-		parent::__construct($registry, FixedHolidayMetadata::class);
+		parent::__construct($registry, FloatingHolidayMetadata::class);
 	}
 }

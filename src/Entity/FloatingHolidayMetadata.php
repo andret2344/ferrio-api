@@ -3,13 +3,14 @@
 namespace App\Entity;
 
 use App\Enum\Algorithm;
+use App\Repository\FloatingMetadataRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Override;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: FloatingMetadataRepository::class)]
 class FloatingHolidayMetadata implements JsonSerializable
 {
 	#[ORM\Id]
@@ -20,9 +21,11 @@ class FloatingHolidayMetadata implements JsonSerializable
 	#[ORM\Column(type: 'boolean')]
 	private(set) bool $usual;
 
-	#[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'floatingHolidays')]
-	#[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
-	public ?Category $category;
+	#[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'floatingHolidays')]
+	#[ORM\JoinTable(name: 'floating_holiday_metadata_category')]
+	#[ORM\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+	#[ORM\InverseJoinColumn(name: 'category_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+	public Collection $categories;
 
 	#[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'floatingHolidays')]
 	#[ORM\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
@@ -50,9 +53,12 @@ class FloatingHolidayMetadata implements JsonSerializable
 	#[ORM\Column(type: 'boolean')]
 	private(set) bool $matureContent;
 
+	/**
+	 * @param Category[] $categories
+	 */
 	public function __construct(bool      $usual,
 								?Country  $country,
-								?Category $category,
+								array     $categories,
 								Script    $script,
 								string    $args,
 								bool      $matureContent,
@@ -61,7 +67,7 @@ class FloatingHolidayMetadata implements JsonSerializable
 	{
 		$this->usual = $usual;
 		$this->country = $country;
-		$this->category = $category;
+		$this->categories = new ArrayCollection($categories);
 		$this->script = $script;
 		$this->args = $args;
 		$this->holidays = new ArrayCollection();
@@ -77,7 +83,7 @@ class FloatingHolidayMetadata implements JsonSerializable
 		return [
 			'id' => $this->id,
 			'usual' => $this->usual,
-			'category' => $this->category?->name,
+			'categories' => $this->categories->map(fn(Category $c) => $c->name)->getValues(),
 			'country' => $this->country?->jsonSerialize(),
 			'script' => $this->script,
 			'args' => $this->args,

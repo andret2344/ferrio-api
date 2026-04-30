@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-#[Route('/manage/api')]
+#[Route('/admin/api')]
 class GenerateDescriptionController extends AbstractController
 {
 	private readonly string $promptDir;
@@ -23,7 +23,7 @@ class GenerateDescriptionController extends AbstractController
 		$this->promptDir = $promptDir ?? dirname(__DIR__, 2) . '/config/prompts';
 	}
 
-	#[Route('/generate', name: 'manage_generate', methods: ['POST'])]
+	#[Route('/generate', name: 'admin_generate', methods: ['POST'])]
 	public function __invoke(Request $request): JsonResponse
 	{
 		$data = json_decode($request->getContent(), true);
@@ -66,7 +66,7 @@ class GenerateDescriptionController extends AbstractController
 				'content-type' => 'application/json',
 			],
 			'json' => [
-				'model' => 'claude-haiku-4-5-20251001',
+				'model' => 'claude-sonnet-4-6',
 				'max_tokens' => $maxTokens,
 				'system' => $systemPrompt,
 				'messages' => [
