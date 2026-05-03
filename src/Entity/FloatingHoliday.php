@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
+use App\Repository\FloatingHolidayRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 use Override;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: FloatingHolidayRepository::class)]
 class FloatingHoliday implements JsonSerializable
 {
 	#[ORM\Id]

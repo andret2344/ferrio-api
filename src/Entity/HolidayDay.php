@@ -21,6 +21,11 @@ class HolidayDay implements JsonSerializable
 		$this->holidays = $holidays;
 	}
 
+	public static function formatId(int $day, int $month): string
+	{
+		return sprintf('%02d%02d', $month, $day);
+	}
+
 	#[Override]
 	#[ArrayShape([
 		'id' => 'string',

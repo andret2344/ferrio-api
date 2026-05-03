@@ -6,15 +6,15 @@ use App\Entity\FloatingHoliday;
 use App\Entity\HolidayDay;
 use App\Repository\FixedHolidayRepository;
 use App\Repository\FixedMetadataRepository;
+use App\Repository\FloatingHolidayRepository;
 use App\Repository\FloatingMetadataRepository;
-use Doctrine\ORM\EntityManagerInterface;
 
 readonly class HolidayServiceV3
 {
 	public function __construct(private FixedHolidayRepository      $fixedHolidayRepository,
 								private FixedMetadataRepository     $fixedMetadataRepository,
+								private FloatingHolidayRepository   $floatingHolidayRepository,
 								private FloatingMetadataRepository  $floatingMetadataRepository,
-								private EntityManagerInterface      $entityManager,
 								private AlgorithmResolver           $algorithmResolver)
 	{
 	}
@@ -38,7 +38,7 @@ readonly class HolidayServiceV3
 	{
 		$groups = [];
 		foreach ($holidays as $holiday) {
-			$key = sprintf('%02d%02d', $holiday['month'], $holiday['day']);
+			$key = HolidayDay::formatId($holiday['day'], $holiday['month']);
 			$groups[$key][] = $holiday;
 		}
 
@@ -74,21 +74,7 @@ readonly class HolidayServiceV3
 
 	private function getFloatingHolidays(string $language, int $year, ?int $day = null, ?int $month = null, ?string $country = null): array
 	{
-		$qb = $this->entityManager->createQueryBuilder()
-			->select('h', 'm')
-			->from(FloatingHoliday::class, 'h')
-			->join('h.metadata', 'm')
-			->where('h.language = :language')
-			->setParameter('language', $language);
-
-		if ($country !== null) {
-			$qb->join('m.country', 'c')
-				->andWhere('c.isoCode = :country')
-				->setParameter('country', $country);
-		}
-
-		/** @var FloatingHoliday[] $holidays */
-		$holidays = $qb->getQuery()->getResult();
+		$holidays = $this->floatingHolidayRepository->findAllByLanguage($language, $country);
 
 		$categoriesByMetadata = $this->floatingMetadataRepository->findCategoryNames(
 			array_map(fn(FloatingHoliday $h) => $h->metadata->id, $holidays),

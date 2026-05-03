@@ -5,7 +5,6 @@ namespace App\Controller\v2;
 use App\Service\HolidayService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/v2/holiday', name: 'v2_holiday_')]
@@ -16,42 +15,29 @@ class HolidayControllerV2 extends AbstractController
 	}
 
 	#[Route('/{language<^\S{2}$>}', name: 'get_all', methods: ['GET'])]
-	public function getAll(string $language): Response
+	public function getAll(string $language): JsonResponse
 	{
-		$holidayDays = $this->holidayService->getHolidays($language);
-		$floatingHolidays = $this->holidayService->getFloatingHolidays($language);
-		$response = new JsonResponse([
-			'fixed' => $holidayDays,
-			'floating' => $floatingHolidays
+		return new JsonResponse([
+			'fixed' => $this->holidayService->getHolidays($language),
+			'floating' => $this->holidayService->getFloatingHolidays($language),
 		]);
-		$response->headers->set("Content-Length", strlen($response->getContent()));
-		return $response;
 	}
 
 	#[Route('/{language<^\S{2}$>}/day/{month<\d+>}/{day<\d+>}', name: 'get_holiday_day', methods: ['GET'])]
-	public function getHolidayDay(string $language, int $month, int $day): Response
+	public function getHolidayDay(string $language, int $month, int $day): JsonResponse
 	{
-		$holidayDay = $this->holidayService->getHolidayDay($language, $day, $month);
-		$response = new JsonResponse($holidayDay);
-		$response->headers->set("Content-Length", strlen($response->getContent()));
-		return $response;
+		return new JsonResponse($this->holidayService->getHolidayDay($language, $day, $month));
 	}
 
 	#[Route('/{language<^\S{2}$>}/floating', name: 'get_floating_holidays', methods: ['GET'])]
-	public function getFloatingHolidays(string $language): Response
+	public function getFloatingHolidays(string $language): JsonResponse
 	{
-		$holidayDay = $this->holidayService->getFloatingHolidays($language);
-		$response = new JsonResponse($holidayDay);
-		$response->headers->set("Content-Length", strlen($response->getContent()));
-		return $response;
+		return new JsonResponse($this->holidayService->getFloatingHolidays($language));
 	}
 
 	#[Route('/{language<^\S{2}$>}/fixed', name: 'get_fixed_holidays', methods: ['GET'])]
-	public function getFixedHolidays(string $language): Response
+	public function getFixedHolidays(string $language): JsonResponse
 	{
-		$holidayDay = $this->holidayService->getHolidays($language);
-		$response = new JsonResponse($holidayDay);
-		$response->headers->set("Content-Length", strlen($response->getContent()));
-		return $response;
+		return new JsonResponse($this->holidayService->getHolidays($language));
 	}
 }

@@ -2,16 +2,15 @@
 
 namespace App\Service;
 
-use App\Entity\FloatingHoliday;
 use App\Entity\HolidayDay;
 use App\Repository\FixedHolidayRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\FloatingHolidayRepository;
 
 readonly class HolidayService
 {
 	public function __construct(
-		private FixedHolidayRepository $fixedHolidayRepository,
-		private EntityManagerInterface $entityManager)
+		private FixedHolidayRepository    $fixedHolidayRepository,
+		private FloatingHolidayRepository $floatingHolidayRepository)
 	{
 	}
 
@@ -23,22 +22,11 @@ readonly class HolidayService
 	public function getHolidays(string $language): array
 	{
 		$holidays = $this->fixedHolidayRepository->findAllByLanguage($language);
-		if (empty($holidays)) {
-			return [];
-		}
-		$days = [];
-		$day = $holidays[0]['day'];
-		$month = $holidays[0]['month'];
-		$array = [];
+		$groups = [];
 		foreach ($holidays as $holiday) {
-			if ($day != $holiday['day'] || $month != $holiday['month']) {
-				$id = sprintf('%02d', $month) . sprintf('%02d', $day);
-				$days[] = new HolidayDay($id, $day, $month, $array);
-				$array = [];
-				$day = $holiday['day'];
-				$month = $holiday['month'];
-			}
-			$array[] = [
+			$key = HolidayDay::formatId($holiday['day'], $holiday['month']);
+			$groups[$key] ??= ['day' => $holiday['day'], 'month' => $holiday['month'], 'items' => []];
+			$groups[$key]['items'][] = [
 				'id' => $holiday['id'],
 				'name' => $holiday['name'],
 				'usual' => $holiday['usual'],
@@ -48,8 +36,11 @@ readonly class HolidayService
 				'mature_content' => $holiday['matureContent'],
 			];
 		}
-		$id = sprintf('%02d', $month) . sprintf('%02d', $day);
-		$days[] = new HolidayDay($id, $day, $month, $array);
+
+		$days = [];
+		foreach ($groups as $key => $g) {
+			$days[] = new HolidayDay($key, $g['day'], $g['month'], $g['items']);
+		}
 		return $days;
 	}
 
@@ -60,9 +51,7 @@ readonly class HolidayService
 	 */
 	public function getFloatingHolidays(string $language): array
 	{
-		/** @var FloatingHoliday[] $holidays */
-		$holidays = $this->entityManager->getRepository(FloatingHoliday::class)
-			->findBy(['language' => $language]);
+		$holidays = $this->floatingHolidayRepository->findAllByLanguage($language);
 		$data = [];
 		foreach ($holidays as $holiday) {
 			$metadata = $holiday->metadata;
@@ -81,9 +70,9 @@ readonly class HolidayService
 		return $data;
 	}
 
-	public function getHolidayDay(string $language, int $day, int $month): ?HolidayDay
+	public function getHolidayDay(string $language, int $day, int $month): HolidayDay
 	{
-		$id = sprintf('%02d', $month) . sprintf('%02d', $day);
+		$id = HolidayDay::formatId($day, $month);
 		$holidays = $this->fixedHolidayRepository->findAt($language, $day, $month);
 		return new HolidayDay($id, $day, $month, $holidays);
 	}
