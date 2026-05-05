@@ -56,14 +56,15 @@ class FloatingHolidayMetadata implements JsonSerializable
 	/**
 	 * @param Category[] $categories
 	 */
-	public function __construct(bool      $usual,
-								?Country  $country,
-								array     $categories,
-								Script    $script,
-								string    $args,
-								bool      $matureContent,
-								Algorithm $algorithm,
-								?string   $algorithmArgs = null)
+	public function __construct(
+		bool      $usual,
+		?Country  $country,
+		array     $categories,
+		Script    $script,
+		string    $args,
+		bool      $matureContent,
+		Algorithm $algorithm,
+		?string   $algorithmArgs = null)
 	{
 		$this->usual = $usual;
 		$this->country = $country;
@@ -83,7 +84,8 @@ class FloatingHolidayMetadata implements JsonSerializable
 		return [
 			'id' => $this->id,
 			'usual' => $this->usual,
-			'categories' => $this->categories->map(fn(Category $c) => $c->name)->getValues(),
+			'categories' => $this->categories->map(fn(Category $c) => $c->name)
+				->getValues(),
 			'country' => $this->country?->jsonSerialize(),
 			'script' => $this->script,
 			'args' => $this->args,

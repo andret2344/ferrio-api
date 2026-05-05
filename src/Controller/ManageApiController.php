@@ -58,13 +58,13 @@ class ManageApiController extends AbstractController
 				$metadata->day = $day;
 			}
 			$metadata->country = $this->getCountry($data['country']);
-			$tagIds = array_values(array_filter(array_map(
-				'intval',
-				(array)$request->request->all('tags')
-			)));
+			$tagIds = array_map('intval', $request->request->all('tags'))
+					|> array_filter(...)
+					|> array_values(...);
 			$categories = empty($tagIds)
 				? []
-				: $this->entityManager->getRepository(Category::class)->findBy(['id' => $tagIds]);
+				: $this->entityManager->getRepository(Category::class)
+					->findBy(['id' => $tagIds]);
 			$metadata->categories = new ArrayCollection($categories);
 			$this->entityManager->persist($found);
 			$this->entityManager->flush();
@@ -106,7 +106,7 @@ class ManageApiController extends AbstractController
 			$desc = $data['description'];
 			$country = $this->getCountry($data['country']);
 			$mature = (bool)$data['mature'];
-			$metadata = new FixedHolidayMetadata($month, $day, 0, $country, null, $mature);
+			$metadata = new FixedHolidayMetadata($month, $day, 0, $country, [], $mature);
 			$this->entityManager->persist($metadata);
 			$holiday = new FixedHoliday($language, $metadata, $name, $desc ?? '', '');
 			$this->entityManager->persist($holiday);
