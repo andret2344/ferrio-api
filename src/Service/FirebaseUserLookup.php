@@ -4,6 +4,7 @@ namespace App\Service;
 
 use Kreait\Firebase\Contract\Auth;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class FirebaseUserLookup
 {
@@ -16,11 +17,15 @@ class FirebaseUserLookup
 
 	/**
 	 * @param string[] $uids
+	 *
 	 * @return array<string, array{email: ?string, name: ?string}> keyed by UID
 	 */
 	public function lookup(array $uids): array
 	{
-		$uids = array_values(array_unique(array_filter($uids)));
+		$uids = $uids
+				|> array_filter(...)
+				|> array_unique(...)
+				|> array_values(...);
 		if ($uids === []) {
 			return [];
 		}
@@ -37,7 +42,7 @@ class FirebaseUserLookup
 						];
 					}
 				}
-			} catch (\Throwable $e) {
+			} catch (Throwable $e) {
 				$this->logger->warning('Firebase getUsers failed: ' . $e->getMessage());
 			}
 		}

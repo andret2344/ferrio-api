@@ -84,7 +84,7 @@ class FloatingHolidayMetadata implements JsonSerializable
 		return [
 			'id' => $this->id,
 			'usual' => $this->usual,
-			'categories' => $this->categories->map(fn(Category $c) => $c->name)
+			'categories' => $this->categories->map(fn(Category $c) => $c->slug)
 				->getValues(),
 			'country' => $this->country?->jsonSerialize(),
 			'script' => $this->script,

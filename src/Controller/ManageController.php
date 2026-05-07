@@ -13,7 +13,6 @@ use App\Entity\FloatingHolidayMetadata;
 use App\Entity\FloatingHolidaySuggestion;
 use App\Entity\Language;
 use App\Entity\ReportState;
-use App\Form\HolidayCheckType;
 use App\Form\HolidayCreateType;
 use App\Form\TranslateType;
 use App\Repository\FixedHolidayRepository;
@@ -241,38 +240,40 @@ class ManageController extends AbstractController
 		]);
 	}
 
-	#[Route('/check', name: 'check')]
-	public function check(Request $request): Response
+	#[Route('/reports/delete', name: 'reports_delete', methods: ['POST'])]
+	public function deleteReport(Request $request): JsonResponse
 	{
-		return $this->checkLanguage($request, 'pl');
-	}
-
-	#[Route('/check/{lang<^\S{2}$>}', name: 'check_language')]
-	public function checkLanguage(Request $request, string $lang): Response
-	{
-		$checkForm = $this->createForm(HolidayCheckType::class);
-		$result = [];
-		if ($request->isMethod('POST') && $request->request->get('action') === 'check') {
-			$checkForm->handleRequest($request);
-			if ($checkForm->isSubmitted() && $checkForm->isValid()) {
-				$data = $checkForm->getData();
-				$holidaysText = $data['holidays'];
-				if ($holidaysText) {
-					$holidays = preg_split("/[\r\n]+/", $holidaysText);
-					$result = $this->fixedHolidayRepository->check($lang, $holidays);
-				}
-			}
+		$data = json_decode($request->getContent(), true);
+		if (!is_array($data)) {
+			throw new BadRequestHttpException('Invalid JSON body');
 		}
-		$language = $this->entityManager->getRepository(Language::class)
-			->findOneBy(['code' => $lang]);
-		$languages = $this->entityManager->getRepository(Language::class)
-			->findAll();
-		return $this->render('admin/check.html.twig', [
-			'language' => $language,
-			'languages' => $languages,
-			'result' => $result,
-			'checkForm' => $checkForm->createView()
-		]);
+
+		$kind = $data['kind'] ?? null;
+		$entityClass = match ($kind) {
+			'fixed_suggestion' => FixedHolidaySuggestion::class,
+			'floating_suggestion' => FloatingHolidaySuggestion::class,
+			'fixed_error' => FixedHolidayError::class,
+			'floating_error' => FloatingHolidayError::class,
+			default => throw new BadRequestHttpException('Invalid kind'),
+		};
+
+		$id = filter_var($data['id'] ?? null, FILTER_VALIDATE_INT);
+		if ($id === false) {
+			throw new BadRequestHttpException('Invalid id');
+		}
+
+		$affected = $this->entityManager->createQueryBuilder()
+			->delete($entityClass, 'r')
+			->where('r.id = :id')
+			->setParameter('id', $id)
+			->getQuery()
+			->execute();
+
+		if ($affected === 0) {
+			return $this->json(['error' => 'Report not found'], Response::HTTP_NOT_FOUND);
+		}
+
+		return $this->json(['id' => $id]);
 	}
 
 }

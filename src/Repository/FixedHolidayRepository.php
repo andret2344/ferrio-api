@@ -83,20 +83,6 @@ class FixedHolidayRepository extends ServiceEntityRepository
 		return $qb->getQuery()->getResult();
 	}
 
-	public function check(string $language, array $array): array
-	{
-		$existingNames = $this->createQueryBuilder('h2')
-			->select('h2.name')
-			->join('h2.metadata', 'm')
-			->andWhere('h2.language = :language')
-			->setParameter('language', $language)
-			->getQuery()
-			->getResult();
-
-		$existingNames = array_column($existingNames, 'name');
-		return array_diff($array, $existingNames);
-	}
-
 	public function findAllAggregatedById(string $languageFrom, string $languageTo, ?int $month = null): array
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder()

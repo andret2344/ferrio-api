@@ -11,11 +11,12 @@ use App\Repository\FloatingMetadataRepository;
 
 readonly class HolidayServiceV3
 {
-	public function __construct(private FixedHolidayRepository      $fixedHolidayRepository,
-								private FixedMetadataRepository     $fixedMetadataRepository,
-								private FloatingHolidayRepository   $floatingHolidayRepository,
-								private FloatingMetadataRepository  $floatingMetadataRepository,
-								private AlgorithmResolver           $algorithmResolver)
+	public function __construct(
+		private FixedHolidayRepository     $fixedHolidayRepository,
+		private FixedMetadataRepository    $fixedMetadataRepository,
+		private FloatingHolidayRepository  $floatingHolidayRepository,
+		private FloatingMetadataRepository $floatingMetadataRepository,
+		private AlgorithmResolver          $algorithmResolver)
 	{
 	}
 
@@ -32,6 +33,7 @@ readonly class HolidayServiceV3
 
 	/**
 	 * @param array<array<string, mixed>> $holidays Already-sorted flat list
+	 *
 	 * @return HolidayDay[]
 	 */
 	public function groupByDay(array $holidays): array

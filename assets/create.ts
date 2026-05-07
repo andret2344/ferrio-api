@@ -61,30 +61,6 @@ function nl2br(str: string): string {
 	return escaped.replace(/\r\n|\r|\n/g, '<br>');
 }
 
-function initHideDescribed(): void {
-	const hidingSwitch = document.querySelector<HTMLInputElement>('#hideDescribedHolidays');
-	if (!hidingSwitch) return;
-
-	if (localStorage.getItem('hide') === 'true') {
-		hidingSwitch.checked = true;
-	}
-	const apply = (checked: boolean) => {
-		document.querySelectorAll<HTMLElement>('.tr-holiday').forEach(row => {
-			const cell = row.querySelector('[data-role="description-cell"]');
-			const value = cell ? (cell.textContent ?? '').trim() : '';
-			if (value) {
-				row.classList.toggle('d-none', checked);
-			}
-		});
-	};
-	apply(hidingSwitch.checked);
-	hidingSwitch.addEventListener('change', () => {
-		const checked = hidingSwitch.checked;
-		localStorage.setItem('hide', JSON.stringify(checked));
-		apply(checked);
-	});
-}
-
 function attachGenerateHandler(btn: HTMLButtonElement, fields: GenerateFields): void {
 	btn.addEventListener('click', async () => {
 		const target = fields.target();
@@ -296,6 +272,20 @@ function initEditModal(): void {
 
 	const tagPicker = new TagPicker(tagsRoot);
 
+	document.querySelectorAll<HTMLElement>('.tr-holiday-clickable').forEach(row => {
+		const open = () => bootstrap.Modal.getOrCreateInstance(modalEl).show(row);
+		row.addEventListener('click', event => {
+			if ((event.target as HTMLElement).closest('a, button, input, select, textarea')) return;
+			open();
+		});
+		row.addEventListener('keydown', event => {
+			if (event.key === 'Enter' || event.key === ' ') {
+				event.preventDefault();
+				open();
+			}
+		});
+	});
+
 	modalEl.addEventListener('show.bs.modal', event => {
 		const trigger = (event as unknown as { relatedTarget: HTMLElement | null }).relatedTarget;
 		if (!trigger) return;
@@ -378,9 +368,8 @@ function applyRowUpdate(payload: UpdatePayload): void {
 	const row = document.querySelector<HTMLElement>(`tr.tr-holiday[data-row-id="${payload.id}"]`);
 	if (!row) return;
 
-	const trigger = row.querySelector<HTMLElement>('.btn-edit-holiday');
 	const nameCell = row.querySelector<HTMLElement>('[data-role="name-cell"]');
-	const descCell = row.querySelector<HTMLElement>('[data-role="description-cell"]');
+	const descCell = row.querySelector<HTMLElement>('[data-role="description-cell"] .holiday-description');
 	const monthCell = row.querySelector<HTMLElement>('[data-role="month-cell"]');
 	const dayCell = row.querySelector<HTMLElement>('[data-role="day-cell"]');
 	const countryCell = row.querySelector<HTMLElement>('[data-role="country-cell"]');
@@ -400,22 +389,19 @@ function applyRowUpdate(payload: UpdatePayload): void {
 		matureCell.dataset.mature = payload.mature ? '1' : '0';
 		matureCell.textContent = payload.mature ? 'Yes' : 'No';
 	}
-	if (trigger) {
-		trigger.dataset.name = payload.name ?? '';
-		trigger.dataset.description = payload.description ?? '';
-		trigger.dataset.month = String(payload.month);
-		trigger.dataset.day = String(payload.day);
-		trigger.dataset.country = payload.countryCode ?? '';
-		trigger.dataset.mature = payload.mature ? '1' : '0';
-		trigger.dataset.tags = JSON.stringify(payload.tags ?? []);
-	}
+	row.dataset.name = payload.name ?? '';
+	row.dataset.description = payload.description ?? '';
+	row.dataset.month = String(payload.month);
+	row.dataset.day = String(payload.day);
+	row.dataset.country = payload.countryCode ?? '';
+	row.dataset.mature = payload.mature ? '1' : '0';
+	row.dataset.tags = JSON.stringify(payload.tags ?? []);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
 	const root = document.querySelector<HTMLElement>('[data-page="admin-create"]');
 	if (!root) return;
 	const currentMonth = parseInt(root.dataset.currentMonth ?? '0');
-	initHideDescribed();
 	initCreateForm(currentMonth);
 	initInlineGenerateButtons();
 	initEditModal();

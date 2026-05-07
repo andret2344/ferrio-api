@@ -5,7 +5,7 @@
 		<div class='container container-main py-5 px-5'>
 			<span class='heading mt-3 mb-5'>Where do you start?</span>
 			<div class='row g-4 justify-content-center pb-4'>
-				<div class='col-lg-4 col-md-6'>
+				<div class='col-md-6'>
 					<a
 							href='{{ path('admin_create') }}'
 							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
@@ -15,37 +15,7 @@
 						<span class='tile-desc'>Write descriptions and add new holidays.</span>
 					</a>
 				</div>
-				<div class='col-lg-4 col-md-6'>
-					<a
-							href='{{ path('admin_polls_index') }}'
-							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
-					>
-						<i class='bi bi-bar-chart-line tile-icon'></i>
-						<span class='tile-title'>Polls</span>
-						<span class='tile-desc'>Manage polls and view results.</span>
-					</a>
-				</div>
-				<div class='col-lg-4 col-md-6'>
-					<a
-							href='{{ path('admin_reports') }}'
-							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
-					>
-						<i class='bi bi-flag tile-icon'></i>
-						<span class='tile-title'>Reports</span>
-						<span class='tile-desc'>View user suggestions and error reports.</span>
-					</a>
-				</div>
-				<div class='col-lg-4 col-md-6'>
-					<a
-							href='{{ path('admin_check') }}'
-							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
-					>
-						<i class='bi bi-check2-circle tile-icon'></i>
-						<span class='tile-title'>Check</span>
-						<span class='tile-desc'>Verify holidays against the database.</span>
-					</a>
-				</div>
-				<div class='col-lg-4 col-md-6'>
+				<div class='col-md-6'>
 					<a
 							href='{{ path('admin_tags_index') }}'
 							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
@@ -55,8 +25,29 @@
 						<span class='tile-desc'>Manage holiday tags.</span>
 					</a>
 				</div>
-				<div class='col-lg-8 col-md-12'>
-					<div class='tile p-4'>
+				<div class='col-md-6'>
+					<a
+							href='{{ path('admin_reports') }}'
+							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
+					>
+						<i class='bi bi-flag tile-icon'></i>
+						<span class='tile-title'>Reports</span>
+						<span class='tile-desc'>View user suggestions and error reports.</span>
+					</a>
+				</div>
+				<div class='col-md-6'>
+					<span
+							class='tile tile-action tile-disabled no-a d-flex flex-column align-items-center text-center p-4'
+							aria-disabled='true'
+							title='Coming soon'
+					>
+						<i class='bi bi-bar-chart-line tile-icon'></i>
+						<span class='tile-title'>Polls</span>
+						<span class='tile-desc'>Manage polls and view results.</span>
+					</span>
+				</div>
+				<div class='col-12'>
+					<div class='tile tile-translate p-4'>
 						<div class='d-flex align-items-center justify-content-center gap-2 mb-3'>
 							<i class='bi bi-translate' style='color: #6060aa; font-size: 20px'></i>
 							<span class='tile-title'>Translate</span>

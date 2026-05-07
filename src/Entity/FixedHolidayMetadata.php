@@ -79,7 +79,8 @@ class FixedHolidayMetadata implements JsonSerializable
 			'day' => $this->day,
 			'usual' => $this->usual,
 			'country' => $this->country?->jsonSerialize(),
-			'categories' => $this->categories->map(fn(Category $c) => $c->name)->getValues(),
+			'categories' => $this->categories->map(fn(Category $c) => $c->slug)
+				->getValues(),
 			'mature_content' => $this->matureContent,
 		];
 	}

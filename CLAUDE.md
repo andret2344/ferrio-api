@@ -106,8 +106,8 @@ Available algorithms with v1/v2 `args` → v3 `algorithmArgs` mapping (dayOfWeek
 
 ### Admin UI
 
-`ManageController` + `WebController` serve Twig templates under `/admin` for managing holiday data (create, translate,
-check). Protected by `ROLE_USER` via HTTP Basic Auth. `AdminTagController` (under `/admin/tags`) handles tag (category)
+`ManageController` + `WebController` serve Twig templates under `/admin` for managing holiday data (create, translate).
+Protected by `ROLE_USER` via HTTP Basic Auth. `AdminTagController` (under `/admin/tags`) handles tag (category)
 management with chip UI and per-type usage counters. Legacy `/manage/*` URLs return 301 redirects to `/admin/*` via
 `ManageRedirectController`.
 
@@ -134,5 +134,11 @@ endpoint via axios.
 - Doctrine mapping uses PHP 8 attributes (not XML/YAML).
 - Always use CRLF line endings in all files.
 - Frontend uses Webpack Encore with TypeScript and Bootstrap 5 / MDB UI Kit. Icons: Bootstrap Icons, Unicons, Font Awesome 5.
+- TypeScript conventions:
+  - Always use single-quoted string literals (no double quotes, no backticks unless interpolation is needed).
+  - Always use template-literal interpolation (`` `${a} ${b}` ``) over string concatenation with `+`.
+  - Always use curly braces for one-line `if`/`else`/`for`/`while` bodies — never the brace-less form.
+  - Prefer named `function` declarations over `const` arrow functions for top-level/module functions. Arrow functions are fine when passed as an argument (callbacks, handlers, array methods).
+  - Prefer `element.dataset.foo` over `element.getAttribute('data-foo')` when reading `data-*` attributes.
 - CI runs on GitHub Actions (`.github/workflows/ci.yml`), executing PHPUnit on PHP 8.5.
 - Composer is at `C:\Tools\php85-ts\composer.bat` (not on PATH in bash).
