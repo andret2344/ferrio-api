@@ -2,7 +2,8 @@
 {% block title %}New Poll — Ferrio Admin{% endblock %}
 {% block body %}
 	<main class='section-manage-main'>
-		{% include 'components/topbar.html.twig' %}
+		{% include 'components/sidebar.html.twig' %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'New Poll'} %}
 		<div class='manage-content'>
 			<h2 class='manage-page-title'>Create Poll</h2>
 			<div style="max-width: 600px; margin: 0 auto">

@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 	<main class='section-manage-main' data-page='admin-create' data-current-month='{{ month }}'>
-		{% include 'components/topbar.html.twig' %}
+		{% include 'components/sidebar.html.twig' %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'Fixed Holidays'} %}
 		<div class='manage-content'>
 			<h2 class='manage-page-title'>Holidays</h2>
 			<div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
@@ -177,103 +178,6 @@
 		</div>
 	</main>
 
-	<div
-			class='modal fade'
-			id='holidayEditModal'
-			tabindex='-1'
-			aria-labelledby='holidayEditModalLabel'
-			aria-hidden='true'
-			data-update-url='{{ path('admin_api_holiday_update') }}'
-			data-csrf-token='{{ csrf_token('holiday_update') }}'
-	>
-		<div class='modal-dialog modal-dialog-centered modal-lg'>
-			<div class='modal-content'>
-				<div class='modal-header'>
-					<h5 class='modal-title' id='holidayEditModalLabel'>Edit holiday</h5>
-					<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
-				</div>
-				<div class='modal-body'>
-					<input type='hidden' id='edit-metadata-id'>
-					<div class='mb-3'>
-						<label class='form-label' for='edit-name'>Name</label>
-						<div class='d-flex align-items-start gap-2'>
-							<textarea id='edit-name' class='form-control manage-input' rows='2'></textarea>
-						</div>
-					</div>
-					<div class='mb-3'>
-						<label class='form-label' for='edit-description'>Description</label>
-						<div class='d-flex align-items-start gap-2'>
-							<textarea id='edit-description' class='form-control manage-input' rows='6'></textarea>
-							<button
-									type='button'
-									class='btn btn-sm btn-outline-light btn-generate-desc flex-shrink-0'
-									title='Generate description with AI'
-									id='edit-description-ai'
-							><i class='bi bi-stars'></i></button>
-						</div>
-					</div>
-					<div class='row g-3 mb-3'>
-						<div class='col-sm-3'>
-							<label class='form-label' for='edit-day'>Day</label>
-							<input type='number' min='1' max='31' id='edit-day' class='form-control manage-input'>
-						</div>
-						<div class='col-sm-3'>
-							<label class='form-label' for='edit-month'>Month</label>
-							<input type='number' min='1' max='12' id='edit-month' class='form-control manage-input'>
-						</div>
-						<div class='col-sm-6'>
-							<label class='form-label' for='edit-country'>Country</label>
-							<select id='edit-country' class='form-select manage-input'>
-								<option value='null'>International</option>
-								{% for country in countries %}
-									<option value='{{ country.isoCode }}'>{{ country.isoCode }}
-										- {{ country.englishName }}</option>
-								{% endfor %}
-							</select>
-						</div>
-					</div>
-					<div class='form-check form-switch mb-3'>
-						<input class='form-check-input' type='checkbox' id='edit-mature'>
-						<label class='form-check-label' for='edit-mature'>Mature content (+18)</label>
-					</div>
-					<div
-							class='mb-2 tag-picker'
-							id='edit-tags'
-							data-tags='{{ tags|map(t => {id: t.id, slug: t.slug, name: t.nameFor('pl') ?? t.slug})|json_encode|e('html_attr') }}'
-					>
-						<label class='form-label'>Tags</label>
-						<div class='tag-picker-chips chip-list' id='edit-tag-chips'></div>
-						{% if tags is not empty %}
-							<div class='dropdown tag-picker-dropdown'>
-								<button
-										class='btn btn-sm btn-outline-light dropdown-toggle tag-picker-add'
-										type='button'
-										id='edit-tag-add'
-										data-bs-toggle='dropdown'
-										data-bs-auto-close='outside'
-										aria-expanded='false'
-								>
-									<i class='bi bi-plus-lg'></i> Add tag
-								</button>
-								<ul class='dropdown-menu dropdown-menu-dark tag-picker-menu'
-								    aria-labelledby='edit-tag-add' id='edit-tag-menu'></ul>
-							</div>
-						{% else %}
-							<p class='text-muted small mb-0'>No tags defined yet.</p>
-						{% endif %}
-					</div>
-					<div class='alert alert-danger d-none' id='edit-error' role='alert'></div>
-				</div>
-				<div class='modal-footer'>
-					<button type='button' class='btn btn-outline-light' data-bs-dismiss='modal' id='edit-cancel'>
-						<i class='bi bi-x-lg me-1'></i>Cancel
-					</button>
-					<button type='button' class='btn btn-primary' id='edit-accept'>
-						<i class='bi bi-check-lg me-1'></i>Accept
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
+	{% include 'admin/components/holiday_edit_modal.html.twig' with {countries: countries, tags: tags} %}
 
 {% endblock %}

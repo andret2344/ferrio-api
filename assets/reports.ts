@@ -1,4 +1,5 @@
 import * as bootstrap from 'bootstrap';
+import {HolidayEditPayload, initHolidayEditModal, onHolidayEditSaved, openHolidayEditModal,} from './holidayEditModal';
 
 function setHash(id: string): void {
     return history.replaceState(null, '', `#${id}`);
@@ -11,7 +12,6 @@ function initTabHashSync(): void {
     }
 
     const tabIds = ['fixed-suggestions', 'floating-suggestions', 'fixed-errors', 'floating-errors'];
-
 
     const raw = globalThis.location.hash.replace(/^#/, '');
     const initial = tabIds.includes(raw) ? raw : tabIds[0];
@@ -35,6 +35,57 @@ function initTabHashSync(): void {
         }));
 }
 
+let activeRow: HTMLElement | null = null;
+let pendingEditPayload: HolidayEditPayload | null = null;
+
+function setReferredHoliday(row: HTMLElement | null): void {
+    const card = document.getElementById('referredHolidayCard');
+    const nameEl = document.getElementById('referredHolidayName');
+    const descEl = document.getElementById('referredHolidayDescription');
+    const emptyEl = document.getElementById('referredHolidayEmpty');
+    const hintEl = document.getElementById('referredHolidayEditHint');
+    const contentEl = document.getElementById('referredHolidayContent');
+    if (!card || !nameEl || !descEl || !emptyEl || !hintEl || !contentEl) {
+        return;
+    }
+
+    const name = row?.dataset.referredName ?? '';
+    const description = row?.dataset.referredDescription ?? '';
+    const canEdit = row?.dataset.canEdit === '1';
+
+    nameEl.textContent = name;
+    descEl.textContent = description;
+
+    if (!name && !description) {
+        emptyEl.classList.remove('d-none');
+        nameEl.classList.add('d-none');
+        descEl.classList.add('d-none');
+    } else {
+        emptyEl.classList.add('d-none');
+        nameEl.classList.remove('d-none');
+        descEl.classList.remove('d-none');
+    }
+
+    pendingEditPayload = null;
+    if (canEdit && row?.dataset.editPayload) {
+        try {
+            pendingEditPayload = JSON.parse(row.dataset.editPayload) as HolidayEditPayload;
+        } catch {
+            pendingEditPayload = null;
+        }
+    }
+
+    if (pendingEditPayload) {
+        contentEl.classList.add('clickable');
+        contentEl.setAttribute('role', 'button');
+        hintEl.classList.remove('d-none');
+    } else {
+        contentEl.classList.remove('clickable');
+        contentEl.removeAttribute('role');
+        hintEl.classList.add('d-none');
+    }
+}
+
 function initModerateModal(): void {
     const modalEl = document.getElementById('moderateModal');
     if (!modalEl) {
@@ -53,6 +104,7 @@ function initModerateModal(): void {
     const errorBox = document.getElementById('moderateError') as HTMLDivElement;
     const saveBtn = document.getElementById('moderateSave') as HTMLButtonElement;
     const deleteBtn = document.getElementById('moderateDelete') as HTMLButtonElement;
+    const referredContent = document.getElementById('referredHolidayContent') as HTMLElement | null;
 
     const setState = (value: string) => {
         stateInput.value = value;
@@ -74,6 +126,7 @@ function initModerateModal(): void {
         if (!trigger) {
             return;
         }
+        activeRow = trigger;
         kindInput.value = trigger.dataset.kind || '';
         idInput.value = trigger.dataset.id || '';
         setState(trigger.dataset.state || '');
@@ -82,7 +135,29 @@ function initModerateModal(): void {
         holidayIdInput.classList.remove('is-invalid');
         errorBox.classList.add('d-none');
         errorBox.textContent = '';
+        setReferredHoliday(trigger);
     });
+
+    modalEl.addEventListener('hidden.bs.modal', () => {
+        activeRow = null;
+        pendingEditPayload = null;
+    });
+
+    if (referredContent) {
+        const openEdit = () => {
+            if (!pendingEditPayload) {
+                return;
+            }
+            openHolidayEditModal(pendingEditPayload);
+        };
+        referredContent.addEventListener('click', openEdit);
+        referredContent.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openEdit();
+            }
+        });
+    }
 
     holidayIdInput.addEventListener('input', () => holidayIdInput.classList.remove('is-invalid'));
 
@@ -160,6 +235,28 @@ function initModerateModal(): void {
     });
 }
 
+function initRowTriggers(): void {
+    const modalEl = document.getElementById('moderateModal');
+    if (!modalEl) {
+        return;
+    }
+    document.querySelectorAll<HTMLElement>('tr.report-row').forEach(row => {
+        const open = () => bootstrap.Modal.getOrCreateInstance(modalEl).show(row);
+        row.addEventListener('click', event => {
+            if ((event.target as HTMLElement).closest('a, button, input, select, textarea, [data-role="comment-popover"]')) {
+                return;
+            }
+            open();
+        });
+        row.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                open();
+            }
+        });
+    });
+}
+
 function createCommentPopover(el: HTMLElement): void {
     const existing = bootstrap.Popover.getInstance(el);
     if (existing) {
@@ -178,7 +275,7 @@ function initCommentPopovers(): void {
 
 function updateRow(kind: string, id: string, state: string, comment: string | null, holidayId: number | null): void {
     const row = document.querySelector<HTMLElement>(
-        `tr[data-report-row][data-kind="${kind}"][data-id="${id}"]`
+        `tr.report-row[data-kind="${kind}"][data-id="${id}"]`
     );
     if (!row) {
         return;
@@ -191,17 +288,9 @@ function updateRow(kind: string, id: string, state: string, comment: string | nu
         badge.dataset.role = 'state-badge';
     }
 
-    const moderateBtn = row.querySelector<HTMLElement>('.btn-moderate');
-    if (moderateBtn) {
-        moderateBtn.dataset.state = state;
-        moderateBtn.dataset.comment = comment ?? '';
-        moderateBtn.dataset.holidayId = holidayId == null ? '' : String(holidayId);
-    }
-
-    const metadataCell = row.querySelector<HTMLElement>('[data-role="metadata-cell"]');
-    if (metadataCell) {
-        metadataCell.textContent = holidayId == null ? '-' : String(holidayId);
-    }
+    row.dataset.state = state;
+    row.dataset.comment = comment ?? '';
+    row.dataset.holidayId = holidayId == null ? '' : String(holidayId);
 
     const commentBtn = row.querySelector<HTMLElement>('[data-role="comment-popover"]');
     if (commentBtn) {
@@ -219,7 +308,7 @@ function updateRow(kind: string, id: string, state: string, comment: string | nu
 
 function removeRow(kind: string, id: string): void {
     const row = document.querySelector<HTMLElement>(
-        `tr[data-report-row][data-kind="${kind}"][data-id="${id}"]`
+        `tr.report-row[data-kind="${kind}"][data-id="${id}"]`
     );
     if (!row) {
         return;
@@ -233,46 +322,77 @@ function removeRow(kind: string, id: string): void {
     row.remove();
 
     if (pane) {
-        const remaining = pane.querySelectorAll('tr[data-report-row]').length;
+        const remaining = pane.querySelectorAll('tr.report-row').length;
         const counter = pane.querySelector<HTMLElement>('.report-count');
         if (counter) {
             counter.textContent = `${remaining} ${remaining === 1 ? 'entry' : 'entries'}`;
         }
+        const paneId = pane.id;
+        const tabBadge = document.querySelector<HTMLElement>(`[data-bs-target="#${paneId}"] .badge`);
+        if (tabBadge) {
+            tabBadge.textContent = String(remaining);
+        }
     }
 }
 
-function initDescriptionModal(): void {
-    const modalEl = document.getElementById('descriptionModal');
-    if (!modalEl) {
-        return;
-    }
-    const body = document.getElementById('descriptionModalBody');
-    const title = document.getElementById('descriptionModalLabel');
-    modalEl.addEventListener('show.bs.modal', (event: Event) => {
-        const trigger = (event as unknown as { relatedTarget: HTMLElement }).relatedTarget;
-        if (!trigger) {
+function refreshReferredHolidayFromEdit(payload: {
+    id: number;
+    name: string;
+    description: string | null;
+    month: number;
+    day: number;
+    countryCode: string | null;
+    mature: boolean;
+    tags: number[];
+}): void {
+    document.querySelectorAll<HTMLElement>('tr.report-row').forEach(row => {
+        const isFixed = row.dataset.kind?.startsWith('fixed_');
+        if (!isFixed) {
             return;
         }
-        if (body) {
-            body.textContent = trigger.dataset.description || '';
+        const editPayloadRaw = row.dataset.editPayload;
+        if (!editPayloadRaw) {
+            return;
         }
-        if (title) {
-            title.textContent = trigger.dataset.title || 'Description';
+        try {
+            const data = JSON.parse(editPayloadRaw) as HolidayEditPayload;
+            if (Number(data.id) !== payload.id) {
+                return;
+            }
+            const next: HolidayEditPayload = {
+                id: payload.id,
+                name: payload.name,
+                description: payload.description ?? '',
+                day: payload.day,
+                month: payload.month,
+                country: payload.countryCode ?? '',
+                mature: payload.mature,
+                tags: payload.tags ?? [],
+            };
+            row.dataset.editPayload = JSON.stringify(next);
+            const isErrorRow = row.dataset.kind === 'fixed_error';
+            if (isErrorRow) {
+                row.dataset.referredName = payload.name;
+                row.dataset.referredDescription = payload.description ?? '';
+            }
+        } catch {
+            // ignore
         }
     });
 
-    document.querySelectorAll<HTMLElement>('.description-cell[role="button"]').forEach(cell =>
-        cell.addEventListener('keydown', event => {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                cell.click();
-            }
-        }));
+    if (activeRow) {
+        setReferredHoliday(activeRow);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (!document.getElementById('reportsTabs')) {
+        return;
+    }
     initTabHashSync();
     initModerateModal();
+    initRowTriggers();
     initCommentPopovers();
-    initDescriptionModal();
+    initHolidayEditModal();
+    onHolidayEditSaved(refreshReferredHolidayFromEdit);
 });

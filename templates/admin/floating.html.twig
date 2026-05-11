@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+{% block title %}Floating Holidays — Ferrio Admin{% endblock %}
+{% block body %}
+	<main class='section-manage-main'>
+		{% include 'components/sidebar.html.twig' %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'Floating Holidays'} %}
+		<div class='manage-content'>
+			<div class='floating-notice'>
+				<i class='bi bi-info-circle'></i>
+				<span>Read-only view. Inline editing for floating holidays is coming soon.</span>
+			</div>
+			<div class='table-responsive'>
+				<table class='table table-dark table-striped table-hover align-middle'>
+					<thead>
+					<tr>
+						<th scope='col'>#</th>
+						<th scope='col'>Country</th>
+						<th scope='col'>+18</th>
+						<th scope='col'>Algorithm</th>
+						<th scope='col'>Args</th>
+						<th scope='col'>Name (PL)</th>
+						<th scope='col'>Tags</th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for holiday in floating_holidays %}
+						{% set m = holiday.metadata %}
+						<tr>
+							<th scope='row'>{{ m.id }}</th>
+							<td>
+								{% if m.country %}
+									{{ m.country.isoCode }} - {{ m.country.englishName }}
+								{% else %}
+									International
+								{% endif %}
+							</td>
+							<td>{{ m.matureContent ? 'Yes' : 'No' }}</td>
+							<td><code class='floating-algorithm'>{{ m.algorithm.value }}</code></td>
+							<td>
+								{% if m.algorithmArgs %}
+									<code class='floating-args'>{{ m.algorithmArgs }}</code>
+								{% else %}
+									<span class='text-muted'>—</span>
+								{% endif %}
+							</td>
+							<td>{{ holiday.name }}</td>
+							<td>
+								{% for cat in m.categories %}
+									<span class='floating-tag'>{{ cat.slug }}</span>
+								{% else %}
+									<span class='text-muted'>—</span>
+								{% endfor %}
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan='7' class='text-center text-muted py-4'>No floating holidays.</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</main>
+{% endblock %}

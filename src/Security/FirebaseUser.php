@@ -18,12 +18,6 @@ readonly class FirebaseUser implements UserInterface
 	}
 
 	#[Override]
-	public function eraseCredentials(): void
-	{
-		// empty
-	}
-
-	#[Override]
 	public function getUserIdentifier(): string
 	{
 		return $this->uid;

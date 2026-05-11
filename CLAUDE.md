@@ -2,7 +2,9 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**Maintenance note:** If you notice something in this file that has become inaccurate (framework/PHP version bumps, changed commands, renamed paths, new conventions, etc.), update it in the same change — even if the user did not explicitly ask. Do not silently leave stale guidance.
+**Maintenance note:** If you notice something in this file that has become inaccurate (framework/PHP version bumps,
+changed commands, renamed paths, new conventions, etc.), update it in the same change — even if the user did not
+explicitly ask. Do not silently leave stale guidance.
 
 ## Project Overview
 
@@ -88,13 +90,24 @@ Floating holiday dates in v3 are computed by polymorphic resolver classes in `sr
 
 Available algorithms with v1/v2 `args` → v3 `algorithmArgs` mapping (dayOfWeek uses ISO 1-7, Mon-Sun):
 
-- `nth_day_of_week_in_month` — nth occurrence of a weekday in a month. v1/v2: `[month, dayOfWeek, nth]` → v3: `{"nth": 4, "dayOfWeek": 4, "month": 11}` (4th Thursday of November = Thanksgiving)
-- `last_nth_day_of_week_in_month` — nth-to-last occurrence of a weekday in a month. Same keys as above: `{"nth": 1, "dayOfWeek": 1, "month": 5}` (last Monday of May = Memorial Day)
-- `first_day_of_week_after_date` — first weekday on or after a date. v1/v2: hardcoded in script → v3: `{"dayOfWeek": 6, "month": 5, "day": 19}` (first Saturday on or after May 19). Optional `"inclusive": false` to exclude the start date.
-- `last_day_of_week_before_date` — last weekday on or before a date. v1/v2: hardcoded in script → v3: `{"dayOfWeek": 5, "month": 3, "day": 20}` (last Friday on or before March 20). Optional `"inclusive": false` to exclude the start date.
-- `nth_day_then_next_day_of_week` — finds nth weekday, then the next occurrence of another weekday after it. v1/v2: `[month, dayOfWeek, nth, after]` → v3: `{"nth": 1, "dayOfWeek": 1, "month": 7, "afterDayOfWeek": 2}` (Tuesday after the 1st Monday of July)
-- `leap_year_date` — returns different dates for leap/non-leap years. `{"leapDay": 29, "leapMonth": 2, "nonLeapDay": 1, "nonLeapMonth": 3}` (Feb 29 in leap years, Mar 1 otherwise)
-- `hardcoded_dates` — year-to-date lookup, for holidays with no algorithmic pattern. `{"2024": "12.9", "2025": "20.9", "2026": "19.9"}` (year keys map to `day.month` strings). Returns null for missing years.
+- `nth_day_of_week_in_month` — nth occurrence of a weekday in a month. v1/v2: `[month, dayOfWeek, nth]` → v3:
+  `{"nth": 4, "dayOfWeek": 4, "month": 11}` (4th Thursday of November = Thanksgiving)
+- `last_nth_day_of_week_in_month` — nth-to-last occurrence of a weekday in a month. Same keys as above:
+  `{"nth": 1, "dayOfWeek": 1, "month": 5}` (last Monday of May = Memorial Day)
+- `first_day_of_week_after_date` — first weekday on or after a date. v1/v2: hardcoded in script → v3:
+  `{"dayOfWeek": 6, "month": 5, "day": 19}` (first Saturday on or after May 19). Optional `"inclusive": false` to
+  exclude the start date.
+- `last_day_of_week_before_date` — last weekday on or before a date. v1/v2: hardcoded in script → v3:
+  `{"dayOfWeek": 5, "month": 3, "day": 20}` (last Friday on or before March 20). Optional `"inclusive": false` to
+  exclude the start date.
+- `nth_day_then_next_day_of_week` — finds nth weekday, then the next occurrence of another weekday after it. v1/v2:
+  `[month, dayOfWeek, nth, after]` → v3: `{"nth": 1, "dayOfWeek": 1, "month": 7, "afterDayOfWeek": 2}` (Tuesday after
+  the 1st Monday of July)
+- `leap_year_date` — returns different dates for leap/non-leap years.
+  `{"leapDay": 29, "leapMonth": 2, "nonLeapDay": 1, "nonLeapMonth": 3}` (Feb 29 in leap years, Mar 1 otherwise)
+- `hardcoded_dates` — year-to-date lookup, for holidays with no algorithmic pattern.
+  `{"2024": "12.9", "2025": "20.9", "2026": "19.9"}` (year keys map to `day.month` strings). Returns null for missing
+  years.
 
 `algorithmArgs` is stored as a JSON column. Common pitfalls: JSON keys must always be quoted strings (e.g., `"2026"` not
 `2026`) and trailing commas are not allowed.
@@ -132,13 +145,16 @@ endpoint via axios.
 
 - PHP 8.5 property hooks and `private(set)` visibility are used in entities.
 - Doctrine mapping uses PHP 8 attributes (not XML/YAML).
-- Always use CRLF line endings in all files.
-- Frontend uses Webpack Encore with TypeScript and Bootstrap 5 / MDB UI Kit. Icons: Bootstrap Icons, Unicons, Font Awesome 5.
+- Always use CRLF line endings in all files. Every file must also end with a final CRLF (trailing newline) — no
+  exceptions, including JSON, YAML, SCSS, TS, PHP, Twig, and Markdown.
+- Frontend uses Webpack Encore with TypeScript and Bootstrap 5 / MDB UI Kit. Icons: Bootstrap Icons, Unicons, Font
+  Awesome 5.
 - TypeScript conventions:
-  - Always use single-quoted string literals (no double quotes, no backticks unless interpolation is needed).
-  - Always use template-literal interpolation (`` `${a} ${b}` ``) over string concatenation with `+`.
-  - Always use curly braces for one-line `if`/`else`/`for`/`while` bodies — never the brace-less form.
-  - Prefer named `function` declarations over `const` arrow functions for top-level/module functions. Arrow functions are fine when passed as an argument (callbacks, handlers, array methods).
-  - Prefer `element.dataset.foo` over `element.getAttribute('data-foo')` when reading `data-*` attributes.
+    - Always use single-quoted string literals (no double quotes, no backticks unless interpolation is needed).
+    - Always use template-literal interpolation (`` `${a} ${b}` ``) over string concatenation with `+`.
+    - Always use curly braces for one-line `if`/`else`/`for`/`while` bodies — never the brace-less form.
+    - Prefer named `function` declarations over `const` arrow functions for top-level/module functions. Arrow functions
+      are fine when passed as an argument (callbacks, handlers, array methods).
+    - Prefer `element.dataset.foo` over `element.getAttribute('data-foo')` when reading `data-*` attributes.
 - CI runs on GitHub Actions (`.github/workflows/ci.yml`), executing PHPUnit on PHP 8.5.
 - Composer is at `C:\Tools\php85-ts\composer.bat` (not on PATH in bash).

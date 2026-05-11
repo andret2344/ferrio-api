@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Country;
+use App\Entity\FixedHoliday;
 use App\Entity\FixedHolidayError;
 use App\Entity\FixedHolidayMetadata;
 use App\Entity\FixedHolidaySuggestion;
@@ -12,6 +13,7 @@ use App\Entity\FloatingHolidayError;
 use App\Entity\FloatingHolidayMetadata;
 use App\Entity\FloatingHolidaySuggestion;
 use App\Entity\Language;
+use App\Entity\Poll;
 use App\Entity\ReportState;
 use App\Form\HolidayCreateType;
 use App\Form\TranslateType;
@@ -41,9 +43,65 @@ class ManageController extends AbstractController
 	{
 		$languages = $this->entityManager->getRepository(Language::class)
 			->findBy([], ['code' => 'ASC']);
+		$fixedCount = $this->entityManager->getRepository(FixedHolidayMetadata::class)
+			->count([]);
+		$floatingCount = $this->entityManager->getRepository(FloatingHolidayMetadata::class)
+			->count([]);
+		$tagCount = $this->entityManager->getRepository(Category::class)
+			->count([]);
+		$translationCounts = $this->countTranslationsByLanguage();
+		$translationTotal = $translationCounts['pl'] ?? 0;
+		$reportCounts = [
+			'fixed_suggestion' => $this->countByReportState(FixedHolidaySuggestion::class),
+			'floating_suggestion' => $this->countByReportState(FloatingHolidaySuggestion::class),
+			'fixed_error' => $this->countByReportState(FixedHolidayError::class),
+			'floating_error' => $this->countByReportState(FloatingHolidayError::class),
+		];
+		$pollCount = $this->entityManager->getRepository(Poll::class)
+			->count([]);
 		return $this->render('admin/index.html.twig', [
-			'languages' => $languages
+			'languages' => $languages,
+			'fixedHolidayCount' => $fixedCount,
+			'floatingHolidayCount' => $floatingCount,
+			'tagCount' => $tagCount,
+			'translationCounts' => $translationCounts,
+			'translationTotal' => $translationTotal,
+			'reportCounts' => $reportCounts,
+			'pollCount' => $pollCount,
 		]);
+	}
+
+	/**
+	 * @param class-string $entityClass
+	 * @return array{reported: int, total: int}
+	 */
+	private function countByReportState(string $entityClass): array
+	{
+		$repo = $this->entityManager->getRepository($entityClass);
+		return [
+			'reported' => $repo->count(['reportState' => ReportState::REPORTED]),
+			'total' => $repo->count([]),
+		];
+	}
+
+	/**
+	 * @return array<string, int> map of language code => total translated holidays (fixed + floating)
+	 */
+	private function countTranslationsByLanguage(): array
+	{
+		$counts = [];
+		foreach ([FixedHoliday::class, FloatingHoliday::class] as $entityClass) {
+			$rows = $this->entityManager->createQueryBuilder()
+				->select('IDENTITY(h.language) AS code, COUNT(h.name) AS cnt')
+				->from($entityClass, 'h')
+				->groupBy('h.language')
+				->getQuery()
+				->getResult();
+			foreach ($rows as $row) {
+				$counts[$row['code']] = ($counts[$row['code']] ?? 0) + (int)$row['cnt'];
+			}
+		}
+		return $counts;
 	}
 
 	#[Route('/translate/{month<^([1-9]|1[0-2])$>}', name: 'translate')]
@@ -129,6 +187,28 @@ class ManageController extends AbstractController
 		]);
 	}
 
+	#[Route('/floating', name: 'floating')]
+	public function floating(): Response
+	{
+		$polishHolidays = $this->entityManager->getRepository(FloatingHoliday::class)
+			->createQueryBuilder('h')
+			->select('h', 'm')
+			->join('h.metadata', 'm')
+			->leftJoin('m.country', 'c')
+			->addSelect('c')
+			->leftJoin('m.categories', 'cat')
+			->addSelect('cat')
+			->where('h.language = :language')
+			->setParameter('language', 'pl')
+			->orderBy('m.algorithm', 'ASC')
+			->addOrderBy('h.name', 'ASC')
+			->getQuery()
+			->getResult();
+		return $this->render('admin/floating.html.twig', [
+			'floating_holidays' => $polishHolidays,
+		]);
+	}
+
 	#[Route('/reports', name: 'reports')]
 	public function reports(): Response
 	{
@@ -149,6 +229,80 @@ class ManageController extends AbstractController
 		);
 		$users = $this->firebaseUserLookup->lookup($uids);
 
+		$fixedMetadataIds = array_values(array_unique(array_filter(array_merge(
+			array_map(fn($s) => $s->holiday?->id, $fixedSuggestions),
+			array_map(fn($e) => $e->metadata?->id, $fixedErrors),
+		))));
+		$floatingMetadataIds = array_values(array_unique(array_filter(array_merge(
+			array_map(fn($s) => $s->holiday?->id, $floatingSuggestions),
+			array_map(fn($e) => $e->metadata?->id, $floatingErrors),
+		))));
+
+		$fixedHolidaysPl = [];
+		$tagsByFixedMetadata = [];
+		$fixedMetadataInfo = [];
+		if (!empty($fixedMetadataIds)) {
+			/** @var FixedHoliday[] $rows */
+			$rows = $this->entityManager->getRepository(FixedHoliday::class)
+				->createQueryBuilder('h')
+				->where('h.language = :lang')
+				->andWhere('h.metadata IN (:ids)')
+				->setParameter('lang', 'pl')
+				->setParameter('ids', $fixedMetadataIds)
+				->getQuery()
+				->getResult();
+			foreach ($rows as $h) {
+				$fixedHolidaysPl[$h->metadata->id] = [
+					'name' => $h->name,
+					'description' => $h->description,
+				];
+			}
+			/** @var FixedHolidayMetadata[] $metadatas */
+			$metadatas = $this->entityManager->getRepository(FixedHolidayMetadata::class)
+				->createQueryBuilder('m')
+				->leftJoin('m.categories', 'c')
+				->addSelect('c')
+				->where('m.id IN (:ids)')
+				->setParameter('ids', $fixedMetadataIds)
+				->getQuery()
+				->getResult();
+			foreach ($metadatas as $m) {
+				$tagsByFixedMetadata[$m->id] = array_values(array_map(
+					fn(Category $c) => $c->id,
+					$m->categories->toArray()
+				));
+				$fixedMetadataInfo[$m->id] = [
+					'day' => $m->day,
+					'month' => $m->month,
+					'country' => $m->country?->isoCode,
+					'mature' => $m->matureContent,
+				];
+			}
+		}
+
+		$floatingHolidaysPl = [];
+		if (!empty($floatingMetadataIds)) {
+			/** @var FloatingHoliday[] $rows */
+			$rows = $this->entityManager->getRepository(FloatingHoliday::class)
+				->createQueryBuilder('h')
+				->where('h.language = :lang')
+				->andWhere('h.metadata IN (:ids)')
+				->setParameter('lang', 'pl')
+				->setParameter('ids', $floatingMetadataIds)
+				->getQuery()
+				->getResult();
+			foreach ($rows as $h) {
+				$floatingHolidaysPl[$h->metadata->id] = [
+					'name' => $h->name,
+					'description' => $h->description,
+				];
+			}
+		}
+
+		$countries = $this->entityManager->getRepository(Country::class)->findAll();
+		$tags = $this->entityManager->getRepository(Category::class)
+			->findBy([], ['slug' => 'ASC']);
+
 		return $this->render('admin/reports.html.twig', [
 			'fixedSuggestions' => $fixedSuggestions,
 			'floatingSuggestions' => $floatingSuggestions,
@@ -156,6 +310,12 @@ class ManageController extends AbstractController
 			'floatingErrors' => $floatingErrors,
 			'users' => $users,
 			'report_states' => array_column(ReportState::cases(), 'value'),
+			'fixedHolidaysPl' => $fixedHolidaysPl,
+			'floatingHolidaysPl' => $floatingHolidaysPl,
+			'tagsByFixedMetadata' => $tagsByFixedMetadata,
+			'fixedMetadataInfo' => $fixedMetadataInfo,
+			'countries' => $countries,
+			'tags' => $tags,
 		]);
 	}
 

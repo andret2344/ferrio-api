@@ -1,71 +1,93 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 	<main class='section-manage-main'>
-		{% include 'components/topbar.html.twig' %}
-		<div class='container container-main py-5 px-5'>
-			<span class='heading mt-3 mb-5'>Where do you start?</span>
-			<div class='row g-4 justify-content-center pb-4'>
-				<div class='col-md-6'>
-					<a
-							href='{{ path('admin_create') }}'
-							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
-					>
-						<i class='bi bi-pencil-square tile-icon'></i>
-						<span class='tile-title'>Holidays</span>
-						<span class='tile-desc'>Write descriptions and add new holidays.</span>
-					</a>
-				</div>
-				<div class='col-md-6'>
-					<a
-							href='{{ path('admin_tags_index') }}'
-							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
-					>
-						<i class='bi bi-tags tile-icon'></i>
-						<span class='tile-title'>Tags</span>
-						<span class='tile-desc'>Manage holiday tags.</span>
-					</a>
-				</div>
-				<div class='col-md-6'>
-					<a
-							href='{{ path('admin_reports') }}'
-							class='tile tile-action no-a d-flex flex-column align-items-center text-center p-4'
-					>
-						<i class='bi bi-flag tile-icon'></i>
-						<span class='tile-title'>Reports</span>
-						<span class='tile-desc'>View user suggestions and error reports.</span>
-					</a>
-				</div>
-				<div class='col-md-6'>
-					<span
-							class='tile tile-action tile-disabled no-a d-flex flex-column align-items-center text-center p-4'
-							aria-disabled='true'
-							title='Coming soon'
-					>
-						<i class='bi bi-bar-chart-line tile-icon'></i>
-						<span class='tile-title'>Polls</span>
-						<span class='tile-desc'>Manage polls and view results.</span>
-					</span>
-				</div>
-				<div class='col-12'>
-					<div class='tile tile-translate p-4'>
-						<div class='d-flex align-items-center justify-content-center gap-2 mb-3'>
-							<i class='bi bi-translate' style='color: #6060aa; font-size: 20px'></i>
-							<span class='tile-title'>Translate</span>
-						</div>
-						<div class='row g-3 justify-content-center'>
-							{% for language in languages %}
-								{% if language.code != 'pl' %}
-									<div class='col-lg-3 col-md-4 col-6'>
-										<a href='/admin/translate?from=pl&to={{ language.code }}'
-										   class='language no-a d-block text-center py-3'>
-											{{ language.name }}
-										</a>
-									</div>
-								{% endif %}
-							{% endfor %}
-						</div>
+		{% include 'components/sidebar.html.twig' %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'Dashboard'} %}
+		<div class='manage-content'>
+			<div class='dashboard-grid'>
+				<div class='dashboard-stat'>
+					<div class='dashboard-stat-icon'><i class='bi bi-calendar-event'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Fixed holidays</div>
+						<div class='dashboard-stat-value'>{{ fixedHolidayCount | number_format(0, '.', ' ') }}</div>
 					</div>
 				</div>
+				<div class='dashboard-stat'>
+					<div class='dashboard-stat-icon'><i class='bi bi-calendar2-range'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Floating holidays</div>
+						<div class='dashboard-stat-value'>{{ floatingHolidayCount | number_format(0, '.', ' ') }}</div>
+					</div>
+				</div>
+				<div class='dashboard-stat'>
+					<div class='dashboard-stat-icon'><i class='bi bi-tag'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Tags</div>
+						<div class='dashboard-stat-value'>{{ tagCount | number_format(0, '.', ' ') }}</div>
+					</div>
+				</div>
+				<div class='dashboard-stat'>
+					<div class='dashboard-stat-icon'><i class='bi bi-bar-chart-line'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Polls</div>
+						<div class='dashboard-stat-value'>{{ pollCount | number_format(0, '.', ' ') }}</div>
+					</div>
+				</div>
+			</div>
+
+			<div class='dashboard-panels'>
+				<section class='dashboard-panel'>
+					<header class='dashboard-panel-header'>
+						<i class='bi bi-flag'></i>
+						<span>Reports</span>
+					</header>
+					<div class='dashboard-panel-body'>
+						{% for item in [
+							{kind: 'fixed_suggestion', label: 'Fixed suggestions', icon: 'bi-lightbulb'},
+							{kind: 'floating_suggestion', label: 'Floating suggestions', icon: 'bi-lightbulb'},
+							{kind: 'fixed_error', label: 'Fixed errors', icon: 'bi-exclamation-triangle'},
+							{kind: 'floating_error', label: 'Floating errors', icon: 'bi-exclamation-triangle'},
+						] %}
+							{% set rc = reportCounts[item.kind] %}
+							<div class='dashboard-report-row {{ rc.reported > 0 ? 'dashboard-report-row-warning' : '' }}'>
+								<i class='bi {{ item.icon }}'></i>
+								<span class='dashboard-report-label'>{{ item.label }}</span>
+								<span class='dashboard-report-value'>
+									<strong>{{ rc.reported }}</strong>
+									<span class='dashboard-report-sep'>/</span>
+									{{ rc.total }}
+								</span>
+							</div>
+						{% endfor %}
+					</div>
+				</section>
+
+				<section class='dashboard-panel'>
+					<header class='dashboard-panel-header'>
+						<i class='bi bi-translate'></i>
+						<span>Translation progress</span>
+					</header>
+					<div class='dashboard-panel-body'>
+						{% for language in languages %}
+							{% if language.code != 'pl' %}
+								{% set langCount = translationCounts[language.code] ?? 0 %}
+								{% set pct = translationTotal > 0 ? (langCount / translationTotal * 100) : 0 %}
+								{% set isComplete = langCount >= translationTotal and translationTotal > 0 %}
+								<a href='/admin/translate?from=pl&to={{ language.code }}'
+								   class='dashboard-translate-row no-a'>
+									<span class='dashboard-translate-name'>{{ language.name }}</span>
+									<div class='dashboard-translate-bar'>
+										<div class='dashboard-translate-bar-fill {{ isComplete ? 'dashboard-translate-bar-fill-complete' : '' }}'
+											 style='width: {{ pct }}%'></div>
+									</div>
+									<span class='dashboard-translate-count {{ isComplete ? '' : 'dashboard-translate-count-warning' }}'>
+										{{ langCount }} / {{ translationTotal }}
+									</span>
+								</a>
+							{% endif %}
+						{% endfor %}
+					</div>
+				</section>
 			</div>
 		</div>
 	</main>

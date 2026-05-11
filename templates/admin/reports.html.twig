@@ -1,7 +1,72 @@
 {% extends 'base.html.twig' %}
+
+{% macro suggestion_row_attrs(s, kind, fixedHolidaysPl, floatingHolidaysPl, fixedMetadataInfo, tagsByFixedMetadata) %}
+	{% set linkedId = s.holiday ? s.holiday.id : null %}
+	{% set referredName = s.name %}
+	{% set referredDescription = s.description %}
+	{% set canEdit = (kind == 'fixed_suggestion') and linkedId is not null and (fixedHolidaysPl[linkedId] ?? null) is not null %}
+	{% set editPayload = null %}
+	{% if canEdit %}
+		{% set ph = fixedHolidaysPl[linkedId] %}
+		{% set pm = fixedMetadataInfo[linkedId] %}
+		{% set editPayload = {
+			id: linkedId,
+			name: ph.name,
+			description: ph.description,
+			day: pm.day,
+			month: pm.month,
+			country: pm.country,
+			mature: pm.mature,
+			tags: tagsByFixedMetadata[linkedId] ?? [],
+		} %}
+	{% endif %}
+	data-kind='{{ kind }}'
+	data-id='{{ s.id }}'
+	data-state='{{ s.reportState.value }}'
+	data-comment='{{ (s.comment ?? '')|e('html_attr') }}'
+	data-holiday-id='{{ linkedId ?? '' }}'
+	data-referred-name='{{ referredName|e('html_attr') }}'
+	data-referred-description='{{ (referredDescription ?? '')|e('html_attr') }}'
+	data-can-edit='{{ canEdit ? '1' : '0' }}'
+	{% if editPayload %}data-edit-payload='{{ editPayload|json_encode|e('html_attr') }}'{% endif %}
+{% endmacro %}
+
+{% macro error_row_attrs(e, kind, fixedHolidaysPl, floatingHolidaysPl, fixedMetadataInfo, tagsByFixedMetadata) %}
+	{% set linkedId = e.metadata ? e.metadata.id : null %}
+	{% set isFixed = kind == 'fixed_error' %}
+	{% set plData = isFixed ? (fixedHolidaysPl[linkedId] ?? null) : (floatingHolidaysPl[linkedId] ?? null) %}
+	{% set referredName = plData ? plData.name : null %}
+	{% set referredDescription = plData ? plData.description : null %}
+	{% set canEdit = isFixed and e.language.code == 'pl' and linkedId is not null and plData is not null %}
+	{% set editPayload = null %}
+	{% if canEdit %}
+		{% set pm = fixedMetadataInfo[linkedId] %}
+		{% set editPayload = {
+			id: linkedId,
+			name: plData.name,
+			description: plData.description,
+			day: pm.day,
+			month: pm.month,
+			country: pm.country,
+			mature: pm.mature,
+			tags: tagsByFixedMetadata[linkedId] ?? [],
+		} %}
+	{% endif %}
+	data-kind='{{ kind }}'
+	data-id='{{ e.id }}'
+	data-state='{{ e.reportState.value }}'
+	data-comment='{{ (e.comment ?? '')|e('html_attr') }}'
+	data-holiday-id='{{ linkedId ?? '' }}'
+	data-referred-name='{{ (referredName ?? '')|e('html_attr') }}'
+	data-referred-description='{{ (referredDescription ?? '')|e('html_attr') }}'
+	data-can-edit='{{ canEdit ? '1' : '0' }}'
+	{% if editPayload %}data-edit-payload='{{ editPayload|json_encode|e('html_attr') }}'{% endif %}
+{% endmacro %}
+
 {% block body %}
 	<main class='section-manage-main'>
-		{% include 'components/topbar.html.twig' %}
+		{% include 'components/sidebar.html.twig' %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'Reports'} %}
 		<div class='manage-content'>
 			<h2 class='manage-page-title'>User Reports</h2>
 
@@ -14,6 +79,7 @@
 							data-bs-target='#fixed-suggestions'
 							type='button'
 					>Fixed Suggestions
+						<span class='badge bg-secondary ms-1'>{{ fixedSuggestions|length }}</span>
 					</button>
 				</li>
 				<li class='nav-item'>
@@ -24,6 +90,7 @@
 							data-bs-target='#floating-suggestions'
 							type='button'
 					>Floating Suggestions
+						<span class='badge bg-secondary ms-1'>{{ floatingSuggestions|length }}</span>
 					</button>
 				</li>
 				<li class='nav-item'>
@@ -34,6 +101,7 @@
 							data-bs-target='#fixed-errors'
 							type='button'
 					>Fixed Errors
+						<span class='badge bg-secondary ms-1'>{{ fixedErrors|length }}</span>
 					</button>
 				</li>
 				<li class='nav-item'>
@@ -44,6 +112,7 @@
 							data-bs-target='#floating-errors'
 							type='button'
 					>Floating Errors
+						<span class='badge bg-secondary ms-1'>{{ floatingErrors|length }}</span>
 					</button>
 				</li>
 			</ul>
@@ -59,7 +128,7 @@
 							<table class='table table-dark table-striped table-hover align-middle'>
 								<thead>
 								<tr>
-									<th>ID</th>
+									<th>#</th>
 									<th>Name</th>
 									<th>Date</th>
 									<th>Description</th>
@@ -67,23 +136,20 @@
 									<th>State</th>
 									<th>Reported</th>
 									<th>User</th>
-									<th></th>
 								</tr>
 								</thead>
 								<tbody>
 								{% for s in fixedSuggestions %}
-									<tr data-report-row data-kind='fixed_suggestion' data-id='{{ s.id }}'>
-										<td>{{ s.id }}</td>
+									<tr
+											class='report-row'
+											role='button'
+											tabindex='0'
+											{{ _self.suggestion_row_attrs(s, 'fixed_suggestion', fixedHolidaysPl, floatingHolidaysPl, fixedMetadataInfo, tagsByFixedMetadata) }}
+									>
+										<td>{{ loop.index }}</td>
 										<td>{{ s.name }}</td>
 										<td>{{ '%02d.%02d'|format(s.day, s.month) }}</td>
-										<td
-												class='description-cell'
-												role='button'
-												tabindex='0'
-												data-bs-toggle='modal'
-												data-bs-target='#descriptionModal'
-												data-description='{{ s.description|e('html_attr') }}'
-												data-title='{{ s.name|e('html_attr') }}'>
+										<td class='description-cell'>
 											<span class='description-text'>{{ s.description }}</span>
 										</td>
 										<td>{{ s.country ? s.country.isoCode : '-' }}</td>
@@ -116,21 +182,6 @@
 											{% endif %}
 											<div class='user-uid'>{{ s.userId }}</div>
 										</td>
-										<td>
-											<button
-													type='button'
-													class='btn btn-moderate'
-													data-bs-toggle='modal'
-													data-bs-target='#moderateModal'
-													data-kind='fixed_suggestion'
-													data-id='{{ s.id }}'
-													data-state='{{ s.reportState.value }}'
-													data-comment='{{ s.comment ?? '' }}'
-													data-holiday-id='{{ s.holiday ? s.holiday.id : '' }}'
-													title='Moderate'>
-												<i class='bi bi-pencil-square'></i>
-											</button>
-										</td>
 									</tr>
 								{% endfor %}
 								</tbody>
@@ -149,7 +200,7 @@
 							<table class='table table-dark table-striped table-hover align-middle'>
 								<thead>
 								<tr>
-									<th>ID</th>
+									<th>#</th>
 									<th>Name</th>
 									<th>Date</th>
 									<th>Description</th>
@@ -157,23 +208,20 @@
 									<th>State</th>
 									<th>Reported</th>
 									<th>User</th>
-									<th></th>
 								</tr>
 								</thead>
 								<tbody>
 								{% for s in floatingSuggestions %}
-									<tr data-report-row data-kind='floating_suggestion' data-id='{{ s.id }}'>
-										<td>{{ s.id }}</td>
+									<tr
+											class='report-row'
+											role='button'
+											tabindex='0'
+											{{ _self.suggestion_row_attrs(s, 'floating_suggestion', fixedHolidaysPl, floatingHolidaysPl, fixedMetadataInfo, tagsByFixedMetadata) }}
+									>
+										<td>{{ loop.index }}</td>
 										<td>{{ s.name }}</td>
 										<td>{{ s.date }}</td>
-										<td
-												class='description-cell'
-												role='button'
-												tabindex='0'
-												data-bs-toggle='modal'
-												data-bs-target='#descriptionModal'
-												data-description='{{ s.description|e('html_attr') }}'
-												data-title='{{ s.name|e('html_attr') }}'>
+										<td class='description-cell'>
 											<span class='description-text'>{{ s.description }}</span>
 										</td>
 										<td>{{ s.country ? s.country.isoCode : '-' }}</td>
@@ -207,21 +255,6 @@
 											{% endif %}
 											<div class='user-uid'>{{ s.userId }}</div>
 										</td>
-										<td>
-											<button
-													type='button'
-													class='btn btn-moderate'
-													data-bs-toggle='modal'
-													data-bs-target='#moderateModal'
-													data-kind='floating_suggestion'
-													data-id='{{ s.id }}'
-													data-state='{{ s.reportState.value }}'
-													data-comment='{{ s.comment ?? '' }}'
-													data-holiday-id='{{ s.holiday ? s.holiday.id : '' }}'
-													title='Moderate'>
-												<i class='bi bi-pencil-square'></i>
-											</button>
-										</td>
 									</tr>
 								{% endfor %}
 								</tbody>
@@ -240,35 +273,28 @@
 							<table class='table table-dark table-striped table-hover align-middle'>
 								<thead>
 								<tr>
-									<th>ID</th>
-									<th>Metadata</th>
-									<th>Language</th>
+									<th>#</th>
 									<th>Type</th>
 									<th>Description</th>
 									<th>State</th>
 									<th>Reported</th>
 									<th>User</th>
-									<th></th>
 								</tr>
 								</thead>
 								<tbody>
 								{% for e in fixedErrors %}
-									<tr data-report-row data-kind='fixed_error' data-id='{{ e.id }}'>
-										<td>{{ e.id }}</td>
-										<td data-role='metadata-cell'>{{ e.metadata ? e.metadata.id : '-' }}</td>
-										<td>{{ e.language.code }}</td>
+									<tr
+											class='report-row'
+											role='button'
+											tabindex='0'
+											{{ _self.error_row_attrs(e, 'fixed_error', fixedHolidaysPl, floatingHolidaysPl, fixedMetadataInfo, tagsByFixedMetadata) }}
+									>
+										<td>{{ loop.index }}</td>
 										<td>
 											<span class='badge bg-light text-dark'>{{ e.reportType.value|lower|replace({'_': ' '})|capitalize }}</span>
 										</td>
 										{% if e.description %}
-											<td
-													class='description-cell'
-													role='button'
-													tabindex='0'
-													data-bs-toggle='modal'
-													data-bs-target='#descriptionModal'
-													data-description='{{ e.description|e('html_attr') }}'
-													data-title='Report #{{ e.id }}'>
+											<td class='description-cell'>
 												<span class='description-text'>{{ e.description }}</span>
 											</td>
 										{% else %}
@@ -303,21 +329,6 @@
 												<div class='user-email'>{{ u.email ?? '-' }}</div>
 											{% endif %}
 											<div class='user-uid'>{{ e.userId }}</div>
-										</td>
-										<td>
-											<button
-													type='button'
-													class='btn btn-moderate'
-													data-bs-toggle='modal'
-													data-bs-target='#moderateModal'
-													data-kind='fixed_error'
-													data-id='{{ e.id }}'
-													data-state='{{ e.reportState.value }}'
-													data-comment='{{ e.comment ?? '' }}'
-													data-holiday-id='{{ e.metadata ? e.metadata.id : '' }}'
-													title='Moderate'>
-												<i class='bi bi-pencil-square'></i>
-											</button>
 										</td>
 									</tr>
 								{% endfor %}
@@ -337,35 +348,28 @@
 							<table class='table table-dark table-striped table-hover align-middle'>
 								<thead>
 								<tr>
-									<th>ID</th>
-									<th>Metadata</th>
-									<th>Language</th>
+									<th>#</th>
 									<th>Type</th>
 									<th>Description</th>
 									<th>State</th>
 									<th>Reported</th>
 									<th>User</th>
-									<th></th>
 								</tr>
 								</thead>
 								<tbody>
 								{% for e in floatingErrors %}
-									<tr data-report-row data-kind='floating_error' data-id='{{ e.id }}'>
-										<td>{{ e.id }}</td>
-										<td data-role='metadata-cell'>{{ e.metadata ? e.metadata.id : '-' }}</td>
-										<td>{{ e.language.code }}</td>
+									<tr
+											class='report-row'
+											role='button'
+											tabindex='0'
+											{{ _self.error_row_attrs(e, 'floating_error', fixedHolidaysPl, floatingHolidaysPl, fixedMetadataInfo, tagsByFixedMetadata) }}
+									>
+										<td>{{ loop.index }}</td>
 										<td>
 											<span class='badge bg-light text-dark'>{{ e.reportType.value|lower|replace({'_': ' '})|capitalize }}</span>
 										</td>
 										{% if e.description %}
-											<td
-													class='description-cell'
-													role='button'
-													tabindex='0'
-													data-bs-toggle='modal'
-													data-bs-target='#descriptionModal'
-													data-description='{{ e.description|e('html_attr') }}'
-													data-title='Report #{{ e.id }}'>
+											<td class='description-cell'>
 												<span class='description-text'>{{ e.description }}</span>
 											</td>
 										{% else %}
@@ -401,20 +405,6 @@
 											{% endif %}
 											<div class='user-uid'>{{ e.userId }}</div>
 										</td>
-										<td>
-											<button
-													type='button'
-													class='btn btn-moderate'
-													data-bs-toggle='modal' data-bs-target='#moderateModal'
-													data-kind='floating_error'
-													data-id='{{ e.id }}'
-													data-state='{{ e.reportState.value }}'
-													data-comment='{{ e.comment ?? '' }}'
-													data-holiday-id='{{ e.metadata ? e.metadata.id : '' }}'
-													title='Moderate'>
-												<i class='bi bi-pencil-square'></i>
-											</button>
-										</td>
 									</tr>
 								{% endfor %}
 								</tbody>
@@ -429,13 +419,26 @@
 	<div class='modal fade' id='moderateModal' tabindex='-1' aria-labelledby='moderateModalLabel' aria-hidden='true'
 	     data-moderate-url='{{ path('admin_reports_moderate') }}'
 	     data-delete-url='{{ path('admin_reports_delete') }}'>
-		<div class='modal-dialog modal-dialog-centered'>
+		<div class='modal-dialog modal-dialog-centered modal-lg'>
 			<div class='modal-content'>
 				<div class='modal-header'>
 					<h5 class='modal-title' id='moderateModalLabel'>Moderate report</h5>
 					<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
 				</div>
 				<div class='modal-body'>
+					<div class='referred-holiday-card mb-3' id='referredHolidayCard'>
+						<div class='referred-holiday-label text-muted small mb-1'>Referred holiday</div>
+						<div class='referred-holiday-content' id='referredHolidayContent' tabindex='0'>
+							<div class='referred-holiday-name fw-semibold' id='referredHolidayName'></div>
+							<div class='referred-holiday-description' id='referredHolidayDescription'></div>
+							<div class='referred-holiday-empty text-muted fst-italic d-none'
+							     id='referredHolidayEmpty'>No referred holiday.</div>
+							<div class='referred-holiday-edit-hint text-muted small mt-1 d-none'
+							     id='referredHolidayEditHint'>
+								<i class='bi bi-pencil-square'></i> Click to edit
+							</div>
+						</div>
+					</div>
 					<form id='moderateForm'>
 						<input type='hidden' name='kind' id='moderateKind'>
 						<input type='hidden' name='id' id='moderateId'>
@@ -464,7 +467,7 @@
 							</div>
 						</div>
 						<div class='mb-3'>
-							<label for='moderateHolidayId' class='form-label'>Related Holiday ID</label>
+							<label for='moderateHolidayId' class='form-label'>Linked Holiday ID</label>
 							<input type='number' class='form-control' id='moderateHolidayId' name='holiday_id' min='1'
 							       placeholder='Leave empty to clear'>
 						</div>
@@ -489,17 +492,6 @@
 		</div>
 	</div>
 
-	<div class='modal fade' id='descriptionModal' tabindex='-1' aria-labelledby='descriptionModalLabel'
-	     aria-hidden='true'>
-		<div class='modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg'>
-			<div class='modal-content'>
-				<div class='modal-header'>
-					<h5 class='modal-title' id='descriptionModalLabel'>Description</h5>
-					<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
-				</div>
-				<div class='modal-body description-modal-body' id='descriptionModalBody'></div>
-			</div>
-		</div>
-	</div>
+	{% include 'admin/components/holiday_edit_modal.html.twig' with {countries: countries, tags: tags} %}
 
 {% endblock %}
