@@ -37,14 +37,12 @@
 			{% for r in rows %}
 				{# Resolve linked metadata id + PL referent + edit payload uniformly. #}
 				{% set linkedId = isError ? (r.metadata ? r.metadata.id : null) : (r.holiday ? r.holiday.id : null) %}
-				{% set plData = isFloating ? (floatingHolidaysPl[linkedId] ?? null) : (fixedHolidaysPl[linkedId] ?? null) %}
-				{% if isError %}
-					{% set referredName = plData ? plData.name : null %}
-					{% set referredDescription = plData ? plData.description : null %}
-				{% else %}
-					{% set referredName = r.name %}
-					{% set referredDescription = r.description %}
-				{% endif %}
+				{% set plData = isError ? (isFloating ? (floatingHolidaysPl[linkedId] ?? null) : (fixedHolidaysPl[linkedId] ?? null)) : null %}
+				{% set referredName = isError ? (plData ? plData.name : null) : null %}
+				{% set referredDescription = isError ? (plData ? plData.description : null) : null %}
+				{% set reportDate = isError ? '' : (isFloating ? r.date : '%02d.%02d'|format(r.day, r.month)) %}
+				{% set reportCountry = isError ? '' : (r.country ? r.country.isoCode : '') %}
+				{% set reportType = isError ? r.reportType.value : '' %}
 				{% set detailHref = linkedId
 					? path('admin_holiday_detail', {kind: isFloating ? 'floating' : 'fixed', id: linkedId})
 					: '' %}
@@ -57,6 +55,11 @@
 						data-state='{{ r.reportState.value }}'
 						data-comment='{{ (r.comment ?? '')|e('html_attr') }}'
 						data-holiday-id='{{ linkedId ?? '' }}'
+						data-report-name='{{ (isError ? '' : r.name)|e('html_attr') }}'
+						data-report-description='{{ (r.description ?? '')|e('html_attr') }}'
+						data-report-date='{{ reportDate }}'
+						data-report-country='{{ reportCountry }}'
+						data-report-type='{{ reportType }}'
 						data-referred-name='{{ (referredName ?? '')|e('html_attr') }}'
 						data-referred-description='{{ (referredDescription ?? '')|e('html_attr') }}'
 						data-detail-href='{{ detailHref }}'
@@ -102,13 +105,14 @@
 						</span>
 					</td>
 					<td>{{ r.datetime|date('Y-m-d H:i') }}</td>
-					<td class='user-cell'>
+					<td class='user-cell' title='{{ r.userId }}'>
 						{% set u = users[r.userId] ?? null %}
 						{% if u and (u.name or u.email) %}
 							<div class='user-name'>{{ u.name ?? '-' }}</div>
 							<div class='user-email'>{{ u.email ?? '-' }}</div>
+						{% else %}
+							<div class='user-uid'>{{ r.userId }}</div>
 						{% endif %}
-						<div class='user-uid'>{{ r.userId }}</div>
 					</td>
 				</tr>
 			{% endfor %}

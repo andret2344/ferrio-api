@@ -40,6 +40,40 @@ function initTabHashSync(): void {
 
 let pendingDetailHref: string | null = null;
 
+function setReportField(id: string, value: string): void {
+    const el = document.getElementById(id);
+    if (!el) {
+        return;
+    }
+    if (value) {
+        el.textContent = value;
+        el.classList.remove('report-content-empty');
+    } else {
+        el.textContent = '—';
+        el.classList.add('report-content-empty');
+    }
+}
+
+function formatReportType(raw: string): string {
+    if (!raw) {
+        return '';
+    }
+    const spaced = raw.toLowerCase().replace(/_/g, ' ');
+    return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+}
+
+function populateSuggestionContent(row: HTMLElement): void {
+    setReportField('suggestionReportName', row.dataset.reportName ?? '');
+    setReportField('suggestionReportDate', row.dataset.reportDate ?? '');
+    setReportField('suggestionReportCountry', row.dataset.reportCountry ?? '');
+    setReportField('suggestionReportDescription', row.dataset.reportDescription ?? '');
+}
+
+function populateErrorContent(row: HTMLElement): void {
+    setReportField('errorReportType', formatReportType(row.dataset.reportType ?? ''));
+    setReportField('errorReportDescription', row.dataset.reportDescription ?? '');
+}
+
 function setReferredHoliday(row: HTMLElement | null): void {
     const card = document.getElementById('referredHolidayCard');
     const nameEl = document.getElementById('referredHolidayName');
@@ -226,6 +260,9 @@ function initSuggestionModal(): void {
         errorBoxId: 'suggestionError',
         saveBtnId: 'suggestionSave',
         deleteBtnId: 'suggestionDelete',
+        onShow: trigger => {
+            populateSuggestionContent(trigger);
+        },
     });
 }
 
@@ -258,6 +295,7 @@ function initErrorModal(): void {
         deleteBtnId: 'errorDelete',
         onShow: trigger => {
             setReferredHoliday(trigger);
+            populateErrorContent(trigger);
         },
         onHide: () => {
             pendingDetailHref = null;

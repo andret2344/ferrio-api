@@ -88,6 +88,22 @@
 					<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
 				</div>
 				<div class='modal-body'>
+					<div class='report-content-card mb-3'>
+						<div class='report-content-label'>
+							<i class='bi bi-person-lines-fill'></i>
+							Submitted by user
+						</div>
+						<dl class='report-content-grid'>
+							<dt>Name</dt>
+							<dd id='suggestionReportName'></dd>
+							<dt>Date</dt>
+							<dd id='suggestionReportDate'></dd>
+							<dt>Country</dt>
+							<dd id='suggestionReportCountry'></dd>
+							<dt>Description</dt>
+							<dd id='suggestionReportDescription' class='report-content-description'></dd>
+						</dl>
+					</div>
 					<form id='suggestionForm'>
 						<input type='hidden' id='suggestionKind'>
 						<input type='hidden' id='suggestionId'>
@@ -153,6 +169,18 @@
 							<i class='bi bi-calendar2-x'></i>
 							<span>No referred holiday.</span>
 						</div>
+					</div>
+					<div class='report-content-card mb-3'>
+						<div class='report-content-label'>
+							<i class='bi bi-person-lines-fill'></i>
+							Submitted by user
+						</div>
+						<dl class='report-content-grid'>
+							<dt>Type</dt>
+							<dd id='errorReportType'></dd>
+							<dt>Description</dt>
+							<dd id='errorReportDescription' class='report-content-description'></dd>
+						</dl>
 					</div>
 					<form id='errorForm'>
 						<input type='hidden' id='errorKind'>
