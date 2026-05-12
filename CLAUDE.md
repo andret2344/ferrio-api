@@ -119,19 +119,40 @@ Available algorithms with v1/v2 `args` → v3 `algorithmArgs` mapping (dayOfWeek
 
 ### Admin UI
 
-`ManageController` + `WebController` serve Twig templates under `/admin` for managing holiday data (create, translate).
-Protected by `ROLE_USER` via HTTP Basic Auth. `AdminTagController` (under `/admin/tags`) handles tag (category)
-management with chip UI and per-type usage counters. Legacy `/manage/*` URLs return 301 redirects to `/admin/*` via
-`ManageRedirectController`.
+`ManageController` + `WebController` serve Twig templates under `/admin`. Protected by `ROLE_USER` via HTTP Basic Auth.
+`AdminTagController` (under `/admin/tags`) handles tag (category) management with chip UI and per-type usage counters.
+`AdminLanguageController` (under `/admin/languages`) handles language create/delete; deletion requires the user to
+type either the language's display name or the literal word `DELETE` in a confirmation modal, and cascades all
+related rows (fixed/floating holiday translations, error reports, category translations) in a single transaction.
+The Polish source language (`pl`) cannot be deleted from the UI.
+Legacy `/manage/*` URLs return 301 redirects to `/admin/*` via `ManageRedirectController`.
 
-`GenerateDescriptionController` (`POST /admin/api/generate`) calls the Anthropic API (Claude Sonnet 4.6) to
-generate Polish holiday descriptions. It accepts `{day, month, name, type?, language?}` JSON and returns `{result}` (or
-`{error}`). `type` selects the prompt set: `description_pl` (default, Polish description), `description` (English-style
-description), or `name` (translates a Polish holiday name into the target `language`). The system prompts enforce
-Ferrio's copywriting style (150-250 words, informative tone) and live in `config/prompts/`. The API key is configured
-via `ANTHROPIC_API_KEY` env var. The create row in `create.html.twig` has an AI sparkle button next to its description
-textarea, and the per-row edit modal has sparkle buttons next to both the name and description fields. All call this
-endpoint via axios.
+List views (`/admin/create/{month}` for fixed, `/admin/floating` for floating) are read-only summaries. Each row is a
+button linking to the **holiday detail page** at `/admin/holiday/{kind}/{id}` (kind ∈ `fixed` | `floating`). Each row
+also shows a `XX/YY` translation count (translations present / total non-Polish languages) sourced from
+`AdminMetricsService::{fixed,floating}TranslationCountsByMetadata`. The create page also keeps an inline "Add" form at
+the bottom that posts to `POST /admin/api/holiday` to create new fixed holidays. There is no separate translate page —
+translation editing lives on the detail page.
+
+The detail page (`templates/admin/holiday_detail.html.twig`) has three sections: Metadata (date for fixed; algorithm
++ algorithm args JSON for floating; country, mature switch, tag picker for both), Source (Polish name + description;
+AI sparkle button only on the description —
+there is no AI generation for the Polish name since Polish IS the source from which everything else is translated),
+and Translations (dynamic rows for every non-Polish language present in the DB, with an "Add translation" dropdown for
+unused languages and a × to delete a translation). The "Add translation" dropdown auto-closes after a pick and the
+button hides itself once every language has been added. Save (`POST /admin/api/holiday/{kind}/{id}`) is a single
+CSRF-protected JSON call that upserts the metadata + the PL source row + every dirty/added/removed translation in one
+transaction. Translation rows whose name and description both come in empty are deleted server-side. The frontend
+(`assets/holidayDetail.ts`) tracks dirty state across all sections and only enables Save when something has changed.
+
+`GenerateDescriptionController` (`POST /admin/api/generate`) calls the Anthropic API (Claude Sonnet 4.6) to generate
+holiday content. It accepts `{day, month, name, type?, language?}` JSON and returns `{result}` (or `{error}`). `type`
+selects the prompt set: `description_pl` (default, Polish description), `description` (English-style description), or
+`name` (translates a Polish holiday name into the target `language`). The system prompts enforce Ferrio's copywriting
+style (150-250 words, informative tone) and live in `config/prompts/`. The API key is configured via `ANTHROPIC_API_KEY`
+env var. The detail page's Source description and per-translation sections each have AI sparkle buttons; the create
+page's inline "Add" form also has one next to its description textarea. The shared helper lives in
+`assets/aiGenerate.ts` and all callers go through it.
 
 ### Testing
 
@@ -145,6 +166,11 @@ endpoint via axios.
 
 - PHP 8.5 property hooks and `private(set)` visibility are used in entities.
 - Doctrine mapping uses PHP 8 attributes (not XML/YAML).
+- All JSON keys in admin internal APIs (`/admin/api/*`) and JSON embedded in Twig templates (data-* blobs and
+  `<script type='application/json'>` payloads) MUST use `snake_case` — never camelCase. The PHP-side variable that
+  holds the value can stay camelCase; only the JSON key gets converted (e.g. `'country_code' => $country->isoCode`).
+  This convention does NOT apply to public versioned APIs under `/v1`, `/v2`, `/v3` — those keep their existing shape
+  for backwards compatibility.
 - Always use CRLF line endings in all files. Every file must also end with a final CRLF (trailing newline) — no
   exceptions, including JSON, YAML, SCSS, TS, PHP, Twig, and Markdown.
 - Frontend uses Webpack Encore with TypeScript and Bootstrap 5 / MDB UI Kit. Icons: Bootstrap Icons, Unicons, Font
@@ -156,5 +182,7 @@ endpoint via axios.
     - Prefer named `function` declarations over `const` arrow functions for top-level/module functions. Arrow functions
       are fine when passed as an argument (callbacks, handlers, array methods).
     - Prefer `element.dataset.foo` over `element.getAttribute('data-foo')` when reading `data-*` attributes.
+    - Mark all interface properties `readonly` by default. Interfaces describe shapes that are passed around, not
+      mutable state — if a property genuinely needs to be reassigned, model the mutability on a class instead.
 - CI runs on GitHub Actions (`.github/workflows/ci.yml`), executing PHPUnit on PHP 8.5.
 - Composer is at `C:\Tools\php85-ts\composer.bat` (not on PATH in bash).

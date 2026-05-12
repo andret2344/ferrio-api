@@ -39,7 +39,7 @@ class FloatingHolidayMetadata implements JsonSerializable
 	private(set) string $args;
 
 	#[ORM\Column(type: 'string', nullable: true)]
-	private(set) ?string $algorithmArgs;
+	public ?string $algorithmArgs;
 
 	#[ORM\OneToMany(targetEntity: FloatingHoliday::class, mappedBy: 'metadata', cascade: ['all'], orphanRemoval: true)]
 	private(set) Collection $holidays;
@@ -48,10 +48,10 @@ class FloatingHolidayMetadata implements JsonSerializable
 	private(set) Collection $reports;
 
 	#[ORM\Column(type: 'string', enumType: Algorithm::class)]
-	private(set) Algorithm $algorithm;
+	public Algorithm $algorithm;
 
 	#[ORM\Column(type: 'boolean')]
-	private(set) bool $matureContent;
+	public bool $matureContent;
 
 	/**
 	 * @param Category[] $categories

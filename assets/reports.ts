@@ -1,5 +1,8 @@
 import * as bootstrap from 'bootstrap';
-import {HolidayEditPayload, initHolidayEditModal, onHolidayEditSaved, openHolidayEditModal,} from './holidayEditModal';
+
+interface BootstrapModalEvent extends Event {
+    readonly relatedTarget: HTMLElement | null;
+}
 
 function setHash(id: string): void {
     return history.replaceState(null, '', `#${id}`);
@@ -35,196 +38,173 @@ function initTabHashSync(): void {
         }));
 }
 
-let activeRow: HTMLElement | null = null;
-let pendingEditPayload: HolidayEditPayload | null = null;
+let pendingDetailHref: string | null = null;
 
 function setReferredHoliday(row: HTMLElement | null): void {
     const card = document.getElementById('referredHolidayCard');
     const nameEl = document.getElementById('referredHolidayName');
     const descEl = document.getElementById('referredHolidayDescription');
     const emptyEl = document.getElementById('referredHolidayEmpty');
-    const hintEl = document.getElementById('referredHolidayEditHint');
     const contentEl = document.getElementById('referredHolidayContent');
-    if (!card || !nameEl || !descEl || !emptyEl || !hintEl || !contentEl) {
+    if (!card || !nameEl || !descEl || !emptyEl || !contentEl) {
         return;
     }
 
     const name = row?.dataset.referredName ?? '';
     const description = row?.dataset.referredDescription ?? '';
-    const canEdit = row?.dataset.canEdit === '1';
+    pendingDetailHref = row?.dataset.detailHref || null;
 
     nameEl.textContent = name;
     descEl.textContent = description;
 
-    if (!name && !description) {
-        emptyEl.classList.remove('d-none');
-        nameEl.classList.add('d-none');
-        descEl.classList.add('d-none');
-    } else {
-        emptyEl.classList.add('d-none');
-        nameEl.classList.remove('d-none');
-        descEl.classList.remove('d-none');
-    }
+    const isEmpty = !name && !description;
+    contentEl.classList.toggle('d-none', isEmpty);
+    emptyEl.classList.toggle('d-none', !isEmpty);
+    descEl.classList.toggle('d-none', !description);
 
-    pendingEditPayload = null;
-    if (canEdit && row?.dataset.editPayload) {
-        try {
-            pendingEditPayload = JSON.parse(row.dataset.editPayload) as HolidayEditPayload;
-        } catch {
-            pendingEditPayload = null;
-        }
-    }
-
-    if (pendingEditPayload) {
+    if (pendingDetailHref) {
         contentEl.classList.add('clickable');
         contentEl.setAttribute('role', 'button');
-        hintEl.classList.remove('d-none');
     } else {
         contentEl.classList.remove('clickable');
         contentEl.removeAttribute('role');
-        hintEl.classList.add('d-none');
     }
 }
 
-function initModerateModal(): void {
-    const modalEl = document.getElementById('moderateModal');
+function makeStateSetter(modalEl: HTMLElement, hiddenInput: HTMLInputElement): (value: string) => void {
+    const toggleBadge = modalEl.querySelector<HTMLElement>('[data-role="state-toggle-badge"]');
+    return (value: string) => {
+        hiddenInput.value = value;
+        if (toggleBadge) {
+            toggleBadge.textContent = value;
+            toggleBadge.className = `badge report-state report-state-${value.toLowerCase()}`;
+            toggleBadge.dataset.role = 'state-toggle-badge';
+        }
+    };
+}
+
+function bindStateMenu(modalEl: HTMLElement, setState: (value: string) => void, onChange?: () => void): void {
+    const stateMenu = modalEl.querySelector<HTMLElement>('.state-dropdown-menu');
+    stateMenu?.querySelectorAll<HTMLElement>('.dropdown-item').forEach(item =>
+        item.addEventListener('click', () => {
+            setState(item.dataset.value || '');
+            onChange?.();
+        }));
+}
+
+interface ModerationModalOptions {
+    readonly modalId: string;
+    readonly kindInputId: string;
+    readonly idInputId: string;
+    readonly stateInputId: string;
+    readonly commentInputId: string;
+    readonly errorBoxId: string;
+    readonly saveBtnId: string;
+    readonly deleteBtnId: string;
+    readonly holidayIdInputId?: string;
+    readonly onShow?: (trigger: HTMLElement) => void;
+    readonly onHide?: () => void;
+}
+
+function initModerationModal(opts: ModerationModalOptions): void {
+    const modalEl = document.getElementById(opts.modalId);
     if (!modalEl) {
         return;
     }
 
     const moderateUrl = modalEl.dataset.moderateUrl || '';
     const deleteUrl = modalEl.dataset.deleteUrl || '';
-    const kindInput = document.getElementById('moderateKind') as HTMLInputElement;
-    const idInput = document.getElementById('moderateId') as HTMLInputElement;
-    const stateInput = document.getElementById('moderateState') as HTMLInputElement;
-    const stateToggleBadge = modalEl.querySelector<HTMLElement>('[data-role="state-toggle-badge"]');
-    const stateMenu = modalEl.querySelector<HTMLElement>('.state-dropdown-menu');
-    const commentInput = document.getElementById('moderateComment') as HTMLTextAreaElement;
-    const holidayIdInput = document.getElementById('moderateHolidayId') as HTMLInputElement;
-    const errorBox = document.getElementById('moderateError') as HTMLDivElement;
-    const saveBtn = document.getElementById('moderateSave') as HTMLButtonElement;
-    const deleteBtn = document.getElementById('moderateDelete') as HTMLButtonElement;
-    const referredContent = document.getElementById('referredHolidayContent') as HTMLElement | null;
+    const kindInput = document.getElementById(opts.kindInputId) as HTMLInputElement;
+    const idInput = document.getElementById(opts.idInputId) as HTMLInputElement;
+    const stateInput = document.getElementById(opts.stateInputId) as HTMLInputElement;
+    const commentInput = document.getElementById(opts.commentInputId) as HTMLTextAreaElement;
+    const errorBox = document.getElementById(opts.errorBoxId) as HTMLDivElement;
+    const saveBtn = document.getElementById(opts.saveBtnId) as HTMLButtonElement;
+    const deleteBtn = document.getElementById(opts.deleteBtnId) as HTMLButtonElement;
+    const holidayIdInput = opts.holidayIdInputId
+        ? document.getElementById(opts.holidayIdInputId) as HTMLInputElement
+        : null;
 
-    const setState = (value: string) => {
-        stateInput.value = value;
-        if (stateToggleBadge) {
-            stateToggleBadge.textContent = value;
-            stateToggleBadge.className = `badge report-state report-state-${value.toLowerCase()}`;
-            stateToggleBadge.dataset.role = 'state-toggle-badge';
-        }
+    let initialState = '';
+    let initialComment = '';
+    let initialHolidayId = '';
+    const refreshDirty = () => {
+        const dirty = stateInput.value !== initialState
+            || commentInput.value !== initialComment
+            || (holidayIdInput !== null && holidayIdInput.value !== initialHolidayId);
+        saveBtn.disabled = !dirty;
     };
 
-    stateMenu?.querySelectorAll<HTMLElement>('.dropdown-item').forEach(item =>
-        item.addEventListener('click', () => {
-            const value = item.dataset.value || '';
-            setState(value);
-        }));
+    const setState = makeStateSetter(modalEl, stateInput);
+    bindStateMenu(modalEl, setState, refreshDirty);
 
-    modalEl.addEventListener('show.bs.modal', (event: Event) => {
-        const trigger = (event as unknown as { relatedTarget: HTMLElement }).relatedTarget;
+    modalEl.addEventListener('show.bs.modal', event => {
+        const trigger = (event as BootstrapModalEvent).relatedTarget;
         if (!trigger) {
             return;
         }
-        activeRow = trigger;
         kindInput.value = trigger.dataset.kind || '';
         idInput.value = trigger.dataset.id || '';
         setState(trigger.dataset.state || '');
         commentInput.value = trigger.dataset.comment || '';
-        holidayIdInput.value = trigger.dataset.holidayId || '';
-        holidayIdInput.classList.remove('is-invalid');
+        if (holidayIdInput) {
+            holidayIdInput.value = trigger.dataset.holidayId || '';
+            holidayIdInput.classList.remove('is-invalid');
+        }
         errorBox.classList.add('d-none');
         errorBox.textContent = '';
-        setReferredHoliday(trigger);
+        opts.onShow?.(trigger);
+        initialState = stateInput.value;
+        initialComment = commentInput.value;
+        initialHolidayId = holidayIdInput?.value ?? '';
+        saveBtn.disabled = true;
     });
 
-    modalEl.addEventListener('hidden.bs.modal', () => {
-        activeRow = null;
-        pendingEditPayload = null;
-    });
-
-    if (referredContent) {
-        const openEdit = () => {
-            if (!pendingEditPayload) {
-                return;
-            }
-            openHolidayEditModal(pendingEditPayload);
-        };
-        referredContent.addEventListener('click', openEdit);
-        referredContent.addEventListener('keydown', event => {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                openEdit();
-            }
-        });
+    if (opts.onHide) {
+        modalEl.addEventListener('hidden.bs.modal', opts.onHide);
     }
 
-    holidayIdInput.addEventListener('input', () => holidayIdInput.classList.remove('is-invalid'));
-
-    deleteBtn.addEventListener('click', async () => {
-        if (!confirm('Delete this report? This cannot be undone.')) {
-            return;
-        }
-        errorBox.classList.add('d-none');
-        errorBox.textContent = '';
-        deleteBtn.disabled = true;
-        saveBtn.disabled = true;
-
-        try {
-            const response = await fetch(deleteUrl, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    kind: kindInput.value,
-                    id: Number(idInput.value),
-                }),
-            });
-
-            if (!response.ok) {
-                const payload = await response.json().catch(() => ({}));
-                throw new Error(payload.error || `HTTP ${response.status}`);
-            }
-
-            removeRow(kindInput.value, idInput.value);
-            bootstrap.Modal.getInstance(modalEl)?.hide();
-        } catch (err) {
-            errorBox.textContent = (err as Error).message || 'Request failed';
-            errorBox.classList.remove('d-none');
-        } finally {
-            deleteBtn.disabled = false;
-            saveBtn.disabled = false;
-        }
+    commentInput.addEventListener('input', refreshDirty);
+    holidayIdInput?.addEventListener('input', () => {
+        holidayIdInput.classList.remove('is-invalid');
+        refreshDirty();
     });
+
+    deleteBtn.addEventListener('click', () =>
+        deleteReport(modalEl, deleteUrl, kindInput, idInput, errorBox, saveBtn, deleteBtn));
 
     saveBtn.addEventListener('click', async () => {
         errorBox.classList.add('d-none');
         errorBox.textContent = '';
-        holidayIdInput.classList.remove('is-invalid');
+        holidayIdInput?.classList.remove('is-invalid');
         saveBtn.disabled = true;
 
         try {
+            const body: Record<string, unknown> = {
+                kind: kindInput.value,
+                id: Number(idInput.value),
+                report_state: stateInput.value,
+                comment: commentInput.value,
+            };
+            if (holidayIdInput) {
+                body.holiday_id = holidayIdInput.value;
+            }
             const response = await fetch(moderateUrl, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    kind: kindInput.value,
-                    id: Number(idInput.value),
-                    report_state: stateInput.value,
-                    comment: commentInput.value,
-                    holiday_id: holidayIdInput.value,
-                }),
+                body: JSON.stringify(body),
             });
 
             if (!response.ok) {
                 const payload = await response.json().catch(() => ({}));
-                if (payload.field === 'holiday_id') {
+                if (payload.field === 'holiday_id' && holidayIdInput) {
                     holidayIdInput.classList.add('is-invalid');
                 }
                 throw new Error(payload.error || `HTTP ${response.status}`);
             }
 
             const payload = await response.json();
-            updateRow(kindInput.value, idInput.value, payload.report_state, payload.comment, payload.holiday_id);
+            updateRow(kindInput.value, idInput.value, payload.report_state, payload.comment, payload.holiday_id ?? null);
             bootstrap.Modal.getInstance(modalEl)?.hide();
         } catch (err) {
             errorBox.textContent = (err as Error).message || 'Request failed';
@@ -235,13 +215,109 @@ function initModerateModal(): void {
     });
 }
 
+function initSuggestionModal(): void {
+    initModerationModal({
+        modalId: 'moderateSuggestionModal',
+        kindInputId: 'suggestionKind',
+        idInputId: 'suggestionId',
+        stateInputId: 'suggestionState',
+        commentInputId: 'suggestionComment',
+        holidayIdInputId: 'suggestionHolidayId',
+        errorBoxId: 'suggestionError',
+        saveBtnId: 'suggestionSave',
+        deleteBtnId: 'suggestionDelete',
+    });
+}
+
+function initErrorModal(): void {
+    const referredContent = document.getElementById('referredHolidayContent');
+    if (referredContent) {
+        const openDetail = () => {
+            if (!pendingDetailHref) {
+                return;
+            }
+            window.location.assign(pendingDetailHref);
+        };
+        referredContent.addEventListener('click', openDetail);
+        referredContent.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openDetail();
+            }
+        });
+    }
+
+    initModerationModal({
+        modalId: 'moderateErrorModal',
+        kindInputId: 'errorKind',
+        idInputId: 'errorId',
+        stateInputId: 'errorState',
+        commentInputId: 'errorComment',
+        errorBoxId: 'errorError',
+        saveBtnId: 'errorSave',
+        deleteBtnId: 'errorDelete',
+        onShow: trigger => {
+            setReferredHoliday(trigger);
+        },
+        onHide: () => {
+            pendingDetailHref = null;
+        },
+    });
+}
+
+async function deleteReport(
+    modalEl: HTMLElement,
+    deleteUrl: string,
+    kindInput: HTMLInputElement,
+    idInput: HTMLInputElement,
+    errorBox: HTMLDivElement,
+    saveBtn: HTMLButtonElement,
+    deleteBtn: HTMLButtonElement,
+): Promise<void> {
+    if (!confirm('Delete this report? This cannot be undone.')) {
+        return;
+    }
+    errorBox.classList.add('d-none');
+    errorBox.textContent = '';
+    deleteBtn.disabled = true;
+    saveBtn.disabled = true;
+
+    try {
+        const response = await fetch(deleteUrl, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                kind: kindInput.value,
+                id: Number(idInput.value),
+            }),
+        });
+
+        if (!response.ok) {
+            const payload = await response.json().catch(() => ({}));
+            throw new Error(payload.error || `HTTP ${response.status}`);
+        }
+
+        removeRow(kindInput.value, idInput.value);
+        bootstrap.Modal.getInstance(modalEl)?.hide();
+    } catch (err) {
+        errorBox.textContent = (err as Error).message || 'Request failed';
+        errorBox.classList.remove('d-none');
+    } finally {
+        deleteBtn.disabled = false;
+        saveBtn.disabled = false;
+    }
+}
+
 function initRowTriggers(): void {
-    const modalEl = document.getElementById('moderateModal');
-    if (!modalEl) {
+    const suggestionModalEl = document.getElementById('moderateSuggestionModal');
+    const errorModalEl = document.getElementById('moderateErrorModal');
+    if (!suggestionModalEl || !errorModalEl) {
         return;
     }
     document.querySelectorAll<HTMLElement>('tr.report-row').forEach(row => {
-        const open = () => bootstrap.Modal.getOrCreateInstance(modalEl).show(row);
+        const kind = row.dataset.kind || '';
+        const target = kind.endsWith('_error') ? errorModalEl : suggestionModalEl;
+        const open = () => bootstrap.Modal.getOrCreateInstance(target).show(row);
         row.addEventListener('click', event => {
             if ((event.target as HTMLElement).closest('a, button, input, select, textarea, [data-role="comment-popover"]')) {
                 return;
@@ -290,7 +366,9 @@ function updateRow(kind: string, id: string, state: string, comment: string | nu
 
     row.dataset.state = state;
     row.dataset.comment = comment ?? '';
-    row.dataset.holidayId = holidayId == null ? '' : String(holidayId);
+    if (holidayId !== null) {
+        row.dataset.holidayId = String(holidayId);
+    }
 
     const commentBtn = row.querySelector<HTMLElement>('[data-role="comment-popover"]');
     if (commentBtn) {
@@ -335,64 +413,13 @@ function removeRow(kind: string, id: string): void {
     }
 }
 
-function refreshReferredHolidayFromEdit(payload: {
-    id: number;
-    name: string;
-    description: string | null;
-    month: number;
-    day: number;
-    countryCode: string | null;
-    mature: boolean;
-    tags: number[];
-}): void {
-    document.querySelectorAll<HTMLElement>('tr.report-row').forEach(row => {
-        const isFixed = row.dataset.kind?.startsWith('fixed_');
-        if (!isFixed) {
-            return;
-        }
-        const editPayloadRaw = row.dataset.editPayload;
-        if (!editPayloadRaw) {
-            return;
-        }
-        try {
-            const data = JSON.parse(editPayloadRaw) as HolidayEditPayload;
-            if (Number(data.id) !== payload.id) {
-                return;
-            }
-            const next: HolidayEditPayload = {
-                id: payload.id,
-                name: payload.name,
-                description: payload.description ?? '',
-                day: payload.day,
-                month: payload.month,
-                country: payload.countryCode ?? '',
-                mature: payload.mature,
-                tags: payload.tags ?? [],
-            };
-            row.dataset.editPayload = JSON.stringify(next);
-            const isErrorRow = row.dataset.kind === 'fixed_error';
-            if (isErrorRow) {
-                row.dataset.referredName = payload.name;
-                row.dataset.referredDescription = payload.description ?? '';
-            }
-        } catch {
-            // ignore
-        }
-    });
-
-    if (activeRow) {
-        setReferredHoliday(activeRow);
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     if (!document.getElementById('reportsTabs')) {
         return;
     }
     initTabHashSync();
-    initModerateModal();
+    initSuggestionModal();
+    initErrorModal();
     initRowTriggers();
     initCommentPopovers();
-    initHolidayEditModal();
-    onHolidayEditSaved(refreshReferredHolidayFromEdit);
 });

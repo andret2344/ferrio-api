@@ -54,7 +54,8 @@ body {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 16px 14px 20px;
+      padding: 0 16px 0 20px;
+      min-height: 57px;
       border-bottom: 1px solid #1a1a2e;
       gap: 8px;
     }
@@ -218,6 +219,12 @@ body {
     top: 0;
     z-index: 50;
 
+    > div {
+      min-height: 56px;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
     .topbar-title {
       font-size: 15px;
       font-weight: 600;
@@ -235,14 +242,6 @@ body {
     max-width: 1400px;
     margin: 0 auto;
     padding: 32px 32px;
-  }
-
-  .manage-page-title {
-    font-size: 22px;
-    font-weight: 600;
-    color: #e0e0f0;
-    margin-bottom: 24px;
-    letter-spacing: 0.3px;
   }
 
   // Inputs
@@ -644,8 +643,11 @@ body {
     }
   }
 
+  .description-cell {
+    max-width: 320px;
+  }
+
   .description-cell[role='button'] {
-    max-width: 250px;
     cursor: pointer;
     transition: color 0.2s, background-color 0.2s;
 
@@ -661,12 +663,14 @@ body {
   }
 
   .description-text {
-    display: inline-block;
-    max-width: 100%;
-    white-space: nowrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    vertical-align: middle;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
   }
 
   .description-modal-body {
@@ -676,46 +680,6 @@ body {
 
   tr.report-row {
     cursor: pointer;
-  }
-
-  .referred-holiday-card {
-    background-color: #0e0e24;
-    border: 1px solid #1a1a3a;
-    border-radius: 8px;
-    padding: 12px 14px;
-
-    .referred-holiday-label {
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .referred-holiday-content {
-      &.clickable {
-        cursor: pointer;
-        transition: color 0.2s;
-
-        &:hover, &:focus {
-          color: #c0c0f0;
-          outline: none;
-
-          .referred-holiday-name {
-            text-decoration: underline;
-          }
-        }
-      }
-    }
-
-    .referred-holiday-description {
-      color: #888;
-      font-size: 12px;
-      max-height: 4.5em;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
   }
 
   .reports-tabs {
@@ -1057,24 +1021,91 @@ body {
     overflow: hidden;
   }
 
-  .translate-source-name {
+  .translate-row-name {
     display: -webkit-box;
-    -webkit-line-clamp: 1;
-    line-clamp: 1;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     word-break: break-word;
+    font-weight: 500;
+    color: #c8c8e8;
   }
 
-  .translate-source-desc {
+  .translate-row-desc {
     white-space: normal;
     word-wrap: break-word;
     line-height: 1.5;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    color: #8888a8;
+    font-size: 12.5px;
+  }
+
+  .translate-tabs {
+    margin-bottom: 4px;
+
+    .translate-tab-count {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 1px 8px;
+      background-color: #14143a;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #8888bb;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  .translate-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .translate-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    line-height: 1.4;
+    border: 1px solid transparent;
+    font-variant-numeric: tabular-nums;
+    transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+
+    .translate-pill-code {
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .translate-pill-complete {
+    background-color: rgba(76, 160, 96, 0.16);
+    border-color: rgba(76, 160, 96, 0.4);
+    color: #6ec286;
+  }
+
+  .translate-pill-partial {
+    background-color: rgba(224, 168, 64, 0.16);
+    border-color: rgba(224, 168, 64, 0.4);
+    color: #e0b06a;
+  }
+
+  .translate-pill-empty {
+    background-color: #0a0a1a;
+    border-color: #1a1a3a;
+    color: #4a4a66;
+  }
+
+  .tr-translate {
+    cursor: pointer;
   }
 
   .tr-holiday-clickable {
@@ -1113,6 +1144,154 @@ body {
     font-size: 11px;
     color: #555;
     margin: 0;
+  }
+}
+
+// Moderate modal save button — visibly inert when disabled (lives outside .section-manage-main)
+#moderateSuggestionModal,
+#moderateErrorModal {
+  .btn-primary:disabled,
+  .btn-primary.disabled {
+    background-color: #1a1a30;
+    border-color: #1a1a30;
+    color: #555570;
+    opacity: 1;
+    cursor: not-allowed;
+    box-shadow: none;
+    pointer-events: none;
+  }
+}
+
+// Referred holiday card (lives inside a modal — must be global, not nested under .section-manage-main)
+.referred-holiday-card {
+  position: relative;
+  background: linear-gradient(135deg, #16163a 0%, #0a0a20 100%);
+  border: 1px solid #2a2a55;
+  border-radius: 12px;
+  padding: 14px 16px 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, #6060c8, #3030aa);
+  }
+
+  .referred-holiday-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #8a8ad0;
+    margin-bottom: 10px;
+
+    i {
+      font-size: 13px;
+      color: #6a6acc;
+    }
+  }
+
+  .referred-holiday-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border-radius: 8px;
+    padding: 8px;
+    margin: -8px;
+    transition: background-color 0.15s;
+
+    &.clickable {
+      cursor: pointer;
+
+      &:hover, &:focus {
+        background-color: rgba(80, 80, 200, 0.1);
+        outline: none;
+
+        .referred-holiday-icon {
+          background-color: #2a2a6a;
+          border-color: #4040aa;
+
+          i {
+            color: #d0d0ff;
+          }
+        }
+
+        .referred-holiday-name {
+          color: #ffffff;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .referred-holiday-icon {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background-color: #1a1a44;
+    border: 1px solid #2a2a66;
+    transition: background-color 0.15s, border-color 0.15s;
+
+    i {
+      font-size: 18px;
+      color: #8080cc;
+      transition: color 0.15s;
+    }
+  }
+
+  .referred-holiday-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .referred-holiday-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #e6e6f6;
+    line-height: 1.3;
+    word-wrap: break-word;
+    transition: color 0.15s;
+  }
+
+  .referred-holiday-description {
+    margin-top: 4px;
+    color: #8a8aaa;
+    font-size: 12.5px;
+    line-height: 1.5;
+    max-height: 4.5em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .referred-holiday-empty {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 4px 4px;
+    color: #6060a0;
+    font-style: italic;
+    font-size: 13px;
+
+    i {
+      font-size: 16px;
+      color: #4a4a7a;
+    }
   }
 }
 
@@ -1306,6 +1485,148 @@ body {
   }
 }
 
+// Modal header action buttons (e.g. "Open translations" on the edit modal)
+.modal-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-modal-header-action {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #22224a;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #8888c8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+
+  i {
+    font-size: 14px;
+  }
+
+  &:hover, &:focus {
+    background-color: #16163a;
+    border-color: #4040a0;
+    color: #c0c0f0;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(80, 80, 200, 0.15);
+  }
+}
+
+// Translate modal (lives outside .section-manage-main)
+.translate-field + .translate-field {
+  margin-top: 10px;
+}
+
+.translate-lang-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.translate-lang-code {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  padding: 2px 8px;
+  background-color: #14143a;
+  border: 1px solid #22224a;
+  border-radius: 6px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #b0b0e0;
+  letter-spacing: 0.5px;
+}
+
+.translate-lang-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #c0c0e0;
+}
+
+.translate-section-remove {
+  margin-left: auto;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #6868b8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+
+  i {
+    font-size: 12px;
+  }
+
+  &:hover, &:focus {
+    background-color: #2a0e0e;
+    border-color: #6a2a2a;
+    color: #c45c5c;
+    outline: none;
+  }
+}
+
+.translate-add-btn {
+  border-radius: 999px;
+  font-size: 12px;
+  padding: 4px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  i {
+    font-size: 11px;
+  }
+}
+
+.translate-add-menu {
+  max-height: 240px;
+  overflow-y: auto;
+  min-width: 220px;
+
+  .translate-add-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .translate-add-item-code {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      padding: 1px 6px;
+      background-color: #14143a;
+      border: 1px solid #22224a;
+      border-radius: 5px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: #b0b0e0;
+      letter-spacing: 0.5px;
+    }
+
+    .translate-add-item-name {
+      flex: 1;
+    }
+  }
+}
+
 // AI Generate button
 .btn-generate-desc {
   padding: 6px 10px;
@@ -1487,6 +1808,90 @@ body {
     margin: 1px 2px;
   }
 
+  // Holiday detail page
+  .holiday-detail-grid {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) 2fr;
+    gap: 16px;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .holiday-detail-panel {
+    background-color: #0c0c24;
+    border: 1px solid #1a1a3a;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .holiday-detail-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    border-bottom: 1px solid #1a1a3a;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #c0c0e0;
+
+    i {
+      color: #5050aa;
+      font-size: 16px;
+    }
+  }
+
+  .holiday-detail-panel-body {
+    padding: 16px 18px;
+
+    .translate-section {
+      padding: 14px 16px;
+      border: 1px solid #14142a;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: background-color 0.15s, box-shadow 0.15s, border-color 0.15s;
+
+      &.translate-section-dirty {
+        background-color: rgba(80, 80, 200, 0.06);
+        border-color: rgba(80, 80, 200, 0.4);
+        box-shadow: inset 3px 0 0 #5050aa;
+      }
+    }
+
+    .translate-add {
+      padding: 4px 0 0;
+    }
+  }
+
+  .holiday-detail-actions {
+    margin-top: 20px;
+
+    .alert {
+      margin-bottom: 12px;
+    }
+  }
+
+  .translation-count-chip-partial {
+    background-color: rgba(255, 193, 7, 0.18);
+    color: #ffd76a;
+    border: 1px solid rgba(255, 193, 7, 0.55);
+  }
+
+  .translation-count-chip-empty {
+    background-color: rgba(220, 53, 69, 0.18);
+    color: #ff8a96;
+    border: 1px solid rgba(220, 53, 69, 0.6);
+  }
+
+  .translation-count-chip-full {
+    background-color: rgba(25, 135, 84, 0.18);
+    color: #6fe0a4;
+    border: 1px solid rgba(25, 135, 84, 0.6);
+  }
+
   // Dashboard
   .dashboard-grid {
     display: grid;
@@ -1503,6 +1908,22 @@ body {
     background-color: #0c0c24;
     border: 1px solid #1a1a3a;
     border-radius: 12px;
+    transition: border-color 0.2s, background-color 0.2s, transform 0.2s;
+
+    &.no-a:hover, &.no-a:focus-visible {
+      border-color: #3a3a7a;
+      background-color: #10102e;
+      outline: none;
+      transform: translateY(-1px);
+
+      .dashboard-stat-icon {
+        background-color: #1c1c4c;
+
+        i {
+          color: #b0b0ff;
+        }
+      }
+    }
 
     .dashboard-stat-icon {
       width: 44px;

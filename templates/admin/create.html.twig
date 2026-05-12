@@ -4,12 +4,11 @@
 		{% include 'components/sidebar.html.twig' %}
 		{% include 'components/topbar.html.twig' with {pageTitle: 'Fixed Holidays'} %}
 		<div class='manage-content'>
-			<h2 class='manage-page-title'>Holidays</h2>
 			<div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
 			{% include 'components/month-navigation.html.twig' with {'month': month, 'url': '/admin/create/'} %}
 			<div class='table-responsive'>
 				<table class="table table-dark table-striped table-hover align-middle">
-					<caption>Translations</caption>
+					<caption>Holidays</caption>
 					<thead>
 					<tr>
 						<th scope="col">#</th>
@@ -19,42 +18,33 @@
 						<th scope="col">Day</th>
 						<th scope="col" class='w-25'>Name</th>
 						<th scope="col" class='w-75'>Description</th>
+						<th scope="col">Translations</th>
 					</tr>
 					</thead>
 					<tbody>
 					{% for element in fixed_holidays %}
-						{% set tag_ids = tags_by_metadata[element.id] ?? [] %}
 						<tr
 								class='tr-holiday tr-holiday-clickable'
 								role='button'
 								tabindex='0'
-								data-row-id='{{ element.id }}'
-								data-id='{{ element.id }}'
-								data-name='{{ element.name|e('html_attr') }}'
-								data-description='{{ element.description|default('')|e('html_attr') }}'
-								data-month='{{ element.month }}'
-								data-day='{{ element.day }}'
-								data-country='{{ element.countryCode ?? '' }}'
-								data-mature='{{ element.matureContent ? '1' : '0' }}'
-								data-tags='{{ tag_ids|json_encode|e('html_attr') }}'
+								data-href='{{ path('admin_holiday_detail', {kind: 'fixed', id: element.id}) }}'
 						>
 							<th scope="row">{{ element.id }}</th>
-							<td data-role='country-cell' data-country='{{ element.countryCode ?? '' }}'>
+							<td>
 								{% if element.countryName %}
 									{{ element.countryCode }} - {{ element.countryName }}
 								{% else %}
 									International
 								{% endif %}
 							</td>
-							<td data-role='mature-cell' data-mature='{{ element.matureContent ? '1' : '0' }}'>
-								{{ element.matureContent ? 'Yes' : 'No' }}
-							</td>
-							<td data-role='month-cell'>{{ element.month }}</td>
-							<td data-role='day-cell'>{{ element.day }}</td>
-							<td data-role='name-cell'>{{ element.name }}</td>
-							<td data-role='description-cell'>
+							<td>{{ element.matureContent ? 'Yes' : 'No' }}</td>
+							<td>{{ element.month }}</td>
+							<td>{{ element.day }}</td>
+							<td>{{ element.name }}</td>
+							<td>
 								<div class='holiday-description'>{{ element.description|nl2br }}</div>
 							</td>
+							<td>{% include 'admin/components/translation_count.html.twig' with {count: translationCounts[element.id]|default(0), total: targetLanguageCount} only %}</td>
 						</tr>
 					{% endfor %}
 					</tbody>
@@ -177,7 +167,4 @@
 			{% include 'components/month-navigation.html.twig' with {'month': month, 'url': '/admin/create/'} %}
 		</div>
 	</main>
-
-	{% include 'admin/components/holiday_edit_modal.html.twig' with {countries: countries, tags: tags} %}
-
 {% endblock %}

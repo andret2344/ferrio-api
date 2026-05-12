@@ -1,0 +1,118 @@
+{# @var kind string  Report kind (e.g. 'fixed_suggestion') — drives column set + row data attributes. #}
+{# @var paneId string  Tab pane id (also used for empty-state and counter). #}
+{# @var emptyLabel string  Human label for the empty state ("fixed holiday suggestions"). #}
+{# @var rows iterable  Report rows (suggestion or error entities). #}
+{# @var users array  uid => user info. #}
+{# @var fixedHolidaysPl array  metadata id => {name, description} for fixed PL data. #}
+{# @var floatingHolidaysPl array  metadata id => {name, description} for floating PL data. #}
+
+{% set isError = kind ends with '_error' %}
+{% set isFloating = kind starts with 'floating_' %}
+
+<div class='report-count'>{{ rows|length }} {{ rows|length == 1 ? 'entry' : 'entries' }}</div>
+{% if rows is empty %}
+	<div class='text-center text-muted py-5'>No {{ emptyLabel }}.</div>
+{% else %}
+	<div class='table-responsive'>
+		<table class='table table-dark table-striped table-hover align-middle'>
+			<thead>
+			<tr>
+				<th>#</th>
+				{% if isError %}
+					<th>Type</th>
+				{% else %}
+					<th>Name</th>
+					<th>Date</th>
+				{% endif %}
+				<th>Description</th>
+				{% if not isError %}
+					<th>Country</th>
+				{% endif %}
+				<th>State</th>
+				<th>Reported</th>
+				<th>User</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for r in rows %}
+				{# Resolve linked metadata id + PL referent + edit payload uniformly. #}
+				{% set linkedId = isError ? (r.metadata ? r.metadata.id : null) : (r.holiday ? r.holiday.id : null) %}
+				{% set plData = isFloating ? (floatingHolidaysPl[linkedId] ?? null) : (fixedHolidaysPl[linkedId] ?? null) %}
+				{% if isError %}
+					{% set referredName = plData ? plData.name : null %}
+					{% set referredDescription = plData ? plData.description : null %}
+				{% else %}
+					{% set referredName = r.name %}
+					{% set referredDescription = r.description %}
+				{% endif %}
+				{% set detailHref = linkedId
+					? path('admin_holiday_detail', {kind: isFloating ? 'floating' : 'fixed', id: linkedId})
+					: '' %}
+				<tr
+						class='report-row'
+						role='button'
+						tabindex='0'
+						data-kind='{{ kind }}'
+						data-id='{{ r.id }}'
+						data-state='{{ r.reportState.value }}'
+						data-comment='{{ (r.comment ?? '')|e('html_attr') }}'
+						data-holiday-id='{{ linkedId ?? '' }}'
+						data-referred-name='{{ (referredName ?? '')|e('html_attr') }}'
+						data-referred-description='{{ (referredDescription ?? '')|e('html_attr') }}'
+						data-detail-href='{{ detailHref }}'
+				>
+					<td>{{ loop.index }}</td>
+					{% if isError %}
+						<td>
+							<span class='badge bg-light text-dark'>{{ r.reportType.value|lower|replace({'_': ' '})|capitalize }}</span>
+						</td>
+						{% if r.description %}
+							<td class='description-cell'>
+								<span class='description-text'>{{ r.description }}</span>
+							</td>
+						{% else %}
+							<td>-</td>
+						{% endif %}
+					{% else %}
+						<td>{{ r.name }}</td>
+						<td>{{ isFloating ? r.date : '%02d.%02d'|format(r.day, r.month) }}</td>
+						<td class='description-cell'>
+							<span class='description-text'>{{ r.description }}</span>
+						</td>
+						<td>{{ r.country ? r.country.isoCode : '-' }}</td>
+					{% endif %}
+					<td>
+						<span class='state-cell'>
+							<span class='badge report-state report-state-{{ r.reportState.value|lower }}'
+							      data-role='state-badge'>
+								{{ r.reportState.value }}
+							</span>
+							<button type='button'
+							        class='btn btn-comment-icon {{ r.comment ? '' : 'd-none' }}'
+							        data-role='comment-popover'
+							        data-bs-toggle='popover'
+							        data-bs-trigger='focus'
+							        data-bs-placement='top'
+							        data-bs-title='Comment'
+							        data-bs-content='{{ r.comment ?? '' }}'
+							        tabindex='0'
+							        title='Show comment'>
+								<i class='bi bi-chat-left-text-fill'></i>
+							</button>
+						</span>
+					</td>
+					<td>{{ r.datetime|date('Y-m-d H:i') }}</td>
+					<td class='user-cell'>
+						{% set u = users[r.userId] ?? null %}
+						{% if u and (u.name or u.email) %}
+							<div class='user-name'>{{ u.name ?? '-' }}</div>
+							<div class='user-email'>{{ u.email ?? '-' }}</div>
+						{% endif %}
+						<div class='user-uid'>{{ r.userId }}</div>
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endif %}

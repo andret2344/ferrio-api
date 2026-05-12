@@ -55,6 +55,13 @@
 			<span class='sidebar-label'>Tags</span>
 			<span class='sidebar-badge'>{{ nav.tagCount }}</span>
 		</a>
+		<a href='{{ path('admin_languages_index') }}'
+		   class='sidebar-item no-a {{ route starts with 'admin_languages_' ? 'sidebar-item-active' : '' }}'
+		   title='Languages ({{ nav.languageCount }})'>
+			<i class='bi bi-translate'></i>
+			<span class='sidebar-label'>Languages</span>
+			<span class='sidebar-badge'>{{ nav.languageCount }}</span>
+		</a>
 		<a href='{{ path('admin_reports') }}'
 		   class='sidebar-item no-a {{ route starts with 'admin_reports' ? 'sidebar-item-active' : '' }}'
 		   title='Reports{{ nav.reportsPending > 0 ? ' (' ~ nav.reportsPending ~ ' pending)' : '' }}'>
@@ -64,23 +71,6 @@
 				<span class='sidebar-badge sidebar-badge-warning'>{{ nav.reportsPending }}</span>
 				<span class='sidebar-dot sidebar-dot-warning'></span>
 			{% endif %}
-		</a>
-		<a href='{{ path('admin_translate_default') }}'
-		   class='sidebar-item no-a {{ route starts with 'admin_translate' ? 'sidebar-item-active' : '' }}'
-		   title='Translate{{ nav.translateIncomplete > 0 ? ' (' ~ nav.translateIncomplete ~ ' incomplete)' : '' }}'>
-			<i class='bi bi-translate'></i>
-			<span class='sidebar-label'>Translate</span>
-			{% if nav.translateIncomplete > 0 %}
-				<span class='sidebar-badge sidebar-badge-warning'>{{ nav.translateIncomplete }}</span>
-				<span class='sidebar-dot sidebar-dot-warning'></span>
-			{% endif %}
-		</a>
-		<a href='{{ path('admin_polls_index') }}'
-		   class='sidebar-item no-a {{ route starts with 'admin_polls_' ? 'sidebar-item-active' : '' }}'
-		   title='Polls ({{ nav.pollCount }})'>
-			<i class='bi bi-bar-chart-line'></i>
-			<span class='sidebar-label'>Polls</span>
-			<span class='sidebar-badge'>{{ nav.pollCount }}</span>
 		</a>
 	</nav>
 </aside>

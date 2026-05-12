@@ -1,0 +1,157 @@
+{% extends 'base.html.twig' %}
+{% block title %}Languages — Ferrio Admin{% endblock %}
+{% block body %}
+	<main class='section-manage-main'>
+		{% include 'components/sidebar.html.twig' %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'Languages'} %}
+		<div class='manage-content'>
+
+			{% for label, messages in app.flashes(['success', 'error']) %}
+				{% for message in messages %}
+					<div class='alert alert-{{ label == 'error' ? 'danger' : 'success' }} alert-dismissible fade show'
+					     role='alert'>
+						{{ message }}
+						<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+					</div>
+				{% endfor %}
+			{% endfor %}
+
+			<form method='post' action='{{ path('admin_languages_create') }}' class='mb-4 d-flex gap-2 flex-wrap'>
+				<input
+						type='text'
+						name='code'
+						class='form-control manage-input'
+						placeholder='Code (e.g. en, de, pt-br)'
+						style='max-width: 200px'
+						maxlength='31'
+						required
+				>
+				<input
+						type='text'
+						name='name'
+						class='form-control manage-input'
+						placeholder='Display name (e.g. English)'
+						style='max-width: 280px'
+						maxlength='63'
+						required
+				>
+				<button type='submit' class='btn btn-primary'>
+					<i class='bi bi-plus-lg'></i> Add language
+				</button>
+			</form>
+
+			<div class='table-responsive'>
+				<table class='table table-dark table-striped table-hover align-middle'>
+					<thead>
+					<tr>
+						<th>Code</th>
+						<th>Name</th>
+						<th class='text-center'>Translations</th>
+						<th></th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for language in languages %}
+						{% set isDefault = language.code == defaultCode %}
+						{% set translationCount = translationCounts[language.code] ?? 0 %}
+						<tr>
+							<td>
+								<span class='chip' title='Language code'>
+									<span class='chip-body'>
+										<span class='chip-label text-monospace'>{{ language.code }}</span>
+									</span>
+								</span>
+								{% if isDefault %}
+									<span class='badge text-bg-light ms-2' title='Polish is the default (source) language'>default</span>
+								{% endif %}
+							</td>
+							<td>{{ language.name }}</td>
+							<td class='text-center' title='{{ isDefault ? 'Default language — source content, not counted as translations' : 'Translated holidays (fixed + floating)' }}'>
+								{% if isDefault %}
+									<span class='text-muted'>—</span>
+								{% else %}
+									<i class='bi bi-translate'></i> {{ translationCount }}
+								{% endif %}
+							</td>
+							<td class='text-end'>
+								{% if isDefault %}
+									<button type='button' class='btn btn-sm btn-outline-secondary' disabled
+									        title='The source language cannot be deleted'>
+										<i class='bi bi-lock'></i>
+									</button>
+								{% else %}
+									<button
+											type='button'
+											class='btn btn-sm btn-outline-danger'
+											data-bs-toggle='modal'
+											data-bs-target='#language-delete-modal-{{ language.code }}'
+											title='Delete language'
+											aria-label='Delete language'
+									>
+										<i class='bi bi-trash'></i>
+									</button>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+
+			{% for language in languages %}
+				{% if language.code != defaultCode %}
+					{% set translationCount = translationCounts[language.code] ?? 0 %}
+					<div class='modal fade' id='language-delete-modal-{{ language.code }}' tabindex='-1' aria-hidden='true'>
+						<div class='modal-dialog modal-dialog-centered'>
+							<div class='modal-content'>
+								<form
+										method='post'
+										action='{{ path('admin_languages_delete', {code: language.code}) }}'
+										class='language-delete-form'
+										data-expected-name='{{ language.name }}'
+								>
+									<div class='modal-header'>
+										<h5 class='modal-title'>
+											<i class='bi bi-exclamation-triangle text-danger'></i>
+											Delete language "{{ language.name }}"
+										</h5>
+										<button type='button' class='btn-close' data-bs-dismiss='modal'
+										        aria-label='Close'></button>
+									</div>
+									<div class='modal-body'>
+										<p>
+											This will permanently delete the
+											<strong>{{ language.name }}</strong> (<code>{{ language.code }}</code>)
+											language and drop all
+											<strong>{{ translationCount }}</strong> translations associated with it.
+											This action cannot be undone.
+										</p>
+										<p class='form-label mb-2'>
+											Type <code>{{ language.name }}</code> or <code>DELETE</code> to confirm:
+										</p>
+										<input
+												type='text'
+												name='confirm'
+												class='form-control manage-input language-delete-confirm'
+												autocomplete='off'
+												placeholder='{{ language.name }} or DELETE'
+												required
+										>
+									</div>
+									<div class='modal-footer'>
+										<button type='button' class='btn btn-outline-light' data-bs-dismiss='modal'>
+											Cancel
+										</button>
+										<button type='submit' class='btn btn-danger language-delete-submit' disabled>
+											<i class='bi bi-trash'></i> Delete language
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</main>
+{% endblock %}

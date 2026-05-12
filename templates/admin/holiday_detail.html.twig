@@ -1,0 +1,178 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+	<main class='section-manage-main' data-page='admin-holiday-detail'
+	      data-kind='{{ kind }}'
+	      data-holiday-id='{{ id }}'
+	      data-save-url='{{ path('admin_api_holiday_save', {kind: kind, id: id}) }}'
+	      data-csrf-token='{{ csrf_token('holiday_save') }}'
+	      data-targets='{{ targets|map(l => {code: l.code, name: l.name})|json_encode|e('html_attr') }}'
+	      data-tags='{{ tags|map(t => {id: t.id, slug: t.slug, name: t.nameFor('pl') ?? t.slug})|json_encode|e('html_attr') }}'
+	>
+		{% include 'components/sidebar.html.twig' %}
+		{% set back_html %}
+			<a href='{{ backUrl }}' class='btn btn-sm btn-outline-light'>
+				<i class='bi bi-arrow-left me-1'></i>{{ backLabel }}
+			</a>
+		{% endset %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'Holiday #' ~ id, back: back_html} %}
+		<div class='manage-content'>
+			<div id='toast-container' class='toast-container position-fixed bottom-0 end-0 p-3'></div>
+
+			<div class='holiday-detail-grid'>
+				<section class='holiday-detail-panel'>
+					<header class='holiday-detail-panel-header'>
+						<i class='bi bi-sliders'></i>Metadata
+					</header>
+					<div class='holiday-detail-panel-body'>
+						{% if kind == 'fixed' %}
+							<div class='row g-3 mb-3'>
+								<div class='col-sm-6'>
+									<label class='form-label' for='meta-day'>Day</label>
+									<input type='number' min='1' max='31' id='meta-day'
+									       class='form-control manage-input' value='{{ day }}'>
+								</div>
+								<div class='col-sm-6'>
+									<label class='form-label' for='meta-month'>Month</label>
+									<input type='number' min='1' max='12' id='meta-month'
+									       class='form-control manage-input' value='{{ month }}'>
+								</div>
+							</div>
+						{% else %}
+							<div class='mb-3'>
+								<label class='form-label' for='meta-algorithm'>Algorithm (v3)</label>
+								<select id='meta-algorithm' class='form-select manage-input'
+								        data-examples='{{ algorithmExamples|json_encode|e('html_attr') }}'>
+									{% for a in algorithms %}
+										<option value='{{ a }}' {{ algorithm == a ? 'selected' : '' }}>{{ a }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<div class='mb-3'>
+								<label class='form-label' for='meta-algorithm-args'>Algorithm args (v3, JSON)</label>
+								<textarea id='meta-algorithm-args' class='form-control manage-input font-monospace' rows='6'>{{ algorithmArgs }}</textarea>
+								<div class='invalid-feedback' id='meta-algorithm-args-error'></div>
+							</div>
+						{% endif %}
+						<div class='mb-3'>
+							<label class='form-label' for='meta-country'>Country</label>
+							<select id='meta-country' class='form-select manage-input'>
+								<option value='null' {{ countryCode is null ? 'selected' : '' }}>International</option>
+								{% for c in countries %}
+									<option value='{{ c.isoCode }}'
+									        {{ countryCode == c.isoCode ? 'selected' : '' }}>{{ c.isoCode }}
+										- {{ c.englishName }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class='form-check form-switch mb-3'>
+							<input class='form-check-input' type='checkbox' id='meta-mature'
+							       {{ mature ? 'checked' : '' }}>
+							<label class='form-check-label' for='meta-mature'>Mature content (+18)</label>
+						</div>
+						<div class='tag-picker' id='meta-tags'
+						     data-selected='{{ selectedTagIds|json_encode|e('html_attr') }}'>
+							<label class='form-label'>Tags</label>
+							<div class='tag-picker-chips chip-list' id='meta-tag-chips'></div>
+							{% if tags is not empty %}
+								<div class='dropdown tag-picker-dropdown'>
+									<button class='btn btn-sm btn-outline-light dropdown-toggle tag-picker-add'
+									        type='button' id='meta-tag-add' data-bs-toggle='dropdown'
+									        data-bs-auto-close='outside' aria-expanded='false'>
+										<i class='bi bi-plus-lg'></i> Add tag
+									</button>
+									<ul class='dropdown-menu dropdown-menu-dark tag-picker-menu'
+									    aria-labelledby='meta-tag-add' id='meta-tag-menu'></ul>
+								</div>
+							{% else %}
+								<p class='text-muted small mb-0'>No tags defined yet.</p>
+							{% endif %}
+						</div>
+					</div>
+				</section>
+
+				<section class='holiday-detail-panel'>
+					<header class='holiday-detail-panel-header'>
+						<i class='bi bi-pencil-square'></i>Source · Polish
+					</header>
+					<div class='holiday-detail-panel-body'>
+						<div class='mb-3'>
+							<label class='form-label' for='source-name'>Name</label>
+							<textarea id='source-name' class='form-control manage-input' rows='2'>{{ source.name }}</textarea>
+						</div>
+						<div>
+							<label class='form-label' for='source-description'>Description</label>
+							<div class='d-flex align-items-start gap-2'>
+								<textarea id='source-description' class='form-control manage-input' rows='8'>{{ source.description }}</textarea>
+								<button type='button' class='btn btn-sm btn-outline-light btn-generate-desc flex-shrink-0'
+								        title='Generate description with AI'
+								        id='source-description-ai'><i class='bi bi-stars'></i></button>
+							</div>
+						</div>
+					</div>
+				</section>
+			</div>
+
+			<section class='holiday-detail-panel mt-3'>
+				<header class='holiday-detail-panel-header'>
+					<i class='bi bi-translate'></i>Translations
+				</header>
+				<div class='holiday-detail-panel-body'>
+					<div class='translate-sections' id='translate-sections'></div>
+					<div class='translate-add'>
+						<div class='dropdown'>
+							<button class='btn btn-sm btn-outline-light dropdown-toggle translate-add-btn'
+							        type='button' id='translate-add-btn' data-bs-toggle='dropdown'
+							        data-bs-auto-close='outside' aria-expanded='false'>
+								<i class='bi bi-plus-lg'></i> Add translation
+							</button>
+							<ul class='dropdown-menu dropdown-menu-dark translate-add-menu' id='translate-add-menu'
+							    aria-labelledby='translate-add-btn'></ul>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<div class='holiday-detail-actions'>
+				<div class='alert alert-danger d-none' id='detail-error' role='alert'></div>
+				<div class='d-flex gap-2 justify-content-end'>
+					<a href='{{ backUrl }}' class='btn btn-outline-light'>
+						<i class='bi bi-x-lg me-1'></i>Cancel
+					</a>
+					<button type='button' class='btn btn-primary' id='detail-save' disabled>
+						<i class='bi bi-check-lg me-1'></i>Save
+					</button>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<script type='application/json' id='translations-data'>{{ translations|json_encode|raw }}</script>
+
+	<template id='translate-section-template'>
+		<section class='translate-section'>
+			<div class='translate-lang-header'>
+				<span class='translate-lang-code' data-role='lang-code'></span>
+				<span class='translate-lang-name' data-role='lang-name'></span>
+				<button type='button' class='translate-section-remove' data-role='remove'
+				        aria-label='Remove translation' title='Remove translation'><i class='bi bi-x-lg'></i></button>
+			</div>
+			<div class='translate-field'>
+				<label class='form-label' data-role='name-label'>Name</label>
+				<div class='d-flex align-items-start gap-2'>
+					<input type='text' class='form-control manage-input' data-role='name-input'/>
+					<button type='button' class='btn btn-sm btn-outline-light btn-generate-desc flex-shrink-0'
+					        title='Generate name with AI' data-role='ai-name'><i class='bi bi-stars'></i></button>
+				</div>
+			</div>
+			<div class='translate-field'>
+				<label class='form-label' data-role='description-label'>Description</label>
+				<div class='d-flex align-items-start gap-2'>
+					<textarea class='form-control manage-input' rows='4' data-role='description-input'></textarea>
+					<button type='button' class='btn btn-sm btn-outline-light btn-generate-desc flex-shrink-0'
+					        title='Generate description with AI' data-role='ai-description'><i
+								class='bi bi-stars'></i></button>
+				</div>
+			</div>
+		</section>
+	</template>
+{% endblock %}

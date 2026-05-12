@@ -12,6 +12,8 @@ use Override;
 #[ORM\Entity]
 class Language implements JsonSerializable
 {
+	public const string DEFAULT_CODE = 'pl';
+
 	#[ORM\Id]
 	#[ORM\Column(type: 'string', length: 31)]
 	private(set) string $code;

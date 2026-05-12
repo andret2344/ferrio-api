@@ -3,9 +3,8 @@
 {% block body %}
 	<main class='section-manage-main'>
 		{% include 'components/sidebar.html.twig' %}
-		{% include 'components/topbar.html.twig' with {pageTitle: 'Poll Results'} %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'Poll · ' ~ poll.name} %}
 		<div class='manage-content'>
-			<h2 class='manage-page-title'>{{ poll.name }}</h2>
 			<p class="text-muted">{{ poll.question }}</p>
 			<p>
 				<strong>Period:</strong> {{ poll.start|date('Y-m-d H:i') }} → {{ poll.end|date('Y-m-d H:i') }}

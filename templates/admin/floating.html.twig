@@ -1,14 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block title %}Floating Holidays — Ferrio Admin{% endblock %}
 {% block body %}
-	<main class='section-manage-main'>
+	<main class='section-manage-main' data-page='admin-floating'>
 		{% include 'components/sidebar.html.twig' %}
 		{% include 'components/topbar.html.twig' with {pageTitle: 'Floating Holidays'} %}
 		<div class='manage-content'>
-			<div class='floating-notice'>
-				<i class='bi bi-info-circle'></i>
-				<span>Read-only view. Inline editing for floating holidays is coming soon.</span>
-			</div>
 			<div class='table-responsive'>
 				<table class='table table-dark table-striped table-hover align-middle'>
 					<thead>
@@ -20,12 +16,14 @@
 						<th scope='col'>Args</th>
 						<th scope='col'>Name (PL)</th>
 						<th scope='col'>Tags</th>
+						<th scope='col'>Translations</th>
 					</tr>
 					</thead>
 					<tbody>
 					{% for holiday in floating_holidays %}
 						{% set m = holiday.metadata %}
-						<tr>
+						<tr class='tr-holiday tr-holiday-clickable' role='button' tabindex='0'
+						    data-href='{{ path('admin_holiday_detail', {kind: 'floating', id: m.id}) }}'>
 							<th scope='row'>{{ m.id }}</th>
 							<td>
 								{% if m.country %}
@@ -51,10 +49,11 @@
 									<span class='text-muted'>—</span>
 								{% endfor %}
 							</td>
+							<td>{% include 'admin/components/translation_count.html.twig' with {count: translationCounts[m.id]|default(0), total: targetLanguageCount} only %}</td>
 						</tr>
 					{% else %}
 						<tr>
-							<td colspan='7' class='text-center text-muted py-4'>No floating holidays.</td>
+							<td colspan='8' class='text-center text-muted py-4'>No floating holidays.</td>
 						</tr>
 					{% endfor %}
 					</tbody>

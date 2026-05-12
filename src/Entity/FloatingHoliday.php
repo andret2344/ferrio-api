@@ -22,10 +22,10 @@ class FloatingHoliday implements JsonSerializable
 	private(set) FloatingHolidayMetadata $metadata;
 
 	#[ORM\Column(type: 'text')]
-	private(set) string $name;
+	public string $name;
 
 	#[ORM\Column(type: 'text', nullable: true)]
-	private(set) ?string $description;
+	public ?string $description;
 
 	#[ORM\Column(type: 'text', nullable: true)]
 	private(set) ?string $url;

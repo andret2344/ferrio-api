@@ -1,490 +1,120 @@
 {% extends 'base.html.twig' %}
 
-{% macro suggestion_row_attrs(s, kind, fixedHolidaysPl, floatingHolidaysPl, fixedMetadataInfo, tagsByFixedMetadata) %}
-	{% set linkedId = s.holiday ? s.holiday.id : null %}
-	{% set referredName = s.name %}
-	{% set referredDescription = s.description %}
-	{% set canEdit = (kind == 'fixed_suggestion') and linkedId is not null and (fixedHolidaysPl[linkedId] ?? null) is not null %}
-	{% set editPayload = null %}
-	{% if canEdit %}
-		{% set ph = fixedHolidaysPl[linkedId] %}
-		{% set pm = fixedMetadataInfo[linkedId] %}
-		{% set editPayload = {
-			id: linkedId,
-			name: ph.name,
-			description: ph.description,
-			day: pm.day,
-			month: pm.month,
-			country: pm.country,
-			mature: pm.mature,
-			tags: tagsByFixedMetadata[linkedId] ?? [],
-		} %}
-	{% endif %}
-	data-kind='{{ kind }}'
-	data-id='{{ s.id }}'
-	data-state='{{ s.reportState.value }}'
-	data-comment='{{ (s.comment ?? '')|e('html_attr') }}'
-	data-holiday-id='{{ linkedId ?? '' }}'
-	data-referred-name='{{ referredName|e('html_attr') }}'
-	data-referred-description='{{ (referredDescription ?? '')|e('html_attr') }}'
-	data-can-edit='{{ canEdit ? '1' : '0' }}'
-	{% if editPayload %}data-edit-payload='{{ editPayload|json_encode|e('html_attr') }}'{% endif %}
-{% endmacro %}
-
-{% macro error_row_attrs(e, kind, fixedHolidaysPl, floatingHolidaysPl, fixedMetadataInfo, tagsByFixedMetadata) %}
-	{% set linkedId = e.metadata ? e.metadata.id : null %}
-	{% set isFixed = kind == 'fixed_error' %}
-	{% set plData = isFixed ? (fixedHolidaysPl[linkedId] ?? null) : (floatingHolidaysPl[linkedId] ?? null) %}
-	{% set referredName = plData ? plData.name : null %}
-	{% set referredDescription = plData ? plData.description : null %}
-	{% set canEdit = isFixed and e.language.code == 'pl' and linkedId is not null and plData is not null %}
-	{% set editPayload = null %}
-	{% if canEdit %}
-		{% set pm = fixedMetadataInfo[linkedId] %}
-		{% set editPayload = {
-			id: linkedId,
-			name: plData.name,
-			description: plData.description,
-			day: pm.day,
-			month: pm.month,
-			country: pm.country,
-			mature: pm.mature,
-			tags: tagsByFixedMetadata[linkedId] ?? [],
-		} %}
-	{% endif %}
-	data-kind='{{ kind }}'
-	data-id='{{ e.id }}'
-	data-state='{{ e.reportState.value }}'
-	data-comment='{{ (e.comment ?? '')|e('html_attr') }}'
-	data-holiday-id='{{ linkedId ?? '' }}'
-	data-referred-name='{{ (referredName ?? '')|e('html_attr') }}'
-	data-referred-description='{{ (referredDescription ?? '')|e('html_attr') }}'
-	data-can-edit='{{ canEdit ? '1' : '0' }}'
-	{% if editPayload %}data-edit-payload='{{ editPayload|json_encode|e('html_attr') }}'{% endif %}
-{% endmacro %}
-
 {% block body %}
+	{% set tableContext = {
+		users: users,
+		fixedHolidaysPl: fixedHolidaysPl,
+		floatingHolidaysPl: floatingHolidaysPl,
+	} %}
+	{% set tabs = [
+		{id: 'fixed-suggestions', label: 'Fixed Suggestions', kind: 'fixed_suggestion', rows: fixedSuggestions, emptyLabel: 'fixed holiday suggestions'},
+		{id: 'floating-suggestions', label: 'Floating Suggestions', kind: 'floating_suggestion', rows: floatingSuggestions, emptyLabel: 'floating holiday suggestions'},
+		{id: 'fixed-errors', label: 'Fixed Errors', kind: 'fixed_error', rows: fixedErrors, emptyLabel: 'fixed holiday error reports'},
+		{id: 'floating-errors', label: 'Floating Errors', kind: 'floating_error', rows: floatingErrors, emptyLabel: 'floating holiday error reports'},
+	] %}
+	{% set reportsTotal = fixedSuggestions|length + floatingSuggestions|length + fixedErrors|length + floatingErrors|length %}
+	{% set toolbar_html %}
+		<span class='badge bg-secondary'>{{ reportsTotal }} total</span>
+	{% endset %}
 	<main class='section-manage-main'>
 		{% include 'components/sidebar.html.twig' %}
-		{% include 'components/topbar.html.twig' with {pageTitle: 'Reports'} %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'Reports', toolbar: toolbar_html} %}
 		<div class='manage-content'>
-			<h2 class='manage-page-title'>User Reports</h2>
-
 			<ul class='nav nav-tabs reports-tabs' id='reportsTabs'>
-				<li class='nav-item'>
-					<button
-							class='nav-link active'
-							id='fixed-suggestions-tab'
-							data-bs-toggle='tab'
-							data-bs-target='#fixed-suggestions'
-							type='button'
-					>Fixed Suggestions
-						<span class='badge bg-secondary ms-1'>{{ fixedSuggestions|length }}</span>
-					</button>
-				</li>
-				<li class='nav-item'>
-					<button
-							class='nav-link'
-							id='floating-suggestions-tab'
-							data-bs-toggle='tab'
-							data-bs-target='#floating-suggestions'
-							type='button'
-					>Floating Suggestions
-						<span class='badge bg-secondary ms-1'>{{ floatingSuggestions|length }}</span>
-					</button>
-				</li>
-				<li class='nav-item'>
-					<button
-							class='nav-link'
-							id='fixed-errors-tab'
-							data-bs-toggle='tab'
-							data-bs-target='#fixed-errors'
-							type='button'
-					>Fixed Errors
-						<span class='badge bg-secondary ms-1'>{{ fixedErrors|length }}</span>
-					</button>
-				</li>
-				<li class='nav-item'>
-					<button
-							class='nav-link'
-							id='floating-errors-tab'
-							data-bs-toggle='tab'
-							data-bs-target='#floating-errors'
-							type='button'
-					>Floating Errors
-						<span class='badge bg-secondary ms-1'>{{ floatingErrors|length }}</span>
-					</button>
-				</li>
+				{% for tab in tabs %}
+					<li class='nav-item'>
+						<button
+								class='nav-link {{ loop.first ? 'active' : '' }}'
+								id='{{ tab.id }}-tab'
+								data-bs-toggle='tab'
+								data-bs-target='#{{ tab.id }}'
+								type='button'
+						>{{ tab.label }}
+							<span class='badge bg-secondary ms-1'>{{ tab.rows|length }}</span>
+						</button>
+					</li>
+				{% endfor %}
 			</ul>
 
 			<div class='tab-content mt-3' id='reportsTabContent'>
-				{# Fixed Suggestions #}
-				<div class='tab-pane fade show active' id='fixed-suggestions'>
-					<div class='report-count'>{{ fixedSuggestions|length }} {{ fixedSuggestions|length == 1 ? 'entry' : 'entries' }}</div>
-					{% if fixedSuggestions is empty %}
-						<div class='text-center text-muted py-5'>No fixed holiday suggestions.</div>
-					{% else %}
-						<div class='table-responsive'>
-							<table class='table table-dark table-striped table-hover align-middle'>
-								<thead>
-								<tr>
-									<th>#</th>
-									<th>Name</th>
-									<th>Date</th>
-									<th>Description</th>
-									<th>Country</th>
-									<th>State</th>
-									<th>Reported</th>
-									<th>User</th>
-								</tr>
-								</thead>
-								<tbody>
-								{% for s in fixedSuggestions %}
-									<tr
-											class='report-row'
-											role='button'
-											tabindex='0'
-											{{ _self.suggestion_row_attrs(s, 'fixed_suggestion', fixedHolidaysPl, floatingHolidaysPl, fixedMetadataInfo, tagsByFixedMetadata) }}
-									>
-										<td>{{ loop.index }}</td>
-										<td>{{ s.name }}</td>
-										<td>{{ '%02d.%02d'|format(s.day, s.month) }}</td>
-										<td class='description-cell'>
-											<span class='description-text'>{{ s.description }}</span>
-										</td>
-										<td>{{ s.country ? s.country.isoCode : '-' }}</td>
-										<td>
-											<span class='state-cell'>
-												<span class='badge report-state report-state-{{ s.reportState.value|lower }}'
-												      data-role='state-badge'>
-													{{ s.reportState.value }}
-												</span>
-												<button type='button'
-												        class='btn btn-comment-icon {{ s.comment ? '' : 'd-none' }}'
-												        data-role='comment-popover'
-												        data-bs-toggle='popover'
-												        data-bs-trigger='focus'
-												        data-bs-placement='top'
-												        data-bs-title='Comment'
-												        data-bs-content='{{ s.comment ?? '' }}'
-												        tabindex='0'
-												        title='Show comment'>
-													<i class='bi bi-chat-left-text-fill'></i>
-												</button>
-											</span>
-										</td>
-										<td>{{ s.datetime|date('Y-m-d H:i') }}</td>
-										<td class='user-cell'>
-											{% set u = users[s.userId] ?? null %}
-											{% if u and (u.name or u.email) %}
-												<div class='user-name'>{{ u.name ?? '-' }}</div>
-												<div class='user-email'>{{ u.email ?? '-' }}</div>
-											{% endif %}
-											<div class='user-uid'>{{ s.userId }}</div>
-										</td>
-									</tr>
-								{% endfor %}
-								</tbody>
-							</table>
-						</div>
-					{% endif %}
-				</div>
-
-				{# Floating Suggestions #}
-				<div class='tab-pane fade' id='floating-suggestions'>
-					<div class='report-count'>{{ floatingSuggestions|length }} {{ floatingSuggestions|length == 1 ? 'entry' : 'entries' }}</div>
-					{% if floatingSuggestions is empty %}
-						<div class='text-center text-muted py-5'>No floating holiday suggestions.</div>
-					{% else %}
-						<div class='table-responsive'>
-							<table class='table table-dark table-striped table-hover align-middle'>
-								<thead>
-								<tr>
-									<th>#</th>
-									<th>Name</th>
-									<th>Date</th>
-									<th>Description</th>
-									<th>Country</th>
-									<th>State</th>
-									<th>Reported</th>
-									<th>User</th>
-								</tr>
-								</thead>
-								<tbody>
-								{% for s in floatingSuggestions %}
-									<tr
-											class='report-row'
-											role='button'
-											tabindex='0'
-											{{ _self.suggestion_row_attrs(s, 'floating_suggestion', fixedHolidaysPl, floatingHolidaysPl, fixedMetadataInfo, tagsByFixedMetadata) }}
-									>
-										<td>{{ loop.index }}</td>
-										<td>{{ s.name }}</td>
-										<td>{{ s.date }}</td>
-										<td class='description-cell'>
-											<span class='description-text'>{{ s.description }}</span>
-										</td>
-										<td>{{ s.country ? s.country.isoCode : '-' }}</td>
-										<td>
-											<span class='state-cell'>
-												<span class='badge report-state report-state-{{ s.reportState.value|lower }}'
-												      data-role='state-badge'>
-													{{ s.reportState.value }}
-												</span>
-												<button
-														type='button'
-														class='btn btn-comment-icon {{ s.comment ? '' : 'd-none' }}'
-														data-role='comment-popover'
-														data-bs-toggle='popover'
-														data-bs-trigger='focus'
-														data-bs-placement='top'
-														data-bs-title='Comment'
-														data-bs-content='{{ s.comment ?? '' }}'
-														tabindex='0'
-														title='Show comment'>
-													<i class='bi bi-chat-left-text-fill'></i>
-												</button>
-											</span>
-										</td>
-										<td>{{ s.datetime|date('Y-m-d H:i') }}</td>
-										<td class='user-cell'>
-											{% set u = users[s.userId] ?? null %}
-											{% if u and (u.name or u.email) %}
-												<div class='user-name'>{{ u.name ?? '-' }}</div>
-												<div class='user-email'>{{ u.email ?? '-' }}</div>
-											{% endif %}
-											<div class='user-uid'>{{ s.userId }}</div>
-										</td>
-									</tr>
-								{% endfor %}
-								</tbody>
-							</table>
-						</div>
-					{% endif %}
-				</div>
-
-				{# Fixed Errors #}
-				<div class='tab-pane fade' id='fixed-errors'>
-					<div class='report-count'>{{ fixedErrors|length }} {{ fixedErrors|length == 1 ? 'entry' : 'entries' }}</div>
-					{% if fixedErrors is empty %}
-						<div class='text-center text-muted py-5'>No fixed holiday error reports.</div>
-					{% else %}
-						<div class='table-responsive'>
-							<table class='table table-dark table-striped table-hover align-middle'>
-								<thead>
-								<tr>
-									<th>#</th>
-									<th>Type</th>
-									<th>Description</th>
-									<th>State</th>
-									<th>Reported</th>
-									<th>User</th>
-								</tr>
-								</thead>
-								<tbody>
-								{% for e in fixedErrors %}
-									<tr
-											class='report-row'
-											role='button'
-											tabindex='0'
-											{{ _self.error_row_attrs(e, 'fixed_error', fixedHolidaysPl, floatingHolidaysPl, fixedMetadataInfo, tagsByFixedMetadata) }}
-									>
-										<td>{{ loop.index }}</td>
-										<td>
-											<span class='badge bg-light text-dark'>{{ e.reportType.value|lower|replace({'_': ' '})|capitalize }}</span>
-										</td>
-										{% if e.description %}
-											<td class='description-cell'>
-												<span class='description-text'>{{ e.description }}</span>
-											</td>
-										{% else %}
-											<td>-</td>
-										{% endif %}
-										<td>
-											<span class='state-cell'>
-												<span class='badge report-state report-state-{{ e.reportState.value|lower }}'
-												      data-role='state-badge'>
-													{{ e.reportState.value }}
-												</span>
-												<button
-														type='button'
-														class='btn btn-comment-icon {{ e.comment ? '' : 'd-none' }}'
-														data-role='comment-popover'
-														data-bs-toggle='popover'
-														data-bs-trigger='focus'
-														data-bs-placement='top'
-														data-bs-title='Comment'
-														data-bs-content='{{ e.comment ?? '' }}'
-														tabindex='0'
-														title='Show comment'>
-													<i class='bi bi-chat-left-text-fill'></i>
-												</button>
-											</span>
-										</td>
-										<td>{{ e.datetime|date('Y-m-d H:i') }}</td>
-										<td class='user-cell'>
-											{% set u = users[e.userId] ?? null %}
-											{% if u and (u.name or u.email) %}
-												<div class='user-name'>{{ u.name ?? '-' }}</div>
-												<div class='user-email'>{{ u.email ?? '-' }}</div>
-											{% endif %}
-											<div class='user-uid'>{{ e.userId }}</div>
-										</td>
-									</tr>
-								{% endfor %}
-								</tbody>
-							</table>
-						</div>
-					{% endif %}
-				</div>
-
-				{# Floating Errors #}
-				<div class='tab-pane fade' id='floating-errors'>
-					<div class='report-count'>{{ floatingErrors|length }} {{ floatingErrors|length == 1 ? 'entry' : 'entries' }}</div>
-					{% if floatingErrors is empty %}
-						<div class='text-center text-muted py-5'>No floating holiday error reports.</div>
-					{% else %}
-						<div class='table-responsive'>
-							<table class='table table-dark table-striped table-hover align-middle'>
-								<thead>
-								<tr>
-									<th>#</th>
-									<th>Type</th>
-									<th>Description</th>
-									<th>State</th>
-									<th>Reported</th>
-									<th>User</th>
-								</tr>
-								</thead>
-								<tbody>
-								{% for e in floatingErrors %}
-									<tr
-											class='report-row'
-											role='button'
-											tabindex='0'
-											{{ _self.error_row_attrs(e, 'floating_error', fixedHolidaysPl, floatingHolidaysPl, fixedMetadataInfo, tagsByFixedMetadata) }}
-									>
-										<td>{{ loop.index }}</td>
-										<td>
-											<span class='badge bg-light text-dark'>{{ e.reportType.value|lower|replace({'_': ' '})|capitalize }}</span>
-										</td>
-										{% if e.description %}
-											<td class='description-cell'>
-												<span class='description-text'>{{ e.description }}</span>
-											</td>
-										{% else %}
-											<td>-</td>
-										{% endif %}
-										<td>
-											<span class='state-cell'>
-												<span class='badge report-state report-state-{{ e.reportState.value|lower }}'
-												      data-role='state-badge'>
-													{{ e.reportState.value }}
-												</span>
-												<button
-														type='button'
-														class='btn btn-comment-icon {{ e.comment ? '' : 'd-none' }}'
-														data-role='comment-popover'
-														data-bs-toggle='popover'
-														data-bs-trigger='focus'
-														data-bs-placement='top'
-														data-bs-title='Comment'
-														data-bs-content='{{ e.comment ?? '' }}'
-														tabindex='0'
-														title='Show comment'>
-													<i class='bi bi-chat-left-text-fill'></i>
-												</button>
-											</span>
-										</td>
-										<td>{{ e.datetime|date('Y-m-d H:i') }}</td>
-										<td class='user-cell'>
-											{% set u = users[e.userId] ?? null %}
-											{% if u and (u.name or u.email) %}
-												<div class='user-name'>{{ u.name ?? '-' }}</div>
-												<div class='user-email'>{{ u.email ?? '-' }}</div>
-											{% endif %}
-											<div class='user-uid'>{{ e.userId }}</div>
-										</td>
-									</tr>
-								{% endfor %}
-								</tbody>
-							</table>
-						</div>
-					{% endif %}
-				</div>
+				{% for tab in tabs %}
+					<div class='tab-pane fade {{ loop.first ? 'show active' : '' }}' id='{{ tab.id }}'>
+						{% include 'admin/components/reports_table.html.twig' with tableContext|merge({
+							kind: tab.kind,
+							paneId: tab.id,
+							rows: tab.rows,
+							emptyLabel: tab.emptyLabel,
+						}) only %}
+					</div>
+				{% endfor %}
 			</div>
 		</div>
 	</main>
 
-	<div class='modal fade' id='moderateModal' tabindex='-1' aria-labelledby='moderateModalLabel' aria-hidden='true'
+	{% macro state_dropdown(toggleId, hiddenId, report_states) %}
+		<div class='dropdown state-dropdown'>
+			<button
+					class='btn dropdown-toggle state-dropdown-toggle'
+					type='button'
+					id='{{ toggleId }}'
+					data-bs-toggle='dropdown'
+					aria-expanded='false'>
+				<span class='badge report-state' data-role='state-toggle-badge'></span>
+			</button>
+			<ul class='dropdown-menu dropdown-menu-dark state-dropdown-menu'
+			    aria-labelledby='{{ toggleId }}'>
+				{% for state in report_states %}
+					<li>
+						<button type='button' class='dropdown-item' data-value='{{ state }}'>
+							<span class='badge report-state report-state-{{ state|lower }}'>{{ state }}</span>
+						</button>
+					</li>
+				{% endfor %}
+			</ul>
+			<input type='hidden' id='{{ hiddenId }}' name='report_state'>
+		</div>
+	{% endmacro %}
+
+	<div class='modal fade' id='moderateSuggestionModal' tabindex='-1'
+	     aria-labelledby='moderateSuggestionModalLabel' aria-hidden='true'
 	     data-moderate-url='{{ path('admin_reports_moderate') }}'
 	     data-delete-url='{{ path('admin_reports_delete') }}'>
 		<div class='modal-dialog modal-dialog-centered modal-lg'>
 			<div class='modal-content'>
 				<div class='modal-header'>
-					<h5 class='modal-title' id='moderateModalLabel'>Moderate report</h5>
+					<h5 class='modal-title' id='moderateSuggestionModalLabel'>
+						<i class='bi bi-lightbulb me-2'></i>Moderate suggestion
+					</h5>
 					<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
 				</div>
 				<div class='modal-body'>
-					<div class='referred-holiday-card mb-3' id='referredHolidayCard'>
-						<div class='referred-holiday-label text-muted small mb-1'>Referred holiday</div>
-						<div class='referred-holiday-content' id='referredHolidayContent' tabindex='0'>
-							<div class='referred-holiday-name fw-semibold' id='referredHolidayName'></div>
-							<div class='referred-holiday-description' id='referredHolidayDescription'></div>
-							<div class='referred-holiday-empty text-muted fst-italic d-none'
-							     id='referredHolidayEmpty'>No referred holiday.</div>
-							<div class='referred-holiday-edit-hint text-muted small mt-1 d-none'
-							     id='referredHolidayEditHint'>
-								<i class='bi bi-pencil-square'></i> Click to edit
-							</div>
-						</div>
-					</div>
-					<form id='moderateForm'>
-						<input type='hidden' name='kind' id='moderateKind'>
-						<input type='hidden' name='id' id='moderateId'>
+					<form id='suggestionForm'>
+						<input type='hidden' id='suggestionKind'>
+						<input type='hidden' id='suggestionId'>
 						<div class='mb-3'>
-							<label class='form-label' for='moderateStateToggle'>State</label>
-							<div class='dropdown state-dropdown'>
-								<button
-										class='btn dropdown-toggle state-dropdown-toggle'
-										type='button'
-										id='moderateStateToggle'
-										data-bs-toggle='dropdown'
-										aria-expanded='false'>
-									<span class='badge report-state' data-role='state-toggle-badge'></span>
-								</button>
-								<ul class='dropdown-menu dropdown-menu-dark state-dropdown-menu'
-								    aria-labelledby='moderateStateToggle'>
-									{% for state in report_states %}
-										<li>
-											<button type='button' class='dropdown-item' data-value='{{ state }}'>
-												<span class='badge report-state report-state-{{ state|lower }}'>{{ state }}</span>
-											</button>
-										</li>
-									{% endfor %}
-								</ul>
-								<input type='hidden' id='moderateState' name='report_state'>
-							</div>
+							<label class='form-label' for='suggestionStateToggle'>State</label>
+							{{ _self.state_dropdown('suggestionStateToggle', 'suggestionState', report_states) }}
 						</div>
 						<div class='mb-3'>
-							<label for='moderateHolidayId' class='form-label'>Linked Holiday ID</label>
-							<input type='number' class='form-control' id='moderateHolidayId' name='holiday_id' min='1'
+							<label for='suggestionHolidayId' class='form-label'>Linked holiday ID</label>
+							<input type='number' class='form-control' id='suggestionHolidayId' min='1'
 							       placeholder='Leave empty to clear'>
+							<div class='form-text'>Link this suggestion to an existing holiday (optional).</div>
 						</div>
 						<div class='mb-3'>
-							<label for='moderateComment' class='form-label'>Comment</label>
-							<textarea class='form-control' id='moderateComment' name='comment' rows='4'
+							<label for='suggestionComment' class='form-label'>Comment</label>
+							<textarea class='form-control' id='suggestionComment' rows='4'
 							          placeholder='Optional note (e.g. "duplicate of #42")'></textarea>
 						</div>
-						<div class='alert alert-danger d-none' id='moderateError' role='alert'></div>
+						<div class='alert alert-danger d-none' id='suggestionError' role='alert'></div>
 					</form>
 				</div>
 				<div class='modal-footer'>
-					<button type='button' class='btn btn-danger me-auto' id='moderateDelete'>
+					<button type='button' class='btn btn-danger me-auto' id='suggestionDelete'>
 						<i class='bi bi-trash me-1'></i>Delete
 					</button>
 					<button type='button' class='btn btn-outline-light' data-bs-dismiss='modal'>Cancel</button>
-					<button type='button' class='btn btn-primary' id='moderateSave'>
+					<button type='button' class='btn btn-primary' id='suggestionSave'>
 						<i class='bi bi-check-lg me-1'></i>Save
 					</button>
 				</div>
@@ -492,6 +122,64 @@
 		</div>
 	</div>
 
-	{% include 'admin/components/holiday_edit_modal.html.twig' with {countries: countries, tags: tags} %}
+	<div class='modal fade' id='moderateErrorModal' tabindex='-1'
+	     aria-labelledby='moderateErrorModalLabel' aria-hidden='true'
+	     data-moderate-url='{{ path('admin_reports_moderate') }}'
+	     data-delete-url='{{ path('admin_reports_delete') }}'>
+		<div class='modal-dialog modal-dialog-centered modal-lg'>
+			<div class='modal-content'>
+				<div class='modal-header'>
+					<h5 class='modal-title' id='moderateErrorModalLabel'>
+						<i class='bi bi-exclamation-triangle me-2'></i>Moderate error report
+					</h5>
+					<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+				</div>
+				<div class='modal-body'>
+					<div class='referred-holiday-card mb-3' id='referredHolidayCard'>
+						<div class='referred-holiday-label'>
+							<i class='bi bi-link-45deg'></i>
+							Referred holiday
+						</div>
+						<div class='referred-holiday-content' id='referredHolidayContent' tabindex='0'>
+							<div class='referred-holiday-icon'>
+								<i class='bi bi-calendar2-event'></i>
+							</div>
+							<div class='referred-holiday-body'>
+								<div class='referred-holiday-name' id='referredHolidayName'></div>
+								<div class='referred-holiday-description' id='referredHolidayDescription'></div>
+							</div>
+						</div>
+						<div class='referred-holiday-empty d-none' id='referredHolidayEmpty'>
+							<i class='bi bi-calendar2-x'></i>
+							<span>No referred holiday.</span>
+						</div>
+					</div>
+					<form id='errorForm'>
+						<input type='hidden' id='errorKind'>
+						<input type='hidden' id='errorId'>
+						<div class='mb-3'>
+							<label class='form-label' for='errorStateToggle'>State</label>
+							{{ _self.state_dropdown('errorStateToggle', 'errorState', report_states) }}
+						</div>
+						<div class='mb-3'>
+							<label for='errorComment' class='form-label'>Comment</label>
+							<textarea class='form-control' id='errorComment' rows='4'
+							          placeholder='Optional note (e.g. "duplicate of #42")'></textarea>
+						</div>
+						<div class='alert alert-danger d-none' id='errorError' role='alert'></div>
+					</form>
+				</div>
+				<div class='modal-footer'>
+					<button type='button' class='btn btn-danger me-auto' id='errorDelete'>
+						<i class='bi bi-trash me-1'></i>Delete
+					</button>
+					<button type='button' class='btn btn-outline-light' data-bs-dismiss='modal'>Cancel</button>
+					<button type='button' class='btn btn-primary' id='errorSave'>
+						<i class='bi bi-check-lg me-1'></i>Save
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 {% endblock %}

@@ -1,5 +1,10 @@
 <header class='manage-topbar'>
 	<div class='d-flex align-items-center px-4 py-3'>
+		{% if back is defined and back %}
+			<div class='topbar-back d-flex align-items-center me-3'>
+				{{ back|raw }}
+			</div>
+		{% endif %}
 		{% if pageTitle is defined and pageTitle %}
 			<span class='topbar-title'>{{ pageTitle }}</span>
 		{% endif %}

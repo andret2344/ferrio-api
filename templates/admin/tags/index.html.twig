@@ -5,7 +5,6 @@
 		{% include 'components/sidebar.html.twig' %}
 		{% include 'components/topbar.html.twig' with {pageTitle: 'Tags'} %}
 		<div class='manage-content'>
-			<h2 class='manage-page-title'>Tags</h2>
 
 			{% for label, messages in app.flashes(['success', 'error']) %}
 				{% for message in messages %}

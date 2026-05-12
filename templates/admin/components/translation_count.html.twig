@@ -1,0 +1,10 @@
+{% set _count = count|default(0) %}
+{% set _total = total|default(0) %}
+{% if _total == 0 or _count >= _total %}
+	{% set _class = 'translation-count-chip-full' %}
+{% elseif _count == 0 %}
+	{% set _class = 'translation-count-chip-empty' %}
+{% else %}
+	{% set _class = 'translation-count-chip-partial' %}
+{% endif %}
+<span class='badge {{ _class }}'>{{ _count }}/{{ _total }}</span>
