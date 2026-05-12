@@ -15,7 +15,6 @@ use App\Entity\FloatingHolidaySuggestion;
 use App\Entity\Language;
 use App\Entity\ReportState;
 use App\Enum\ReportKind;
-use App\Form\HolidayCreateType;
 use App\Repository\FixedHolidayRepository;
 use App\Service\AdminMetricsService;
 use App\Service\FirebaseUserLookup;
@@ -55,6 +54,52 @@ class ManageController extends AbstractController
 		]);
 	}
 
+	#[Route('/holiday/{kind<fixed|floating>}/new', name: 'holiday_new')]
+	public function holidayNew(string $kind, Request $request): Response
+	{
+		$languageRepository = $this->entityManager->getRepository(Language::class);
+		/** @var Language[] $languages */
+		$languages = $languageRepository->findBy([], ['code' => 'ASC']);
+		$targets = array_values(array_filter($languages, fn(Language $l) => $l->code !== Language::DEFAULT_CODE));
+
+		$countries = $this->entityManager->getRepository(Country::class)->findAll();
+		$tags = $this->entityManager->getRepository(Category::class)
+			->findBy([], ['slug' => 'ASC']);
+
+		$context = [
+			'kind' => $kind,
+			'id' => null,
+			'isNew' => true,
+			'targets' => $targets,
+			'countries' => $countries,
+			'tags' => $tags,
+			'selectedTagIds' => [],
+			'source' => ['name' => '', 'description' => ''],
+			'translations' => [],
+			'countryCode' => null,
+			'mature' => false,
+		];
+
+		if ($kind === 'fixed') {
+			$month = filter_var($request->query->get('month'), FILTER_VALIDATE_INT);
+			$context['day'] = '';
+			$context['month'] = $month >= 1 && $month <= 12 ? (string)$month : '';
+			$context['backUrl'] = $month >= 1 && $month <= 12
+				? $this->generateUrl('admin_create_month', ['month' => $month])
+				: $this->generateUrl('admin_create');
+			$context['backLabel'] = 'Fixed';
+		} else {
+			$context['algorithm'] = \App\Enum\Algorithm::HARDCODED_DATES->value;
+			$context['algorithmArgs'] = '';
+			$context['algorithms'] = array_map(fn(\App\Enum\Algorithm $a) => $a->value, \App\Enum\Algorithm::cases());
+			$context['algorithmExamples'] = $this->algorithmExamples();
+			$context['backUrl'] = $this->generateUrl('admin_floating');
+			$context['backLabel'] = 'Floating';
+		}
+
+		return $this->render('admin/holiday_detail.html.twig', $context);
+	}
+
 	#[Route('/holiday/{kind<fixed|floating>}/{id<\d+>}', name: 'holiday_detail')]
 	public function holidayDetail(string $kind, int $id): Response
 	{
@@ -88,6 +133,7 @@ class ManageController extends AbstractController
 		$context = [
 			'kind' => $kind,
 			'id' => $id,
+			'isNew' => false,
 			'targets' => $targets,
 			'countries' => $countries,
 			'tags' => $tags,
@@ -109,22 +155,37 @@ class ManageController extends AbstractController
 			$context['algorithm'] = $metadata->algorithm->value;
 			$context['algorithmArgs'] = $metadata->algorithmArgs;
 			$context['algorithms'] = array_map(fn(\App\Enum\Algorithm $a) => $a->value, \App\Enum\Algorithm::cases());
-			$context['algorithmExamples'] = [
-				'nth_day_of_week_in_month' => "{\n  \"nth\": 4,\n  \"dayOfWeek\": 4,\n  \"month\": 11\n}",
-				'last_nth_day_of_week_in_month' => "{\n  \"nth\": 1,\n  \"dayOfWeek\": 1,\n  \"month\": 5\n}",
-				'first_day_of_week_after_date' => "{\n  \"dayOfWeek\": 6,\n  \"month\": 5,\n  \"day\": 19,\n  \"inclusive\": true\n}",
-				'last_day_of_week_before_date' => "{\n  \"dayOfWeek\": 5,\n  \"month\": 3,\n  \"day\": 20,\n  \"inclusive\": true\n}",
-				'nth_day_then_next_day_of_week' => "{\n  \"nth\": 1,\n  \"dayOfWeek\": 1,\n  \"month\": 7,\n  \"afterDayOfWeek\": 2\n}",
-				'leap_year_date' => "{\n  \"leapDay\": 29,\n  \"leapMonth\": 2,\n  \"nonLeapDay\": 1,\n  \"nonLeapMonth\": 3\n}",
-				'hardcoded_dates' => "{\n  \"2024\": \"12.9\",\n  \"2025\": \"20.9\",\n  \"2026\": \"19.9\"\n}",
-				'earth_hour' => "{}",
-				'fixed_date_with_changes' => "{\n  \"defaultDay\": 1,\n  \"defaultMonth\": 5,\n  \"changes\": []\n}",
-			];
+			$context['algorithmExamples'] = $this->algorithmExamples();
 			$context['backUrl'] = $this->generateUrl('admin_floating');
 			$context['backLabel'] = 'Floating';
 		}
 
 		return $this->render('admin/holiday_detail.html.twig', $context);
+	}
+
+	/**
+	 * @return array<string, string>
+	 */
+	private function algorithmExamples(): array
+	{
+		$currentYear = (int)date('Y');
+		$hardcodedLines = [];
+		for ($y = $currentYear - 2; $y <= $currentYear; $y++) {
+			$hardcodedLines[] = sprintf('  "%d": "1.1"', $y);
+		}
+		$hardcoded = "{\n" . implode(",\n", $hardcodedLines) . "\n}";
+
+		return [
+			'nth_day_of_week_in_month' => "{\n  \"nth\": 4,\n  \"dayOfWeek\": 4,\n  \"month\": 11\n}",
+			'last_nth_day_of_week_in_month' => "{\n  \"nth\": 1,\n  \"dayOfWeek\": 1,\n  \"month\": 5\n}",
+			'first_day_of_week_after_date' => "{\n  \"dayOfWeek\": 6,\n  \"month\": 5,\n  \"day\": 19,\n  \"inclusive\": true\n}",
+			'last_day_of_week_before_date' => "{\n  \"dayOfWeek\": 5,\n  \"month\": 3,\n  \"day\": 20,\n  \"inclusive\": true\n}",
+			'nth_day_then_next_day_of_week' => "{\n  \"nth\": 1,\n  \"dayOfWeek\": 1,\n  \"month\": 7,\n  \"afterDayOfWeek\": 2\n}",
+			'leap_year_date' => "{\n  \"leapDay\": 29,\n  \"leapMonth\": 2,\n  \"nonLeapDay\": 1,\n  \"nonLeapMonth\": 3\n}",
+			'hardcoded_dates' => $hardcoded,
+			'earth_hour' => "{}",
+			'fixed_date_with_changes' => "{\n  \"defaultDay\": 1,\n  \"defaultMonth\": 5,\n  \"changes\": []\n}",
+		];
 	}
 
 	#[Route('/create', name: 'create')]
@@ -137,15 +198,9 @@ class ManageController extends AbstractController
 	public function createMonth(int $month): Response
 	{
 		$fixedHolidays = $this->fixedHolidayRepository->findAllByLanguage(Language::DEFAULT_CODE, matureContent: true, month: $month);
-		$countries = $this->entityManager->getRepository(Country::class)
-			->findAll();
-		$createForm = $this->createForm(HolidayCreateType::class)
-			->createView();
 		return $this->render('admin/create.html.twig', [
 			'fixed_holidays' => $fixedHolidays,
-			'countries' => $countries,
 			'month' => $month,
-			'createForm' => $createForm,
 			'translationCounts' => $this->metrics->fixedTranslationCountsByMetadata($month),
 			'targetLanguageCount' => $this->metrics->targetLanguageCount(),
 		]);

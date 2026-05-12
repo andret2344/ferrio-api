@@ -165,6 +165,7 @@ class DetailPage {
     private readonly root: HTMLElement;
     private readonly kind: Kind;
     private readonly id: number;
+    private readonly isNew: boolean;
     private readonly saveUrl: string;
     private readonly csrfToken: string;
     private readonly targets: LanguageDef[];
@@ -180,6 +181,7 @@ class DetailPage {
     private readonly metaAlgorithm: HTMLSelectElement | null;
     private readonly metaAlgorithmArgs: HTMLTextAreaElement | null;
     private readonly metaAlgorithmArgsError: HTMLElement | null;
+    private readonly metaAlgorithmArgsFill: HTMLButtonElement | null;
     private readonly tagPicker: TagPicker;
     private readonly sectionsRoot: HTMLElement;
     private readonly addMenu: HTMLElement;
@@ -205,6 +207,7 @@ class DetailPage {
         this.root = root;
         this.kind = (root.dataset.kind ?? 'fixed') as Kind;
         this.id = parseInt(root.dataset.holidayId ?? '0');
+        this.isNew = root.dataset.isNew === '1';
         this.saveUrl = root.dataset.saveUrl ?? '';
         this.csrfToken = root.dataset.csrfToken ?? '';
         try {
@@ -233,6 +236,7 @@ class DetailPage {
         this.metaAlgorithm = document.getElementById('meta-algorithm') as HTMLSelectElement | null;
         this.metaAlgorithmArgs = document.getElementById('meta-algorithm-args') as HTMLTextAreaElement | null;
         this.metaAlgorithmArgsError = document.getElementById('meta-algorithm-args-error');
+        this.metaAlgorithmArgsFill = document.getElementById('meta-algorithm-args-fill') as HTMLButtonElement | null;
         this.sectionsRoot = document.getElementById('translate-sections') as HTMLElement;
         this.addMenu = document.getElementById('translate-add-menu') as HTMLElement;
         this.template = document.getElementById('translate-section-template') as HTMLTemplateElement;
@@ -294,7 +298,13 @@ class DetailPage {
             });
         }
         if (this.metaAlgorithmArgs) {
-            this.metaAlgorithmArgs.addEventListener('input', onChange);
+            this.metaAlgorithmArgs.addEventListener('input', () => {
+                this.refreshAlgorithmArgsFill();
+                onChange();
+            });
+        }
+        if (this.metaAlgorithmArgsFill) {
+            this.metaAlgorithmArgsFill.addEventListener('click', () => this.fillAlgorithmArgsFromPlaceholder());
         }
         this.sourceName.addEventListener('input', onChange);
         this.sourceDesc.addEventListener('input', onChange);
@@ -489,6 +499,9 @@ class DetailPage {
     }
 
     private hasPendingChanges(): boolean {
+        if (this.isNew) {
+            return this.sourceName.value.trim() !== '';
+        }
         return this.metaDirty() || this.sourceDirty() || this.translationsDirty();
     }
 
@@ -507,6 +520,29 @@ class DetailPage {
             examples = {};
         }
         this.metaAlgorithmArgs.placeholder = examples[this.metaAlgorithm.value] ?? '';
+        this.refreshAlgorithmArgsFill();
+    }
+
+    private refreshAlgorithmArgsFill(): void {
+        if (!this.metaAlgorithmArgs || !this.metaAlgorithmArgsFill) {
+            return;
+        }
+        const empty = this.metaAlgorithmArgs.value === '';
+        const hasPlaceholder = (this.metaAlgorithmArgs.placeholder ?? '') !== '';
+        this.metaAlgorithmArgsFill.disabled = !empty || !hasPlaceholder;
+    }
+
+    private fillAlgorithmArgsFromPlaceholder(): void {
+        if (!this.metaAlgorithmArgs) {
+            return;
+        }
+        const placeholder = this.metaAlgorithmArgs.placeholder ?? '';
+        if (placeholder === '' || this.metaAlgorithmArgs.value !== '') {
+            return;
+        }
+        this.metaAlgorithmArgs.value = placeholder;
+        this.metaAlgorithmArgs.dispatchEvent(new Event('input', {bubbles: true}));
+        this.metaAlgorithmArgs.focus();
     }
 
     private showAlgorithmArgsError(message: string): void {
@@ -584,13 +620,17 @@ class DetailPage {
         }
 
         try {
-            const res = await axios.post<{success: boolean; errors?: string[]}>(this.saveUrl, {
+            const res = await axios.post<{success: boolean; errors?: string[]; redirect?: string}>(this.saveUrl, {
                 _token: this.csrfToken,
                 source: {name: this.sourceName.value.trim(), description: this.sourceDesc.value},
                 metadata,
                 translations: this.collectTranslations(),
             });
             if (res.data.success) {
+                if (this.isNew && res.data.redirect) {
+                    window.location.assign(res.data.redirect);
+                    return;
+                }
                 showToast('success', 'Holiday saved.');
                 window.location.reload();
             }

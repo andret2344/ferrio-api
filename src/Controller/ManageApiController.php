@@ -8,7 +8,7 @@ use App\Entity\FixedHolidayMetadata;
 use App\Entity\FloatingHoliday;
 use App\Entity\FloatingHolidayMetadata;
 use App\Entity\Language;
-use App\Form\HolidayCreateType;
+use App\Enum\Algorithm;
 use App\Handler\CountryLookupTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,47 +29,128 @@ class ManageApiController extends AbstractController
 	{
 	}
 
-	#[Route('/holiday', name: 'holiday_create', methods: ['POST'])]
-	public function createHoliday(Request $request): JsonResponse
+	#[Route('/holiday/{kind<fixed|floating>}', name: 'holiday_create', methods: ['POST'])]
+	public function createHoliday(Request $request, string $kind): JsonResponse
 	{
-		$repository = $this->entityManager->getRepository(Language::class);
-		$language = $repository->findOneBy(['code' => 'pl']);
-		if ($language === null) {
-			return new JsonResponse(['success' => false, 'errors' => ['Language "pl" not found in the database. Please seed the language table first.']], 400);
+		$data = json_decode($request->getContent(), true);
+		if (!is_array($data)) {
+			return new JsonResponse(['success' => false, 'errors' => ['Invalid JSON body.']], Response::HTTP_BAD_REQUEST);
 		}
-		$form = $this->createForm(HolidayCreateType::class);
-		$form->handleRequest($request);
-		if ($form->isSubmitted() && $form->isValid()) {
-			$data = $form->getData();
-			$month = $data['month'];
-			$day = $data['day'];
-			$name = $data['name'];
-			$desc = $data['description'];
-			$country = $this->getCountry($data['country']);
-			$mature = (bool)$data['mature'];
-			$metadata = new FixedHolidayMetadata($month, $day, 0, $country, [], $mature);
-			$this->entityManager->persist($metadata);
-			$holiday = new FixedHoliday($language, $metadata, $name, $desc ?? '', '');
-			$this->entityManager->persist($holiday);
-			$this->entityManager->flush();
-			return new JsonResponse([
-				'success' => true,
-				'id' => $metadata->id,
-				'month' => $month,
-				'day' => $day,
-				'name' => $name,
-				'description' => $desc ?? '',
-				'country_code' => $country?->isoCode,
-				'country_name' => $country?->englishName,
-				'mature' => $mature,
-				'message' => sprintf('Holiday "%s" created (ID=%d).', $name, $metadata->id),
-			]);
+		if (!$this->isCsrfTokenValid('holiday_save', (string)($data['_token'] ?? ''))) {
+			return new JsonResponse(['success' => false, 'errors' => ['Invalid CSRF token.']], Response::HTTP_BAD_REQUEST);
+		}
+
+		$source = $data['source'] ?? null;
+		if (!is_array($source)) {
+			return new JsonResponse(['success' => false, 'errors' => ['Missing source payload.']], Response::HTTP_BAD_REQUEST);
+		}
+		$sourceName = trim((string)($source['name'] ?? ''));
+		if ($sourceName === '') {
+			return new JsonResponse(['success' => false, 'errors' => ['Source name (Polish) cannot be empty.']], Response::HTTP_BAD_REQUEST);
+		}
+		$sourceDescription = $source['description'] ?? null;
+		if ($sourceDescription !== null) {
+			$sourceDescription = (string)$sourceDescription;
+		}
+
+		$polish = $this->entityManager->getRepository(Language::class)
+			->findOneBy(['code' => Language::DEFAULT_CODE]);
+		if ($polish === null) {
+			return new JsonResponse(['success' => false, 'errors' => ['Polish language row missing.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+		}
+
+		$meta = $data['metadata'] ?? [];
+		$country = $this->getCountry($meta['country'] ?? null);
+		$mature = !empty($meta['mature']);
+
+		if ($kind === 'fixed') {
+			$month = filter_var($meta['month'] ?? null, FILTER_VALIDATE_INT);
+			$day = filter_var($meta['day'] ?? null, FILTER_VALIDATE_INT);
+			if ($month === false || $month < 1 || $month > 12) {
+				return new JsonResponse(['success' => false, 'errors' => ['Month must be between 1 and 12.']], Response::HTTP_BAD_REQUEST);
+			}
+			if ($day === false || $day < 1 || $day > 31) {
+				return new JsonResponse(['success' => false, 'errors' => ['Day must be between 1 and 31.']], Response::HTTP_BAD_REQUEST);
+			}
+			$metadata = new FixedHolidayMetadata($month, $day, false, $country, [], $mature);
+		} else {
+			$algorithm = Algorithm::tryFrom((string)($meta['algorithm'] ?? ''));
+			if ($algorithm === null) {
+				return new JsonResponse(['success' => false, 'errors' => ['Invalid algorithm.']], Response::HTTP_BAD_REQUEST);
+			}
+			$argsString = null;
+			$rawArgs = $meta['algorithm_args'] ?? null;
+			if ($rawArgs !== null && !(is_string($rawArgs) && trim($rawArgs) === '')) {
+				if (!is_string($rawArgs)) {
+					return new JsonResponse(['success' => false, 'errors' => ['Algorithm args must be sent as a raw JSON string.']], Response::HTTP_BAD_REQUEST);
+				}
+				$argsString = trim($rawArgs);
+				$decoded = json_decode($argsString, true);
+				if (!is_array($decoded) || array_is_list($decoded)) {
+					return new JsonResponse(['success' => false, 'errors' => ['Algorithm args must be a JSON object.']], Response::HTTP_BAD_REQUEST);
+				}
+			}
+			$metadata = new FloatingHolidayMetadata(false, $country, [], null, '[]', $mature, $algorithm, $argsString);
+		}
+
+		$tagIds = array_values(array_filter(array_map('intval', $meta['tags'] ?? []), fn(int $v) => $v > 0));
+		if ($tagIds !== []) {
+			$categories = $this->entityManager->getRepository(Category::class)->findBy(['id' => $tagIds]);
+			$metadata->categories = new ArrayCollection($categories);
+		}
+
+		$this->entityManager->persist($metadata);
+
+		$polishHoliday = $kind === 'fixed'
+			? new FixedHoliday($polish, $metadata, $sourceName, $sourceDescription, '')
+			: new FloatingHoliday($polish, $metadata, $sourceName, $sourceDescription, '');
+		$this->entityManager->persist($polishHoliday);
+
+		$languageRepo = $this->entityManager->getRepository(Language::class);
+		$translations = $data['translations'] ?? [];
+		if (!is_array($translations)) {
+			$translations = [];
 		}
 		$errors = [];
-		foreach ($form->getErrors(true) as $error) {
-			$errors[] = $error->getMessage();
+		foreach ($translations as $code => $entry) {
+			if (!is_string($code) || $code === Language::DEFAULT_CODE) {
+				$errors[] = sprintf('Invalid language code "%s".', (string)$code);
+				continue;
+			}
+			if (!is_array($entry)) {
+				$errors[] = sprintf('Invalid payload for language "%s".', $code);
+				continue;
+			}
+			$language = $languageRepo->findOneBy(['code' => $code]);
+			if ($language === null) {
+				$errors[] = sprintf('Unknown language "%s".', $code);
+				continue;
+			}
+			$name = trim((string)($entry['name'] ?? ''));
+			$description = $entry['description'] ?? null;
+			if ($description !== null) {
+				$description = (string)$description;
+			}
+			if ($name === '' && (string)$description === '') {
+				continue;
+			}
+			$holiday = $kind === 'fixed'
+				? new FixedHoliday($language, $metadata, $name, $description, '')
+				: new FloatingHoliday($language, $metadata, $name, $description, '');
+			$this->entityManager->persist($holiday);
 		}
-		return new JsonResponse(['success' => false, 'errors' => $errors], 400);
+
+		if ($errors !== []) {
+			return new JsonResponse(['success' => false, 'errors' => $errors], Response::HTTP_BAD_REQUEST);
+		}
+
+		$this->entityManager->flush();
+
+		return new JsonResponse([
+			'success' => true,
+			'id' => $metadata->id,
+			'redirect' => $this->generateUrl('admin_holiday_detail', ['kind' => $kind, 'id' => $metadata->id]),
+		]);
 	}
 
 	#[Route('/holiday/{kind<fixed|floating>}/{id<\d+>}', name: 'holiday_save', methods: ['POST'])]

@@ -130,17 +130,22 @@ Legacy `/manage/*` URLs return 301 redirects to `/admin/*` via `ManageRedirectCo
 List views (`/admin/create/{month}` for fixed, `/admin/floating` for floating) are read-only summaries. Each row is a
 button linking to the **holiday detail page** at `/admin/holiday/{kind}/{id}` (kind ∈ `fixed` | `floating`). Each row
 also shows a `XX/YY` translation count (translations present / total non-Polish languages) sourced from
-`AdminMetricsService::{fixed,floating}TranslationCountsByMetadata`. The create page also keeps an inline "Add" form at
-the bottom that posts to `POST /admin/api/holiday` to create new fixed holidays. There is no separate translate page —
-translation editing lives on the detail page.
+`AdminMetricsService::{fixed,floating}TranslationCountsByMetadata`. Each list view has an "Add holiday" button in the
+topbar that links to `/admin/holiday/{kind}/new` (the fixed page passes the current month as `?month=N` so the new
+page pre-fills it). There is no separate translate page — translation editing lives on the detail page.
 
-The detail page (`templates/admin/holiday_detail.html.twig`) has three sections: Metadata (date for fixed; algorithm
-+ algorithm args JSON for floating; country, mature switch, tag picker for both), Source (Polish name + description;
-AI sparkle button only on the description —
-there is no AI generation for the Polish name since Polish IS the source from which everything else is translated),
-and Translations (dynamic rows for every non-Polish language present in the DB, with an "Add translation" dropdown for
-unused languages and a × to delete a translation). The "Add translation" dropdown auto-closes after a pick and the
-button hides itself once every language has been added. Save (`POST /admin/api/holiday/{kind}/{id}`) is a single
+The detail page (`templates/admin/holiday_detail.html.twig`) handles both edit and create flows. In edit mode the URL
+is `/admin/holiday/{kind}/{id}`; in create mode it is `/admin/holiday/{kind}/new` with an `isNew` Twig flag that
+swaps the save URL to `POST /admin/api/holiday/{kind}` (create endpoint) instead of
+`POST /admin/api/holiday/{kind}/{id}` (save endpoint). In create mode the Save button enables as soon as the Polish
+source name is non-empty (instead of tracking dirty state), and on success the JSON response includes a `redirect`
+URL pointing to the new detail page — the frontend navigates there so subsequent saves go through the regular edit
+flow. Three sections: Metadata (date for fixed; algorithm + algorithm args JSON for floating; country, mature switch,
+tag picker for both), Source (Polish name + description; AI sparkle button only on the description — there is no AI
+generation for the Polish name since Polish IS the source from which everything else is translated), and Translations
+(dynamic rows for every non-Polish language present in the DB, with an "Add translation" dropdown for unused languages
+and a × to delete a translation). The "Add translation" dropdown auto-closes after a pick and the button hides itself
+once every language has been added. Save (in edit mode: `POST /admin/api/holiday/{kind}/{id}`) is a single
 CSRF-protected JSON call that upserts the metadata + the PL source row + every dirty/added/removed translation in one
 transaction. Translation rows whose name and description both come in empty are deleted server-side. The frontend
 (`assets/holidayDetail.ts`) tracks dirty state across all sections and only enables Save when something has changed.

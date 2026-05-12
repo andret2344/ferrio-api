@@ -60,7 +60,7 @@ class FloatingHolidayMetadata implements JsonSerializable
 		bool      $usual,
 		?Country  $country,
 		array     $categories,
-		Script    $script,
+		?Script   $script,
 		string    $args,
 		bool      $matureContent,
 		Algorithm $algorithm,

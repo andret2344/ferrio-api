@@ -2,8 +2,9 @@
 {% block body %}
 	<main class='section-manage-main' data-page='admin-holiday-detail'
 	      data-kind='{{ kind }}'
-	      data-holiday-id='{{ id }}'
-	      data-save-url='{{ path('admin_api_holiday_save', {kind: kind, id: id}) }}'
+	      data-holiday-id='{{ id|default('') }}'
+	      data-is-new='{{ isNew|default(false) ? '1' : '0' }}'
+	      data-save-url='{{ isNew|default(false) ? path('admin_api_holiday_create', {kind: kind}) : path('admin_api_holiday_save', {kind: kind, id: id}) }}'
 	      data-csrf-token='{{ csrf_token('holiday_save') }}'
 	      data-targets='{{ targets|map(l => {code: l.code, name: l.name})|json_encode|e('html_attr') }}'
 	      data-tags='{{ tags|map(t => {id: t.id, slug: t.slug, name: t.nameFor('pl') ?? t.slug})|json_encode|e('html_attr') }}'
@@ -14,7 +15,8 @@
 				<i class='bi bi-arrow-left me-1'></i>{{ backLabel }}
 			</a>
 		{% endset %}
-		{% include 'components/topbar.html.twig' with {pageTitle: 'Holiday #' ~ id, back: back_html} %}
+		{% set page_title = isNew|default(false) ? 'New ' ~ kind ~ ' holiday' : 'Holiday #' ~ id %}
+		{% include 'components/topbar.html.twig' with {pageTitle: page_title, back: back_html} %}
 		<div class='manage-content'>
 			<div id='toast-container' class='toast-container position-fixed bottom-0 end-0 p-3'></div>
 
@@ -49,7 +51,12 @@
 							</div>
 							<div class='mb-3'>
 								<label class='form-label' for='meta-algorithm-args'>Algorithm args (v3, JSON)</label>
-								<textarea id='meta-algorithm-args' class='form-control manage-input font-monospace' rows='6'>{{ algorithmArgs }}</textarea>
+								<div class='d-flex align-items-start gap-2'>
+									<textarea id='meta-algorithm-args' class='form-control manage-input font-monospace' rows='6'>{{ algorithmArgs }}</textarea>
+									<button type='button' class='btn btn-sm btn-outline-light flex-shrink-0'
+									        id='meta-algorithm-args-fill'
+									        title='Pre-fill with example'><i class='bi bi-magic'></i></button>
+								</div>
 								<div class='invalid-feedback' id='meta-algorithm-args-error'></div>
 							</div>
 						{% endif %}
@@ -102,7 +109,7 @@
 						<div>
 							<label class='form-label' for='source-description'>Description</label>
 							<div class='d-flex align-items-start gap-2'>
-								<textarea id='source-description' class='form-control manage-input' rows='8'>{{ source.description }}</textarea>
+								<textarea id='source-description' class='form-control manage-input' rows='16' style='resize: vertical;'>{{ source.description }}</textarea>
 								<button type='button' class='btn btn-sm btn-outline-light btn-generate-desc flex-shrink-0'
 								        title='Generate description with AI'
 								        id='source-description-ai'><i class='bi bi-stars'></i></button>
@@ -167,7 +174,7 @@
 			<div class='translate-field'>
 				<label class='form-label' data-role='description-label'>Description</label>
 				<div class='d-flex align-items-start gap-2'>
-					<textarea class='form-control manage-input' rows='4' data-role='description-input'></textarea>
+					<textarea class='form-control manage-input' rows='12' style='resize: vertical;' data-role='description-input'></textarea>
 					<button type='button' class='btn btn-sm btn-outline-light btn-generate-desc flex-shrink-0'
 					        title='Generate description with AI' data-role='ai-description'><i
 								class='bi bi-stars'></i></button>

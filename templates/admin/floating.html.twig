@@ -3,7 +3,12 @@
 {% block body %}
 	<main class='section-manage-main' data-page='admin-floating'>
 		{% include 'components/sidebar.html.twig' %}
-		{% include 'components/topbar.html.twig' with {pageTitle: 'Floating Holidays'} %}
+		{% set toolbar_html %}
+			<a href='{{ path('admin_holiday_new', {kind: 'floating'}) }}' class='btn btn-sm btn-primary'>
+				<i class='bi bi-plus-lg me-1'></i>Add holiday
+			</a>
+		{% endset %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'Floating Holidays', toolbar: toolbar_html} %}
 		<div class='manage-content'>
 			<div class='table-responsive'>
 				<table class='table table-dark table-striped table-hover align-middle'>
