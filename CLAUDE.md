@@ -149,6 +149,17 @@ once every language has been added. Save (in edit mode: `POST /admin/api/holiday
 CSRF-protected JSON call that upserts the metadata + the PL source row + every dirty/added/removed translation in one
 transaction. Translation rows whose name and description both come in empty are deleted server-side. The frontend
 (`assets/holidayDetail.ts`) tracks dirty state across all sections and only enables Save when something has changed.
+In edit mode the actions row also exposes a Delete button (red, bottom-left) that opens a yes/no confirmation modal;
+on confirm the frontend POSTs `/admin/api/holiday/{kind}/{id}/delete` (CSRF-protected) which removes the metadata in
+a transaction — related holiday translations, error reports, and tag join rows cascade via Doctrine/DB constraints;
+suggestion FKs pointing at the holiday are nullified first.
+
+The detail page topbar also exposes a three-dot menu (edit mode only) with a "Convert to {opposite kind}" action.
+The link points at `/admin/holiday/{otherKind}/new?from={kind}&fromId={id}`; `holidayNew` reads those query params
+and pre-fills source name/description, all translations, country, mature flag, and tags from the original metadata.
+Date (for fixed) / algorithm + algorithmArgs (for floating) are intentionally left blank — the user must fill them
+before saving. Conversion is non-destructive: it copies into a brand-new metadata row of the opposite kind, leaving
+the original untouched.
 
 `GenerateDescriptionController` (`POST /admin/api/generate`) calls the Anthropic API (Claude Sonnet 4.6) to generate
 holiday content. It accepts `{day, month, name, type?, language?}` JSON and returns `{result}` (or `{error}`). `type`

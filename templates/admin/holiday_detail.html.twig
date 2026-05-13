@@ -5,6 +5,8 @@
 	      data-holiday-id='{{ id|default('') }}'
 	      data-is-new='{{ isNew|default(false) ? '1' : '0' }}'
 	      data-save-url='{{ isNew|default(false) ? path('admin_api_holiday_create', {kind: kind}) : path('admin_api_holiday_save', {kind: kind, id: id}) }}'
+	      data-delete-url='{{ isNew|default(false) ? '' : path('admin_api_holiday_delete', {kind: kind, id: id}) }}'
+	      data-back-url='{{ backUrl }}'
 	      data-csrf-token='{{ csrf_token('holiday_save') }}'
 	      data-targets='{{ targets|map(l => {code: l.code, name: l.name})|json_encode|e('html_attr') }}'
 	      data-tags='{{ tags|map(t => {id: t.id, slug: t.slug, name: t.nameFor('pl') ?? t.slug})|json_encode|e('html_attr') }}'
@@ -16,7 +18,26 @@
 			</a>
 		{% endset %}
 		{% set page_title = isNew|default(false) ? 'New ' ~ kind ~ ' holiday' : 'Holiday #' ~ id %}
-		{% include 'components/topbar.html.twig' with {pageTitle: page_title, back: back_html} %}
+		{% set toolbar_html = '' %}
+		{% if not isNew|default(false) %}
+			{% set convert_kind = kind == 'fixed' ? 'floating' : 'fixed' %}
+			{% set toolbar_html %}
+				<div class='dropdown'>
+					<button class='btn btn-sm btn-outline-light' type='button' id='detail-actions-menu'
+					        data-bs-toggle='dropdown' aria-expanded='false' aria-label='More actions' title='More actions'>
+						<i class='bi bi-three-dots-vertical'></i>
+					</button>
+					<ul class='dropdown-menu dropdown-menu-dark dropdown-menu-end' aria-labelledby='detail-actions-menu'>
+						<li>
+							<a class='dropdown-item' href='{{ path('admin_holiday_new', {kind: convert_kind}) }}?from={{ kind }}&fromId={{ id }}'>
+								<i class='bi bi-arrow-left-right me-2'></i>Convert to {{ convert_kind }}
+							</a>
+						</li>
+					</ul>
+				</div>
+			{% endset %}
+		{% endif %}
+		{% include 'components/topbar.html.twig' with {pageTitle: page_title, back: back_html, toolbar: toolbar_html} %}
 		<div class='manage-content'>
 			<div id='toast-container' class='toast-container position-fixed bottom-0 end-0 p-3'></div>
 
@@ -141,15 +162,46 @@
 
 			<div class='holiday-detail-actions'>
 				<div class='alert alert-danger d-none' id='detail-error' role='alert'></div>
-				<div class='d-flex gap-2 justify-content-end'>
-					<a href='{{ backUrl }}' class='btn btn-outline-light'>
-						<i class='bi bi-x-lg me-1'></i>Cancel
-					</a>
-					<button type='button' class='btn btn-primary' id='detail-save' disabled>
-						<i class='bi bi-check-lg me-1'></i>Save
-					</button>
+				<div class='d-flex gap-2 justify-content-between'>
+					<div>
+						{% if not isNew|default(false) %}
+							<button type='button' class='btn btn-outline-danger' id='detail-delete'>
+								<i class='bi bi-trash me-1'></i>Delete
+							</button>
+						{% endif %}
+					</div>
+					<div class='d-flex gap-2'>
+						<a href='{{ backUrl }}' class='btn btn-outline-light'>
+							<i class='bi bi-x-lg me-1'></i>Cancel
+						</a>
+						<button type='button' class='btn btn-primary' id='detail-save' disabled>
+							<i class='bi bi-check-lg me-1'></i>Save
+						</button>
+					</div>
 				</div>
 			</div>
+
+			{% if not isNew|default(false) %}
+				<div class='modal fade' id='delete-confirm-modal' tabindex='-1' aria-hidden='true'>
+					<div class='modal-dialog modal-dialog-centered'>
+						<div class='modal-content bg-dark text-light'>
+							<div class='modal-header'>
+								<h5 class='modal-title'><i class='bi bi-exclamation-triangle me-2'></i>Delete holiday?</h5>
+								<button type='button' class='btn-close btn-close-white' data-bs-dismiss='modal' aria-label='Close'></button>
+							</div>
+							<div class='modal-body'>
+								This will permanently remove the holiday, all its translations, tag links, and error reports. This action cannot be undone.
+							</div>
+							<div class='modal-footer'>
+								<button type='button' class='btn btn-outline-light' data-bs-dismiss='modal'>No</button>
+								<button type='button' class='btn btn-danger' id='detail-delete-confirm'>
+									<i class='bi bi-trash me-1'></i>Yes, delete
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
 		</div>
 	</main>
 

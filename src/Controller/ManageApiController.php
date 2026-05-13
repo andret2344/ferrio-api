@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\FixedHoliday;
 use App\Entity\FixedHolidayMetadata;
+use App\Entity\FixedHolidaySuggestion;
 use App\Entity\FloatingHoliday;
 use App\Entity\FloatingHolidayMetadata;
+use App\Entity\FloatingHolidaySuggestion;
 use App\Entity\Language;
 use App\Enum\Algorithm;
 use App\Handler\CountryLookupTrait;
@@ -298,6 +300,40 @@ class ManageApiController extends AbstractController
 		}
 
 		$this->entityManager->flush();
+
+		return new JsonResponse(['success' => true]);
+	}
+
+	#[Route('/holiday/{kind<fixed|floating>}/{id<\d+>}/delete', name: 'holiday_delete', methods: ['POST'])]
+	public function deleteHoliday(Request $request, string $kind, int $id): JsonResponse
+	{
+		$data = json_decode($request->getContent(), true);
+		if (!is_array($data)) {
+			return new JsonResponse(['success' => false, 'errors' => ['Invalid JSON body.']], Response::HTTP_BAD_REQUEST);
+		}
+		if (!$this->isCsrfTokenValid('holiday_save', (string)($data['_token'] ?? ''))) {
+			return new JsonResponse(['success' => false, 'errors' => ['Invalid CSRF token.']], Response::HTTP_BAD_REQUEST);
+		}
+
+		$metadataClass = $kind === 'fixed' ? FixedHolidayMetadata::class : FloatingHolidayMetadata::class;
+		$suggestionClass = $kind === 'fixed' ? FixedHolidaySuggestion::class : FloatingHolidaySuggestion::class;
+
+		$metadata = $this->entityManager->getRepository($metadataClass)->find($id);
+		if ($metadata === null) {
+			return new JsonResponse(['success' => false, 'errors' => ['Holiday not found.']], Response::HTTP_NOT_FOUND);
+		}
+
+		$this->entityManager->wrapInTransaction(function () use ($metadata, $suggestionClass): void {
+			$this->entityManager->createQueryBuilder()
+				->update($suggestionClass, 's')
+				->set('s.holiday', ':null')
+				->where('s.holiday = :id')
+				->setParameter('null', null)
+				->setParameter('id', $metadata->id)
+				->getQuery()
+				->execute();
+			$this->entityManager->remove($metadata);
+		});
 
 		return new JsonResponse(['success' => true]);
 	}

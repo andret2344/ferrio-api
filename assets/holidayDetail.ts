@@ -167,6 +167,8 @@ class DetailPage {
     private readonly id: number;
     private readonly isNew: boolean;
     private readonly saveUrl: string;
+    private readonly deleteUrl: string;
+    private readonly backUrl: string;
     private readonly csrfToken: string;
     private readonly targets: LanguageDef[];
     private readonly tags: TagDefinition[];
@@ -209,6 +211,8 @@ class DetailPage {
         this.id = parseInt(root.dataset.holidayId ?? '0');
         this.isNew = root.dataset.isNew === '1';
         this.saveUrl = root.dataset.saveUrl ?? '';
+        this.deleteUrl = root.dataset.deleteUrl ?? '';
+        this.backUrl = root.dataset.backUrl ?? '';
         this.csrfToken = root.dataset.csrfToken ?? '';
         try {
             this.targets = JSON.parse(root.dataset.targets ?? '[]');
@@ -265,7 +269,41 @@ class DetailPage {
         this.initFixedStrategyDropdowns();
         this.updateAlgorithmPlaceholder();
         this.saveBtn.addEventListener('click', () => this.save());
+        this.attachDeleteHandler();
         this.refreshSaveButton();
+    }
+
+    private attachDeleteHandler(): void {
+        if (this.isNew || this.deleteUrl === '') {
+            return;
+        }
+        const deleteBtn = document.getElementById('detail-delete') as HTMLButtonElement | null;
+        const confirmBtn = document.getElementById('detail-delete-confirm') as HTMLButtonElement | null;
+        const modalEl = document.getElementById('delete-confirm-modal');
+        if (!deleteBtn || !confirmBtn || !modalEl) {
+            return;
+        }
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        deleteBtn.addEventListener('click', () => modal.show());
+        const confirmIconClass = confirmBtn.querySelector('i')?.className ?? 'bi bi-trash me-1';
+        confirmBtn.addEventListener('click', async () => {
+            setButtonLoading(confirmBtn, true, confirmIconClass);
+            try {
+                const res = await axios.post<{success: boolean; errors?: string[]}>(this.deleteUrl, {
+                    _token: this.csrfToken,
+                });
+                if (res.data.success) {
+                    window.location.assign(this.backUrl);
+                    return;
+                }
+            } catch (err: unknown) {
+                const errors = (err as { response?: { data?: { errors?: string[] } } }).response?.data?.errors;
+                this.errorBox.textContent = errors ? errors.join(', ') : 'Failed to delete.';
+                this.errorBox.classList.remove('d-none');
+            }
+            setButtonLoading(confirmBtn, false, confirmIconClass);
+            modal.hide();
+        });
     }
 
     private initFixedStrategyDropdowns(): void {

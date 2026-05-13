@@ -97,6 +97,30 @@ class ManageController extends AbstractController
 			$context['backLabel'] = 'Floating';
 		}
 
+		$fromKind = $request->query->get('from');
+		$fromId = filter_var($request->query->get('fromId'), FILTER_VALIDATE_INT);
+		if (in_array($fromKind, ['fixed', 'floating'], true) && $fromKind !== $kind && $fromId !== false && $fromId > 0) {
+			$sourceMetadataClass = $fromKind === 'fixed' ? FixedHolidayMetadata::class : FloatingHolidayMetadata::class;
+			$sourceMetadata = $this->entityManager->getRepository($sourceMetadataClass)->find($fromId);
+			if ($sourceMetadata !== null) {
+				$source = ['name' => '', 'description' => ''];
+				$translations = [];
+				foreach ($sourceMetadata->holidays as $holiday) {
+					$entry = ['name' => $holiday->name, 'description' => $holiday->description];
+					if ($holiday->language->code === Language::DEFAULT_CODE) {
+						$source = $entry;
+					} else {
+						$translations[$holiday->language->code] = $entry;
+					}
+				}
+				$context['source'] = $source;
+				$context['translations'] = $translations;
+				$context['countryCode'] = $sourceMetadata->country?->isoCode;
+				$context['mature'] = $sourceMetadata->matureContent;
+				$context['selectedTagIds'] = array_values(array_map(fn(Category $c) => $c->id, $sourceMetadata->categories->toArray()));
+			}
+		}
+
 		return $this->render('admin/holiday_detail.html.twig', $context);
 	}
 
