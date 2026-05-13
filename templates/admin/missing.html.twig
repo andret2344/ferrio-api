@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+{% block title %}Missing {{ kind }} translations · {{ language.name }} — Ferrio Admin{% endblock %}
+{% block body %}
+	<main class='section-manage-main' data-page='admin-missing'>
+		{% include 'components/sidebar.html.twig' %}
+		{% set back_html %}
+			<a href='{{ path('admin_index') }}' class='btn btn-sm btn-outline-light'>
+				<i class='bi bi-arrow-left me-1'></i>Dashboard
+			</a>
+		{% endset %}
+		{% set page_title %}Missing {{ kind }} translations · {{ language.name }} ({{ language.code }}){% endset %}
+		{% include 'components/topbar.html.twig' with {pageTitle: page_title, back: back_html} %}
+		<div class='manage-content'>
+			{% if holidays is empty %}
+				<div class='alert alert-success'>
+					<i class='bi bi-check-circle me-1'></i>
+					Every {{ kind }} holiday is already translated into {{ language.name }}.
+				</div>
+			{% else %}
+				<p class='text-muted mb-3'>{{ holidays|length }} holiday(s) missing a {{ language.name }} translation.</p>
+				<div class='table-responsive'>
+					<table class='table table-dark table-striped table-hover align-middle'>
+						<thead>
+						<tr>
+							<th scope='col'>#</th>
+							<th scope='col'>Country</th>
+							{% if kind == 'fixed' %}
+								<th scope='col'>Month</th>
+								<th scope='col'>Day</th>
+							{% else %}
+								<th scope='col'>Algorithm</th>
+								<th scope='col'>Args</th>
+							{% endif %}
+							<th scope='col'>Name (PL)</th>
+							<th scope='col'>Description (PL)</th>
+						</tr>
+						</thead>
+						<tbody>
+						{% for holiday in holidays %}
+							{% set m = holiday.metadata %}
+							<tr class='tr-holiday tr-holiday-clickable' role='button' tabindex='0'
+								data-href='{{ path('admin_holiday_detail', {kind: kind, id: m.id}) }}'>
+								<th scope='row'>{{ m.id }}</th>
+								<td>
+									{% if m.country %}
+										{{ m.country.isoCode }} - {{ m.country.englishName }}
+									{% else %}
+										International
+									{% endif %}
+								</td>
+								{% if kind == 'fixed' %}
+									<td>{{ m.month }}</td>
+									<td>{{ m.day }}</td>
+								{% else %}
+									<td><code class='floating-algorithm'>{{ m.algorithm.value }}</code></td>
+									<td>
+										{% if m.algorithmArgs %}
+											<code class='floating-args'>{{ m.algorithmArgs }}</code>
+										{% else %}
+											<span class='text-muted'>—</span>
+										{% endif %}
+									</td>
+								{% endif %}
+								<td>{{ holiday.name }}</td>
+								<td>
+									<div class='holiday-description'>{{ holiday.description|nl2br }}</div>
+								</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			{% endif %}
+		</div>
+	</main>
+{% endblock %}

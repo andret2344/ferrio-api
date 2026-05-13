@@ -1,6 +1,8 @@
 {% set nav = admin_nav() %}
 {% set route = app.request.attributes.get('_route') %}
+{% set routeKind = app.request.attributes.get('kind') %}
 {% set holidaysActive = route in ['admin_create', 'admin_create_month', 'admin_floating'] %}
+{% set missingActive = route in ['admin_missing', 'admin_missing_overview'] %}
 <script>
 	(() => {
 		try {
@@ -62,6 +64,34 @@
 			<span class='sidebar-label'>Languages</span>
 			<span class='sidebar-badge'>{{ nav.languageCount }}</span>
 		</a>
+		<div class='sidebar-group {{ missingActive ? 'sidebar-group-active' : '' }}'>
+			<div class='sidebar-group-title' title='Missing translations'>
+				<i class='bi bi-translate'></i>
+				<span class='sidebar-label'>Missing</span>
+			</div>
+			<a href='{{ path('admin_missing_overview', {kind: 'fixed'}) }}'
+			   class='sidebar-subitem no-a {{ missingActive and routeKind == 'fixed' ? 'sidebar-item-active' : '' }}'
+			   title='Missing fixed translations ({{ nav.fixedMissing }})'>
+				<i class='bi bi-calendar-event sidebar-subitem-icon'></i>
+				<span class='sidebar-label'>Fixed</span>
+				{% if nav.fixedMissing > 0 %}
+					<span class='sidebar-badge sidebar-badge-warning'>{{ nav.fixedMissing | number_format(0, '.', ' ') }}</span>
+				{% else %}
+					<span class='sidebar-badge'>0</span>
+				{% endif %}
+			</a>
+			<a href='{{ path('admin_missing_overview', {kind: 'floating'}) }}'
+			   class='sidebar-subitem no-a {{ missingActive and routeKind == 'floating' ? 'sidebar-item-active' : '' }}'
+			   title='Missing floating translations ({{ nav.floatingMissing }})'>
+				<i class='bi bi-calendar2-range sidebar-subitem-icon'></i>
+				<span class='sidebar-label'>Floating</span>
+				{% if nav.floatingMissing > 0 %}
+					<span class='sidebar-badge sidebar-badge-warning'>{{ nav.floatingMissing | number_format(0, '.', ' ') }}</span>
+				{% else %}
+					<span class='sidebar-badge'>0</span>
+				{% endif %}
+			</a>
+		</div>
 		<a href='{{ path('admin_reports') }}'
 		   class='sidebar-item no-a {{ route starts with 'admin_reports' ? 'sidebar-item-active' : '' }}'
 		   title='Reports{{ nav.reportsPending > 0 ? ' (' ~ nav.reportsPending ~ ' pending)' : '' }}'>

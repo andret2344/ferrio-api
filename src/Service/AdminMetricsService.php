@@ -25,6 +25,7 @@ class AdminMetricsService
 
 	private ?array $reportCounts = null;
 	private ?array $translationCounts = null;
+	private ?array $translationCountsByKind = null;
 
 	public function __construct(private readonly EntityManagerInterface $entityManager)
 	{
@@ -98,6 +99,29 @@ class AdminMetricsService
 	public function translationTotal(): int
 	{
 		return $this->translationCountsByLanguage()[Language::DEFAULT_CODE] ?? 0;
+	}
+
+	/**
+	 * @return array{fixed: array<string, int>, floating: array<string, int>} per-kind map of language code => translated holiday count
+	 */
+	public function translationCountsByLanguageAndKind(): array
+	{
+		if ($this->translationCountsByKind !== null) {
+			return $this->translationCountsByKind;
+		}
+		$result = ['fixed' => [], 'floating' => []];
+		foreach (['fixed' => FixedHoliday::class, 'floating' => FloatingHoliday::class] as $kind => $entityClass) {
+			$rows = $this->entityManager->createQueryBuilder()
+				->select('IDENTITY(h.language) AS code', 'COUNT(h.name) AS cnt')
+				->from($entityClass, 'h')
+				->groupBy('h.language')
+				->getQuery()
+				->getResult();
+			foreach ($rows as $row) {
+				$result[$kind][$row['code']] = (int)$row['cnt'];
+			}
+		}
+		return $this->translationCountsByKind = $result;
 	}
 
 	public function targetLanguageCount(): int

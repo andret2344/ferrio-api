@@ -43,13 +43,15 @@ class ManageController extends AbstractController
 	{
 		$languages = $this->entityManager->getRepository(Language::class)
 			->findBy([], ['code' => 'ASC']);
+		$fixedTotal = $this->metrics->fixedHolidayCount();
+		$floatingTotal = $this->metrics->floatingHolidayCount();
 		return $this->render('admin/index.html.twig', [
 			'languages' => $languages,
-			'fixedHolidayCount' => $this->metrics->fixedHolidayCount(),
-			'floatingHolidayCount' => $this->metrics->floatingHolidayCount(),
+			'fixedHolidayCount' => $fixedTotal,
+			'floatingHolidayCount' => $floatingTotal,
 			'tagCount' => $this->metrics->tagCount(),
-			'translationCounts' => $this->metrics->translationCountsByLanguage(),
-			'translationTotal' => $this->metrics->translationTotal(),
+			'translationCountsByKind' => $this->metrics->translationCountsByLanguageAndKind(),
+			'translationTotalsByKind' => ['fixed' => $fixedTotal, 'floating' => $floatingTotal],
 			'reportCounts' => $this->metrics->reportCounts(),
 		]);
 	}
@@ -251,6 +253,78 @@ class ManageController extends AbstractController
 			'floating_holidays' => $polishHolidays,
 			'translationCounts' => $this->metrics->floatingTranslationCountsByMetadata(),
 			'targetLanguageCount' => $this->metrics->targetLanguageCount(),
+		]);
+	}
+
+	#[Route('/missing/{kind<fixed|floating>}', name: 'missing_overview')]
+	public function missingOverview(string $kind): Response
+	{
+		$languages = $this->entityManager->getRepository(Language::class)
+			->findBy([], ['code' => 'ASC']);
+		$targets = array_values(array_filter(
+			$languages,
+			fn(Language $l) => $l->code !== Language::DEFAULT_CODE,
+		));
+
+		$countsByKind = $this->metrics->translationCountsByLanguageAndKind();
+		$kindTotal = $kind === 'fixed'
+			? $this->metrics->fixedHolidayCount()
+			: $this->metrics->floatingHolidayCount();
+
+		$rows = [];
+		foreach ($targets as $language) {
+			$translated = $countsByKind[$kind][$language->code] ?? 0;
+			$missing = max(0, $kindTotal - $translated);
+			$rows[] = [
+				'language' => $language,
+				'translated' => $translated,
+				'total' => $kindTotal,
+				'missing' => $missing,
+			];
+		}
+
+		return $this->render('admin/missing_overview.html.twig', [
+			'kind' => $kind,
+			'rows' => $rows,
+			'kindTotal' => $kindTotal,
+		]);
+	}
+
+	#[Route('/missing/{kind<fixed|floating>}/{lang}', name: 'missing')]
+	public function missing(string $kind, string $lang): Response
+	{
+		$language = $this->entityManager->getRepository(Language::class)->find($lang);
+		if ($language === null || $language->code === Language::DEFAULT_CODE) {
+			throw $this->createNotFoundException();
+		}
+
+		$entityClass = $kind === 'fixed' ? FixedHoliday::class : FloatingHoliday::class;
+		$qb = $this->entityManager->getRepository($entityClass)
+			->createQueryBuilder('h')
+			->select('h', 'm')
+			->join('h.metadata', 'm')
+			->leftJoin('m.country', 'c')->addSelect('c')
+			->leftJoin('m.categories', 'cat')->addSelect('cat')
+			->where('h.language = :pl')
+			->andWhere(sprintf(
+				'm.id NOT IN (SELECT IDENTITY(t.metadata) FROM %s t WHERE t.language = :lang)',
+				$entityClass,
+			))
+			->setParameter('pl', Language::DEFAULT_CODE)
+			->setParameter('lang', $language->code);
+
+		if ($kind === 'fixed') {
+			$qb->orderBy('m.month', 'ASC')->addOrderBy('m.day', 'ASC')->addOrderBy('h.name', 'ASC');
+		} else {
+			$qb->orderBy('m.algorithm', 'ASC')->addOrderBy('h.name', 'ASC');
+		}
+
+		$holidays = $qb->getQuery()->getResult();
+
+		return $this->render('admin/missing.html.twig', [
+			'kind' => $kind,
+			'language' => $language,
+			'holidays' => $holidays,
 		]);
 	}
 
