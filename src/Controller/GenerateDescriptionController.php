@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Country;
+use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,9 +17,10 @@ class GenerateDescriptionController extends AbstractController
 	private readonly string $promptDir;
 
 	public function __construct(
-		private readonly HttpClientInterface $httpClient,
-		private readonly string              $anthropicApiKey,
-		?string                              $promptDir = null,
+		private readonly HttpClientInterface    $httpClient,
+		private readonly EntityManagerInterface $entityManager,
+		private readonly string                 $anthropicApiKey,
+		?string                                 $promptDir = null,
 	)
 	{
 		$this->promptDir = $promptDir ?? dirname(__DIR__, 2) . '/config/prompts';
@@ -32,6 +35,7 @@ class GenerateDescriptionController extends AbstractController
 		$month = $data['month'] ?? null;
 		$name = $data['name'] ?? null;
 		$language = $data['language'] ?? null;
+		$countryCode = $data['country'] ?? null;
 
 		if (!$day || !$month || !$name) {
 			return $this->json(['error' => 'Day, month and name are required.'], 400);
@@ -41,16 +45,24 @@ class GenerateDescriptionController extends AbstractController
 			return $this->json(['error' => 'Anthropic API key is not configured.'], 500);
 		}
 
-		$defaultLanguage = match ($type) {
-			'name', 'description' => 'English',
-			default => 'polski',
-		};
+		$isPolish = !in_array($type, ['name', 'description'], true);
+		$defaultLanguage = $isPolish ? 'polski' : 'English';
+		$internationalLabel = $isPolish ? 'międzynarodowy' : 'international';
+
+		$countryLabel = $internationalLabel;
+		if (is_string($countryCode) && $countryCode !== '' && $countryCode !== 'null') {
+			$country = $this->entityManager->getRepository(Country::class)->find($countryCode);
+			if ($country !== null) {
+				$countryLabel = $country->englishName;
+			}
+		}
 
 		$vars = [
 			'{name}' => $name,
 			'{day}' => $day,
 			'{month}' => sprintf('%02d', $month),
 			'{language}' => $language ?? $defaultLanguage,
+			'{country}' => $countryLabel,
 		];
 
 		[$systemPrompt, $userPrompt, $maxTokens] = match ($type) {

@@ -7,6 +7,7 @@ interface GenerateFields {
     readonly name: () => string;
     readonly month: () => string | undefined;
     readonly day: () => string | undefined;
+    readonly country?: () => string | undefined;
     readonly enabled?: () => boolean;
 }
 
@@ -47,6 +48,12 @@ export function attachGenerateHandler(btn: HTMLButtonElement, fields: GenerateFi
             };
             if (fields.language) {
                 payload.language = fields.language;
+            }
+            if (fields.country) {
+                const country = fields.country();
+                if (country && country !== 'null') {
+                    payload.country = country;
+                }
             }
             const res = await axios.post('/admin/api/generate', payload);
             if (res.data.error) {

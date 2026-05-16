@@ -361,6 +361,7 @@ class DetailPage {
                 name: () => this.sourceName.value,
                 month: () => this.currentMonth(),
                 day: () => this.currentDay(),
+                country: () => this.metaCountry.value,
                 enabled: () => this.dateOrArgsReady() && this.sourceNameReady(),
             });
             this.aiHandles.push(handle);
@@ -452,6 +453,7 @@ class DetailPage {
             name: () => this.sourceName.value,
             month: () => this.currentMonth(),
             day: () => this.currentDay(),
+            country: () => this.metaCountry.value,
             enabled: () => this.dateOrArgsReady() && this.sourceNameReady(),
         }), attachGenerateHandler(aiDesc, {
             type: 'description',
@@ -460,6 +462,7 @@ class DetailPage {
             name: () => nameInput.value.trim() || this.sourceName.value,
             month: () => this.currentMonth(),
             day: () => this.currentDay(),
+            country: () => this.metaCountry.value,
             enabled: () => this.dateOrArgsReady() && nameInput.value.trim() !== '',
         }));
 
