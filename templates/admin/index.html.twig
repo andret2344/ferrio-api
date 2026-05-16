@@ -68,20 +68,44 @@
 						<span>Translation progress</span>
 					</header>
 					<div class='dashboard-panel-body'>
+						{% set fixedTotal = translationTotalsByKind.fixed %}
+						{% set floatingTotal = translationTotalsByKind.floating %}
+						{% set combinedTotal = fixedTotal + floatingTotal %}
 						{% for language in languages %}
 							{% if language.code != 'pl' %}
-								{% set langCount = translationCounts[language.code] ?? 0 %}
-								{% set pct = translationTotal > 0 ? (langCount / translationTotal * 100) : 0 %}
-								{% set isComplete = langCount >= translationTotal and translationTotal > 0 %}
+								{% set fixedCount = translationCountsByKind.fixed[language.code] ?? 0 %}
+								{% set floatingCount = translationCountsByKind.floating[language.code] ?? 0 %}
+								{% set combinedCount = fixedCount + floatingCount %}
+								{% set fixedComplete = fixedCount >= fixedTotal %}
+								{% set floatingComplete = floatingCount >= floatingTotal %}
+								{% set allComplete = fixedComplete and floatingComplete %}
+								{% set pct = allComplete ? 100 : (combinedTotal > 0 ? (combinedCount / combinedTotal * 100) : 0) %}
 								<div class='dashboard-translate-row'>
 									<span class='dashboard-translate-name'>{{ language.name }}</span>
 									<div class='dashboard-translate-bar'>
-										<div class='dashboard-translate-bar-fill {{ isComplete ? 'dashboard-translate-bar-fill-complete' : '' }}'
+										<div class='dashboard-translate-bar-fill {{ allComplete ? 'dashboard-translate-bar-fill-complete' : '' }}'
 											 style='width: {{ pct }}%'></div>
 									</div>
-									<span class='dashboard-translate-count {{ isComplete ? '' : 'dashboard-translate-count-warning' }}'>
-										{{ langCount }} / {{ translationTotal }}
-									</span>
+									<div class='dashboard-translate-counts'>
+										{% for kindRow in [
+											{kind: 'fixed', icon: 'bi-calendar-event', count: fixedCount, total: fixedTotal, complete: fixedComplete, label: 'Fixed'},
+											{kind: 'floating', icon: 'bi-calendar2-range', count: floatingCount, total: floatingTotal, complete: floatingComplete, label: 'Floating'}
+										] %}
+											{% if kindRow.complete %}
+												<span class='dashboard-translate-count' title='{{ kindRow.label }}: {{ kindRow.count }} / {{ kindRow.total }}'>
+													<i class='bi {{ kindRow.icon }}'></i>
+													<span>{{ kindRow.count }} / {{ kindRow.total }}</span>
+												</span>
+											{% else %}
+												<a class='dashboard-translate-count dashboard-translate-count-warning no-a'
+												   href='{{ path('admin_missing', {kind: kindRow.kind, lang: language.code}) }}'
+												   title='{{ kindRow.label }}: {{ kindRow.count }} / {{ kindRow.total }}'>
+													<i class='bi {{ kindRow.icon }}'></i>
+													<span>{{ kindRow.count }} / {{ kindRow.total }}</span>
+												</a>
+											{% endif %}
+										{% endfor %}
+									</div>
 								</div>
 							{% endif %}
 						{% endfor %}

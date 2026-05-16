@@ -2108,7 +2108,7 @@ body {
 
   .dashboard-translate-row {
     display: grid;
-    grid-template-columns: 90px 1fr 90px;
+    grid-template-columns: 90px 1fr auto;
     align-items: center;
     gap: 14px;
     padding: 9px 18px;
@@ -2123,6 +2123,12 @@ body {
 
     .dashboard-translate-name {
       font-weight: 500;
+    }
+
+    .dashboard-translate-counts {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .dashboard-translate-bar {
@@ -2143,14 +2149,45 @@ body {
     }
 
     .dashboard-translate-count {
-      text-align: right;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 80px;
+      justify-content: flex-end;
       font-variant-numeric: tabular-nums;
       font-size: 12px;
       color: #7070a0;
+      text-decoration: none;
+      transition: color 0.15s;
+
+      i {
+        font-size: 13px;
+        color: #5050aa;
+      }
+
+      &.no-a:hover {
+        color: #e0e0f0;
+
+        i {
+          color: #7070cc;
+        }
+      }
     }
 
     .dashboard-translate-count-warning {
       color: #f0b840;
+
+      i {
+        color: #f0b840;
+      }
+
+      &.no-a:hover {
+        color: #ffd070;
+
+        i {
+          color: #ffd070;
+        }
+      }
     }
   }
 }
