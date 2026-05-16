@@ -7,9 +7,19 @@ interface GenerateFields {
     readonly name: () => string;
     readonly month: () => string | undefined;
     readonly day: () => string | undefined;
+    readonly enabled?: () => boolean;
 }
 
-export function attachGenerateHandler(btn: HTMLButtonElement, fields: GenerateFields): void {
+export interface GenerateHandle {
+    readonly refresh: () => void;
+}
+
+export function attachGenerateHandler(btn: HTMLButtonElement, fields: GenerateFields): GenerateHandle {
+    const refresh = (): void => {
+        if (fields.enabled) {
+            btn.disabled = !fields.enabled();
+        }
+    };
     btn.addEventListener('click', async () => {
         const target = fields.target();
         const name = (fields.name() || '').trim();
@@ -31,8 +41,8 @@ export function attachGenerateHandler(btn: HTMLButtonElement, fields: GenerateFi
         try {
             const payload: Record<string, unknown> = {
                 type: fields.type,
-                day: parseInt(day),
-                month: parseInt(month),
+                day: Number.parseInt(day),
+                month: Number.parseInt(month),
                 name: name || undefined,
             };
             if (fields.language) {
@@ -51,7 +61,9 @@ export function attachGenerateHandler(btn: HTMLButtonElement, fields: GenerateFi
             if (icon) {
                 icon.className = originalClass;
             }
-            btn.disabled = false;
+            refresh();
         }
     });
+    refresh();
+    return {refresh};
 }

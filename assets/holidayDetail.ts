@@ -1,6 +1,6 @@
 import * as bootstrap from 'bootstrap';
 import axios from 'axios';
-import {attachGenerateHandler} from './aiGenerate';
+import {attachGenerateHandler, GenerateHandle} from './aiGenerate';
 
 type Kind = 'fixed' | 'floating';
 
@@ -63,10 +63,10 @@ function setButtonLoading(btn: HTMLButtonElement, loading: boolean, originalIcon
 class TagPicker {
     private readonly all: TagDefinition[];
     private readonly byId: Map<number, TagDefinition>;
-    private selected: Set<number>;
+    private readonly selected: Set<number>;
     private readonly chipsEl: HTMLElement;
     private readonly menuEl: HTMLElement | null;
-    private onChange: () => void = () => {};
+    private onChange: () => void = (): any => undefined;
 
     constructor(root: HTMLElement, tags: TagDefinition[]) {
         this.all = tags;
@@ -193,22 +193,23 @@ class DetailPage {
     private readonly saveIconClass: string;
 
     private sections: TranslationSection[] = [];
-    private removedFromServer: Set<string> = new Set();
+    private readonly removedFromServer: Set<string> = new Set();
+    private readonly aiHandles: GenerateHandle[] = [];
 
-    private originalSourceName: string;
-    private originalSourceDesc: string;
-    private originalDay: string;
-    private originalMonth: string;
-    private originalCountry: string;
-    private originalMature: boolean;
-    private originalTagIds: string;
-    private originalAlgorithm: string;
-    private originalAlgorithmArgs: string;
+    private readonly originalSourceName: string;
+    private readonly originalSourceDesc: string;
+    private readonly originalDay: string;
+    private readonly originalMonth: string;
+    private readonly originalCountry: string;
+    private readonly originalMature: boolean;
+    private readonly originalTagIds: string;
+    private readonly originalAlgorithm: string;
+    private readonly originalAlgorithmArgs: string;
 
     constructor(root: HTMLElement) {
         this.root = root;
         this.kind = (root.dataset.kind ?? 'fixed') as Kind;
-        this.id = parseInt(root.dataset.holidayId ?? '0');
+        this.id = Number.parseInt(root.dataset.holidayId ?? '0');
         this.isNew = root.dataset.isNew === '1';
         this.saveUrl = root.dataset.saveUrl ?? '';
         this.deleteUrl = root.dataset.deleteUrl ?? '';
@@ -289,11 +290,11 @@ class DetailPage {
         confirmBtn.addEventListener('click', async () => {
             setButtonLoading(confirmBtn, true, confirmIconClass);
             try {
-                const res = await axios.post<{success: boolean; errors?: string[]}>(this.deleteUrl, {
+                const res = await axios.post<{ success: boolean; errors?: string[] }>(this.deleteUrl, {
                     _token: this.csrfToken,
                 });
                 if (res.data.success) {
-                    window.location.assign(this.backUrl);
+                    globalThis.location.assign(this.backUrl);
                     return;
                 }
             } catch (err: unknown) {
@@ -320,7 +321,10 @@ class DetailPage {
     }
 
     private attachMetaListeners(): void {
-        const onChange = () => this.refreshSaveButton();
+        const onChange = () => {
+            this.refreshSaveButton();
+            this.refreshAiButtons();
+        };
         if (this.metaDay) {
             this.metaDay.addEventListener('input', onChange);
         }
@@ -351,13 +355,34 @@ class DetailPage {
     private attachSourceAi(): void {
         const descAi = document.getElementById('source-description-ai') as HTMLButtonElement | null;
         if (descAi) {
-            attachGenerateHandler(descAi, {
+            const handle = attachGenerateHandler(descAi, {
                 type: 'description_pl',
                 target: () => this.sourceDesc,
                 name: () => this.sourceName.value,
                 month: () => this.currentMonth(),
                 day: () => this.currentDay(),
+                enabled: () => this.dateOrArgsReady() && this.sourceNameReady(),
             });
+            this.aiHandles.push(handle);
+        }
+    }
+
+    private dateOrArgsReady(): boolean {
+        if (this.kind === 'fixed') {
+            const day = (this.metaDay?.value ?? '').trim();
+            const month = (this.metaMonth?.value ?? '').trim();
+            return day !== '' && month !== '';
+        }
+        return (this.metaAlgorithmArgs?.value ?? '').trim() !== '';
+    }
+
+    private sourceNameReady(): boolean {
+        return this.sourceName.value.trim() !== '';
+    }
+
+    private refreshAiButtons(): void {
+        for (const handle of this.aiHandles) {
+            handle.refresh();
         }
     }
 
@@ -414,27 +439,29 @@ class DetailPage {
         const onChange = () => {
             this.updateDirtyMark(state);
             this.refreshSaveButton();
+            this.refreshAiButtons();
         };
         nameInput.addEventListener('input', onChange);
         descInput.addEventListener('input', onChange);
         removeBtn.addEventListener('click', () => this.removeSection(state));
 
-        attachGenerateHandler(aiName, {
+        this.aiHandles.push(attachGenerateHandler(aiName, {
             type: 'name',
             language: target.name,
             target: () => nameInput,
             name: () => this.sourceName.value,
             month: () => this.currentMonth(),
             day: () => this.currentDay(),
-        });
-        attachGenerateHandler(aiDesc, {
+            enabled: () => this.dateOrArgsReady() && this.sourceNameReady(),
+        }), attachGenerateHandler(aiDesc, {
             type: 'description',
             language: target.name,
             target: () => descInput,
             name: () => nameInput.value.trim() || this.sourceName.value,
             month: () => this.currentMonth(),
             day: () => this.currentDay(),
-        });
+            enabled: () => this.dateOrArgsReady() && nameInput.value.trim() !== '',
+        }));
 
         this.sectionsRoot.appendChild(sectionEl);
         this.sections.push(state);
@@ -601,8 +628,8 @@ class DetailPage {
         }
     }
 
-    private collectTranslations(): Record<string, {name: string; description: string}> {
-        const payload: Record<string, {name: string; description: string}> = {};
+    private collectTranslations(): Record<string, { name: string; description: string }> {
+        const payload: Record<string, { name: string; description: string }> = {};
         for (const code of this.removedFromServer) {
             payload[code] = {name: '', description: ''};
         }
@@ -631,8 +658,8 @@ class DetailPage {
             tags: this.tagPicker.getSelected(),
         };
         if (this.kind === 'fixed' && this.metaDay && this.metaMonth) {
-            metadata.day = parseInt(this.metaDay.value);
-            metadata.month = parseInt(this.metaMonth.value);
+            metadata.day = Number.parseInt(this.metaDay.value);
+            metadata.month = Number.parseInt(this.metaMonth.value);
         }
         if (this.kind === 'floating' && this.metaAlgorithm && this.metaAlgorithmArgs) {
             metadata.algorithm = this.metaAlgorithm.value;
@@ -658,7 +685,7 @@ class DetailPage {
         }
 
         try {
-            const res = await axios.post<{success: boolean; errors?: string[]; redirect?: string}>(this.saveUrl, {
+            const res = await axios.post<{ success: boolean; errors?: string[]; redirect?: string }>(this.saveUrl, {
                 _token: this.csrfToken,
                 source: {name: this.sourceName.value.trim(), description: this.sourceDesc.value},
                 metadata,
@@ -666,11 +693,11 @@ class DetailPage {
             });
             if (res.data.success) {
                 if (this.isNew && res.data.redirect) {
-                    window.location.assign(res.data.redirect);
+                    globalThis.location.assign(res.data.redirect);
                     return;
                 }
                 showToast('success', 'Holiday saved.');
-                window.location.reload();
+                globalThis.location.reload();
             }
         } catch (err: unknown) {
             const errors = (err as { response?: { data?: { errors?: string[] } } }).response?.data?.errors;

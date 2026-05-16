@@ -166,9 +166,19 @@ holiday content. It accepts `{day, month, name, type?, language?}` JSON and retu
 selects the prompt set: `description_pl` (default, Polish description), `description` (English-style description), or
 `name` (translates a Polish holiday name into the target `language`). The system prompts enforce Ferrio's copywriting
 style (150-250 words, informative tone) and live in `config/prompts/`. The API key is configured via `ANTHROPIC_API_KEY`
-env var. The detail page's Source description and per-translation sections each have AI sparkle buttons; the create
-page's inline "Add" form also has one next to its description textarea. The shared helper lives in
-`assets/aiGenerate.ts` and all callers go through it.
+env var. The detail page's Source description and per-translation sections each have AI sparkle buttons. The shared
+helper lives in `assets/aiGenerate.ts` — `attachGenerateHandler` accepts an optional `enabled: () => boolean`
+predicate and returns a `GenerateHandle` with a `refresh()` that re-evaluates `disabled` (also called after each
+generation finishes, instead of unconditionally re-enabling). The detail page wires the following predicates and calls
+`refreshAiButtons()` whenever date/algorithmArgs, source name, or any translation name changes:
+
+- **All AI buttons** require the date to be fully set: for fixed, both day and month are non-empty; for floating,
+  `algorithmArgs` is non-empty.
+- **Translation name buttons** (per language) additionally require the Polish source name — they translate FROM Polish,
+  so without a source name there is nothing to translate.
+- **Description buttons** (Source PL and per-language) additionally require the name in the SAME language to be
+  present — descriptions are generated about a specific holiday name, and the prompts expect a name in the target
+  language.
 
 ### Testing
 
