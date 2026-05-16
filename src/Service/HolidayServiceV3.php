@@ -20,10 +20,10 @@ readonly class HolidayServiceV3
 	{
 	}
 
-	public function getHolidays(string $language, int $year, ?int $day = null, ?int $month = null, ?string $country = null): array
+	public function getHolidays(string $language, int $year, ?int $day = null, ?int $month = null, ?string $country = null, bool $includeMatureContent = false): array
 	{
-		$fixed = $this->getFixedHolidays($language, $day, $month, $country);
-		$floating = $this->getFloatingHolidays($language, $year, $day, $month, $country);
+		$fixed = $this->getFixedHolidays($language, $day, $month, $country, $includeMatureContent);
+		$floating = $this->getFloatingHolidays($language, $year, $day, $month, $country, $includeMatureContent);
 
 		$merged = array_merge($fixed, $floating);
 		usort($merged, fn(array $a, array $b) => [$a['month'], $a['day']] <=> [$b['month'], $b['day']]);
@@ -52,9 +52,9 @@ readonly class HolidayServiceV3
 		return $result;
 	}
 
-	private function getFixedHolidays(string $language, ?int $day = null, ?int $month = null, ?string $country = null): array
+	private function getFixedHolidays(string $language, ?int $day = null, ?int $month = null, ?string $country = null, bool $includeMatureContent = false): array
 	{
-		$holidays = $this->fixedHolidayRepository->findAllByLanguage($language, day: $day, month: $month, country: $country);
+		$holidays = $this->fixedHolidayRepository->findAllByLanguage($language, matureContent: $includeMatureContent, day: $day, month: $month, country: $country);
 		$categoriesByMetadata = $this->fixedMetadataRepository->findCategoryNames(
 			array_column($holidays, 'id'),
 			$language,
@@ -74,7 +74,7 @@ readonly class HolidayServiceV3
 		], $holidays);
 	}
 
-	private function getFloatingHolidays(string $language, int $year, ?int $day = null, ?int $month = null, ?string $country = null): array
+	private function getFloatingHolidays(string $language, int $year, ?int $day = null, ?int $month = null, ?string $country = null, bool $includeMatureContent = false): array
 	{
 		$holidays = $this->floatingHolidayRepository->findAllByLanguage($language, $country);
 
@@ -87,6 +87,9 @@ readonly class HolidayServiceV3
 		foreach ($holidays as $holiday) {
 			$metadata = $holiday->metadata;
 			if ($metadata->algorithmArgs === null || $metadata->algorithmArgs === '') {
+				continue;
+			}
+			if ($metadata->matureContent && !$includeMatureContent) {
 				continue;
 			}
 			$args = json_decode($metadata->algorithmArgs, true);

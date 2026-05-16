@@ -76,6 +76,7 @@ Single endpoint: `GET /v3/holidays` with query parameters:
 - `month` (optional) — filter by month
 - `country` (optional, case-insensitive) — filter by country ISO code
 - `grouping` (optional, default `false`) — when `true`, groups holidays by day in v2-compatible `HolidayDay` format
+- `includeMatureContent` (optional, default `false`) — when `true`, includes holidays whose metadata `matureContent` is true alongside the rest; otherwise mature ones are filtered out
 
 The v3 merges fixed and floating holidays into a unified flat list sorted by date. Each item has a prefixed `id` (
 `fixed-*` or `floating-*`) and includes a `categories` array of tag names translated into the requested `lang` (falling

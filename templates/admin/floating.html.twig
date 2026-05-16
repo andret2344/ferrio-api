@@ -47,13 +47,7 @@
 								{% endif %}
 							</td>
 							<td>{{ holiday.name }}</td>
-							<td>
-								{% for cat in m.categories %}
-									<span class='floating-tag'>{{ cat.slug }}</span>
-								{% else %}
-									<span class='text-muted'>—</span>
-								{% endfor %}
-							</td>
+							<td>{{ tagCounts[m.id]|default(0) }}</td>
 							<td>{% include 'admin/components/translation_count.html.twig' with {count: translationCounts[m.id]|default(0), total: targetLanguageCount} only %}</td>
 						</tr>
 					{% else %}

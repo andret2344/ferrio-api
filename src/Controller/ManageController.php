@@ -230,6 +230,7 @@ class ManageController extends AbstractController
 			'month' => $month,
 			'translationCounts' => $this->metrics->fixedTranslationCountsByMetadata($month),
 			'targetLanguageCount' => $this->metrics->targetLanguageCount(),
+			'tagCounts' => $this->metrics->fixedTagCountsByMetadata($month),
 		]);
 	}
 
@@ -242,8 +243,6 @@ class ManageController extends AbstractController
 			->join('h.metadata', 'm')
 			->leftJoin('m.country', 'c')
 			->addSelect('c')
-			->leftJoin('m.categories', 'cat')
-			->addSelect('cat')
 			->where('h.language = :language')
 			->setParameter('language', Language::DEFAULT_CODE)
 			->orderBy('m.algorithm', 'ASC')
@@ -254,6 +253,7 @@ class ManageController extends AbstractController
 			'floating_holidays' => $polishHolidays,
 			'translationCounts' => $this->metrics->floatingTranslationCountsByMetadata(),
 			'targetLanguageCount' => $this->metrics->targetLanguageCount(),
+			'tagCounts' => $this->metrics->floatingTagCountsByMetadata(),
 		]);
 	}
 

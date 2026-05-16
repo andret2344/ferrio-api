@@ -2,8 +2,14 @@
 
 namespace App\Tests\Controller\v3;
 
+use App\Entity\FloatingHoliday;
+use App\Entity\FloatingHolidayMetadata;
+use App\Entity\Language;
+use App\Entity\Script;
+use App\Enum\Algorithm;
 use App\Tests\Fixture\FixedHolidayFixture;
 use App\Tests\Fixture\FloatingHolidayFixture;
+use App\Tests\Fixture\LanguageFixture;
 use App\Tests\Trait\TestUtilTrait;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\ORM\EntityManagerInterface;
@@ -358,6 +364,63 @@ class HolidayControllerV3Test extends WebTestCase
 		// Flat list, not grouped
 		$this->assertArrayNotHasKey('holidays', $response[0]);
 		$this->assertArrayHasKey('name', $response[0]);
+	}
+
+	public function testIncludeMatureContentDefaultsToFalse(): void
+	{
+		$this->request('GET', '/v3/holidays', ['lang' => 'en', 'year' => 2026]);
+
+		$this->assertResponseIsSuccessful();
+		$response = json_decode($this->client->getResponse()
+			->getContent(), true);
+
+		// Mature Pi Day (0314) must be excluded by default
+		$this->assertCount(2, $response);
+		$names = array_column($response, 'name');
+		$this->assertNotContains('Pi Day', $names);
+	}
+
+	public function testIncludeMatureContentTrueIncludesMatureFixed(): void
+	{
+		$this->request('GET', '/v3/holidays', ['lang' => 'en', 'year' => 2026, 'includeMatureContent' => 'true']);
+
+		$this->assertResponseIsSuccessful();
+		$response = json_decode($this->client->getResponse()
+			->getContent(), true);
+
+		// 2 fixed (March First + Pi Day) + 1 floating
+		$this->assertCount(3, $response);
+		$names = array_column($response, 'name');
+		$this->assertContains('Pi Day', $names);
+	}
+
+	public function testIncludeMatureContentTrueIncludesMatureFloating(): void
+	{
+		$language = $this->em->getRepository(Language::class)->find('en');
+		$script = $this->em->getRepository(Script::class)->find(1);
+		$matureMetadata = new FloatingHolidayMetadata(
+			true,
+			null,
+			[],
+			$script,
+			json_encode([2026, 6]),
+			true,
+			Algorithm::HARDCODED_DATES,
+			json_encode(['2026' => '10.6']),
+		);
+		$this->em->persist($matureMetadata);
+		$matureHoliday = new FloatingHoliday($language, $matureMetadata, 'Mature Floating', 'Mature only', null);
+		$this->em->persist($matureHoliday);
+		$this->em->flush();
+
+		$this->request('GET', '/v3/holidays', ['lang' => 'en', 'year' => 2026]);
+		$default = json_decode($this->client->getResponse()->getContent(), true);
+		$this->assertNotContains('Mature Floating', array_column($default, 'name'));
+
+		$this->request('GET', '/v3/holidays', ['lang' => 'en', 'year' => 2026, 'includeMatureContent' => 'true']);
+		$included = json_decode($this->client->getResponse()->getContent(), true);
+		$names = array_column($included, 'name');
+		$this->assertContains('Mature Floating', $names);
 	}
 
 	public function testGroupingCombinedWithFilters(): void

@@ -5,9 +5,11 @@ namespace App\Service;
 use App\Entity\Category;
 use App\Entity\FixedHoliday;
 use App\Entity\FixedHolidayError;
+use App\Entity\FixedHolidayMetadata;
 use App\Entity\FixedHolidaySuggestion;
 use App\Entity\FloatingHoliday;
 use App\Entity\FloatingHolidayError;
+use App\Entity\FloatingHolidayMetadata;
 use App\Entity\FloatingHolidaySuggestion;
 use App\Entity\Language;
 use App\Entity\ReportState;
@@ -166,6 +168,44 @@ class AdminMetricsService
 			$qb->join('h.metadata', 'm')
 				->andWhere('m.month = :month')
 				->setParameter('month', $month);
+		}
+		$rows = $qb->getQuery()->getResult();
+		$counts = [];
+		foreach ($rows as $row) {
+			$counts[(int)$row['metadataId']] = (int)$row['cnt'];
+		}
+		return $counts;
+	}
+
+	/**
+	 * @return array<int, int> map of metadata id => number of tags
+	 */
+	public function fixedTagCountsByMetadata(?int $month = null): array
+	{
+		return $this->tagCountsByMetadata(FixedHolidayMetadata::class, $month);
+	}
+
+	/**
+	 * @return array<int, int> map of metadata id => number of tags
+	 */
+	public function floatingTagCountsByMetadata(): array
+	{
+		return $this->tagCountsByMetadata(FloatingHolidayMetadata::class, null);
+	}
+
+	/**
+	 * @param class-string $metadataClass
+	 * @return array<int, int>
+	 */
+	private function tagCountsByMetadata(string $metadataClass, ?int $month): array
+	{
+		$qb = $this->entityManager->createQueryBuilder()
+			->select('m.id AS metadataId', 'COUNT(c.id) AS cnt')
+			->from($metadataClass, 'm')
+			->leftJoin('m.categories', 'c')
+			->groupBy('m.id');
+		if ($month !== null) {
+			$qb->andWhere('m.month = :month')->setParameter('month', $month);
 		}
 		$rows = $qb->getQuery()->getResult();
 		$counts = [];

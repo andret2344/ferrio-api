@@ -28,8 +28,9 @@ class HolidayControllerV3 extends AbstractController
 		$month = $request->query->has('month') ? $request->query->getInt('month') : null;
 		$country = $request->query->has('country') ? strtoupper($request->query->getString('country')) : null;
 		$grouping = $request->query->getBoolean('grouping', false);
+		$includeMatureContent = $request->query->getBoolean('includeMatureContent', false);
 
-		$holidays = $this->holidayService->getHolidays($language, $year, $day, $month, $country);
+		$holidays = $this->holidayService->getHolidays($language, $year, $day, $month, $country, $includeMatureContent);
 
 		if ($grouping) {
 			$holidays = $this->holidayService->groupByDay($holidays);
