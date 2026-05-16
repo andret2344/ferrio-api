@@ -9,6 +9,7 @@ use App\Service\Algorithm\HardcodedDatesResolver;
 use App\Service\Algorithm\LastDayOfWeekBeforeDateResolver;
 use App\Service\Algorithm\LastNthDayOfWeekInMonthResolver;
 use App\Service\Algorithm\LeapYearDateResolver;
+use App\Service\Algorithm\NearestDayOfWeekToDateResolver;
 use App\Service\Algorithm\NthDayOfWeekInMonthResolver;
 use App\Service\Algorithm\NthDayThenNextDayOfWeekResolver;
 
@@ -18,6 +19,7 @@ enum Algorithm: string
 	case LAST_NTH_DAY_OF_WEEK_IN_MONTH = 'last_nth_day_of_week_in_month';
 	case FIRST_DAY_OF_WEEK_AFTER_DATE = 'first_day_of_week_after_date';
 	case LAST_DAY_OF_WEEK_BEFORE_DATE = 'last_day_of_week_before_date';
+	case NEAREST_DAY_OF_WEEK_TO_DATE = 'nearest_day_of_week_to_date';
 	case NTH_DAY_THEN_NEXT_DAY_OF_WEEK = 'nth_day_then_next_day_of_week';
 	case LEAP_YEAR_DATE = 'leap_year_date';
 	case EARTH_HOUR = 'earth_hour';
@@ -34,6 +36,7 @@ enum Algorithm: string
 			self::LAST_NTH_DAY_OF_WEEK_IN_MONTH => LastNthDayOfWeekInMonthResolver::class,
 			self::FIRST_DAY_OF_WEEK_AFTER_DATE => FirstDayOfWeekAfterDateResolver::class,
 			self::LAST_DAY_OF_WEEK_BEFORE_DATE => LastDayOfWeekBeforeDateResolver::class,
+			self::NEAREST_DAY_OF_WEEK_TO_DATE => NearestDayOfWeekToDateResolver::class,
 			self::NTH_DAY_THEN_NEXT_DAY_OF_WEEK => NthDayThenNextDayOfWeekResolver::class,
 			self::LEAP_YEAR_DATE => LeapYearDateResolver::class,
 			self::EARTH_HOUR => EarthHourResolver::class,

@@ -100,6 +100,9 @@ Available algorithms with v1/v2 `args` → v3 `algorithmArgs` mapping (dayOfWeek
 - `last_day_of_week_before_date` — last weekday on or before a date. v1/v2: hardcoded in script → v3:
   `{"dayOfWeek": 5, "month": 3, "day": 20}` (last Friday on or before March 20). Optional `"inclusive": false` to
   exclude the start date.
+- `nearest_day_of_week_to_date` — weekday nearest to a given date. `{"dayOfWeek": 6, "month": 6, "day": 17}`
+  (Saturday nearest June 17). Forward/backward distances can never tie (they sum to 7), so the result is always
+  unambiguous; it may cross month or year boundaries.
 - `nth_day_then_next_day_of_week` — finds nth weekday, then the next occurrence of another weekday after it. v1/v2:
   `[month, dayOfWeek, nth, after]` → v3: `{"nth": 1, "dayOfWeek": 1, "month": 7, "afterDayOfWeek": 2}` (Tuesday after
   the 1st Monday of July)

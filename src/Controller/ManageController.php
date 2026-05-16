@@ -206,6 +206,7 @@ class ManageController extends AbstractController
 			'last_nth_day_of_week_in_month' => "{\n  \"nth\": 1,\n  \"dayOfWeek\": 1,\n  \"month\": 5\n}",
 			'first_day_of_week_after_date' => "{\n  \"dayOfWeek\": 6,\n  \"month\": 5,\n  \"day\": 19,\n  \"inclusive\": true\n}",
 			'last_day_of_week_before_date' => "{\n  \"dayOfWeek\": 5,\n  \"month\": 3,\n  \"day\": 20,\n  \"inclusive\": true\n}",
+			'nearest_day_of_week_to_date' => "{\n  \"dayOfWeek\": 6,\n  \"month\": 6,\n  \"day\": 17\n}",
 			'nth_day_then_next_day_of_week' => "{\n  \"nth\": 1,\n  \"dayOfWeek\": 1,\n  \"month\": 7,\n  \"afterDayOfWeek\": 2\n}",
 			'leap_year_date' => "{\n  \"leapDay\": 29,\n  \"leapMonth\": 2,\n  \"nonLeapDay\": 1,\n  \"nonLeapMonth\": 3\n}",
 			'hardcoded_dates' => $hardcoded,

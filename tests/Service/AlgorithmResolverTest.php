@@ -9,6 +9,7 @@ use App\Service\Algorithm\HardcodedDatesResolver;
 use App\Service\Algorithm\LastDayOfWeekBeforeDateResolver;
 use App\Service\Algorithm\LastNthDayOfWeekInMonthResolver;
 use App\Service\Algorithm\LeapYearDateResolver;
+use App\Service\Algorithm\NearestDayOfWeekToDateResolver;
 use App\Service\Algorithm\NthDayOfWeekInMonthResolver;
 use App\Service\Algorithm\NthDayThenNextDayOfWeekResolver;
 use PHPUnit\Framework\TestCase;
@@ -168,6 +169,66 @@ class AlgorithmResolverTest extends TestCase
 
 		$this->assertSame(22, $result['day']);
 		$this->assertSame(2, $result['month']);
+	}
+
+	public function testNearestDayOfWeekToDate(): void
+	{
+		$resolver = new NearestDayOfWeekToDateResolver();
+
+		// Nearest Saturday to June 17, 2026 (Wednesday) → June 20
+		$result = $resolver->calculate([
+			'dayOfWeek' => 6,
+			'month' => 6,
+			'day' => 17,
+		], 2026);
+
+		$this->assertSame(20, $result['day']);
+		$this->assertSame(6, $result['month']);
+	}
+
+	public function testNearestDayOfWeekToDateWhenDateIsTarget(): void
+	{
+		$resolver = new NearestDayOfWeekToDateResolver();
+
+		// Nearest Wednesday to June 17, 2026 (already Wednesday) → June 17
+		$result = $resolver->calculate([
+			'dayOfWeek' => 3,
+			'month' => 6,
+			'day' => 17,
+		], 2026);
+
+		$this->assertSame(17, $result['day']);
+		$this->assertSame(6, $result['month']);
+	}
+
+	public function testNearestDayOfWeekToDateBackwardCrossesMonthBoundary(): void
+	{
+		$resolver = new NearestDayOfWeekToDateResolver();
+
+		// Nearest Monday to July 2, 2026 (Thursday) → June 29 (3 back vs 4 forward)
+		$result = $resolver->calculate([
+			'dayOfWeek' => 1,
+			'month' => 7,
+			'day' => 2,
+		], 2026);
+
+		$this->assertSame(29, $result['day']);
+		$this->assertSame(6, $result['month']);
+	}
+
+	public function testNearestDayOfWeekToDateForwardCrossesMonthBoundary(): void
+	{
+		$resolver = new NearestDayOfWeekToDateResolver();
+
+		// Nearest Friday to June 30, 2026 (Tuesday) → July 3 (3 forward vs 4 back)
+		$result = $resolver->calculate([
+			'dayOfWeek' => 5,
+			'month' => 6,
+			'day' => 30,
+		], 2026);
+
+		$this->assertSame(3, $result['day']);
+		$this->assertSame(7, $result['month']);
 	}
 
 	public function testNthDayThenNextDayOfWeek(): void
