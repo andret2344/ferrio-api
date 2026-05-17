@@ -9,3 +9,8 @@ import './languages';
 
 (window as any).axios = axios;
 (window as any).bootstrap = bootstrap;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const triggers = document.querySelectorAll<HTMLElement>('[data-bs-toggle="tooltip"]');
+    triggers.forEach(el => bootstrap.Tooltip.getOrCreateInstance(el));
+});

@@ -399,7 +399,7 @@ class DetailPage {
         for (const target of this.targets) {
             const entry = this.translations[target.code];
             if (entry !== undefined) {
-                this.appendSection(target, entry.name ?? '', entry.description ?? '', true);
+                this.appendSection(target, entry.name ?? '', entry.description ?? '', !this.isNew);
             }
         }
     }
