@@ -5,6 +5,7 @@ namespace App\Enum;
 use App\Service\Algorithm\FixedDateWithChangesResolver;
 use App\Service\Algorithm\FirstDayOfWeekAfterDateResolver;
 use App\Service\Algorithm\EarthHourResolver;
+use App\Service\Algorithm\EasterOffsetResolver;
 use App\Service\Algorithm\HardcodedDatesResolver;
 use App\Service\Algorithm\LastDayOfWeekBeforeDateResolver;
 use App\Service\Algorithm\LastNthDayOfWeekInMonthResolver;
@@ -23,6 +24,7 @@ enum Algorithm: string
 	case NTH_DAY_THEN_NEXT_DAY_OF_WEEK = 'nth_day_then_next_day_of_week';
 	case LEAP_YEAR_DATE = 'leap_year_date';
 	case EARTH_HOUR = 'earth_hour';
+	case EASTER_OFFSET = 'easter_offset';
 	case HARDCODED_DATES = 'hardcoded_dates';
 	case FIXED_DATE_WITH_CHANGES = 'fixed_date_with_changes';
 
@@ -40,6 +42,7 @@ enum Algorithm: string
 			self::NTH_DAY_THEN_NEXT_DAY_OF_WEEK => NthDayThenNextDayOfWeekResolver::class,
 			self::LEAP_YEAR_DATE => LeapYearDateResolver::class,
 			self::EARTH_HOUR => EarthHourResolver::class,
+			self::EASTER_OFFSET => EasterOffsetResolver::class,
 			self::HARDCODED_DATES => HardcodedDatesResolver::class,
 			self::FIXED_DATE_WITH_CHANGES => FixedDateWithChangesResolver::class,
 		};

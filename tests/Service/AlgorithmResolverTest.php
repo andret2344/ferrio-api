@@ -4,6 +4,7 @@ namespace App\Tests\Service;
 
 use App\Service\Algorithm\FixedDateWithChangesResolver;
 use App\Service\Algorithm\EarthHourResolver;
+use App\Service\Algorithm\EasterOffsetResolver;
 use App\Service\Algorithm\FirstDayOfWeekAfterDateResolver;
 use App\Service\Algorithm\HardcodedDatesResolver;
 use App\Service\Algorithm\LastDayOfWeekBeforeDateResolver;
@@ -555,5 +556,49 @@ class AlgorithmResolverTest extends TestCase
 		$result = $resolver->calculate($args, 2026);
 		$this->assertSame(22, $result['day']);
 		$this->assertSame(6, $result['month']);
+	}
+
+	public function testEasterOffsetCorpusChristi(): void
+	{
+		$resolver = new EasterOffsetResolver();
+
+		// Corpus Christi 2026 — Easter (Apr 5) + 60 days → June 4
+		$result = $resolver->calculate(['offset' => 60], 2026);
+
+		$this->assertSame(4, $result['day']);
+		$this->assertSame(6, $result['month']);
+	}
+
+	public function testEasterOffsetCorpusChristiCrossesIntoMay(): void
+	{
+		$resolver = new EasterOffsetResolver();
+
+		// Corpus Christi 2024 — Easter (Mar 31) + 60 days → May 30
+		$result = $resolver->calculate(['offset' => 60], 2024);
+
+		$this->assertSame(30, $result['day']);
+		$this->assertSame(5, $result['month']);
+	}
+
+	public function testEasterOffsetZeroReturnsEaster(): void
+	{
+		$resolver = new EasterOffsetResolver();
+
+		// Easter 2026 → April 5
+		$result = $resolver->calculate(['offset' => 0], 2026);
+
+		$this->assertSame(5, $result['day']);
+		$this->assertSame(4, $result['month']);
+	}
+
+	public function testEasterOffsetNegativeAshWednesday(): void
+	{
+		$resolver = new EasterOffsetResolver();
+
+		// Ash Wednesday 2026 — Easter (Apr 5) - 46 days → February 18
+		$result = $resolver->calculate(['offset' => -46], 2026);
+
+		$this->assertSame(18, $result['day']);
+		$this->assertSame(2, $result['month']);
 	}
 }

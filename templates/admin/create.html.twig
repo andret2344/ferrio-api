@@ -23,6 +23,7 @@
 						<th scope="col" class='w-25'>Name</th>
 						<th scope="col" class='w-75'>Description</th>
 						<th scope="col" class='text-center'>Tags</th>
+						<th scope="col" class='text-center usual-col'>Type</th>
 						<th scope="col" class='text-center'>Translations</th>
 						<th scope="col" class='mature-col'><span class='visually-hidden'>Mature</span></th>
 					</tr>
@@ -51,6 +52,7 @@
 								<div class='holiday-description'>{{ element.description|nl2br }}</div>
 							</td>
 							<td class='text-center'>{{ tagCounts[element.id]|default(0) }}</td>
+							<td class='text-center usual-col'>{% include 'admin/components/usual_badge.html.twig' with {usual: element.usual} only %}</td>
 							<td class='text-center'>{% include 'admin/components/translation_count.html.twig' with {count: translationCounts[element.id]|default(0), total: targetLanguageCount} only %}</td>
 							<td class='mature-col'>{% include 'admin/components/mature_badge.html.twig' with {mature: element.matureContent} only %}</td>
 						</tr>

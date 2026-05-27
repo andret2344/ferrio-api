@@ -1139,6 +1139,42 @@ body {
     font-family: 'SF Mono', 'Fira Code', monospace;
   }
 
+  .usual-col {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .usual-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 20px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    text-transform: uppercase;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+
+    &.usual {
+      background-color: #14331a;
+      border: 1px solid #5cc472;
+      color: #a0f0b0;
+    }
+
+    &.unusual {
+      background-color: #33280f;
+      border: 1px solid #c4a35c;
+      color: #f0d8a0;
+    }
+  }
+
   // Translation editor (modal grid)
   .translation-grid {
     display: flex;

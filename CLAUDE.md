@@ -109,9 +109,18 @@ Available algorithms with v1/v2 `args` → v3 `algorithmArgs` mapping (dayOfWeek
   the 1st Monday of July)
 - `leap_year_date` — returns different dates for leap/non-leap years.
   `{"leapDay": 29, "leapMonth": 2, "nonLeapDay": 1, "nonLeapMonth": 3}` (Feb 29 in leap years, Mar 1 otherwise)
+- `easter_offset` — a fixed number of days before/after Easter Sunday, for movable feasts tied to Easter.
+  `{"offset": 60}` (Easter + 60 days = Corpus Christi / Boże Ciało). Negative offsets go backwards
+  (`{"offset": -46}` = Ash Wednesday). Easter itself is computed via PHP's `easter_days()`; the offset may cross
+  month or year boundaries.
+- `earth_hour` — last Saturday of March, shifted back one week if it would fall on Holy Saturday. Takes no args:
+  `{}`. (Uses `easter_days()` to detect the Holy Saturday clash.)
 - `hardcoded_dates` — year-to-date lookup, for holidays with no algorithmic pattern.
   `{"2024": "12.9", "2025": "20.9", "2026": "19.9"}` (year keys map to `day.month` strings). Returns null for missing
   years.
+- `fixed_date_with_changes` — a default month/day that changes from a given year onward (e.g. a holiday whose official
+  date was moved). `{"defaultDay": 6, "defaultMonth": 4, "changes": [{"fromYear": 2023, "day": 23, "month": 4}]}`
+  (April 6 before 2023, April 23 from 2023 on). `changes` are applied in order; the last matching `fromYear` wins.
 
 `algorithmArgs` is stored as a JSON column. Common pitfalls: JSON keys must always be quoted strings (e.g., `"2026"` not
 `2026`) and trailing commas are not allowed.

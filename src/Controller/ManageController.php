@@ -211,6 +211,7 @@ class ManageController extends AbstractController
 			'leap_year_date' => "{\n  \"leapDay\": 29,\n  \"leapMonth\": 2,\n  \"nonLeapDay\": 1,\n  \"nonLeapMonth\": 3\n}",
 			'hardcoded_dates' => $hardcoded,
 			'earth_hour' => "{}",
+			'easter_offset' => "{\n  \"offset\": 60\n}",
 			'fixed_date_with_changes' => "{\n  \"defaultDay\": 6,\n  \"defaultMonth\": 4,\n  \"changes\": [\n    {\n      \"fromYear\": 2023,\n      \"day\": 23,\n      \"month\": 4\n    }\n  ]\n}",
 		];
 	}

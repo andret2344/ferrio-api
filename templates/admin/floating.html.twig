@@ -19,6 +19,7 @@
 						<th scope='col'>Algorithm</th>
 						<th scope='col'>Name (PL)</th>
 						<th scope='col' class='text-center'>Tags</th>
+						<th scope='col' class='text-center usual-col'>Type</th>
 						<th scope='col' class='text-center'>Translations</th>
 						<th scope='col' class='mature-col'><span class='visually-hidden'>Mature</span></th>
 					</tr>
@@ -50,12 +51,13 @@
 							</td>
 							<td>{{ holiday.name }}</td>
 							<td class='text-center'>{{ tagCounts[m.id]|default(0) }}</td>
+							<td class='text-center usual-col'>{% include 'admin/components/usual_badge.html.twig' with {usual: m.usual} only %}</td>
 							<td class='text-center'>{% include 'admin/components/translation_count.html.twig' with {count: translationCounts[m.id]|default(0), total: targetLanguageCount} only %}</td>
 							<td class='mature-col'>{% include 'admin/components/mature_badge.html.twig' with {mature: m.matureContent} only %}</td>
 						</tr>
 					{% else %}
 						<tr>
-							<td colspan='7' class='text-center text-muted py-4'>No floating holidays.</td>
+							<td colspan='8' class='text-center text-muted py-4'>No floating holidays.</td>
 						</tr>
 					{% endfor %}
 					</tbody>
