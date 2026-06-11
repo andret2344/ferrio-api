@@ -4,40 +4,6 @@ interface BootstrapModalEvent extends Event {
     readonly relatedTarget: HTMLElement | null;
 }
 
-function setHash(id: string): void {
-    return history.replaceState(null, '', `#${id}`);
-}
-
-function initTabHashSync(): void {
-    const tabsContainer = document.getElementById('reportsTabs');
-    if (!tabsContainer) {
-        return;
-    }
-
-    const tabIds = ['fixed-suggestions', 'floating-suggestions', 'fixed-errors', 'floating-errors'];
-
-    const raw = globalThis.location.hash.replace(/^#/, '');
-    const initial = tabIds.includes(raw) ? raw : tabIds[0];
-
-    if (raw !== initial) {
-        setHash(initial);
-    }
-
-    if (initial !== tabIds[0]) {
-        const trigger = document.querySelector<HTMLElement>(`[data-bs-target="#${initial}"]`);
-        if (trigger) {
-            trigger.click();
-            setHash(initial);
-        }
-    }
-
-    tabsContainer.querySelectorAll<HTMLElement>('[data-bs-toggle="tab"]').forEach(btn =>
-        btn.addEventListener('shown.bs.tab', event => {
-            const target = (event.target as HTMLElement).dataset.bsTarget || '';
-            setHash(target.replace(/^#/, ''));
-        }));
-}
-
 let pendingDetailHref: string | null = null;
 
 function setReportField(id: string, value: string): void {
@@ -387,6 +353,32 @@ function initCommentPopovers(): void {
     });
 }
 
+function refreshPaneSummary(): void {
+    const pane = document.querySelector<HTMLElement>('.reports-pane');
+    if (!pane) {
+        return;
+    }
+    const rows = pane.querySelectorAll<HTMLElement>('tr.report-row');
+    const total = rows.length;
+    const pending = Array.from(rows).filter(row => row.dataset.state === 'REPORTED').length;
+
+    const totalEl = pane.querySelector<HTMLElement>('[data-role="total-count"]');
+    if (totalEl) {
+        totalEl.textContent = String(total);
+    }
+    const nounEl = pane.querySelector<HTMLElement>('[data-role="total-noun"]');
+    if (nounEl) {
+        nounEl.textContent = total === 1 ? 'report' : 'reports';
+    }
+
+    const pendingPill = pane.querySelector<HTMLElement>('[data-role="pending-pill"]');
+    const pendingCount = pane.querySelector<HTMLElement>('[data-role="pending-count"]');
+    if (pendingCount) {
+        pendingCount.textContent = String(pending);
+    }
+    pendingPill?.classList.toggle('d-none', pending === 0);
+}
+
 function updateRow(kind: string, id: string, state: string, comment: string | null, holidayId: number | null): void {
     const row = document.querySelector<HTMLElement>(
         `tr.report-row[data-kind="${kind}"][data-id="${id}"]`
@@ -420,6 +412,8 @@ function updateRow(kind: string, id: string, state: string, comment: string | nu
             commentBtn.classList.add('d-none');
         }
     }
+
+    refreshPaneSummary();
 }
 
 function removeRow(kind: string, id: string): void {
@@ -430,32 +424,19 @@ function removeRow(kind: string, id: string): void {
         return;
     }
 
-    const pane = row.closest<HTMLElement>('.tab-pane');
     const commentBtn = row.querySelector<HTMLElement>('[data-role="comment-popover"]');
     if (commentBtn) {
         bootstrap.Popover.getInstance(commentBtn)?.dispose();
     }
     row.remove();
 
-    if (pane) {
-        const remaining = pane.querySelectorAll('tr.report-row').length;
-        const counter = pane.querySelector<HTMLElement>('.report-count');
-        if (counter) {
-            counter.textContent = `${remaining} ${remaining === 1 ? 'entry' : 'entries'}`;
-        }
-        const paneId = pane.id;
-        const tabBadge = document.querySelector<HTMLElement>(`[data-bs-target="#${paneId}"] .badge`);
-        if (tabBadge) {
-            tabBadge.textContent = String(remaining);
-        }
-    }
+    refreshPaneSummary();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (!document.getElementById('reportsTabs')) {
+    if (!document.querySelector('.reports-pane')) {
         return;
     }
-    initTabHashSync();
     initSuggestionModal();
     initErrorModal();
     initRowTriggers();

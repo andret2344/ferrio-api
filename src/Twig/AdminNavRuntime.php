@@ -28,12 +28,14 @@ class AdminNavRuntime implements RuntimeExtensionInterface
 		unset($fixedTranslated[Language::DEFAULT_CODE], $floatingTranslated[Language::DEFAULT_CODE]);
 		$fixedMissing = max(0, $targetLanguages * $fixedCount - array_sum($fixedTranslated));
 		$floatingMissing = max(0, $targetLanguages * $floatingCount - array_sum($floatingTranslated));
+		$reportCounts = $this->metrics->reportCounts();
 		return $this->data = [
 			'fixedCount' => $fixedCount,
 			'floatingCount' => $floatingCount,
 			'tagCount' => $this->metrics->tagCount(),
 			'languageCount' => $this->metrics->languageCount(),
 			'reportsPending' => $this->metrics->reportsPendingTotal(),
+			'reportsByKind' => array_map(fn(array $c): int => $c['reported'], $reportCounts),
 			'fixedMissing' => $fixedMissing,
 			'floatingMissing' => $floatingMissing,
 		];

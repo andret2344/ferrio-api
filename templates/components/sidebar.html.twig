@@ -3,6 +3,8 @@
 {% set routeKind = app.request.attributes.get('kind') %}
 {% set holidaysActive = route in ['admin_create', 'admin_create_month', 'admin_floating'] %}
 {% set missingActive = route in ['admin_missing', 'admin_missing_overview'] %}
+{% set reportsActive = route in ['admin_reports', 'admin_reports_index'] %}
+{% set reportType = app.request.attributes.get('type') %}
 <script>
 	(() => {
 		try {
@@ -92,15 +94,33 @@
 				{% endif %}
 			</a>
 		</div>
-		<a href='{{ path('admin_reports') }}'
-		   class='sidebar-item no-a {{ route starts with 'admin_reports' ? 'sidebar-item-active' : '' }}'
-		   title='Reports{{ nav.reportsPending > 0 ? ' (' ~ nav.reportsPending ~ ' pending)' : '' }}'>
-			<i class='bi bi-flag'></i>
-			<span class='sidebar-label'>Reports</span>
-			{% if nav.reportsPending > 0 %}
-				<span class='sidebar-badge sidebar-badge-warning'>{{ nav.reportsPending }}</span>
-				<span class='sidebar-dot sidebar-dot-warning'></span>
-			{% endif %}
-		</a>
+		<div class='sidebar-group {{ reportsActive ? 'sidebar-group-active' : '' }}'>
+			<div class='sidebar-group-title' title='Reports'>
+				<i class='bi bi-flag'></i>
+				<span class='sidebar-label'>Reports</span>
+				{% if nav.reportsPending > 0 %}
+					<span class='sidebar-dot sidebar-dot-warning'></span>
+				{% endif %}
+			</div>
+			{% for entry in [
+				{type: 'fixed-suggestions', kind: 'fixed_suggestion', label: 'Fixed suggestions', icon: 'bi-lightbulb'},
+				{type: 'floating-suggestions', kind: 'floating_suggestion', label: 'Floating suggestions', icon: 'bi-lightbulb-fill'},
+				{type: 'fixed-errors', kind: 'fixed_error', label: 'Fixed errors', icon: 'bi-exclamation-triangle'},
+				{type: 'floating-errors', kind: 'floating_error', label: 'Floating errors', icon: 'bi-exclamation-triangle-fill'},
+			] %}
+				{% set pending = nav.reportsByKind[entry.kind] ?? 0 %}
+				<a href='{{ path('admin_reports', {type: entry.type}) }}'
+				   class='sidebar-subitem no-a {{ reportsActive and reportType == entry.type ? 'sidebar-item-active' : '' }}'
+				   title='{{ entry.label }}{{ pending > 0 ? ' (' ~ pending ~ ' pending)' : '' }}'>
+					<i class='bi {{ entry.icon }} sidebar-subitem-icon'></i>
+					<span class='sidebar-label'>{{ entry.label }}</span>
+					{% if pending > 0 %}
+						<span class='sidebar-badge sidebar-badge-warning'>{{ pending }}</span>
+					{% else %}
+						<span class='sidebar-badge'>0</span>
+					{% endif %}
+				</a>
+			{% endfor %}
+		</div>
 	</nav>
 </aside>

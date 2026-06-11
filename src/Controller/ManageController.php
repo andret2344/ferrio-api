@@ -5,13 +5,9 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Country;
 use App\Entity\FixedHoliday;
-use App\Entity\FixedHolidayError;
 use App\Entity\FixedHolidayMetadata;
-use App\Entity\FixedHolidaySuggestion;
 use App\Entity\FloatingHoliday;
-use App\Entity\FloatingHolidayError;
 use App\Entity\FloatingHolidayMetadata;
-use App\Entity\FloatingHolidaySuggestion;
 use App\Entity\Language;
 use App\Entity\ReportState;
 use App\Enum\ReportKind;
@@ -330,82 +326,89 @@ class ManageController extends AbstractController
 		]);
 	}
 
-	#[Route('/reports', name: 'reports')]
-	public function reports(): Response
+	/**
+	 * @var array<string, array{kind: ReportKind, label: string, emptyLabel: string}>
+	 */
+	private const array REPORT_TYPES = [
+		'fixed-suggestions' => [
+			'kind' => ReportKind::FIXED_SUGGESTION,
+			'label' => 'Fixed suggestions',
+			'emptyLabel' => 'fixed holiday suggestions',
+		],
+		'floating-suggestions' => [
+			'kind' => ReportKind::FLOATING_SUGGESTION,
+			'label' => 'Floating suggestions',
+			'emptyLabel' => 'floating holiday suggestions',
+		],
+		'fixed-errors' => [
+			'kind' => ReportKind::FIXED_ERROR,
+			'label' => 'Fixed errors',
+			'emptyLabel' => 'fixed holiday error reports',
+		],
+		'floating-errors' => [
+			'kind' => ReportKind::FLOATING_ERROR,
+			'label' => 'Floating errors',
+			'emptyLabel' => 'floating holiday error reports',
+		],
+	];
+
+	#[Route('/reports', name: 'reports_index')]
+	public function reportsIndex(): Response
 	{
-		$fixedSuggestions = $this->entityManager->getRepository(FixedHolidaySuggestion::class)
-			->findBy([], ['datetime' => 'DESC']);
-		$floatingSuggestions = $this->entityManager->getRepository(FloatingHolidaySuggestion::class)
-			->findBy([], ['datetime' => 'DESC']);
-		$fixedErrors = $this->entityManager->getRepository(FixedHolidayError::class)
-			->findBy([], ['datetime' => 'DESC']);
-		$floatingErrors = $this->entityManager->getRepository(FloatingHolidayError::class)
+		return $this->redirectToRoute('admin_reports', ['type' => array_key_first(self::REPORT_TYPES)]);
+	}
+
+	#[Route('/reports/{type<fixed-suggestions|floating-suggestions|fixed-errors|floating-errors>}', name: 'reports')]
+	public function reports(string $type): Response
+	{
+		$config = self::REPORT_TYPES[$type];
+		$kind = $config['kind'];
+		$isError = !$kind->isSuggestion();
+		$isFloating = $kind === ReportKind::FLOATING_SUGGESTION || $kind === ReportKind::FLOATING_ERROR;
+
+		$rows = $this->entityManager->getRepository($kind->entityClass())
 			->findBy([], ['datetime' => 'DESC']);
 
-		$uids = array_merge(
-			array_map(fn($s) => $s->userId, $fixedSuggestions),
-			array_map(fn($s) => $s->userId, $floatingSuggestions),
-			array_map(fn($e) => $e->userId, $fixedErrors),
-			array_map(fn($e) => $e->userId, $floatingErrors),
-		);
-		$users = $this->firebaseUserLookup->lookup($uids);
+		$users = $this->firebaseUserLookup->lookup(array_map(fn($r) => $r->userId, $rows));
 
-		$fixedMetadataIds = array_values(array_unique(array_filter(array_merge(
-			array_map(fn($s) => $s->holiday?->id, $fixedSuggestions),
-			array_map(fn($e) => $e->metadata?->id, $fixedErrors),
-		))));
-		$floatingMetadataIds = array_values(array_unique(array_filter(array_merge(
-			array_map(fn($s) => $s->holiday?->id, $floatingSuggestions),
-			array_map(fn($e) => $e->metadata?->id, $floatingErrors),
-		))));
-
-		$fixedHolidaysPl = [];
-		if (!empty($fixedMetadataIds)) {
-			/** @var FixedHoliday[] $rows */
-			$rows = $this->entityManager->getRepository(FixedHoliday::class)
-				->createQueryBuilder('h')
-				->where('h.language = :lang')
-				->andWhere('h.metadata IN (:ids)')
-				->setParameter('lang', Language::DEFAULT_CODE)
-				->setParameter('ids', $fixedMetadataIds)
-				->getQuery()
-				->getResult();
-			foreach ($rows as $h) {
-				$fixedHolidaysPl[$h->metadata->id] = [
-					'name' => $h->name,
-					'description' => $h->description,
-				];
-			}
-		}
-
-		$floatingHolidaysPl = [];
-		if (!empty($floatingMetadataIds)) {
-			/** @var FloatingHoliday[] $rows */
-			$rows = $this->entityManager->getRepository(FloatingHoliday::class)
-				->createQueryBuilder('h')
-				->where('h.language = :lang')
-				->andWhere('h.metadata IN (:ids)')
-				->setParameter('lang', Language::DEFAULT_CODE)
-				->setParameter('ids', $floatingMetadataIds)
-				->getQuery()
-				->getResult();
-			foreach ($rows as $h) {
-				$floatingHolidaysPl[$h->metadata->id] = [
-					'name' => $h->name,
-					'description' => $h->description,
-				];
+		// Error reports reference an existing holiday whose PL name/description we surface in the modal;
+		// suggestions carry their own name/date/country, so no referent lookup is needed.
+		$holidaysPl = [];
+		if ($isError) {
+			$metadataIds = array_values(array_unique(array_filter(
+				array_map(fn($e) => $e->metadata?->id, $rows),
+			)));
+			if (!empty($metadataIds)) {
+				$holidayClass = $isFloating ? FloatingHoliday::class : FixedHoliday::class;
+				/** @var FixedHoliday[]|FloatingHoliday[] $plRows */
+				$plRows = $this->entityManager->getRepository($holidayClass)
+					->createQueryBuilder('h')
+					->where('h.language = :lang')
+					->andWhere('h.metadata IN (:ids)')
+					->setParameter('lang', Language::DEFAULT_CODE)
+					->setParameter('ids', $metadataIds)
+					->getQuery()
+					->getResult();
+				foreach ($plRows as $h) {
+					$holidaysPl[$h->metadata->id] = [
+						'name' => $h->name,
+						'description' => $h->description,
+					];
+				}
 			}
 		}
 
 		return $this->render('admin/reports.html.twig', [
-			'fixedSuggestions' => $fixedSuggestions,
-			'floatingSuggestions' => $floatingSuggestions,
-			'fixedErrors' => $fixedErrors,
-			'floatingErrors' => $floatingErrors,
+			'type' => $type,
+			'kind' => $kind->value,
+			'isError' => $isError,
+			'label' => $config['label'],
+			'emptyLabel' => $config['emptyLabel'],
+			'rows' => $rows,
 			'users' => $users,
 			'report_states' => array_column(ReportState::cases(), 'value'),
-			'fixedHolidaysPl' => $fixedHolidaysPl,
-			'floatingHolidaysPl' => $floatingHolidaysPl,
+			'fixedHolidaysPl' => $isFloating ? [] : $holidaysPl,
+			'floatingHolidaysPl' => $isFloating ? $holidaysPl : [],
 		]);
 	}
 

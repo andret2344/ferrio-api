@@ -1,5 +1,4 @@
 {# @var kind string  Report kind (e.g. 'fixed_suggestion') — drives column set + row data attributes. #}
-{# @var paneId string  Tab pane id (also used for empty-state and counter). #}
 {# @var emptyLabel string  Human label for the empty state ("fixed holiday suggestions"). #}
 {# @var rows iterable  Report rows (suggestion or error entities). #}
 {# @var users array  uid => user info. #}
@@ -8,8 +7,19 @@
 
 {% set isError = kind ends with '_error' %}
 {% set isFloating = kind starts with 'floating_' %}
+{% set pending = rows|filter(r => r.reportState.value == 'REPORTED')|length %}
 
-<div class='report-count'>{{ rows|length }} {{ rows|length == 1 ? 'entry' : 'entries' }}</div>
+<div class='reports-summary'>
+	<span class='reports-summary-total'>
+		<span class='reports-summary-num' data-role='total-count'>{{ rows|length }}</span>
+		<span class='reports-summary-noun' data-role='total-noun'>{{ rows|length == 1 ? 'report' : 'reports' }}</span>
+	</span>
+	<span class='reports-summary-pending {{ pending > 0 ? '' : 'd-none' }}' data-role='pending-pill'>
+		<span class='reports-summary-dot'></span>
+		<span data-role='pending-count'>{{ pending }}</span>
+		pending
+	</span>
+</div>
 {% if rows is empty %}
 	<div class='text-center text-muted py-5'>No {{ emptyLabel }}.</div>
 {% else %}

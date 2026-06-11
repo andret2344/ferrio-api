@@ -1,52 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	{% set tableContext = {
-		users: users,
-		fixedHolidaysPl: fixedHolidaysPl,
-		floatingHolidaysPl: floatingHolidaysPl,
-	} %}
-	{% set tabs = [
-		{id: 'fixed-suggestions', label: 'Fixed Suggestions', kind: 'fixed_suggestion', rows: fixedSuggestions, emptyLabel: 'fixed holiday suggestions'},
-		{id: 'floating-suggestions', label: 'Floating Suggestions', kind: 'floating_suggestion', rows: floatingSuggestions, emptyLabel: 'floating holiday suggestions'},
-		{id: 'fixed-errors', label: 'Fixed Errors', kind: 'fixed_error', rows: fixedErrors, emptyLabel: 'fixed holiday error reports'},
-		{id: 'floating-errors', label: 'Floating Errors', kind: 'floating_error', rows: floatingErrors, emptyLabel: 'floating holiday error reports'},
-	] %}
-	{% set reportsTotal = fixedSuggestions|length + floatingSuggestions|length + fixedErrors|length + floatingErrors|length %}
-	{% set toolbar_html %}
-		<span class='badge bg-secondary'>{{ reportsTotal }} total</span>
-	{% endset %}
 	<main class='section-manage-main'>
 		{% include 'components/sidebar.html.twig' %}
-		{% include 'components/topbar.html.twig' with {pageTitle: 'Reports', toolbar: toolbar_html} %}
+		{% include 'components/topbar.html.twig' with {pageTitle: label} %}
 		<div class='manage-content'>
-			<ul class='nav nav-tabs reports-tabs' id='reportsTabs'>
-				{% for tab in tabs %}
-					<li class='nav-item'>
-						<button
-								class='nav-link {{ loop.first ? 'active' : '' }}'
-								id='{{ tab.id }}-tab'
-								data-bs-toggle='tab'
-								data-bs-target='#{{ tab.id }}'
-								type='button'
-						>{{ tab.label }}
-							<span class='badge bg-secondary ms-1'>{{ tab.rows|length }}</span>
-						</button>
-					</li>
-				{% endfor %}
-			</ul>
-
-			<div class='tab-content mt-3' id='reportsTabContent'>
-				{% for tab in tabs %}
-					<div class='tab-pane fade {{ loop.first ? 'show active' : '' }}' id='{{ tab.id }}'>
-						{% include 'admin/components/reports_table.html.twig' with tableContext|merge({
-							kind: tab.kind,
-							paneId: tab.id,
-							rows: tab.rows,
-							emptyLabel: tab.emptyLabel,
-						}) only %}
-					</div>
-				{% endfor %}
+			<div class='reports-pane' id='{{ type }}'>
+				{% include 'admin/components/reports_table.html.twig' with {
+					kind: kind,
+					rows: rows,
+					emptyLabel: emptyLabel,
+					users: users,
+					fixedHolidaysPl: fixedHolidaysPl,
+					floatingHolidaysPl: floatingHolidaysPl,
+				} only %}
 			</div>
 		</div>
 	</main>
@@ -75,6 +42,7 @@
 		</div>
 	{% endmacro %}
 
+	{% if not isError %}
 	<div class='modal fade' id='moderateSuggestionModal' tabindex='-1'
 	     aria-labelledby='moderateSuggestionModalLabel' aria-hidden='true'
 	     data-moderate-url='{{ path('admin_reports_moderate') }}'
@@ -137,7 +105,9 @@
 			</div>
 		</div>
 	</div>
+	{% endif %}
 
+	{% if isError %}
 	<div class='modal fade' id='moderateErrorModal' tabindex='-1'
 	     aria-labelledby='moderateErrorModalLabel' aria-hidden='true'
 	     data-moderate-url='{{ path('admin_reports_moderate') }}'
@@ -209,5 +179,6 @@
 			</div>
 		</div>
 	</div>
+	{% endif %}
 
 {% endblock %}

@@ -43,13 +43,14 @@
 					</header>
 					<div class='dashboard-panel-body'>
 						{% for item in [
-							{kind: 'fixed_suggestion', label: 'Fixed suggestions', icon: 'bi-lightbulb'},
-							{kind: 'floating_suggestion', label: 'Floating suggestions', icon: 'bi-lightbulb'},
-							{kind: 'fixed_error', label: 'Fixed errors', icon: 'bi-exclamation-triangle'},
-							{kind: 'floating_error', label: 'Floating errors', icon: 'bi-exclamation-triangle'},
+							{kind: 'fixed_suggestion', type: 'fixed-suggestions', label: 'Fixed suggestions', icon: 'bi-lightbulb'},
+							{kind: 'floating_suggestion', type: 'floating-suggestions', label: 'Floating suggestions', icon: 'bi-lightbulb'},
+							{kind: 'fixed_error', type: 'fixed-errors', label: 'Fixed errors', icon: 'bi-exclamation-triangle'},
+							{kind: 'floating_error', type: 'floating-errors', label: 'Floating errors', icon: 'bi-exclamation-triangle'},
 						] %}
 							{% set rc = reportCounts[item.kind] %}
-							<div class='dashboard-report-row {{ rc.reported > 0 ? 'dashboard-report-row-warning' : '' }}'>
+							<a href='{{ path('admin_reports', {type: item.type}) }}'
+							   class='dashboard-report-row no-a {{ rc.reported > 0 ? 'dashboard-report-row-warning' : '' }}'>
 								<i class='bi {{ item.icon }}'></i>
 								<span class='dashboard-report-label'>{{ item.label }}</span>
 								<span class='dashboard-report-value'>
@@ -57,7 +58,7 @@
 									<span class='dashboard-report-sep'>/</span>
 									{{ rc.total }}
 								</span>
-							</div>
+							</a>
 						{% endfor %}
 					</div>
 				</section>

@@ -140,6 +140,15 @@ related rows (fixed/floating holiday translations, error reports, category trans
 The Polish source language (`pl`) cannot be deleted from the UI.
 Legacy `/manage/*` URLs return 301 redirects to `/admin/*` via `ManageRedirectController`.
 
+Reports moderation is split into four separate drawer entries under a "Reports" sidebar group — one page per report
+type at `/admin/reports/{type}` where `type` ∈ `fixed-suggestions | floating-suggestions | fixed-errors |
+floating-errors` (route `admin_reports`). `/admin/reports` (route `admin_reports_index`) 302-redirects to the first
+type. Each page renders a single `admin/components/reports_table.html.twig` (no tabs) plus the matching moderation
+modal (suggestion modal for `*-suggestions`, error modal for `*-errors`). Per-type pending badges in the sidebar come
+from `AdminNavRuntime`'s `reportsByKind` (the `reported`-state count per `ReportKind`). The dashboard's Reports panel
+rows link to the corresponding per-type page. `admin_reports_moderate` / `admin_reports_delete` remain the shared
+POST endpoints driven by `assets/reports.ts`.
+
 List views (`/admin/create/{month}` for fixed, `/admin/floating` for floating) are read-only summaries. Each row is a
 button linking to the **holiday detail page** at `/admin/holiday/{kind}/{id}` (kind ∈ `fixed` | `floating`). Each row
 also shows a `XX/YY` translation count (translations present / total non-Polish languages) sourced from
