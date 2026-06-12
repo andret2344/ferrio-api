@@ -315,12 +315,12 @@ async function deleteReport(
 function initRowTriggers(): void {
     const suggestionModalEl = document.getElementById('moderateSuggestionModal');
     const errorModalEl = document.getElementById('moderateErrorModal');
-    if (!suggestionModalEl || !errorModalEl) {
-        return;
-    }
     document.querySelectorAll<HTMLElement>('tr.report-row').forEach(row => {
         const kind = row.dataset.kind || '';
         const target = kind.endsWith('_error') ? errorModalEl : suggestionModalEl;
+        if (!target) {
+            return;
+        }
         const open = () => bootstrap.Modal.getOrCreateInstance(target).show(row);
         row.addEventListener('click', event => {
             if ((event.target as HTMLElement).closest('a, button, input, select, textarea, [data-role="comment-popover"]')) {
