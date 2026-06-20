@@ -122,7 +122,10 @@ class ReportControllerV2Test extends WebTestCase
 				'datetime' => $error->datetime->format('Y-m-d H:i:s'),
 				'report_state' => 'REPORTED',
 				'comment' => null,
-				'user_id' => 'user-id'
+				'user_id' => 'user-id',
+				'platform' => 'unknown',
+				'real_device' => null,
+				'device_country' => null
 			]
 		]);
 
@@ -217,7 +220,10 @@ class ReportControllerV2Test extends WebTestCase
 				'datetime' => $error->datetime->format('Y-m-d H:i:s'),
 				'report_state' => 'REPORTED',
 				'comment' => 'Reviewed by admin',
-				'user_id' => 'user-id'
+				'user_id' => 'user-id',
+				'platform' => 'unknown',
+				'real_device' => null,
+				'device_country' => null
 			]
 		]);
 
@@ -282,6 +288,60 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(422);
 	}
 
+	public function testPostFixedReportWithPlatformAndRealDevice(): void
+	{
+		/** @var Language $language */
+		$language = $this->getFixture('language-en', Language::class);
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => $language->code,
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'platform' => 'ios',
+			'real_device' => 'iPhone 15 Pro',
+			'device_country' => 'GB',
+		]);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidayError::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertNotNull($entity->platform);
+		$this->assertSame('ios', $entity->platform->value);
+		$this->assertSame('iPhone 15 Pro', $entity->realDevice);
+		$this->assertNotNull($entity->deviceCountry);
+		$this->assertSame('GB', $entity->deviceCountry->isoCode);
+	}
+
+	public function testPostFixedReportUnknownPlatformStoredAsUnknown(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'platform' => 'symbian',
+		]);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidayError::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('unknown', $entity->platform->value);
+	}
+
 	public function testPostFloatingReportInvalidReportType(): void
 	{
 		/** @var FixedHolidayMetadata $metadata */
@@ -296,5 +356,237 @@ class ReportControllerV2Test extends WebTestCase
 		]);
 
 		$this->assertResponseStatusCodeSame(422);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedReportLowercaseDeviceCountryNormalized(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'device_country' => 'pl',
+		]);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidayError::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertNotNull($entity->deviceCountry);
+		$this->assertSame('PL', $entity->deviceCountry->isoCode);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedReportUppercasePlatformNormalized(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'platform' => 'ANDROID',
+		]);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidayError::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('android', $entity->platform->value);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedReportTooLongRealDeviceRejected(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'real_device' => str_repeat('x', 2001),
+		]);
+
+		$this->assertResponseStatusCodeSame(422);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedReportWebPlatformFallsBackToUserAgent(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'platform' => 'web',
+		], ['User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) Firefox/123.0']);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidayError::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('Mozilla/5.0 (X11; Linux x86_64) Firefox/123.0', $entity->realDevice);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedReportNonWebPlatformDoesNotFallBackToUserAgent(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'platform' => 'android',
+		], ['User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) Firefox/123.0']);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidayError::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertNull($entity->realDevice);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedReportWebPlatformPrefersExplicitRealDevice(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'platform' => 'web',
+			'real_device' => 'Custom UA Override',
+		], ['User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) Firefox/123.0']);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidayError::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('Custom UA Override', $entity->realDevice);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedReportTrimsRealDevice(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'platform' => 'android',
+			'real_device' => '  Pixel 8 Pro  ',
+		]);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidayError::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('Pixel 8 Pro', $entity->realDevice);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedReportWhitespaceOnlyRealDeviceFallsBackToUserAgent(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'platform' => 'web',
+			'real_device' => '   ',
+		], ['User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) Firefox/123.0']);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidayError::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('Mozilla/5.0 (X11; Linux x86_64) Firefox/123.0', $entity->realDevice);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedReportUnknownDeviceCountryStoredAsNull(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'device_country' => 'ZZ',
+		]);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidayError::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertNull($entity->deviceCountry);
 	}
 }

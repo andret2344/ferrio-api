@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+	{% set nav = admin_nav() %}
 	<main class='section-manage-main'>
 		{% include 'components/sidebar.html.twig' %}
 		{% include 'components/topbar.html.twig' with {pageTitle: 'Dashboard'} %}
@@ -32,6 +33,17 @@
 						<div class='dashboard-stat-label'>Languages</div>
 						<div class='dashboard-stat-value'>{{ languages|length | number_format(0, '.', ' ') }}</div>
 					</div>
+				</a>
+				<a href='{{ path('admin_reports') }}'
+				   class='dashboard-stat no-a {{ nav.reportsPending > 0 ? 'dashboard-stat-warning' : '' }}'>
+					<div class='dashboard-stat-icon'><i class='bi bi-flag'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Pending reports</div>
+						<div class='dashboard-stat-value'>{{ nav.reportsPending | number_format(0, '.', ' ') }}</div>
+					</div>
+					{% if nav.reportsPending > 0 %}
+						<span class='dashboard-stat-pulse' aria-hidden='true'></span>
+					{% endif %}
 				</a>
 			</div>
 

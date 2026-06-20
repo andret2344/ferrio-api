@@ -2,15 +2,28 @@
 
 namespace App\Handler;
 
+use App\DTO\AbstractReportPayload;
+use App\Entity\Country;
 use App\Entity\Language;
+use App\Entity\Platform;
 use App\Entity\ReportType;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Override;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 abstract readonly class AbstractErrorReportHandler implements ReportHandlerInterface
 {
-	public function __construct(protected EntityManagerInterface $entityManager)
+	use CountryLookupTrait;
+	use RealDeviceResolverTrait;
+
+	public function __construct(
+		protected EntityManagerInterface $entityManager,
+		protected RequestStack           $requestStack,
+		protected LoggerInterface        $reportsLogger,
+	)
 	{
 	}
 
@@ -24,30 +37,44 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 	#[Override]
 	public function create(string $userId, object $payload): void
 	{
-		$dto = $this->validatePayload($payload);
+		$dtoClass = $this->getDtoClass();
+		if (!$payload instanceof $dtoClass) {
+			throw new InvalidArgumentException(sprintf('Expected %s', $dtoClass));
+		}
+		/** @var AbstractReportPayload $payload */
 		$language = $this->entityManager->getRepository(Language::class)
-			->findOneBy(['code' => $dto['language']]);
+			->findOneBy(['code' => $payload->language]);
 		if (!$language) {
+			$this->reportsLogger->info('Report rejected: language not found', ['user_id' => $userId, 'language' => $payload->language]);
 			throw new BadRequestHttpException('Language not found');
 		}
 
 		$metadata = $this->entityManager->getRepository($this->getMetadataEntityClass())
-			->findOneBy(['id' => $dto['metadata']]);
+			->findOneBy(['id' => $payload->metadata]);
 		if (!$metadata) {
+			$this->reportsLogger->info('Report rejected: metadata not found', ['user_id' => $userId, 'metadata' => $payload->metadata]);
 			throw new BadRequestHttpException('Metadata not found');
 		}
 
-		$reportType = ReportType::from($dto['reportType']);
-		$report = $this->createErrorEntity($userId, $language, $metadata, $reportType, $dto['description'], $dto['comment']);
+		$platform = Platform::fromInputOrUnknown($payload->platform);
+		$report = $this->createErrorEntity(
+			$userId,
+			$language,
+			$metadata,
+			ReportType::from($payload->reportType),
+			$payload->description,
+			$payload->comment,
+			$platform,
+			$this->resolveRealDevice($platform, $payload->realDevice),
+			$this->getCountry($payload->deviceCountry),
+		);
 		$metadata->reports->add($report);
 		$this->entityManager->persist($metadata);
 		$this->entityManager->flush();
 	}
 
-	/**
-	 * @return array{language: string, metadata: int, reportType: string, description: ?string, comment: ?string}
-	 */
-	abstract protected function validatePayload(object $payload): array;
+	/** @return class-string<AbstractReportPayload> */
+	abstract protected function getDtoClass(): string;
 
 	/** @return class-string */
 	abstract protected function getErrorEntityClass(): string;
@@ -55,5 +82,5 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 	/** @return class-string */
 	abstract protected function getMetadataEntityClass(): string;
 
-	abstract protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description, ?string $comment): object;
+	abstract protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description, ?string $comment, Platform $platform, ?string $realDevice, ?Country $deviceCountry): object;
 }

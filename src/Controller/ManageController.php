@@ -9,6 +9,7 @@ use App\Entity\FixedHolidayMetadata;
 use App\Entity\FloatingHoliday;
 use App\Entity\FloatingHolidayMetadata;
 use App\Entity\Language;
+use App\Entity\Platform;
 use App\Entity\ReportState;
 use App\Enum\ReportKind;
 use App\Repository\FixedHolidayRepository;
@@ -359,15 +360,16 @@ class ManageController extends AbstractController
 	}
 
 	#[Route('/reports/{type<fixed-suggestions|floating-suggestions|fixed-errors|floating-errors>}', name: 'reports')]
-	public function reports(string $type): Response
+	public function reports(string $type, Request $request): Response
 	{
 		$config = self::REPORT_TYPES[$type];
 		$kind = $config['kind'];
 		$isError = !$kind->isSuggestion();
 		$isFloating = $kind === ReportKind::FLOATING_SUGGESTION || $kind === ReportKind::FLOATING_ERROR;
 
+		$filters = $this->parseReportFilters($request);
 		$rows = $this->entityManager->getRepository($kind->entityClass())
-			->findBy([], ['datetime' => 'DESC']);
+			->findBy($this->buildReportCriteria($filters), ['datetime' => 'DESC']);
 
 		$users = $this->firebaseUserLookup->lookup(array_map(fn($r) => $r->userId, $rows));
 
@@ -407,9 +409,150 @@ class ManageController extends AbstractController
 			'rows' => $rows,
 			'users' => $users,
 			'report_states' => array_column(ReportState::cases(), 'value'),
+			'platforms' => Platform::values(),
+			'filters' => $filters,
+			'countries' => $this->entityManager->getRepository(Country::class)->findBy([], ['isoCode' => 'ASC']),
 			'fixedHolidaysPl' => $isFloating ? [] : $holidaysPl,
 			'floatingHolidaysPl' => $isFloating ? $holidaysPl : [],
 		]);
+	}
+
+	private const string UNKNOWN_COUNTRY = 'unknown';
+
+	/**
+	 * @return array{platform: ?string, device_country: ?string, state: ?string}
+	 */
+	private function parseReportFilters(Request $request): array
+	{
+		$platform = $request->query->get('platform');
+		$deviceCountry = $request->query->get('device_country');
+		$state = $request->query->get('state');
+		return [
+			'platform' => in_array($platform, Platform::values(), true) ? $platform : null,
+			'device_country' => $this->normalizeDeviceCountryFilter($deviceCountry),
+			'state' => ReportState::tryFrom((string)$state)?->value,
+		];
+	}
+
+	private function normalizeDeviceCountryFilter(mixed $raw): ?string
+	{
+		if (!is_string($raw) || $raw === '') {
+			return null;
+		}
+		if (strtolower($raw) === self::UNKNOWN_COUNTRY) {
+			return self::UNKNOWN_COUNTRY;
+		}
+		return strtoupper($raw);
+	}
+
+	/**
+	 * @param array{platform: ?string, device_country: ?string, state: ?string} $filters
+	 * @return array<string, mixed>
+	 */
+	private function buildReportCriteria(array $filters): array
+	{
+		$criteria = [];
+		if ($filters['platform'] !== null) {
+			$criteria['platform'] = Platform::from($filters['platform']);
+		}
+		if ($filters['device_country'] === self::UNKNOWN_COUNTRY) {
+			$criteria['deviceCountry'] = null;
+		} elseif ($filters['device_country'] !== null) {
+			$country = $this->entityManager->getRepository(Country::class)
+				->findOneBy(['isoCode' => $filters['device_country']]);
+			if ($country !== null) {
+				$criteria['deviceCountry'] = $country;
+			}
+		}
+		if ($filters['state'] !== null) {
+			$criteria['reportState'] = ReportState::from($filters['state']);
+		}
+		return $criteria;
+	}
+
+	#[Route('/api/reports/stats', name: 'reports_stats', methods: ['GET'])]
+	public function reportsStats(): JsonResponse
+	{
+		$stats = [];
+		foreach (ReportKind::cases() as $kind) {
+			$qb = $this->entityManager->getRepository($kind->entityClass())->createQueryBuilder('r');
+			$byPlatform = $qb->select('COALESCE(r.platform, \'_unknown\') AS platform, COUNT(r.id) AS c')
+				->groupBy('r.platform')
+				->getQuery()->getArrayResult();
+
+			$qb = $this->entityManager->getRepository($kind->entityClass())->createQueryBuilder('r');
+			$byState = $qb->select('r.reportState AS state, COUNT(r.id) AS c')
+				->groupBy('r.reportState')
+				->getQuery()->getArrayResult();
+
+			$qb = $this->entityManager->getRepository($kind->entityClass())->createQueryBuilder('r');
+			$byCountry = $qb->select('COALESCE(IDENTITY(r.deviceCountry), \'_unknown\') AS country, COUNT(r.id) AS c')
+				->groupBy('r.deviceCountry')
+				->getQuery()->getArrayResult();
+
+			$stats[$kind->value] = [
+				'by_platform' => $this->collapseAgg($byPlatform, 'platform'),
+				'by_state' => $this->collapseAgg($byState, 'state'),
+				'by_device_country' => $this->collapseAgg($byCountry, 'country'),
+			];
+		}
+		return $this->json($stats);
+	}
+
+	/**
+	 * @param list<array<string, mixed>> $rows
+	 * @return array<string, int>
+	 */
+	private function collapseAgg(array $rows, string $key): array
+	{
+		$out = [];
+		foreach ($rows as $row) {
+			$k = $row[$key];
+			if ($k instanceof \BackedEnum) {
+				$k = $k->value;
+			}
+			$out[(string)$k] = (int)$row['c'];
+		}
+		return $out;
+	}
+
+	#[Route('/reports/{type<fixed-suggestions|floating-suggestions|fixed-errors|floating-errors>}/export.csv', name: 'reports_export', methods: ['GET'])]
+	public function reportsExport(string $type, Request $request): Response
+	{
+		$config = self::REPORT_TYPES[$type];
+		$kind = $config['kind'];
+		$isError = !$kind->isSuggestion();
+
+		$filters = $this->parseReportFilters($request);
+		$rows = $this->entityManager->getRepository($kind->entityClass())
+			->findBy($this->buildReportCriteria($filters), ['datetime' => 'DESC']);
+
+		$out = fopen('php://temp', 'w+');
+		if ($isError) {
+			$header = ['id', 'datetime', 'user_id', 'language', 'metadata_id', 'report_type', 'description', 'report_state', 'comment', 'platform', 'real_device', 'device_country'];
+		} else {
+			$header = ['id', 'datetime', 'user_id', 'name', 'day_or_date', 'description', 'country', 'report_state', 'comment', 'holiday_id', 'platform', 'real_device', 'device_country'];
+		}
+		fputcsv($out, $header);
+
+		foreach ($rows as $r) {
+			if ($isError) {
+				$row = [$r->id, $r->datetime->format('Y-m-d H:i:s'), $r->userId, $r->language->code, $r->metadata?->id, $r->reportType->value, $r->description, $r->reportState->value, $r->comment, $r->platform?->value, $r->realDevice, $r->deviceCountry?->isoCode];
+			} else {
+				$dayOrDate = property_exists($r, 'date') ? $r->date : sprintf('%02d.%02d', $r->day, $r->month);
+				$row = [$r->id, $r->datetime->format('Y-m-d H:i:s'), $r->userId, $r->name, $dayOrDate, $r->description, $r->country?->isoCode, $r->reportState->value, $r->comment, $r->holiday?->id, $r->platform?->value, $r->realDevice, $r->deviceCountry?->isoCode];
+			}
+			fputcsv($out, $row);
+		}
+
+		rewind($out);
+		$csv = stream_get_contents($out);
+		fclose($out);
+
+		$response = new Response($csv);
+		$response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
+		$response->headers->set('Content-Disposition', sprintf('attachment; filename="reports-%s-%s.csv"', $type, date('Ymd-His')));
+		return $response;
 	}
 
 	#[Route('/reports/moderate', name: 'reports_moderate', methods: ['POST'])]

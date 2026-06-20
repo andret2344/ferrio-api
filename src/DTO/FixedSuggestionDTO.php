@@ -2,48 +2,30 @@
 
 namespace App\DTO;
 
-use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final readonly class FixedSuggestionDTO
+final readonly class FixedSuggestionDTO extends AbstractSuggestionPayload
 {
-	#[SerializedName('user_id')]
-	#[Assert\NotBlank]
-	public string $userId;
-
-	#[Assert\NotBlank]
-	public string $name;
-
-	#[Assert\NotNull]
-	#[Assert\Range(min: 1, max: 31)]
-	public int $day;
-
-	#[Assert\NotNull]
-	#[Assert\Range(min: 1, max: 12)]
-	public int $month;
-
-	public ?string $description;
-
-	public ?string $country;
-
-	public ?string $comment;
-
 	public function __construct(
-		string  $userId,
-		string  $name,
-		int     $day,
-		int     $month,
-		?string $description = null,
-		?string $country = null,
-		?string $comment = null,
+		string         $userId,
+		string         $name,
+
+		#[Assert\NotNull]
+		#[Assert\Range(min: 1, max: 31)]
+		public int     $day,
+
+		#[Assert\NotNull]
+		#[Assert\Range(min: 1, max: 12)]
+		public int     $month,
+
+		?string        $description = null,
+		?string        $country = null,
+		?string        $comment = null,
+		?string        $platform = null,
+		?string        $realDevice = null,
+		?string        $deviceCountry = null,
 	)
 	{
-		$this->userId = $userId;
-		$this->name = $name;
-		$this->day = $day;
-		$this->month = $month;
-		$this->description = $description;
-		$this->country = $country;
-		$this->comment = $comment;
+		parent::__construct($userId, $name, $description, $country, $comment, $platform, $realDevice, $deviceCountry);
 	}
 }

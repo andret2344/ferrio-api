@@ -9,6 +9,26 @@
 {% set isFloating = kind starts with 'floating_' %}
 {% set pending = rows|filter(r => r.reportState.value == 'REPORTED')|length %}
 
+{% macro platform_icon(platform) %}
+	{% set icon = {
+		'android': {'cls': 'bi-android2', 'label': 'Android'},
+		'ios': {'cls': 'bi-apple', 'label': 'iOS'},
+		'web': {'cls': 'bi-globe', 'label': 'Web'},
+		'api': {'cls': 'bi-braces', 'label': 'API'},
+	} %}
+	{% if platform and icon[platform] is defined %}
+		<span class='platform-icon platform-icon-{{ platform }}'
+		      data-bs-toggle='tooltip'
+		      title='{{ icon[platform].label }}'>
+			<i class='bi {{ icon[platform].cls }}'></i>
+		</span>
+	{% else %}
+		<span class='platform-icon platform-icon-unknown' title='Unknown'>
+			<i class='bi bi-question-circle'></i>
+		</span>
+	{% endif %}
+{% endmacro %}
+
 <div class='reports-summary'>
 	<span class='reports-summary-total'>
 		<span class='reports-summary-num' data-role='total-count'>{{ rows|length }}</span>
@@ -24,23 +44,24 @@
 	<div class='text-center text-muted py-5'>No {{ emptyLabel }}.</div>
 {% else %}
 	<div class='table-responsive'>
-		<table class='table table-dark table-striped table-hover align-middle'>
+		<table class='table table-dark table-striped table-hover align-middle reports-table'>
 			<thead>
 			<tr>
-				<th>#</th>
+				<th data-sort='index'>#</th>
+				<th class='platform-col' data-sort='platform' title='Platform'><i class='bi bi-phone'></i></th>
 				{% if isError %}
-					<th>Type</th>
+					<th data-sort='type'>Type</th>
 				{% else %}
-					<th>Name</th>
-					<th>Date</th>
+					<th data-sort='name'>Name</th>
+					<th data-sort='date'>Date</th>
 				{% endif %}
-				<th>Description</th>
+				<th data-sort='description'>Description</th>
 				{% if not isError %}
-					<th>Country</th>
+					<th data-sort='country'>Country</th>
 				{% endif %}
-				<th>State</th>
-				<th>Reported</th>
-				<th>User</th>
+				<th data-sort='state'>State</th>
+				<th data-sort='datetime'>Reported</th>
+				<th data-sort='user'>User</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -52,10 +73,13 @@
 				{% set referredDescription = isError ? (plData ? plData.description : null) : null %}
 				{% set reportDate = isError ? '' : (isFloating ? r.date : '%02d.%02d'|format(r.day, r.month)) %}
 				{% set reportCountry = isError ? '' : (r.country ? r.country.isoCode : '') %}
+				{% set deviceCountryCode = r.deviceCountry ? r.deviceCountry.isoCode : '' %}
 				{% set reportType = isError ? r.reportType.value : '' %}
 				{% set detailHref = linkedId
 					? path('admin_holiday_detail', {kind: isFloating ? 'floating' : 'fixed', id: linkedId})
 					: '' %}
+				{% set platformValue = r.platform ? r.platform.value : '' %}
+				{% set u = users[r.userId] ?? null %}
 				<tr
 						class='report-row'
 						role='button'
@@ -70,31 +94,40 @@
 						data-report-date='{{ reportDate }}'
 						data-report-country='{{ reportCountry }}'
 						data-report-type='{{ reportType }}'
+						data-report-language='{{ isError ? r.language.code : '' }}'
+						data-report-datetime='{{ r.datetime|date('Y-m-d H:i:s') }}'
+						data-report-user-id='{{ r.userId|e('html_attr') }}'
+						data-report-user-name='{{ (u ? (u.name ?? '') : '')|e('html_attr') }}'
+						data-report-user-email='{{ (u ? (u.email ?? '') : '')|e('html_attr') }}'
+						data-platform='{{ platformValue }}'
+						data-real-device='{{ (r.realDevice ?? '')|e('html_attr') }}'
+						data-device-country='{{ deviceCountryCode }}'
 						data-referred-name='{{ (referredName ?? '')|e('html_attr') }}'
 						data-referred-description='{{ (referredDescription ?? '')|e('html_attr') }}'
 						data-detail-href='{{ detailHref }}'
 				>
-					<td>{{ loop.index }}</td>
+					<td data-sort-value='{{ loop.index }}'>{{ loop.index }}</td>
+					<td class='platform-col' data-sort-value='{{ platformValue }}'>{{ _self.platform_icon(platformValue) }}</td>
 					{% if isError %}
-						<td>
+						<td data-sort-value='{{ reportType }}'>
 							<span class='badge bg-light text-dark'>{{ r.reportType.value|lower|replace({'_': ' '})|capitalize }}</span>
 						</td>
 						{% if r.description %}
-							<td class='description-cell'>
+							<td class='description-cell' data-sort-value='{{ r.description|e('html_attr') }}'>
 								<span class='description-text'>{{ r.description }}</span>
 							</td>
 						{% else %}
-							<td>-</td>
+							<td data-sort-value=''>-</td>
 						{% endif %}
 					{% else %}
-						<td>{{ r.name }}</td>
-						<td>{{ isFloating ? r.date : '%02d.%02d'|format(r.day, r.month) }}</td>
-						<td class='description-cell'>
+						<td data-sort-value='{{ r.name|e('html_attr') }}'>{{ r.name }}</td>
+						<td data-sort-value='{{ isFloating ? r.date : '%02d%02d'|format(r.month, r.day) }}'>{{ isFloating ? r.date : '%02d.%02d'|format(r.day, r.month) }}</td>
+						<td class='description-cell' data-sort-value='{{ r.description|e('html_attr') }}'>
 							<span class='description-text'>{{ r.description }}</span>
 						</td>
-						<td>{{ r.country ? r.country.isoCode : '-' }}</td>
+						<td data-sort-value='{{ reportCountry }}'>{{ r.country ? r.country.isoCode : '-' }}</td>
 					{% endif %}
-					<td>
+					<td data-sort-value='{{ r.reportState.value }}'>
 						<span class='state-cell'>
 							<span class='badge report-state report-state-{{ r.reportState.value|lower }}'
 							      data-role='state-badge'>
@@ -114,8 +147,8 @@
 							</button>
 						</span>
 					</td>
-					<td>{{ r.datetime|date('Y-m-d H:i') }}</td>
-					<td class='user-cell' title='{{ r.userId }}'>
+					<td data-sort-value='{{ r.datetime|date('Y-m-d H:i:s') }}'>{{ r.datetime|date('Y-m-d H:i') }}</td>
+					<td class='user-cell' data-sort-value='{{ (u ? (u.name ?? '') : r.userId)|e('html_attr') }}' title='{{ r.userId }}'>
 						{% set u = users[r.userId] ?? null %}
 						{% if u and (u.name or u.email) %}
 							<div class='user-name'>{{ u.name ?? '-' }}</div>

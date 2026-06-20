@@ -4,12 +4,15 @@ namespace App\Handler;
 
 use App\DTO\FixedSuggestionDTO;
 use App\Entity\FixedHolidaySuggestion;
+use App\Entity\Platform;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Override;
 
 readonly class FixedHolidaySuggestionHandler implements ReportHandlerInterface
 {
 	use CountryLookupTrait;
+	use RealDeviceResolverTrait;
 
 	public function __construct(private EntityManagerInterface $entityManager)
 	{
@@ -26,11 +29,23 @@ readonly class FixedHolidaySuggestionHandler implements ReportHandlerInterface
 	public function create(string $userId, object $payload): void
 	{
 		if (!$payload instanceof FixedSuggestionDTO) {
-			throw new \InvalidArgumentException('Expected FixedSuggestionDTO');
+			throw new InvalidArgumentException('Expected FixedSuggestionDTO');
 		}
-		$report = new FixedHolidaySuggestion($userId, $payload->name, $payload->description, $payload->day, $payload->month, $this->getCountry($payload->country), comment: $payload->comment);
+		$platform = Platform::fromInputOrUnknown($payload->platform);
+		$countries = $this->getCountriesByCodes($payload->country, $payload->deviceCountry);
+		$report = new FixedHolidaySuggestion(
+			$userId,
+			$payload->name,
+			$payload->description,
+			$payload->day,
+			$payload->month,
+			$this->pickCountry($countries, $payload->country),
+			comment      : $payload->comment,
+			platform     : $platform,
+			realDevice   : $this->resolveRealDevice($platform, $payload->realDevice),
+			deviceCountry: $this->pickCountry($countries, $payload->deviceCountry),
+		);
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();
 	}
-
 }

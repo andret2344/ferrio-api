@@ -281,4 +281,105 @@ class MissingControllerV2Test extends WebTestCase
 
 		$this->assertResponseStatusCodeSame(400);
 	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedMissingWithPlatformAndDeviceMeta(): void
+	{
+		$this->request('POST', '/v2/missing/fixed', [], [
+			'user_id' => 'user-id',
+			'day' => 1,
+			'month' => 1,
+			'name' => 'Test name',
+			'description' => 'Test description',
+			'country' => 'GB',
+			'platform' => 'ios',
+			'real_device' => 'iPhone 15 Pro',
+			'device_country' => 'pl',
+		]);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidaySuggestion::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('ios', $entity->platform->value);
+		$this->assertSame('iPhone 15 Pro', $entity->realDevice);
+		$this->assertSame('GB', $entity->country->isoCode);
+		$this->assertSame('PL', $entity->deviceCountry->isoCode);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedMissingWebPlatformFallsBackToUserAgent(): void
+	{
+		$this->request('POST', '/v2/missing/fixed', [], [
+			'user_id' => 'user-id',
+			'day' => 2,
+			'month' => 2,
+			'name' => 'Test name',
+			'description' => 'Test description',
+			'platform' => 'web',
+		], ['User-Agent' => 'Mozilla/5.0 web-test-agent']);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidaySuggestion::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('Mozilla/5.0 web-test-agent', $entity->realDevice);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedMissingUnknownPlatformStoredAsUnknown(): void
+	{
+		$this->request('POST', '/v2/missing/fixed', [], [
+			'user_id' => 'user-id',
+			'day' => 1,
+			'month' => 1,
+			'name' => 'Test name',
+			'description' => 'Test description',
+			'platform' => 'symbian',
+		]);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidaySuggestion::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('unknown', $entity->platform->value);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFloatingMissingWithSameCountryAndDeviceCountry(): void
+	{
+		// Same code on both sides — the bulk lookup should still resolve both.
+		$this->request('POST', '/v2/missing/floating', [], [
+			'user_id' => 'user-id',
+			'date' => '01.01',
+			'name' => 'Test name',
+			'description' => 'Test description',
+			'country' => 'gb',
+			'device_country' => 'GB',
+			'platform' => 'android',
+		]);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FloatingHolidaySuggestion::class)
+			->findOneBy(['userId' => 'user-id']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('GB', $entity->country->isoCode);
+		$this->assertSame('GB', $entity->deviceCountry->isoCode);
+	}
 }

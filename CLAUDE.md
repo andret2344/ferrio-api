@@ -214,6 +214,10 @@ generation finishes, instead of unconditionally re-enabling). The detail page wi
 
 - PHP 8.5 property hooks and `private(set)` visibility are used in entities.
 - Doctrine mapping uses PHP 8 attributes (not XML/YAML).
+- Avoid ternary expressions (`?:`) in PHP — prefer `if`/`else` blocks for clarity. Simple one-liners
+  (a single condition assigning or returning, fits cleanly on one line) are the allowed exception, as
+  are Twig inline ternaries inside template attributes where `{% if %}` would be unwieldy. Avoid nested
+  or multi-condition ternaries even when they fit on a line.
 - All JSON keys in admin internal APIs (`/admin/api/*`) and JSON embedded in Twig templates (data-* blobs and
   `<script type='application/json'>` payloads) MUST use `snake_case` — never camelCase. The PHP-side variable that
   holds the value can stay camelCase; only the JSON key gets converted (e.g. `'country_code' => $country->isoCode`).

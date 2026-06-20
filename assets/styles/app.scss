@@ -1451,6 +1451,246 @@ body {
   }
 }
 
+// Meta card — same shape as report-content-card but a neutral accent stripe
+.report-meta-card {
+  position: relative;
+  background: linear-gradient(135deg, #1a1a30 0%, #0c0c1e 100%);
+  border: 1px solid #2a2a4a;
+  border-radius: 12px;
+  padding: 14px 16px 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, #4a6a90, #3050a0);
+    border-radius: 12px 0 0 12px;
+  }
+
+  .report-content-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #8aa8d0;
+    margin-bottom: 10px;
+
+    i {
+      font-size: 13px;
+      color: #6a90cc;
+    }
+  }
+
+  .report-content-grid {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 14px;
+    row-gap: 6px;
+    margin: 0;
+
+    dt {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #7a7a9a;
+      padding-top: 2px;
+    }
+
+    dd {
+      margin: 0;
+      color: #e6e6f6;
+      font-size: 13.5px;
+      line-height: 1.4;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    .report-content-empty {
+      color: #555575;
+      font-style: italic;
+    }
+  }
+
+  .report-content-mono {
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: #b0b0d0;
+  }
+
+  .report-content-description {
+    white-space: pre-wrap;
+    max-height: 8em;
+    overflow-y: auto;
+  }
+}
+
+// Platform icon — shown per report row and as a column header glyph
+.platform-col {
+  width: 36px;
+  text-align: center;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.platform-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  i {
+    line-height: 1;
+  }
+
+  &-android {
+    color: #6dd06a;
+  }
+
+  &-ios {
+    color: #d0d0e0;
+  }
+
+  &-web {
+    color: #6aa8d6;
+  }
+
+  &-api {
+    color: #d6a86a;
+  }
+
+  &-unknown {
+    color: #555575;
+  }
+}
+
+// Platform badge — shown in modal as label + icon
+.platform-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #e0e0f0;
+
+  &.platform-icon-android {
+    color: #6dd06a;
+  }
+
+  &.platform-icon-ios {
+    color: #d0d0e0;
+  }
+
+  &.platform-icon-web {
+    color: #6aa8d6;
+  }
+
+  &.platform-icon-api {
+    color: #d6a86a;
+  }
+
+  &.platform-icon-unknown {
+    color: #555575;
+  }
+}
+
+.device-country-flag {
+  font-size: 16px;
+  margin-right: 4px;
+  line-height: 1;
+}
+
+// Reports toolbar (inline filter selects + CSV export)
+.reports-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 6px 10px;
+  background: linear-gradient(135deg, #14142a 0%, #0a0a18 100%);
+  border: 1px solid #1f1f3a;
+  border-radius: 8px;
+}
+
+.reports-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex: 1;
+  align-items: center;
+}
+
+.reports-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+
+  select {
+    background-color: #1a1a30;
+    border: 1px solid #2a2a4a;
+    color: #e0e0f0;
+    font-size: 12px;
+    padding: 3px 22px 3px 8px;
+    height: auto;
+    min-width: 90px;
+  }
+}
+
+.filter-inline-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #7a7a9a;
+}
+
+// Sortable table headers
+table.reports-table thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+
+  &.sort-asc::after {
+    content: ' \2191';
+    color: #6aa8d6;
+  }
+
+  &.sort-desc::after {
+    content: ' \2193';
+    color: #6aa8d6;
+  }
+}
+
 // Report state badge (used both in tables and modal — must be global)
 .report-state {
   font-size: 11px;
@@ -1812,6 +2052,18 @@ body {
   }
 }
 
+@keyframes dashboard-stat-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(240, 184, 64, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(240, 184, 64, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(240, 184, 64, 0);
+  }
+}
+
 .spin-icon {
   display: inline-block;
   animation: spin 0.8s linear infinite;
@@ -2050,6 +2302,7 @@ body {
   }
 
   .dashboard-stat {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 14px;
@@ -2072,6 +2325,48 @@ body {
           color: #b0b0ff;
         }
       }
+    }
+
+    &.dashboard-stat-warning {
+      border-color: rgba(240, 184, 64, 0.35);
+      background: linear-gradient(135deg, #0c0c24 0%, #1a1530 100%);
+
+      .dashboard-stat-icon {
+        background-color: rgba(240, 184, 64, 0.12);
+
+        i {
+          color: #f0b840;
+        }
+      }
+
+      .dashboard-stat-value {
+        color: #f0b840;
+      }
+
+      &.no-a:hover, &.no-a:focus-visible {
+        border-color: rgba(240, 184, 64, 0.65);
+        background: linear-gradient(135deg, #10102e 0%, #1f1a36 100%);
+
+        .dashboard-stat-icon {
+          background-color: rgba(240, 184, 64, 0.2);
+
+          i {
+            color: #ffd070;
+          }
+        }
+      }
+    }
+
+    .dashboard-stat-pulse {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #f0b840;
+      box-shadow: 0 0 0 0 rgba(240, 184, 64, 0.7);
+      animation: dashboard-stat-pulse 1.8s ease-out infinite;
     }
 
     .dashboard-stat-icon {

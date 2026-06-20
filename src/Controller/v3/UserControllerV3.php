@@ -9,6 +9,7 @@ use App\DTO\FloatingReportDTO;
 use App\DTO\FloatingSuggestionDTO;
 use App\Handler\ReportHandlerInterface;
 use App\Service\BanService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +32,7 @@ class UserControllerV3 extends AbstractController
 		private readonly BanService          $banService,
 		private readonly SerializerInterface $serializer,
 		private readonly ValidatorInterface  $validator,
+		private readonly LoggerInterface     $reportsLogger,
 		ReportHandlerInterface               $floatingSuggestionHandler,
 		ReportHandlerInterface               $floatingErrorHandler,
 		ReportHandlerInterface               $fixedSuggestionHandler,
@@ -68,6 +70,7 @@ class UserControllerV3 extends AbstractController
 			->getUserIdentifier();
 		$banInfo = $this->banService->getBanInfo($userId);
 		if ($banInfo) {
+			$this->reportsLogger->info('Report rejected: user banned', ['user_id' => $userId, 'report_type' => $request->query->getString('reportType'), 'holiday_type' => $request->query->getString('holidayType'), 'reason' => $banInfo->reason]);
 			return new JsonResponse(['reason' => $banInfo->reason], Response::HTTP_FORBIDDEN);
 		}
 
@@ -102,6 +105,7 @@ class UserControllerV3 extends AbstractController
 					'message' => $violation->getMessage(),
 				];
 			}
+			$this->reportsLogger->info('Report rejected: validation failed', ['user_id' => $userId, 'report_type' => $reportType, 'holiday_type' => $holidayType, 'errors' => $errors]);
 			return new JsonResponse(['errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY);
 		}
 

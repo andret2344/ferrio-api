@@ -7,6 +7,7 @@ use App\DTO\FloatingReportDTO;
 use App\Handler\FixedHolidayErrorHandler;
 use App\Handler\FloatingHolidayErrorHandler;
 use App\Service\BanService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,9 @@ class ReportControllerV2 extends AbstractController
 	public function __construct(
 		private readonly BanService                  $banService,
 		private readonly FixedHolidayErrorHandler    $fixedHolidayErrorHandler,
-		private readonly FloatingHolidayErrorHandler $floatingHolidayErrorHandler)
+		private readonly FloatingHolidayErrorHandler $floatingHolidayErrorHandler,
+		private readonly LoggerInterface             $reportsLogger,
+	)
 	{
 	}
 
@@ -40,6 +43,7 @@ class ReportControllerV2 extends AbstractController
 	{
 		$banInfo = $this->banService->getBanInfo($dto->userId);
 		if ($banInfo) {
+			$this->reportsLogger->info('Report rejected: user banned', ['user_id' => $dto->userId, 'kind' => 'fixed_error', 'reason' => $banInfo->reason]);
 			return new JsonResponse(['reason' => $banInfo->reason], Response::HTTP_FORBIDDEN);
 		}
 		$this->fixedHolidayErrorHandler->create($dto->userId, $dto);
@@ -51,6 +55,7 @@ class ReportControllerV2 extends AbstractController
 	{
 		$banInfo = $this->banService->getBanInfo($dto->userId);
 		if ($banInfo) {
+			$this->reportsLogger->info('Report rejected: user banned', ['user_id' => $dto->userId, 'kind' => 'floating_error', 'reason' => $banInfo->reason]);
 			return new JsonResponse(['reason' => $banInfo->reason], Response::HTTP_FORBIDDEN);
 		}
 		$this->floatingHolidayErrorHandler->create($dto->userId, $dto);

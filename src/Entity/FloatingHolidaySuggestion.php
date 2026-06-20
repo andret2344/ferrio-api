@@ -4,13 +4,18 @@ namespace App\Entity;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 use Override;
 
 #[ORM\Entity]
+#[ORM\Table(name: 'floating_holiday_suggestion')]
+#[ORM\Index(name: 'idx_flhs_platform', columns: ['platform'])]
+#[ORM\Index(name: 'idx_flhs_device_country', columns: ['device_country'])]
+#[ORM\Index(name: 'idx_flhs_report_state', columns: ['report_state'])]
 class FloatingHolidaySuggestion implements JsonSerializable
 {
+	use ReporterDeviceMetaTrait;
+
 	#[ORM\Id]
 	#[ORM\Column]
 	#[ORM\GeneratedValue]
@@ -54,7 +59,10 @@ class FloatingHolidaySuggestion implements JsonSerializable
 		DateTimeImmutable        $datetime = new DateTimeImmutable(),
 		ReportState              $reportState = ReportState::REPORTED,
 		?FloatingHolidayMetadata $floatingHolidayMetadata = null,
-		?string                  $comment = null)
+		?string                  $comment = null,
+		Platform                 $platform = Platform::UNKNOWN,
+		?string                  $realDevice = null,
+		?Country                 $deviceCountry = null)
 	{
 		$this->userId = $userId;
 		$this->name = $name;
@@ -65,21 +73,12 @@ class FloatingHolidaySuggestion implements JsonSerializable
 		$this->reportState = $reportState;
 		$this->holiday = $floatingHolidayMetadata;
 		$this->comment = $comment;
+		$this->platform = $platform;
+		$this->realDevice = $realDevice;
+		$this->deviceCountry = $deviceCountry;
 	}
 
 	#[Override]
-	#[ArrayShape([
-		'id' => 'int|null',
-		'user_id' => 'string',
-		'name' => 'string',
-		'description' => 'string',
-		'date' => 'string',
-		'datetime' => 'string',
-		'country' => 'null|string',
-		'report_state' => '\App\Entity\ReportState',
-		'comment' => 'null|string',
-		'holiday_id' => 'int|null'
-	])]
 	public function jsonSerialize(): array
 	{
 		return [
@@ -92,7 +91,8 @@ class FloatingHolidaySuggestion implements JsonSerializable
 			'country' => $this->country?->isoCode,
 			'report_state' => $this->reportState,
 			'comment' => $this->comment,
-			'holiday_id' => $this->holiday?->id
+			'holiday_id' => $this->holiday?->id,
+			...$this->deviceMeta,
 		];
 	}
 }

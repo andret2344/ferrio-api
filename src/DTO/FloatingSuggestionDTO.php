@@ -2,41 +2,25 @@
 
 namespace App\DTO;
 
-use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final readonly class FloatingSuggestionDTO
+final readonly class FloatingSuggestionDTO extends AbstractSuggestionPayload
 {
-	#[SerializedName('user_id')]
-	#[Assert\NotBlank]
-	public string $userId;
-
-	#[Assert\NotBlank]
-	public string $name;
-
-	#[Assert\NotBlank]
-	public string $date;
-
-	public ?string $description;
-
-	public ?string $country;
-
-	public ?string $comment;
-
 	public function __construct(
-		string  $userId,
-		string  $name,
-		string  $date,
-		?string $description = null,
-		?string $country = null,
-		?string $comment = null,
+		string         $userId,
+		string         $name,
+
+		#[Assert\NotBlank]
+		public string  $date,
+
+		?string        $description = null,
+		?string        $country = null,
+		?string        $comment = null,
+		?string        $platform = null,
+		?string        $realDevice = null,
+		?string        $deviceCountry = null,
 	)
 	{
-		$this->userId = $userId;
-		$this->name = $name;
-		$this->date = $date;
-		$this->description = $description;
-		$this->country = $country;
-		$this->comment = $comment;
+		parent::__construct($userId, $name, $description, $country, $comment, $platform, $realDevice, $deviceCountry);
 	}
 }

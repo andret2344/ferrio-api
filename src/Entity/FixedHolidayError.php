@@ -4,13 +4,18 @@ namespace App\Entity;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 use Override;
 
 #[ORM\Entity]
+#[ORM\Table(name: 'fixed_holiday_error')]
+#[ORM\Index(name: 'idx_fhe_platform', columns: ['platform'])]
+#[ORM\Index(name: 'idx_fhe_device_country', columns: ['device_country'])]
+#[ORM\Index(name: 'idx_fhe_report_state', columns: ['report_state'])]
 class FixedHolidayError implements JsonSerializable
 {
+	use ReporterDeviceMetaTrait;
+
 	#[ORM\Id]
 	#[ORM\Column(type: 'integer')]
 	#[ORM\GeneratedValue]
@@ -48,7 +53,10 @@ class FixedHolidayError implements JsonSerializable
 		FixedHolidayMetadata $metadata,
 		ReportType           $reportType,
 		?string              $description,
-		?string              $comment = null)
+		?string              $comment = null,
+		Platform             $platform = Platform::UNKNOWN,
+		?string              $realDevice = null,
+		?Country             $deviceCountry = null)
 	{
 		$this->userId = $userId;
 		$this->language = $language;
@@ -58,20 +66,12 @@ class FixedHolidayError implements JsonSerializable
 		$this->datetime = new DateTimeImmutable();
 		$this->reportState = ReportState::REPORTED;
 		$this->comment = $comment;
+		$this->platform = $platform;
+		$this->realDevice = $realDevice;
+		$this->deviceCountry = $deviceCountry;
 	}
 
 	#[Override]
-	#[ArrayShape([
-		'id' => 'int',
-		'user_id' => 'string',
-		'language_code' => 'string',
-		'metadata_id' => 'int',
-		'report_type' => '\App\Entity\ReportType',
-		'description' => 'null|string',
-		'datetime' => 'string',
-		'report_state' => '\App\Entity\ReportState',
-		'comment' => 'null|string'
-	])]
 	public function jsonSerialize(): array
 	{
 		return [
@@ -83,7 +83,8 @@ class FixedHolidayError implements JsonSerializable
 			'description' => $this->description,
 			'datetime' => $this->datetime->format('Y-m-d H:i:s'),
 			'report_state' => $this->reportState,
-			'comment' => $this->comment
+			'comment' => $this->comment,
+			...$this->deviceMeta,
 		];
 	}
 }

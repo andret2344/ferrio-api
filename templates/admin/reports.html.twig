@@ -5,6 +5,47 @@
 		{% include 'components/sidebar.html.twig' %}
 		{% include 'components/topbar.html.twig' with {pageTitle: label} %}
 		<div class='manage-content'>
+			<form class='reports-toolbar' method='get' action='{{ path('admin_reports', {type: type}) }}'>
+				<div class='reports-filters'>
+					<label class='filter-inline'>
+						<span class='filter-inline-label'>Platform</span>
+						<select name='platform' class='form-select form-select-sm' onchange='this.form.submit()'>
+							<option value=''>All</option>
+							{% for p in platforms %}
+								<option value='{{ p }}' {{ filters.platform == p ? 'selected' : '' }}>{{ p|capitalize }}</option>
+							{% endfor %}
+						</select>
+					</label>
+
+					<label class='filter-inline'>
+						<span class='filter-inline-label'>State</span>
+						<select name='state' class='form-select form-select-sm' onchange='this.form.submit()'>
+							<option value=''>All</option>
+							{% for s in report_states %}
+								<option value='{{ s }}' {{ filters.state == s ? 'selected' : '' }}>{{ s }}</option>
+							{% endfor %}
+						</select>
+					</label>
+
+					<label class='filter-inline'>
+						<span class='filter-inline-label'>Country</span>
+						<select name='device_country' class='form-select form-select-sm' onchange='this.form.submit()'>
+							<option value=''>All</option>
+							<option value='unknown' {{ filters.device_country == 'unknown' ? 'selected' : '' }}>Unknown</option>
+							{% for c in countries %}
+								<option value='{{ c.isoCode }}' {{ filters.device_country == c.isoCode ? 'selected' : '' }}>{{ c.isoCode }}</option>
+							{% endfor %}
+						</select>
+					</label>
+				</div>
+
+				<div class='reports-toolbar-actions'>
+					<a class='btn btn-sm btn-outline-light'
+					   href='{{ path('admin_reports_export', {type: type, platform: filters.platform, device_country: filters.device_country, state: filters.state}) }}'>
+						<i class='bi bi-download me-1'></i>Export CSV
+					</a>
+				</div>
+			</form>
 			<div class='reports-pane' id='{{ type }}'>
 				{% include 'admin/components/reports_table.html.twig' with {
 					kind: kind,
@@ -70,6 +111,26 @@
 							<dd id='suggestionReportCountry'></dd>
 							<dt>Description</dt>
 							<dd id='suggestionReportDescription' class='report-content-description'></dd>
+						</dl>
+					</div>
+					<div class='report-meta-card mb-3'>
+						<div class='report-content-label'>
+							<i class='bi bi-info-circle'></i>
+							Report details
+						</div>
+						<dl class='report-content-grid'>
+							<dt>Reported at</dt>
+							<dd id='suggestionReportDatetime'></dd>
+							<dt>User</dt>
+							<dd id='suggestionReportUser'></dd>
+							<dt>User ID</dt>
+							<dd id='suggestionReportUserId' class='report-content-mono'></dd>
+							<dt>Platform</dt>
+							<dd id='suggestionReportPlatform'></dd>
+							<dt>Real device</dt>
+							<dd id='suggestionReportDevice' class='report-content-description'></dd>
+							<dt>Device country</dt>
+							<dd id='suggestionReportDeviceCountry'></dd>
 						</dl>
 					</div>
 					<form id='suggestionForm'>
@@ -148,8 +209,30 @@
 						<dl class='report-content-grid'>
 							<dt>Type</dt>
 							<dd id='errorReportType'></dd>
+							<dt>Language</dt>
+							<dd id='errorReportLanguage'></dd>
 							<dt>Description</dt>
 							<dd id='errorReportDescription' class='report-content-description'></dd>
+						</dl>
+					</div>
+					<div class='report-meta-card mb-3'>
+						<div class='report-content-label'>
+							<i class='bi bi-info-circle'></i>
+							Report details
+						</div>
+						<dl class='report-content-grid'>
+							<dt>Reported at</dt>
+							<dd id='errorReportDatetime'></dd>
+							<dt>User</dt>
+							<dd id='errorReportUser'></dd>
+							<dt>User ID</dt>
+							<dd id='errorReportUserId' class='report-content-mono'></dd>
+							<dt>Platform</dt>
+							<dd id='errorReportPlatform'></dd>
+							<dt>Real device</dt>
+							<dd id='errorReportDevice' class='report-content-description'></dd>
+							<dt>Device country</dt>
+							<dd id='errorReportDeviceCountry'></dd>
 						</dl>
 					</div>
 					<form id='errorForm'>

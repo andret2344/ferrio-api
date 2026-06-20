@@ -4,6 +4,18 @@ interface BootstrapModalEvent extends Event {
     readonly relatedTarget: HTMLElement | null;
 }
 
+interface PlatformMeta {
+    readonly label: string;
+    readonly icon: string;
+}
+
+const PLATFORM_META: Record<string, PlatformMeta> = {
+    android: {label: 'Android', icon: 'bi-android2'},
+    ios: {label: 'iOS', icon: 'bi-apple'},
+    web: {label: 'Web', icon: 'bi-globe'},
+    api: {label: 'API', icon: 'bi-braces'},
+};
+
 let pendingDetailHref: string | null = null;
 
 function setReportField(id: string, value: string): void {
@@ -20,6 +32,20 @@ function setReportField(id: string, value: string): void {
     }
 }
 
+function setReportHtml(id: string, html: string): void {
+    const el = document.getElementById(id);
+    if (!el) {
+        return;
+    }
+    if (html) {
+        el.innerHTML = html;
+        el.classList.remove('report-content-empty');
+    } else {
+        el.textContent = '—';
+        el.classList.add('report-content-empty');
+    }
+}
+
 function formatReportType(raw: string): string {
     if (!raw) {
         return '';
@@ -28,16 +54,77 @@ function formatReportType(raw: string): string {
     return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 }
 
+function escapeHtml(value: string): string {
+    return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function platformBadgeHtml(raw: string): string {
+    if (!raw) {
+        return '';
+    }
+    const meta = PLATFORM_META[raw];
+    if (!meta) {
+        return `<span class='badge platform-badge platform-icon-unknown'><i class='bi bi-question-circle me-1'></i>${escapeHtml(raw)}</span>`;
+    }
+    return `<span class='badge platform-badge platform-icon-${raw}'><i class='bi ${meta.icon} me-1'></i>${escapeHtml(meta.label)}</span>`;
+}
+
+function flagEmoji(iso: string): string {
+    if (!iso || iso.length !== 2) {
+        return '';
+    }
+    const A = 0x1F1E6;
+    const base = 'A'.charCodeAt(0);
+    const codes = iso.toUpperCase().split('').map(c => A + c.charCodeAt(0) - base);
+    if (codes.some(code => code < 0x1F1E6 || code > 0x1F1FF)) {
+        return '';
+    }
+    return String.fromCodePoint(...codes);
+}
+
+function deviceCountryHtml(iso: string): string {
+    if (!iso) {
+        return '';
+    }
+    const flag = flagEmoji(iso);
+    const label = escapeHtml(iso.toUpperCase());
+    return flag ? `<span class='device-country-flag' aria-hidden='true'>${flag}</span> ${label}` : label;
+}
+
+function formatUserLine(name: string, email: string): string {
+    if (name && email) {
+        return `${name} (${email})`;
+    }
+    return name || email || '';
+}
+
+function populateReportMeta(row: HTMLElement, prefix: 'suggestionReport' | 'errorReport'): void {
+    setReportField(`${prefix}Datetime`, row.dataset.reportDatetime ?? '');
+    setReportField(`${prefix}User`, formatUserLine(row.dataset.reportUserName ?? '', row.dataset.reportUserEmail ?? ''));
+    setReportField(`${prefix}UserId`, row.dataset.reportUserId ?? '');
+    setReportHtml(`${prefix}Platform`, platformBadgeHtml(row.dataset.platform ?? ''));
+    setReportField(`${prefix}Device`, row.dataset.realDevice ?? '');
+    setReportHtml(`${prefix}DeviceCountry`, deviceCountryHtml(row.dataset.deviceCountry ?? ''));
+}
+
 function populateSuggestionContent(row: HTMLElement): void {
     setReportField('suggestionReportName', row.dataset.reportName ?? '');
     setReportField('suggestionReportDate', row.dataset.reportDate ?? '');
     setReportField('suggestionReportCountry', row.dataset.reportCountry ?? '');
     setReportField('suggestionReportDescription', row.dataset.reportDescription ?? '');
+    populateReportMeta(row, 'suggestionReport');
 }
 
 function populateErrorContent(row: HTMLElement): void {
     setReportField('errorReportType', formatReportType(row.dataset.reportType ?? ''));
+    setReportField('errorReportLanguage', row.dataset.reportLanguage ?? '');
     setReportField('errorReportDescription', row.dataset.reportDescription ?? '');
+    populateReportMeta(row, 'errorReport');
 }
 
 function setReferredHoliday(row: HTMLElement | null): void {
@@ -379,6 +466,48 @@ function refreshPaneSummary(): void {
     pendingPill?.classList.toggle('d-none', pending === 0);
 }
 
+function initSortableHeaders(): void {
+    const table = document.querySelector<HTMLTableElement>('table.reports-table');
+    if (!table) {
+        return;
+    }
+    const headers = table.querySelectorAll<HTMLTableCellElement>('thead th[data-sort]');
+    headers.forEach((th, columnIndex) => {
+        th.classList.add('sortable');
+        let direction: 'asc' | 'desc' | null = null;
+        th.addEventListener('click', () => {
+            const tbody = table.tBodies[0];
+            if (!tbody) {
+                return;
+            }
+            direction = direction === 'asc' ? 'desc' : 'asc';
+            headers.forEach(other => {
+                if (other !== th) {
+                    other.classList.remove('sort-asc', 'sort-desc');
+                }
+            });
+            th.classList.toggle('sort-asc', direction === 'asc');
+            th.classList.toggle('sort-desc', direction === 'desc');
+
+            const rows = Array.from(tbody.querySelectorAll<HTMLTableRowElement>('tr.report-row'));
+            rows.sort((a, b) => {
+                const av = (a.cells[columnIndex]?.dataset.sortValue ?? a.cells[columnIndex]?.textContent ?? '').trim();
+                const bv = (b.cells[columnIndex]?.dataset.sortValue ?? b.cells[columnIndex]?.textContent ?? '').trim();
+                const aNum = Number(av);
+                const bNum = Number(bv);
+                let cmp: number;
+                if (!Number.isNaN(aNum) && !Number.isNaN(bNum) && av !== '' && bv !== '') {
+                    cmp = aNum - bNum;
+                } else {
+                    cmp = av.localeCompare(bv);
+                }
+                return direction === 'asc' ? cmp : -cmp;
+            });
+            rows.forEach(row => tbody.appendChild(row));
+        });
+    });
+}
+
 function updateRow(kind: string, id: string, state: string, comment: string | null, holidayId: number | null): void {
     const row = document.querySelector<HTMLElement>(
         `tr.report-row[data-kind="${kind}"][data-id="${id}"]`
@@ -441,4 +570,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initErrorModal();
     initRowTriggers();
     initCommentPopovers();
+    initSortableHeaders();
 });

@@ -4,12 +4,15 @@ namespace App\Handler;
 
 use App\DTO\FloatingSuggestionDTO;
 use App\Entity\FloatingHolidaySuggestion;
+use App\Entity\Platform;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Override;
 
 readonly class FloatingHolidaySuggestionHandler implements ReportHandlerInterface
 {
 	use CountryLookupTrait;
+	use RealDeviceResolverTrait;
 
 	public function __construct(private EntityManagerInterface $entityManager)
 	{
@@ -26,11 +29,22 @@ readonly class FloatingHolidaySuggestionHandler implements ReportHandlerInterfac
 	public function create(string $userId, object $payload): void
 	{
 		if (!$payload instanceof FloatingSuggestionDTO) {
-			throw new \InvalidArgumentException('Expected FloatingSuggestionDTO');
+			throw new InvalidArgumentException('Expected FloatingSuggestionDTO');
 		}
-		$report = new FloatingHolidaySuggestion($userId, $payload->name, $payload->description, $payload->date, $this->getCountry($payload->country), comment: $payload->comment);
+		$platform = Platform::fromInputOrUnknown($payload->platform);
+		$countries = $this->getCountriesByCodes($payload->country, $payload->deviceCountry);
+		$report = new FloatingHolidaySuggestion(
+			$userId,
+			$payload->name,
+			$payload->description,
+			$payload->date,
+			$this->pickCountry($countries, $payload->country),
+			comment      : $payload->comment,
+			platform     : $platform,
+			realDevice   : $this->resolveRealDevice($platform, $payload->realDevice),
+			deviceCountry: $this->pickCountry($countries, $payload->deviceCountry),
+		);
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();
 	}
-
 }
