@@ -78,7 +78,7 @@ class MissingControllerV2Test extends WebTestCase
 
 		$repo = $this->em->getRepository(FixedHolidaySuggestion::class);
 		/** @var FixedHolidaySuggestion $entity */
-		$entity = $repo->findOneBy(['userId' => 'user-id']);
+		$entity = $repo->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity, 'Entity not stored in the DB');
 		$this->assertSame('user-id', $entity->userId);
@@ -118,7 +118,10 @@ class MissingControllerV2Test extends WebTestCase
 				'holiday_id' => null,
 				'report_state' => 'REPORTED',
 				'comment' => 'Duplicate of #42',
-				'user_id' => 'user-id'
+				'user_id' => 'user-id',
+				'platform' => 'unknown',
+				'real_device' => null,
+				'device_country' => null
 			]
 		]);
 
@@ -171,7 +174,7 @@ class MissingControllerV2Test extends WebTestCase
 
 		$repo = $this->em->getRepository(FloatingHolidaySuggestion::class);
 		/** @var FloatingHolidaySuggestion $entity */
-		$entity = $repo->findOneBy(['userId' => 'user-id']);
+		$entity = $repo->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity, 'Entity not stored in the DB');
 		$this->assertSame('user-id', $entity->userId);
@@ -209,7 +212,10 @@ class MissingControllerV2Test extends WebTestCase
 				'country' => 'GB',
 				'report_state' => 'REPORTED',
 				'comment' => null,
-				'user_id' => 'user-id'
+				'user_id' => 'user-id',
+				'platform' => 'unknown',
+				'real_device' => null,
+				'device_country' => null
 			]
 		]);
 
@@ -302,7 +308,7 @@ class MissingControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidaySuggestion::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('ios', $entity->platform->value);
@@ -328,7 +334,7 @@ class MissingControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidaySuggestion::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('Mozilla/5.0 web-test-agent', $entity->realDevice);
@@ -351,7 +357,7 @@ class MissingControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidaySuggestion::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('unknown', $entity->platform->value);
@@ -376,7 +382,7 @@ class MissingControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FloatingHolidaySuggestion::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('GB', $entity->country->isoCode);

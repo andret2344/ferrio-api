@@ -85,7 +85,7 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$repo = $this->em->getRepository(FixedHolidayError::class);
-		$entity = $repo->findOneBy(['userId' => 'user-id']);
+		$entity = $repo->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity, 'Entity not stored in the DB');
 		$this->assertSame('user-id', $entity->userId);
@@ -183,7 +183,7 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$repo = $this->em->getRepository(FloatingHolidayError::class);
-		$entity = $repo->findOneBy(['userId' => 'user-id']);
+		$entity = $repo->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity, 'Entity not stored in the DB');
 		$this->assertSame('user-id', $entity->userId);
@@ -309,7 +309,7 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertNotNull($entity->platform);
@@ -336,7 +336,7 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('unknown', $entity->platform->value);
@@ -378,7 +378,7 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertNotNull($entity->deviceCountry);
@@ -405,7 +405,7 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('android', $entity->platform->value);
@@ -451,7 +451,7 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('Mozilla/5.0 (X11; Linux x86_64) Firefox/123.0', $entity->realDevice);
@@ -477,7 +477,7 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertNull($entity->realDevice);
@@ -504,7 +504,7 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('Custom UA Override', $entity->realDevice);
@@ -531,7 +531,7 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('Pixel 8 Pro', $entity->realDevice);
@@ -558,7 +558,7 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('Mozilla/5.0 (X11; Linux x86_64) Firefox/123.0', $entity->realDevice);
@@ -584,7 +584,7 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertNull($entity->deviceCountry);

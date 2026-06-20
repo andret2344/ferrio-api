@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Override;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 abstract readonly class AbstractErrorReportHandler implements ReportHandlerInterface
@@ -21,7 +20,6 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 
 	public function __construct(
 		protected EntityManagerInterface $entityManager,
-		protected RequestStack           $requestStack,
 		protected LoggerInterface        $reportsLogger,
 	)
 	{

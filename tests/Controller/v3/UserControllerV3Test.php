@@ -94,7 +94,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$repo = $this->em->getRepository(FixedHolidayError::class);
-		$entity = $repo->findOneBy(['userId' => 'user-id']);
+		$entity = $repo->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity, 'Entity not stored in the DB');
 		$this->assertSame('user-id', $entity->userId);
@@ -209,7 +209,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$repo = $this->em->getRepository(FloatingHolidayError::class);
-		$entity = $repo->findOneBy(['userId' => 'user-id']);
+		$entity = $repo->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity, 'Entity not stored in the DB');
 		$this->assertSame('user-id', $entity->userId);
@@ -381,7 +381,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$repo = $this->em->getRepository(FixedHolidayError::class);
-		$entity = $repo->findOneBy(['userId' => 'user-id']);
+		$entity = $repo->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertNotNull($entity->platform);
@@ -419,7 +419,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$repo = $this->em->getRepository(FloatingHolidayError::class);
-		$entity = $repo->findOneBy(['userId' => 'user-id']);
+		$entity = $repo->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertNotNull($entity->platform);
@@ -452,7 +452,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('unknown', $entity->platform->value);
@@ -483,7 +483,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertNotNull($entity->deviceCountry);
@@ -543,7 +543,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FloatingHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('Mozilla/5.0 (Macintosh; Intel Mac OS X 14_2) Safari/605.1.15', $entity->realDevice);
@@ -577,7 +577,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertNull($entity->realDevice);
@@ -677,7 +677,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidaySuggestion::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('ios', $entity->platform->value);
@@ -710,7 +710,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FloatingHolidaySuggestion::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('Mozilla/5.0 v3-suggestion-ua', $entity->realDevice);
@@ -738,7 +738,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidaySuggestion::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('ios', $entity->platform->value);
@@ -773,7 +773,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertResponseStatusCodeSame(201);
 
 		$entity = $this->em->getRepository(FixedHolidayError::class)
-			->findOneBy(['userId' => 'user-id']);
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
 		$this->assertSame('UA-from-fallback/1.0', $entity->realDevice);
