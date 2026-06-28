@@ -11,10 +11,12 @@ use App\Entity\FloatingHolidayMetadata;
 use App\Entity\Language;
 use App\Entity\Platform;
 use App\Entity\ReportState;
+use App\Enum\Algorithm;
 use App\Enum\ReportKind;
 use App\Repository\FixedHolidayRepository;
 use App\Service\AdminMetricsService;
 use App\Service\FirebaseUserLookup;
+use BackedEnum;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -61,7 +63,8 @@ class ManageController extends AbstractController
 		$languages = $languageRepository->findBy([], ['code' => 'ASC']);
 		$targets = array_values(array_filter($languages, fn(Language $l) => $l->code !== Language::DEFAULT_CODE));
 
-		$countries = $this->entityManager->getRepository(Country::class)->findAll();
+		$countries = $this->entityManager->getRepository(Country::class)
+			->findAll();
 		$tags = $this->entityManager->getRepository(Category::class)
 			->findBy([], ['slug' => 'ASC']);
 
@@ -88,9 +91,9 @@ class ManageController extends AbstractController
 				: $this->generateUrl('admin_create');
 			$context['backLabel'] = 'Fixed';
 		} else {
-			$context['algorithm'] = \App\Enum\Algorithm::HARDCODED_DATES->value;
+			$context['algorithm'] = Algorithm::HARDCODED_DATES->value;
 			$context['algorithmArgs'] = '';
-			$context['algorithms'] = array_map(fn(\App\Enum\Algorithm $a) => $a->value, \App\Enum\Algorithm::cases());
+			$context['algorithms'] = array_map(fn(Algorithm $a) => $a->value, Algorithm::cases());
 			$context['algorithmExamples'] = $this->algorithmExamples();
 			$context['backUrl'] = $this->generateUrl('admin_floating');
 			$context['backLabel'] = 'Floating';
@@ -100,7 +103,8 @@ class ManageController extends AbstractController
 		$fromId = filter_var($request->query->get('fromId'), FILTER_VALIDATE_INT);
 		if (in_array($fromKind, ['fixed', 'floating'], true) && $fromKind !== $kind && $fromId !== false && $fromId > 0) {
 			$sourceMetadataClass = $fromKind === 'fixed' ? FixedHolidayMetadata::class : FloatingHolidayMetadata::class;
-			$sourceMetadata = $this->entityManager->getRepository($sourceMetadataClass)->find($fromId);
+			$sourceMetadata = $this->entityManager->getRepository($sourceMetadataClass)
+				->find($fromId);
 			if ($sourceMetadata !== null) {
 				$source = ['name' => '', 'description' => ''];
 				$translations = [];
@@ -127,7 +131,8 @@ class ManageController extends AbstractController
 	public function holidayDetail(string $kind, int $id): Response
 	{
 		$metadataClass = $kind === 'fixed' ? FixedHolidayMetadata::class : FloatingHolidayMetadata::class;
-		$metadata = $this->entityManager->getRepository($metadataClass)->find($id);
+		$metadata = $this->entityManager->getRepository($metadataClass)
+			->find($id);
 		if ($metadata === null) {
 			throw $this->createNotFoundException();
 		}
@@ -148,7 +153,8 @@ class ManageController extends AbstractController
 			}
 		}
 
-		$countries = $this->entityManager->getRepository(Country::class)->findAll();
+		$countries = $this->entityManager->getRepository(Country::class)
+			->findAll();
 		$tags = $this->entityManager->getRepository(Category::class)
 			->findBy([], ['slug' => 'ASC']);
 		$selectedTagIds = array_values(array_map(fn(Category $c) => $c->id, $metadata->categories->toArray()));
@@ -177,7 +183,7 @@ class ManageController extends AbstractController
 			/** @var FloatingHolidayMetadata $metadata */
 			$context['algorithm'] = $metadata->algorithm->value;
 			$context['algorithmArgs'] = $metadata->algorithmArgs;
-			$context['algorithms'] = array_map(fn(\App\Enum\Algorithm $a) => $a->value, \App\Enum\Algorithm::cases());
+			$context['algorithms'] = array_map(fn(Algorithm $a) => $a->value, Algorithm::cases());
 			$context['algorithmExamples'] = $this->algorithmExamples();
 			$context['backUrl'] = $this->generateUrl('admin_floating');
 			$context['backLabel'] = 'Floating';
@@ -292,7 +298,8 @@ class ManageController extends AbstractController
 	#[Route('/missing/{kind<fixed|floating>}/{lang}', name: 'missing')]
 	public function missing(string $kind, string $lang): Response
 	{
-		$language = $this->entityManager->getRepository(Language::class)->find($lang);
+		$language = $this->entityManager->getRepository(Language::class)
+			->find($lang);
 		if ($language === null || $language->code === Language::DEFAULT_CODE) {
 			throw $this->createNotFoundException();
 		}
@@ -302,8 +309,10 @@ class ManageController extends AbstractController
 			->createQueryBuilder('h')
 			->select('h', 'm')
 			->join('h.metadata', 'm')
-			->leftJoin('m.country', 'c')->addSelect('c')
-			->leftJoin('m.categories', 'cat')->addSelect('cat')
+			->leftJoin('m.country', 'c')
+			->addSelect('c')
+			->leftJoin('m.categories', 'cat')
+			->addSelect('cat')
 			->where('h.language = :pl')
 			->andWhere(sprintf(
 				'm.id NOT IN (SELECT IDENTITY(t.metadata) FROM %s t WHERE t.language = :lang)',
@@ -313,12 +322,16 @@ class ManageController extends AbstractController
 			->setParameter('lang', $language->code);
 
 		if ($kind === 'fixed') {
-			$qb->orderBy('m.month', 'ASC')->addOrderBy('m.day', 'ASC')->addOrderBy('h.name', 'ASC');
+			$qb->orderBy('m.month', 'ASC')
+				->addOrderBy('m.day', 'ASC')
+				->addOrderBy('h.name', 'ASC');
 		} else {
-			$qb->orderBy('m.algorithm', 'ASC')->addOrderBy('h.name', 'ASC');
+			$qb->orderBy('m.algorithm', 'ASC')
+				->addOrderBy('h.name', 'ASC');
 		}
 
-		$holidays = $qb->getQuery()->getResult();
+		$holidays = $qb->getQuery()
+			->getResult();
 
 		return $this->render('admin/missing.html.twig', [
 			'kind' => $kind,
@@ -411,7 +424,8 @@ class ManageController extends AbstractController
 			'report_states' => array_column(ReportState::cases(), 'value'),
 			'platforms' => Platform::values(),
 			'filters' => $filters,
-			'countries' => $this->entityManager->getRepository(Country::class)->findBy([], ['isoCode' => 'ASC']),
+			'countries' => $this->entityManager->getRepository(Country::class)
+				->findBy([], ['isoCode' => 'ASC']),
 			'fixedHolidaysPl' => $isFloating ? [] : $holidaysPl,
 			'floatingHolidaysPl' => $isFloating ? $holidaysPl : [],
 		]);
@@ -447,6 +461,7 @@ class ManageController extends AbstractController
 
 	/**
 	 * @param array{platform: ?string, device_country: ?string, state: ?string} $filters
+	 *
 	 * @return array<string, mixed>
 	 */
 	private function buildReportCriteria(array $filters): array
@@ -457,11 +472,13 @@ class ManageController extends AbstractController
 		}
 		if ($filters['device_country'] === self::UNKNOWN_COUNTRY) {
 			$criteria['deviceCountry'] = null;
-		} elseif ($filters['device_country'] !== null) {
-			$country = $this->entityManager->getRepository(Country::class)
-				->findOneBy(['isoCode' => $filters['device_country']]);
-			if ($country !== null) {
-				$criteria['deviceCountry'] = $country;
+		} else {
+			if ($filters['device_country'] !== null) {
+				$country = $this->entityManager->getRepository(Country::class)
+					->findOneBy(['isoCode' => $filters['device_country']]);
+				if ($country !== null) {
+					$criteria['deviceCountry'] = $country;
+				}
 			}
 		}
 		if ($filters['state'] !== null) {
@@ -475,20 +492,26 @@ class ManageController extends AbstractController
 	{
 		$stats = [];
 		foreach (ReportKind::cases() as $kind) {
-			$qb = $this->entityManager->getRepository($kind->entityClass())->createQueryBuilder('r');
+			$qb = $this->entityManager->getRepository($kind->entityClass())
+				->createQueryBuilder('r');
 			$byPlatform = $qb->select('COALESCE(r.platform, \'_unknown\') AS platform, COUNT(r.id) AS c')
 				->groupBy('r.platform')
-				->getQuery()->getArrayResult();
+				->getQuery()
+				->getArrayResult();
 
-			$qb = $this->entityManager->getRepository($kind->entityClass())->createQueryBuilder('r');
+			$qb = $this->entityManager->getRepository($kind->entityClass())
+				->createQueryBuilder('r');
 			$byState = $qb->select('r.reportState AS state, COUNT(r.id) AS c')
 				->groupBy('r.reportState')
-				->getQuery()->getArrayResult();
+				->getQuery()
+				->getArrayResult();
 
-			$qb = $this->entityManager->getRepository($kind->entityClass())->createQueryBuilder('r');
+			$qb = $this->entityManager->getRepository($kind->entityClass())
+				->createQueryBuilder('r');
 			$byCountry = $qb->select('COALESCE(IDENTITY(r.deviceCountry), \'_unknown\') AS country, COUNT(r.id) AS c')
 				->groupBy('r.deviceCountry')
-				->getQuery()->getArrayResult();
+				->getQuery()
+				->getArrayResult();
 
 			$stats[$kind->value] = [
 				'by_platform' => $this->collapseAgg($byPlatform, 'platform'),
@@ -501,6 +524,7 @@ class ManageController extends AbstractController
 
 	/**
 	 * @param list<array<string, mixed>> $rows
+	 *
 	 * @return array<string, int>
 	 */
 	private function collapseAgg(array $rows, string $key): array
@@ -508,7 +532,7 @@ class ManageController extends AbstractController
 		$out = [];
 		foreach ($rows as $row) {
 			$k = $row[$key];
-			if ($k instanceof \BackedEnum) {
+			if ($k instanceof BackedEnum) {
 				$k = $k->value;
 			}
 			$out[(string)$k] = (int)$row['c'];
@@ -529,18 +553,72 @@ class ManageController extends AbstractController
 
 		$out = fopen('php://temp', 'w+');
 		if ($isError) {
-			$header = ['id', 'datetime', 'user_id', 'language', 'metadata_id', 'report_type', 'description', 'report_state', 'comment', 'platform', 'real_device', 'device_country'];
+			$header = [
+				'id',
+				'datetime',
+				'user_id',
+				'language',
+				'metadata_id',
+				'report_type',
+				'description',
+				'report_state',
+				'comment',
+				'platform',
+				'real_device',
+				'device_country'
+			];
 		} else {
-			$header = ['id', 'datetime', 'user_id', 'name', 'day_or_date', 'description', 'country', 'report_state', 'comment', 'holiday_id', 'platform', 'real_device', 'device_country'];
+			$header = [
+				'id',
+				'datetime',
+				'user_id',
+				'name',
+				'day_or_date',
+				'description',
+				'country',
+				'report_state',
+				'comment',
+				'holiday_id',
+				'platform',
+				'real_device',
+				'device_country'
+			];
 		}
 		fputcsv($out, $header);
 
 		foreach ($rows as $r) {
 			if ($isError) {
-				$row = [$r->id, $r->datetime->format('Y-m-d H:i:s'), $r->userId, $r->language->code, $r->metadata?->id, $r->reportType->value, $r->description, $r->reportState->value, $r->comment, $r->platform?->value, $r->realDevice, $r->deviceCountry?->isoCode];
+				$row = [
+					$r->id,
+					$r->datetime->format('Y-m-d H:i:s'),
+					$r->userId,
+					$r->language->code,
+					$r->metadata?->id,
+					$r->reportType->value,
+					$r->description,
+					$r->reportState->value,
+					$r->comment,
+					$r->platform?->value,
+					$r->realDevice,
+					$r->deviceCountry?->isoCode
+				];
 			} else {
 				$dayOrDate = property_exists($r, 'date') ? $r->date : sprintf('%02d.%02d', $r->day, $r->month);
-				$row = [$r->id, $r->datetime->format('Y-m-d H:i:s'), $r->userId, $r->name, $dayOrDate, $r->description, $r->country?->isoCode, $r->reportState->value, $r->comment, $r->holiday?->id, $r->platform?->value, $r->realDevice, $r->deviceCountry?->isoCode];
+				$row = [
+					$r->id,
+					$r->datetime->format('Y-m-d H:i:s'),
+					$r->userId,
+					$r->name,
+					$dayOrDate,
+					$r->description,
+					$r->country?->isoCode,
+					$r->reportState->value,
+					$r->comment,
+					$r->holiday?->id,
+					$r->platform?->value,
+					$r->realDevice,
+					$r->deviceCountry?->isoCode
+				];
 			}
 			fputcsv($out, $row);
 		}
@@ -594,7 +672,8 @@ class ManageController extends AbstractController
 				if ($holidayId === false || $holidayId <= 0) {
 					return $this->json(['error' => 'Invalid holiday id', 'field' => 'holiday_id'], Response::HTTP_BAD_REQUEST);
 				}
-				if ($this->entityManager->getRepository($kind->metadataClass())->find($holidayId) === null) {
+				if ($this->entityManager->getRepository($kind->metadataClass())
+						->find($holidayId) === null) {
 					return $this->json(['error' => 'Holiday does not exist', 'field' => 'holiday_id'], Response::HTTP_BAD_REQUEST);
 				}
 			}
@@ -612,7 +691,8 @@ class ManageController extends AbstractController
 			$update->set('r.holiday', ':holiday')
 				->setParameter('holiday', $holidayId);
 		}
-		$affected = $update->getQuery()->execute();
+		$affected = $update->getQuery()
+			->execute();
 
 		if ($affected === 0) {
 			return $this->json(['error' => 'Report not found'], Response::HTTP_NOT_FOUND);
