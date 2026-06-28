@@ -123,9 +123,13 @@ class ReportControllerV2Test extends WebTestCase
 				'report_state' => 'REPORTED',
 				'comment' => null,
 				'user_id' => 'user-id',
-				'platform' => 'unknown',
-				'real_device' => null,
-				'device_country' => null
+				'device' => [
+					'platform' => 'unknown',
+					'model' => null,
+					'country' => null,
+					'os_version' => null,
+					'app_version' => null,
+				]
 			]
 		]);
 
@@ -221,9 +225,13 @@ class ReportControllerV2Test extends WebTestCase
 				'report_state' => 'REPORTED',
 				'comment' => 'Reviewed by admin',
 				'user_id' => 'user-id',
-				'platform' => 'unknown',
-				'real_device' => null,
-				'device_country' => null
+				'device' => [
+					'platform' => 'unknown',
+					'model' => null,
+					'country' => null,
+					'os_version' => null,
+					'app_version' => null,
+				]
 			]
 		]);
 
@@ -301,9 +309,11 @@ class ReportControllerV2Test extends WebTestCase
 			'metadata' => $metadata->id,
 			'report_type' => 'OTHER',
 			'description' => 'Test description',
-			'platform' => 'ios',
-			'real_device' => 'iPhone 15 Pro',
-			'device_country' => 'GB',
+			'device' => [
+				'platform' => 'ios',
+				'model' => 'iPhone 15 Pro',
+				'country' => 'GB',
+			],
 		]);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -330,7 +340,9 @@ class ReportControllerV2Test extends WebTestCase
 			'metadata' => $metadata->id,
 			'report_type' => 'OTHER',
 			'description' => 'Test description',
-			'platform' => 'symbian',
+			'device' => [
+				'platform' => 'symbian',
+			],
 		]);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -372,7 +384,9 @@ class ReportControllerV2Test extends WebTestCase
 			'metadata' => $metadata->id,
 			'report_type' => 'OTHER',
 			'description' => 'Test description',
-			'device_country' => 'pl',
+			'device' => [
+				'country' => 'pl',
+			],
 		]);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -399,7 +413,9 @@ class ReportControllerV2Test extends WebTestCase
 			'metadata' => $metadata->id,
 			'report_type' => 'OTHER',
 			'description' => 'Test description',
-			'platform' => 'ANDROID',
+			'device' => [
+				'platform' => 'ANDROID',
+			],
 		]);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -425,7 +441,9 @@ class ReportControllerV2Test extends WebTestCase
 			'metadata' => $metadata->id,
 			'report_type' => 'OTHER',
 			'description' => 'Test description',
-			'real_device' => str_repeat('x', 2001),
+			'device' => [
+				'model' => str_repeat('x', 2001),
+			],
 		]);
 
 		$this->assertResponseStatusCodeSame(422);
@@ -445,7 +463,9 @@ class ReportControllerV2Test extends WebTestCase
 			'metadata' => $metadata->id,
 			'report_type' => 'OTHER',
 			'description' => 'Test description',
-			'platform' => 'web',
+			'device' => [
+				'platform' => 'web',
+			],
 		], ['User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) Firefox/123.0']);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -471,7 +491,9 @@ class ReportControllerV2Test extends WebTestCase
 			'metadata' => $metadata->id,
 			'report_type' => 'OTHER',
 			'description' => 'Test description',
-			'platform' => 'android',
+			'device' => [
+				'platform' => 'android',
+			],
 		], ['User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) Firefox/123.0']);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -497,8 +519,10 @@ class ReportControllerV2Test extends WebTestCase
 			'metadata' => $metadata->id,
 			'report_type' => 'OTHER',
 			'description' => 'Test description',
-			'platform' => 'web',
-			'real_device' => 'Custom UA Override',
+			'device' => [
+				'platform' => 'web',
+				'model' => 'Custom UA Override',
+			],
 		], ['User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) Firefox/123.0']);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -524,8 +548,10 @@ class ReportControllerV2Test extends WebTestCase
 			'metadata' => $metadata->id,
 			'report_type' => 'OTHER',
 			'description' => 'Test description',
-			'platform' => 'android',
-			'real_device' => '  Pixel 8 Pro  ',
+			'device' => [
+				'platform' => 'android',
+				'model' => '  Pixel 8 Pro  ',
+			],
 		]);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -551,8 +577,10 @@ class ReportControllerV2Test extends WebTestCase
 			'metadata' => $metadata->id,
 			'report_type' => 'OTHER',
 			'description' => 'Test description',
-			'platform' => 'web',
-			'real_device' => '   ',
+			'device' => [
+				'platform' => 'web',
+				'model' => '   ',
+			],
 		], ['User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) Firefox/123.0']);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -578,7 +606,9 @@ class ReportControllerV2Test extends WebTestCase
 			'metadata' => $metadata->id,
 			'report_type' => 'OTHER',
 			'description' => 'Test description',
-			'device_country' => 'ZZ',
+			'device' => [
+				'country' => 'ZZ',
+			],
 		]);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -588,5 +618,96 @@ class ReportControllerV2Test extends WebTestCase
 
 		$this->assertNotNull($entity);
 		$this->assertNull($entity->deviceCountry);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedReportPersistsOsAndAppVersion(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'device' => [
+				'platform' => 'android',
+				'os_version' => '14',
+				'app_version' => '3.2.0',
+			],
+		]);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidayError::class)
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('14', $entity->osVersion);
+		$this->assertSame('3.2.0', $entity->appVersion);
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function testPostFixedReportRejectsTooLongAppVersion(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'device' => [
+				'app_version' => str_repeat('9', 65),
+			],
+		]);
+
+		$this->assertResponseStatusCodeSame(422);
+	}
+
+	/**
+	 * Backward compatibility: a legacy client that still sends the device fields flat at the top
+	 * level (pre-`device` object) must not be rejected — the unknown keys are ignored and the
+	 * report is stored with default device metadata.
+	 *
+	 * @throws JsonException
+	 */
+	public function testPostFixedReportIgnoresLegacyFlatDeviceFields(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request('POST', '/v2/report/fixed', [], [
+			'user_id' => 'user-id',
+			'language' => 'en',
+			'metadata' => $metadata->id,
+			'report_type' => 'OTHER',
+			'description' => 'Test description',
+			'platform' => 'android',
+			'real_device' => 'Pixel 8 Pro',
+			'device_country' => 'PL',
+			'os_version' => '14',
+			'app_version' => '3.2.0',
+		]);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidayError::class)
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('unknown', $entity->platform->value);
+		$this->assertNull($entity->realDevice);
+		$this->assertNull($entity->deviceCountry);
+		$this->assertNull($entity->osVersion);
+		$this->assertNull($entity->appVersion);
 	}
 }

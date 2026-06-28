@@ -1,0 +1,28 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "v3 users reports — validation-error rejection (422)",
+	"type": "object",
+	"required": [
+		"errors"
+	],
+	"properties": {
+		"errors": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"required": [
+					"property",
+					"message"
+				],
+				"properties": {
+					"property": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}

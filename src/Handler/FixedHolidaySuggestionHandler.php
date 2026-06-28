@@ -31,8 +31,9 @@ readonly class FixedHolidaySuggestionHandler implements ReportHandlerInterface
 		if (!$payload instanceof FixedSuggestionDTO) {
 			throw new InvalidArgumentException('Expected FixedSuggestionDTO');
 		}
-		$platform = Platform::fromInputOrUnknown($payload->platform);
-		$countries = $this->getCountriesByCodes($payload->country, $payload->deviceCountry);
+		$device = $payload->device;
+		$platform = Platform::fromInputOrUnknown($device?->platform);
+		$countries = $this->getCountriesByCodes($payload->country, $device?->country);
 		$report = new FixedHolidaySuggestion(
 			$userId,
 			$payload->name,
@@ -42,8 +43,10 @@ readonly class FixedHolidaySuggestionHandler implements ReportHandlerInterface
 			$this->pickCountry($countries, $payload->country),
 			comment      : $payload->comment,
 			platform     : $platform,
-			realDevice   : $this->resolveRealDevice($platform, $payload->realDevice),
-			deviceCountry: $this->pickCountry($countries, $payload->deviceCountry),
+			realDevice   : $this->resolveRealDevice($platform, $device?->model),
+			deviceCountry: $this->pickCountry($countries, $device?->country),
+			osVersion    : $device?->osVersion,
+			appVersion   : $device?->appVersion,
 		);
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();

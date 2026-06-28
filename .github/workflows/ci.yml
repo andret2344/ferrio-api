@@ -42,3 +42,37 @@ jobs:
 
       - name: Run PHPUnit
         run: vendor/bin/phpunit
+
+  contract-immutability:
+    name: Contract fixtures are append-only
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # full history needed for merge-base
+
+      - name: Check frozen fixtures are append-only
+        run: |
+          git fetch origin main --quiet || true
+
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            # push straight to main: compare the pre-push tip with the new one
+            base="${{ github.event.before }}"
+          else
+            # PR or feature branch: the point where it diverged from main
+            base="$(git merge-base origin/main HEAD)"
+          fi
+
+          # new branch / missing base (all-zeros) — fall back to merge-base
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            base="$(git merge-base origin/main HEAD)"
+          fi
+
+          changed=$(git diff --no-renames --diff-filter=MD --name-only "$base" HEAD -- tests/Contract/data/)
+          if [ -n "$changed" ]; then
+            echo "::error::Frozen contract fixtures are append-only — these were modified or deleted:"
+            echo "$changed"
+            exit 1
+          fi
+          echo "OK — no frozen fixture touched."

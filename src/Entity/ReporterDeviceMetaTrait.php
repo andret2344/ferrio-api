@@ -16,12 +16,20 @@ trait ReporterDeviceMetaTrait
 	#[ORM\JoinColumn(name: 'device_country', referencedColumnName: 'iso_code', nullable: true, onDelete: 'SET NULL')]
 	private(set) ?Country $deviceCountry = null;
 
-	/** @var array{platform: string, real_device: ?string, device_country: ?string} */
+	#[ORM\Column(type: 'string', length: 64, nullable: true)]
+	private(set) ?string $osVersion = null;
+
+	#[ORM\Column(type: 'string', length: 64, nullable: true)]
+	private(set) ?string $appVersion = null;
+
+	/** @var array{platform: string, model: ?string, country: ?string, os_version: ?string, app_version: ?string} */
 	public array $deviceMeta {
 		get => [
 			'platform' => $this->platform->value,
-			'real_device' => $this->realDevice,
-			'device_country' => $this->deviceCountry?->isoCode,
+			'model' => $this->realDevice,
+			'country' => $this->deviceCountry?->isoCode,
+			'os_version' => $this->osVersion,
+			'app_version' => $this->appVersion,
 		];
 	}
 }

@@ -1,0 +1,122 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "v3 floating suggestion list — gen02 (device)",
+	"type": "array",
+	"items": {
+		"type": "object",
+		"required": [
+			"id",
+			"user_id",
+			"name",
+			"description",
+			"date",
+			"datetime",
+			"country",
+			"report_state",
+			"comment",
+			"holiday_id",
+			"device"
+		],
+		"properties": {
+			"id": {
+				"type": "integer"
+			},
+			"user_id": {
+				"type": "string",
+				"minLength": 1
+			},
+			"name": {
+				"type": "string"
+			},
+			"description": {
+				"type": "string"
+			},
+			"date": {
+				"type": "string"
+			},
+			"datetime": {
+				"type": "string",
+				"pattern": "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$"
+			},
+			"country": {
+				"type": [
+					"string",
+					"null"
+				],
+				"pattern": "^[A-Z]{2}$"
+			},
+			"report_state": {
+				"type": "string",
+				"enum": [
+					"REPORTED",
+					"APPLIED",
+					"DECLINED",
+					"ON_HOLD",
+					"DUPLICATE",
+					"ALREADY_EXISTS"
+				]
+			},
+			"comment": {
+				"type": [
+					"string",
+					"null"
+				]
+			},
+			"holiday_id": {
+				"type": [
+					"integer",
+					"null"
+				]
+			},
+			"device": {
+				"type": "object",
+				"required": [
+					"platform",
+					"model",
+					"country",
+					"os_version",
+					"app_version"
+				],
+				"properties": {
+					"platform": {
+						"type": "string",
+						"enum": [
+							"android",
+							"ios",
+							"web",
+							"api",
+							"unknown"
+						]
+					},
+					"model": {
+						"type": [
+							"string",
+							"null"
+						]
+					},
+					"country": {
+						"type": [
+							"string",
+							"null"
+						],
+						"pattern": "^[A-Z]{2}$"
+					},
+					"os_version": {
+						"type": [
+							"string",
+							"null"
+						],
+						"maxLength": 64
+					},
+					"app_version": {
+						"type": [
+							"string",
+							"null"
+						],
+						"maxLength": 64
+					}
+				}
+			}
+		}
+	}
+}

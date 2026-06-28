@@ -139,9 +139,13 @@ class UserControllerV3Test extends WebTestCase
 				'report_state' => 'REPORTED',
 				'comment' => null,
 				'user_id' => 'user-id',
-				'platform' => 'unknown',
-				'real_device' => null,
-				'device_country' => null
+				'device' => [
+					'platform' => 'unknown',
+					'model' => null,
+					'country' => null,
+					'os_version' => null,
+					'app_version' => null,
+				]
 			]
 		], JSON_THROW_ON_ERROR);
 
@@ -254,9 +258,13 @@ class UserControllerV3Test extends WebTestCase
 				'report_state' => 'REPORTED',
 				'comment' => 'Reviewed by admin',
 				'user_id' => 'user-id',
-				'platform' => 'unknown',
-				'real_device' => null,
-				'device_country' => null
+				'device' => [
+					'platform' => 'unknown',
+					'model' => null,
+					'country' => null,
+					'os_version' => null,
+					'app_version' => null,
+				]
 			]
 		], JSON_THROW_ON_ERROR);
 
@@ -371,9 +379,11 @@ class UserControllerV3Test extends WebTestCase
 				'metadata' => $metadata->id,
 				'report_type' => 'OTHER',
 				'description' => 'Test description',
-				'platform' => 'android',
-				'real_device' => 'Pixel 8 Pro',
-				'device_country' => 'PL',
+				'device' => [
+					'platform' => 'android',
+					'model' => 'Pixel 8 Pro',
+					'country' => 'PL',
+				],
 			],
 			['Authorization' => 'Bearer test-token']
 		);
@@ -410,8 +420,10 @@ class UserControllerV3Test extends WebTestCase
 				'metadata' => $metadata->id,
 				'report_type' => 'OTHER',
 				'description' => 'Test description',
-				'platform' => 'web',
-				'real_device' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+				'device' => [
+					'platform' => 'web',
+					'model' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+				],
 			],
 			['Authorization' => 'Bearer test-token']
 		);
@@ -444,7 +456,9 @@ class UserControllerV3Test extends WebTestCase
 				'metadata' => $metadata->id,
 				'report_type' => 'OTHER',
 				'description' => 'Test description',
-				'platform' => 'windows',
+				'device' => [
+					'platform' => 'windows',
+				],
 			],
 			['Authorization' => 'Bearer test-token']
 		);
@@ -475,7 +489,9 @@ class UserControllerV3Test extends WebTestCase
 				'metadata' => $metadata->id,
 				'report_type' => 'OTHER',
 				'description' => 'Test description',
-				'device_country' => 'gb',
+				'device' => [
+					'country' => 'gb',
+				],
 			],
 			['Authorization' => 'Bearer test-token']
 		);
@@ -507,7 +523,9 @@ class UserControllerV3Test extends WebTestCase
 				'metadata' => $metadata->id,
 				'report_type' => 'OTHER',
 				'description' => 'Test description',
-				'real_device' => str_repeat('x', 2001),
+				'device' => [
+					'model' => str_repeat('x', 2001),
+				],
 			],
 			['Authorization' => 'Bearer test-token']
 		);
@@ -532,7 +550,9 @@ class UserControllerV3Test extends WebTestCase
 				'metadata' => $metadata->id,
 				'report_type' => 'OTHER',
 				'description' => 'Test description',
-				'platform' => 'web',
+				'device' => [
+					'platform' => 'web',
+				],
 			],
 			[
 				'Authorization' => 'Bearer test-token',
@@ -566,7 +586,9 @@ class UserControllerV3Test extends WebTestCase
 				'metadata' => $metadata->id,
 				'report_type' => 'OTHER',
 				'description' => 'Test description',
-				'platform' => 'api',
+				'device' => [
+					'platform' => 'api',
+				],
 			],
 			[
 				'Authorization' => 'Bearer test-token',
@@ -667,9 +689,11 @@ class UserControllerV3Test extends WebTestCase
 				'day' => 5,
 				'month' => 5,
 				'country' => 'GB',
-				'platform' => 'ios',
-				'real_device' => 'iPhone 15',
-				'device_country' => 'pl',
+				'device' => [
+					'platform' => 'ios',
+					'model' => 'iPhone 15',
+					'country' => 'pl',
+				],
 			],
 			['Authorization' => 'Bearer test-token']
 		);
@@ -699,7 +723,9 @@ class UserControllerV3Test extends WebTestCase
 				'name' => 'New Floating Holiday',
 				'description' => 'Test description',
 				'date' => '12.06',
-				'platform' => 'web',
+				'device' => [
+					'platform' => 'web',
+				],
 			],
 			[
 				'Authorization' => 'Bearer test-token',
@@ -730,7 +756,9 @@ class UserControllerV3Test extends WebTestCase
 				'description' => 'desc',
 				'day' => 5,
 				'month' => 5,
-				'platform' => 'IOS',
+				'device' => [
+					'platform' => 'IOS',
+				],
 			],
 			['Authorization' => 'Bearer test-token']
 		);
@@ -761,8 +789,10 @@ class UserControllerV3Test extends WebTestCase
 				'metadata' => $metadata->id,
 				'report_type' => 'OTHER',
 				'description' => 'Test description',
-				'platform' => 'web',
-				'real_device' => '   ',
+				'device' => [
+					'platform' => 'web',
+					'model' => '   ',
+				],
 			],
 			[
 				'Authorization' => 'Bearer test-token',
@@ -777,5 +807,48 @@ class UserControllerV3Test extends WebTestCase
 
 		$this->assertNotNull($entity);
 		$this->assertSame('UA-from-fallback/1.0', $entity->realDevice);
+	}
+
+	/**
+	 * Backward compatibility: a legacy client that still sends the device fields flat at the top
+	 * level (pre-`device` object) must not be rejected — the unknown keys are ignored by the
+	 * denormalizer and the report is stored with default device metadata.
+	 *
+	 * @throws JsonException
+	 */
+	public function testPostFixedReportIgnoresLegacyFlatDeviceFields(): void
+	{
+		/** @var FixedHolidayMetadata $metadata */
+		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
+
+		$this->request(
+			'POST',
+			'/v3/users/reports',
+			['reportType' => 'error', 'holidayType' => 'fixed'],
+			[
+				'language' => 'en',
+				'metadata' => $metadata->id,
+				'report_type' => 'OTHER',
+				'description' => 'Test description',
+				'platform' => 'android',
+				'real_device' => 'Pixel 8 Pro',
+				'device_country' => 'PL',
+				'os_version' => '14',
+				'app_version' => '3.2.0',
+			],
+			['Authorization' => 'Bearer test-token']
+		);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidayError::class)
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('unknown', $entity->platform->value);
+		$this->assertNull($entity->realDevice);
+		$this->assertNull($entity->deviceCountry);
+		$this->assertNull($entity->osVersion);
+		$this->assertNull($entity->appVersion);
 	}
 }

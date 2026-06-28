@@ -1,0 +1,13 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "v2 fixed error report — banned-user rejection (403)",
+	"type": "object",
+	"required": [
+		"reason"
+	],
+	"properties": {
+		"reason": {
+			"type": "string"
+		}
+	}
+}

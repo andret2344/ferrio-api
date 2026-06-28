@@ -66,7 +66,9 @@ class FixedHolidaySuggestion implements JsonSerializable
 		?string               $comment = null,
 		Platform              $platform = Platform::UNKNOWN,
 		?string               $realDevice = null,
-		?Country              $deviceCountry = null)
+		?Country              $deviceCountry = null,
+		?string               $osVersion = null,
+		?string               $appVersion = null)
 	{
 		$this->userId = $userId;
 		$this->name = $name;
@@ -81,6 +83,8 @@ class FixedHolidaySuggestion implements JsonSerializable
 		$this->platform = $platform;
 		$this->realDevice = $realDevice;
 		$this->deviceCountry = $deviceCountry;
+		$this->osVersion = $osVersion;
+		$this->appVersion = $appVersion;
 	}
 
 	#[Override]
@@ -98,7 +102,7 @@ class FixedHolidaySuggestion implements JsonSerializable
 			'report_state' => $this->reportState,
 			'comment' => $this->comment,
 			'holiday_id' => $this->holiday?->id,
-			...$this->deviceMeta,
+			'device' => $this->deviceMeta,
 		];
 	}
 }

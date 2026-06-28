@@ -1,0 +1,73 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "v3 floating error report list — gen01",
+	"type": "array",
+	"items": {
+		"type": "object",
+		"required": [
+			"id",
+			"user_id",
+			"language_code",
+			"metadata_id",
+			"report_type",
+			"description",
+			"datetime",
+			"report_state",
+			"comment"
+		],
+		"properties": {
+			"id": {
+				"type": "integer"
+			},
+			"user_id": {
+				"type": "string",
+				"minLength": 1
+			},
+			"language_code": {
+				"type": "string",
+				"pattern": "^[a-zA-Z]{2}$"
+			},
+			"metadata_id": {
+				"type": "integer"
+			},
+			"report_type": {
+				"type": "string",
+				"enum": [
+					"WRONG_DATE",
+					"WRONG_NAME",
+					"WRONG_COUNTRY",
+					"WRONG_DESCRIPTION",
+					"NOT_EXISTS",
+					"OTHER"
+				]
+			},
+			"description": {
+				"type": [
+					"string",
+					"null"
+				]
+			},
+			"datetime": {
+				"type": "string",
+				"pattern": "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$"
+			},
+			"report_state": {
+				"type": "string",
+				"enum": [
+					"REPORTED",
+					"APPLIED",
+					"DECLINED",
+					"ON_HOLD",
+					"DUPLICATE",
+					"ALREADY_EXISTS"
+				]
+			},
+			"comment": {
+				"type": [
+					"string",
+					"null"
+				]
+			}
+		}
+	}
+}

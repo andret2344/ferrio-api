@@ -66,6 +66,18 @@ Controllers are organized in `src/Controller/v1/`, `src/Controller/v2/`, and `sr
 `/v1/`, `/v2/`, and `/v3/`. v1/v2 routes use path parameters with inline regex constraints (e.g.,
 `{language<^\S{2}$>}`). v3 uses query parameters exclusively.
 
+### API traffic metrics
+
+Per-version request volume is counted in the `api_hit` table (entity `ApiHit`): one row per
+`(bucket_hour, version)` with a `hits` counter, bucketed by **UTC hour**. `ApiHitListener`
+(on `kernel.terminate`, so it adds no latency to the response) calls `ApiHitCounter::count()`,
+which extracts the version from the path (`/v1`, `/v2`, `/v3` — non-versioned paths are ignored)
+and runs an atomic `INSERT ... ON DUPLICATE KEY UPDATE hits = hits + 1` via raw DBAL. Raw DBAL
+(not the ORM) is deliberate: read-modify-write through Doctrine would race under concurrency.
+Errors are caught and logged as warnings — analytics must never break a request. The table stays
+tiny (≤ 3 versions × 24 h × 365 ≈ 26k rows/year); query it directly: per hour from the raw rows,
+per day via `GROUP BY DATE(bucket_hour), version`.
+
 ### v3 API
 
 Single endpoint: `GET /v3/holidays` with query parameters:

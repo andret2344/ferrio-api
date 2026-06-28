@@ -32,8 +32,8 @@ readonly class FloatingHolidayErrorHandler extends AbstractErrorReportHandler
 	}
 
 	#[Override]
-	protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description, ?string $comment, Platform $platform, ?string $realDevice, ?Country $deviceCountry): object
+	protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description, ?string $comment, Platform $platform, ?string $realDevice, ?Country $deviceCountry, ?string $osVersion, ?string $appVersion): object
 	{
-		return new FloatingHolidayError($userId, $language, $metadata, $reportType, $description, $comment, $platform, $realDevice, $deviceCountry);
+		return new FloatingHolidayError($userId, $language, $metadata, $reportType, $description, $comment, $platform, $realDevice, $deviceCountry, $osVersion, $appVersion);
 	}
 }
