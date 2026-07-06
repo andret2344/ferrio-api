@@ -54,7 +54,8 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 			throw new BadRequestHttpException('Metadata not found');
 		}
 
-		$platform = Platform::fromInputOrUnknown($payload->platform);
+		$device = $payload->device;
+		$platform = Platform::fromInputOrUnknown($device?->platform);
 		$report = $this->createErrorEntity(
 			$userId,
 			$language,
@@ -63,8 +64,10 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 			$payload->description,
 			$payload->comment,
 			$platform,
-			$this->resolveRealDevice($platform, $payload->realDevice),
-			$this->getCountry($payload->deviceCountry),
+			$this->resolveRealDevice($platform, $device?->model),
+			$this->getCountry($device?->country),
+			$device?->osVersion,
+			$device?->appVersion,
 		);
 		$metadata->reports->add($report);
 		$this->entityManager->persist($metadata);
@@ -80,5 +83,5 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 	/** @return class-string */
 	abstract protected function getMetadataEntityClass(): string;
 
-	abstract protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description, ?string $comment, Platform $platform, ?string $realDevice, ?Country $deviceCountry): object;
+	abstract protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description, ?string $comment, Platform $platform, ?string $realDevice, ?Country $deviceCountry, ?string $osVersion, ?string $appVersion): object;
 }

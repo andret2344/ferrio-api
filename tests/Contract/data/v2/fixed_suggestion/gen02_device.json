@@ -1,0 +1,14 @@
+{
+	"user_id": "contract-user",
+	"name": "Contract Fixed Day",
+	"day": 15,
+	"month": 6,
+	"description": "Contract test suggestion",
+	"device": {
+		"platform": "android",
+		"model": "Pixel 8 Pro",
+		"country": "PL",
+		"os_version": "14",
+		"app_version": "3.2.0"
+	}
+}

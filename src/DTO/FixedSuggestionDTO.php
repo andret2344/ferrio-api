@@ -21,11 +21,9 @@ final readonly class FixedSuggestionDTO extends AbstractSuggestionPayload
 		?string        $description = null,
 		?string        $country = null,
 		?string        $comment = null,
-		?string        $platform = null,
-		?string        $realDevice = null,
-		?string        $deviceCountry = null,
+		?DeviceDTO     $device = null,
 	)
 	{
-		parent::__construct($userId, $name, $description, $country, $comment, $platform, $realDevice, $deviceCountry);
+		parent::__construct($userId, $name, $description, $country, $comment, $device);
 	}
 }

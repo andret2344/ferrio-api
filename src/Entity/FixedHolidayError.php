@@ -56,7 +56,9 @@ class FixedHolidayError implements JsonSerializable
 		?string              $comment = null,
 		Platform             $platform = Platform::UNKNOWN,
 		?string              $realDevice = null,
-		?Country             $deviceCountry = null)
+		?Country             $deviceCountry = null,
+		?string              $osVersion = null,
+		?string              $appVersion = null)
 	{
 		$this->userId = $userId;
 		$this->language = $language;
@@ -69,6 +71,8 @@ class FixedHolidayError implements JsonSerializable
 		$this->platform = $platform;
 		$this->realDevice = $realDevice;
 		$this->deviceCountry = $deviceCountry;
+		$this->osVersion = $osVersion;
+		$this->appVersion = $appVersion;
 	}
 
 	#[Override]
@@ -84,7 +88,7 @@ class FixedHolidayError implements JsonSerializable
 			'datetime' => $this->datetime->format('Y-m-d H:i:s'),
 			'report_state' => $this->reportState,
 			'comment' => $this->comment,
-			...$this->deviceMeta,
+			'device' => $this->deviceMeta,
 		];
 	}
 }

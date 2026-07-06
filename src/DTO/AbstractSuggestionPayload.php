@@ -25,14 +25,8 @@ abstract readonly class AbstractSuggestionPayload
 
 		public ?string $comment = null,
 
-		public ?string $platform = null,
-
-		#[SerializedName('real_device')]
-		#[Assert\Length(max: 2000)]
-		public ?string $realDevice = null,
-
-		#[SerializedName('device_country')]
-		public ?string $deviceCountry = null,
+		#[Assert\Valid]
+		public ?DeviceDTO $device = null,
 	)
 	{
 	}

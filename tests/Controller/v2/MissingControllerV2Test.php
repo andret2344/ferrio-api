@@ -119,9 +119,13 @@ class MissingControllerV2Test extends WebTestCase
 				'report_state' => 'REPORTED',
 				'comment' => 'Duplicate of #42',
 				'user_id' => 'user-id',
-				'platform' => 'unknown',
-				'real_device' => null,
-				'device_country' => null
+				'device' => [
+					'platform' => 'unknown',
+					'model' => null,
+					'country' => null,
+					'os_version' => null,
+					'app_version' => null,
+				]
 			]
 		]);
 
@@ -213,9 +217,13 @@ class MissingControllerV2Test extends WebTestCase
 				'report_state' => 'REPORTED',
 				'comment' => null,
 				'user_id' => 'user-id',
-				'platform' => 'unknown',
-				'real_device' => null,
-				'device_country' => null
+				'device' => [
+					'platform' => 'unknown',
+					'model' => null,
+					'country' => null,
+					'os_version' => null,
+					'app_version' => null,
+				]
 			]
 		]);
 
@@ -300,9 +308,11 @@ class MissingControllerV2Test extends WebTestCase
 			'name' => 'Test name',
 			'description' => 'Test description',
 			'country' => 'GB',
-			'platform' => 'ios',
-			'real_device' => 'iPhone 15 Pro',
-			'device_country' => 'pl',
+			'device' => [
+				'platform' => 'ios',
+				'model' => 'iPhone 15 Pro',
+				'country' => 'pl',
+			],
 		]);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -328,7 +338,9 @@ class MissingControllerV2Test extends WebTestCase
 			'month' => 2,
 			'name' => 'Test name',
 			'description' => 'Test description',
-			'platform' => 'web',
+			'device' => [
+				'platform' => 'web',
+			],
 		], ['User-Agent' => 'Mozilla/5.0 web-test-agent']);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -351,7 +363,9 @@ class MissingControllerV2Test extends WebTestCase
 			'month' => 1,
 			'name' => 'Test name',
 			'description' => 'Test description',
-			'platform' => 'symbian',
+			'device' => [
+				'platform' => 'symbian',
+			],
 		]);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -375,8 +389,10 @@ class MissingControllerV2Test extends WebTestCase
 			'name' => 'Test name',
 			'description' => 'Test description',
 			'country' => 'gb',
-			'device_country' => 'GB',
-			'platform' => 'android',
+			'device' => [
+				'country' => 'GB',
+				'platform' => 'android',
+			],
 		]);
 
 		$this->assertResponseStatusCodeSame(201);
@@ -387,5 +403,40 @@ class MissingControllerV2Test extends WebTestCase
 		$this->assertNotNull($entity);
 		$this->assertSame('GB', $entity->country->isoCode);
 		$this->assertSame('GB', $entity->deviceCountry->isoCode);
+	}
+
+	/**
+	 * Backward compatibility: a legacy client that still sends the device fields flat at the top
+	 * level (pre-`device` object) must not be rejected — the unknown keys are ignored and the
+	 * suggestion is stored with default device metadata.
+	 *
+	 * @throws JsonException
+	 */
+	public function testPostFixedMissingIgnoresLegacyFlatDeviceFields(): void
+	{
+		$this->request('POST', '/v2/missing/fixed', [], [
+			'user_id' => 'user-id',
+			'day' => 1,
+			'month' => 1,
+			'name' => 'Test name',
+			'description' => 'Test description',
+			'platform' => 'ios',
+			'real_device' => 'iPhone 15 Pro',
+			'device_country' => 'pl',
+			'os_version' => '17',
+			'app_version' => '3.2.0',
+		]);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidaySuggestion::class)
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('unknown', $entity->platform->value);
+		$this->assertNull($entity->realDevice);
+		$this->assertNull($entity->deviceCountry);
+		$this->assertNull($entity->osVersion);
+		$this->assertNull($entity->appVersion);
 	}
 }
