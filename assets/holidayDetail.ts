@@ -7,6 +7,7 @@ type Kind = 'fixed' | 'floating';
 interface TranslationEntry {
     readonly name: string;
     readonly description: string | null;
+    readonly ai_generated?: boolean;
 }
 
 interface LanguageDef {
@@ -25,8 +26,10 @@ interface TranslationSection {
     readonly el: HTMLElement;
     readonly nameInput: HTMLInputElement;
     readonly descInput: HTMLTextAreaElement;
+    readonly aiInput: HTMLInputElement;
     readonly originalName: string;
     readonly originalDesc: string;
+    readonly originalAi: boolean;
     readonly existedOnServer: boolean;
 }
 
@@ -176,6 +179,7 @@ class DetailPage {
 
     private readonly sourceName: HTMLTextAreaElement;
     private readonly sourceDesc: HTMLTextAreaElement;
+    private readonly sourceAi: HTMLInputElement;
     private readonly metaDay: HTMLInputElement | null;
     private readonly metaMonth: HTMLInputElement | null;
     private readonly metaCountry: HTMLSelectElement;
@@ -198,6 +202,7 @@ class DetailPage {
 
     private readonly originalSourceName: string;
     private readonly originalSourceDesc: string;
+    private readonly originalSourceAi: boolean;
     private readonly originalDay: string;
     private readonly originalMonth: string;
     private readonly originalCountry: string;
@@ -234,6 +239,7 @@ class DetailPage {
 
         this.sourceName = document.getElementById('source-name') as HTMLTextAreaElement;
         this.sourceDesc = document.getElementById('source-description') as HTMLTextAreaElement;
+        this.sourceAi = document.getElementById('source-ai-generated') as HTMLInputElement;
         this.metaDay = document.getElementById('meta-day') as HTMLInputElement | null;
         this.metaMonth = document.getElementById('meta-month') as HTMLInputElement | null;
         this.metaCountry = document.getElementById('meta-country') as HTMLSelectElement;
@@ -255,6 +261,7 @@ class DetailPage {
 
         this.originalSourceName = this.sourceName.value;
         this.originalSourceDesc = this.sourceDesc.value;
+        this.originalSourceAi = this.sourceAi.checked;
         this.originalDay = this.metaDay?.value ?? '';
         this.originalMonth = this.metaMonth?.value ?? '';
         this.originalCountry = this.metaCountry.value;
@@ -350,6 +357,7 @@ class DetailPage {
         }
         this.sourceName.addEventListener('input', onChange);
         this.sourceDesc.addEventListener('input', onChange);
+        this.sourceAi.addEventListener('change', () => this.refreshSaveButton());
     }
 
     private attachSourceAi(): void {
@@ -363,6 +371,7 @@ class DetailPage {
                 day: () => this.currentDay(),
                 country: () => this.metaCountry.value,
                 enabled: () => this.dateOrArgsReady() && this.sourceNameReady(),
+                onGenerated: () => this.markAiGenerated(this.sourceAi),
             });
             this.aiHandles.push(handle);
         }
@@ -387,6 +396,13 @@ class DetailPage {
         }
     }
 
+    private markAiGenerated(checkbox: HTMLInputElement): void {
+        if (!checkbox.checked) {
+            checkbox.checked = true;
+            checkbox.dispatchEvent(new Event('change', {bubbles: true}));
+        }
+    }
+
     private currentMonth(): string {
         return this.metaMonth?.value || '1';
     }
@@ -399,12 +415,12 @@ class DetailPage {
         for (const target of this.targets) {
             const entry = this.translations[target.code];
             if (entry !== undefined) {
-                this.appendSection(target, entry.name ?? '', entry.description ?? '', !this.isNew);
+                this.appendSection(target, entry.name ?? '', entry.description ?? '', entry.ai_generated ?? false, !this.isNew);
             }
         }
     }
 
-    private appendSection(target: LanguageDef, name: string, description: string, existedOnServer: boolean): void {
+    private appendSection(target: LanguageDef, name: string, description: string, aiGenerated: boolean, existedOnServer: boolean): void {
         const fragment = this.template.content.cloneNode(true) as DocumentFragment;
         const sectionEl = fragment.querySelector<HTMLElement>('.translate-section')!;
         const codeEl = sectionEl.querySelector<HTMLElement>('[data-role="lang-code"]')!;
@@ -416,24 +432,31 @@ class DetailPage {
         const removeBtn = sectionEl.querySelector<HTMLButtonElement>('[data-role="remove"]')!;
         const aiName = sectionEl.querySelector<HTMLButtonElement>('[data-role="ai-name"]')!;
         const aiDesc = sectionEl.querySelector<HTMLButtonElement>('[data-role="ai-description"]')!;
+        const aiInput = sectionEl.querySelector<HTMLInputElement>('[data-role="ai-generated"]')!;
+        const aiLabel = sectionEl.querySelector<HTMLLabelElement>('[data-role="ai-generated-label"]')!;
 
         sectionEl.dataset.langCode = target.code;
         codeEl.textContent = target.code.toUpperCase();
         nameEl.textContent = target.name;
         nameInput.id = `translate-${target.code}-name`;
         descInput.id = `translate-${target.code}-description`;
+        aiInput.id = `translate-${target.code}-ai-generated`;
         nameLabel.htmlFor = nameInput.id;
         descLabel.htmlFor = descInput.id;
+        aiLabel.htmlFor = aiInput.id;
         nameInput.value = name;
         descInput.value = description;
+        aiInput.checked = aiGenerated;
 
         const state: TranslationSection = {
             code: target.code,
             el: sectionEl,
             nameInput,
             descInput,
+            aiInput,
             originalName: existedOnServer ? name : '',
             originalDesc: existedOnServer ? description : '',
+            originalAi: existedOnServer ? aiGenerated : false,
             existedOnServer,
         };
 
@@ -444,6 +467,7 @@ class DetailPage {
         };
         nameInput.addEventListener('input', onChange);
         descInput.addEventListener('input', onChange);
+        aiInput.addEventListener('change', onChange);
         removeBtn.addEventListener('click', () => this.removeSection(state));
 
         this.aiHandles.push(attachGenerateHandler(aiName, {
@@ -455,6 +479,7 @@ class DetailPage {
             day: () => this.currentDay(),
             country: () => this.metaCountry.value,
             enabled: () => this.dateOrArgsReady() && this.sourceNameReady(),
+            onGenerated: () => this.markAiGenerated(aiInput),
         }), attachGenerateHandler(aiDesc, {
             type: 'description',
             language: target.name,
@@ -464,6 +489,7 @@ class DetailPage {
             day: () => this.currentDay(),
             country: () => this.metaCountry.value,
             enabled: () => this.dateOrArgsReady() && nameInput.value.trim() !== '',
+            onGenerated: () => this.markAiGenerated(aiInput),
         }));
 
         this.sectionsRoot.appendChild(sectionEl);
@@ -482,7 +508,9 @@ class DetailPage {
     }
 
     private isSectionDirty(state: TranslationSection): boolean {
-        return state.nameInput.value !== state.originalName || state.descInput.value !== state.originalDesc;
+        return state.nameInput.value !== state.originalName
+            || state.descInput.value !== state.originalDesc
+            || state.aiInput.checked !== state.originalAi;
     }
 
     private updateDirtyMark(state: TranslationSection): void {
@@ -511,7 +539,7 @@ class DetailPage {
             btn.querySelector('.translate-add-item-name')!.textContent = target.name;
             btn.addEventListener('click', () => {
                 this.removedFromServer.delete(target.code);
-                this.appendSection(target, '', '', false);
+                this.appendSection(target, '', '', false, false);
                 this.refreshAddMenu();
                 this.refreshSaveButton();
                 if (addBtn) {
@@ -551,7 +579,8 @@ class DetailPage {
 
     private sourceDirty(): boolean {
         return this.sourceName.value !== this.originalSourceName
-            || this.sourceDesc.value !== this.originalSourceDesc;
+            || this.sourceDesc.value !== this.originalSourceDesc
+            || this.sourceAi.checked !== this.originalSourceAi;
     }
 
     private translationsDirty(): boolean {
@@ -631,10 +660,10 @@ class DetailPage {
         }
     }
 
-    private collectTranslations(): Record<string, { name: string; description: string }> {
-        const payload: Record<string, { name: string; description: string }> = {};
+    private collectTranslations(): Record<string, { name: string; description: string; ai_generated: boolean }> {
+        const payload: Record<string, { name: string; description: string; ai_generated: boolean }> = {};
         for (const code of this.removedFromServer) {
-            payload[code] = {name: '', description: ''};
+            payload[code] = {name: '', description: '', ai_generated: false};
         }
         for (const s of this.sections) {
             if (s.existedOnServer && !this.isSectionDirty(s)) {
@@ -645,7 +674,7 @@ class DetailPage {
             if (!s.existedOnServer && name === '' && desc.trim() === '') {
                 continue;
             }
-            payload[s.code] = {name, description: desc};
+            payload[s.code] = {name, description: desc, ai_generated: s.aiInput.checked};
         }
         return payload;
     }
@@ -690,7 +719,11 @@ class DetailPage {
         try {
             const res = await axios.post<{ success: boolean; errors?: string[]; redirect?: string }>(this.saveUrl, {
                 _token: this.csrfToken,
-                source: {name: this.sourceName.value.trim(), description: this.sourceDesc.value},
+                source: {
+                    name: this.sourceName.value.trim(),
+                    description: this.sourceDesc.value,
+                    ai_generated: this.sourceAi.checked
+                },
                 metadata,
                 translations: this.collectTranslations(),
             });

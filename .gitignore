@@ -17,5 +17,6 @@ yarn-error.log
 ###< phpunit/phpunit ###
 
 ###> claude ###
-.claude/settings.local.json
+/.claude/settings.local.json
+/graphify-out/
 ###< claude ###

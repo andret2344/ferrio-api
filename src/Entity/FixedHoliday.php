@@ -30,8 +30,14 @@ class FixedHoliday implements JsonSerializable
 	#[ORM\Column(type: 'text', nullable: true)]
 	private(set) ?string $url;
 
-	public function __construct(Language $language, FixedHolidayMetadata $metadata, string $name,
-								?string  $description = null, ?string $url = null)
+	#[ORM\Column(name: 'ai_generated', type: 'boolean', options: ['default' => false])]
+	public bool $aiGenerated = false;
+
+	public function __construct(Language             $language,
+	                            FixedHolidayMetadata $metadata,
+	                            string               $name,
+	                            ?string              $description = null,
+	                            ?string              $url = null)
 	{
 		$this->language = $language;
 		$this->metadata = $metadata;
@@ -46,7 +52,8 @@ class FixedHoliday implements JsonSerializable
 		'usual' => 'boolean',
 		'name' => 'null|string',
 		'description' => 'null|string',
-		'url' => 'null|string'
+		'url' => 'null|string',
+		'ai_generated' => 'boolean'
 	])]
 	public function jsonSerialize(): array
 	{
@@ -55,7 +62,8 @@ class FixedHoliday implements JsonSerializable
 			'usual' => $this->metadata->usual,
 			'name' => $this->name,
 			'description' => $this->description,
-			'url' => $this->url
+			'url' => $this->url,
+			'ai_generated' => $this->aiGenerated
 		];
 	}
 }

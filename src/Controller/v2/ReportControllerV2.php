@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/v2/report', name: 'v2_report_')]
+#[Route('/{_version<v2|v3>}/report', name: 'report_')]
 class ReportControllerV2 extends AbstractController
 {
 	public function __construct(

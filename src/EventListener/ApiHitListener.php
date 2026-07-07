@@ -20,6 +20,7 @@ readonly class ApiHitListener
 			return;
 		}
 
-		$this->apiHitCounter->count($event->getRequest()->getPathInfo());
+		$request = $event->getRequest();
+		$this->apiHitCounter->count($request->getMethod(), $request->getPathInfo());
 	}
 }

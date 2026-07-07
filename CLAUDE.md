@@ -9,7 +9,7 @@ explicitly ask. Do not silently leave stale guidance.
 ## Project Overview
 
 Ferrio API is a Symfony 7.4 / PHP 8.5 application that serves holiday data (fixed and floating) across multiple
-languages and countries. It exposes a versioned JSON REST API (v1, v2, v3) and includes a Twig-based admin UI (
+languages and countries. It exposes a versioned JSON REST API (v2, v3) and includes a Twig-based admin UI (
 `/admin`, with a 301 redirect from the legacy `/manage` prefix) protected by HTTP Basic Auth.
 
 ## Commands
@@ -48,7 +48,7 @@ Two holiday types with parallel structures:
 
 - **Fixed holidays** — tied to a specific month/day (e.g., Christmas). Entities: `FixedHoliday`, `FixedHolidayMetadata`,
   `FixedHolidaySuggestion`, `FixedHolidayError`
-- **Floating holidays** — date varies per year. In v1/v2, computed by a `Script` entity using `args` (JSON array for JS
+- **Floating holidays** — date varies per year. In v2, computed by a `Script` entity using `args` (JSON array for JS
   scripts). In v3, computed by `AlgorithmResolver` using `algorithmArgs` (JSON object with named keys). Entities:
   `FloatingHoliday`, `FloatingHolidayMetadata`, `FloatingHolidaySuggestion`, `FloatingHolidayError`
 
@@ -57,26 +57,47 @@ API output.
 
 `FloatingHolidayMetadata` has two args columns:
 
-- `args` — JSON array for v1/v2 script-based calculation (e.g., `[2026, 4]`)
+- `args` — JSON array for v2 script-based calculation (e.g., `[2026, 4]`)
 - `algorithmArgs` — JSON object for v3 algorithm-based calculation (e.g., `{"2026": "15.4"}`)
 
 ### API Versioning
 
-Controllers are organized in `src/Controller/v1/`, `src/Controller/v2/`, and `src/Controller/v3/` with route prefixes
-`/v1/`, `/v2/`, and `/v3/`. v1/v2 routes use path parameters with inline regex constraints (e.g.,
-`{language<^\S{2}$>}`). v3 uses query parameters exclusively.
+Controllers are organized in `src/Controller/v2/` and `src/Controller/v3/` with route prefixes `/v2/` and `/v3/`.
+(v1 no longer exists — no client queries it.) v2 routes use path parameters with inline regex constraints (e.g.,
+`{language<^\S{2}$>}`); v3 uses query parameters exclusively.
+
+Version numbers are a snapshot of the *whole* API, not per-resource. The rule for a resource whose behaviour is
+identical across a version range: mount ONE controller under a version-parameter prefix so a single definition serves
+all those versions —
+`#[Route('/{_version<v2|v3>}/report', name: 'report_')]`. Releasing a new version then costs no new code for
+unchanged resources — you widen the `_version` regex. When a resource's behaviour actually changes in a new version,
+split it into a separate versioned controller instead (freeze the old one's regex, add a new one). Back-compat holds
+because old prefixes are never unmounted. `report` is the current example (served at `/v2/report` and `/v3/report`
+by the same `ReportControllerV2`); v3 also has its own distinct report contract at `/v3/users/reports`
+(`UserControllerV3`). `countries` and `missing` are deliberately v2-only. Security `access_control`
+paths must match the same range — use `^/v\d+/report` (version-agnostic) for aliased resources, a pinned `^/v2/...`
+for single-version ones.
+
+Contract tests (`tests/Contract/`) unify the driver but freeze the data. The v2 report/suggestion matrix
+({error, suggestion} × {fixed, floating}) is driven by a single `V2/ReportsContractTest` with a data-provider over
+combos; v3 does the same in `V3/UserReportsContractTest`. Frozen request/schema fixtures under `data/**` stay
+per-combo and append-only — unify test code, never the fixtures. For a resource aliased across versions (report),
+the provider adds a **version axis**: the same frozen generation is replayed against every version path that serves
+it (`/v2/report` and `/v3/report`), which catches an alias silently drifting the response shape. "Always latest" is
+covered by the ordinary controller tests, never the frozen contract suite.
 
 ### API traffic metrics
 
-Per-version request volume is counted in the `api_hit` table (entity `ApiHit`): one row per
-`(bucket_hour, version)` with a `hits` counter, bucketed by **UTC hour**. `ApiHitListener`
-(on `kernel.terminate`, so it adds no latency to the response) calls `ApiHitCounter::count()`,
-which extracts the version from the path (`/v1`, `/v2`, `/v3` — non-versioned paths are ignored)
+Per-endpoint GET traffic is counted in the `api_hit` table (entity `ApiHit`): one row per
+`(bucket_hour, path)` with a `hits` counter, bucketed by **UTC hour**, where `path` is the full
+request path (e.g. `/v3/holidays`, `/v2/holiday/en/day/3/1`). `ApiHitListener`
+(on `kernel.terminate`, so it adds no latency to the response) calls `ApiHitCounter::count($method, $path)`,
+which records **only GET** requests to a versioned path (`/v\d+…`; non-versioned admin/asset paths are ignored)
 and runs an atomic `INSERT ... ON DUPLICATE KEY UPDATE hits = hits + 1` via raw DBAL. Raw DBAL
 (not the ORM) is deliberate: read-modify-write through Doctrine would race under concurrency.
-Errors are caught and logged as warnings — analytics must never break a request. The table stays
-tiny (≤ 3 versions × 24 h × 365 ≈ 26k rows/year); query it directly: per hour from the raw rows,
-per day via `GROUP BY DATE(bucket_hour), version`.
+Errors are caught and logged as warnings — analytics must never break a request. Cardinality is
+bounded by the number of distinct GET paths hit per hour; query it directly: per endpoint via
+`GROUP BY path`, per version via `path LIKE '/v3/%'`, per day via `GROUP BY DATE(bucket_hour), path`.
 
 ### v3 API
 
@@ -88,7 +109,8 @@ Single endpoint: `GET /v3/holidays` with query parameters:
 - `month` (optional) — filter by month
 - `country` (optional, case-insensitive) — filter by country ISO code
 - `grouping` (optional, default `false`) — when `true`, groups holidays by day in v2-compatible `HolidayDay` format
-- `includeMatureContent` (optional, default `false`) — when `true`, includes holidays whose metadata `matureContent` is true alongside the rest; otherwise mature ones are filtered out
+- `includeMatureContent` (optional, default `false`) — when `true`, includes holidays whose metadata `matureContent` is
+  true alongside the rest; otherwise mature ones are filtered out
 
 The v3 merges fixed and floating holidays into a unified flat list sorted by date. Each item has a prefixed `id` (
 `fixed-*` or `floating-*`) and includes a `categories` array of tag names translated into the requested `lang` (falling
@@ -101,22 +123,22 @@ Floating holiday dates in v3 are computed by polymorphic resolver classes in `sr
 `AlgorithmResolver` is a thin factory using Symfony's `#[AutowireLocator]` to inject all resolvers via a
 `ServiceLocator`.
 
-Available algorithms with v1/v2 `args` → v3 `algorithmArgs` mapping (dayOfWeek uses ISO 1-7, Mon-Sun):
+Available algorithms with v2 `args` → v3 `algorithmArgs` mapping (dayOfWeek uses ISO 1-7, Mon-Sun):
 
-- `nth_day_of_week_in_month` — nth occurrence of a weekday in a month. v1/v2: `[month, dayOfWeek, nth]` → v3:
+- `nth_day_of_week_in_month` — nth occurrence of a weekday in a month. v2: `[month, dayOfWeek, nth]` → v3:
   `{"nth": 4, "dayOfWeek": 4, "month": 11}` (4th Thursday of November = Thanksgiving)
 - `last_nth_day_of_week_in_month` — nth-to-last occurrence of a weekday in a month. Same keys as above:
   `{"nth": 1, "dayOfWeek": 1, "month": 5}` (last Monday of May = Memorial Day)
-- `first_day_of_week_after_date` — first weekday on or after a date. v1/v2: hardcoded in script → v3:
+- `first_day_of_week_after_date` — first weekday on or after a date. v2: hardcoded in script → v3:
   `{"dayOfWeek": 6, "month": 5, "day": 19}` (first Saturday on or after May 19). Optional `"inclusive": false` to
   exclude the start date.
-- `last_day_of_week_before_date` — last weekday on or before a date. v1/v2: hardcoded in script → v3:
+- `last_day_of_week_before_date` — last weekday on or before a date. v2: hardcoded in script → v3:
   `{"dayOfWeek": 5, "month": 3, "day": 20}` (last Friday on or before March 20). Optional `"inclusive": false` to
   exclude the start date.
 - `nearest_day_of_week_to_date` — weekday nearest to a given date. `{"dayOfWeek": 6, "month": 6, "day": 17}`
   (Saturday nearest June 17). Forward/backward distances can never tie (they sum to 7), so the result is always
   unambiguous; it may cross month or year boundaries.
-- `nth_day_then_next_day_of_week` — finds nth weekday, then the next occurrence of another weekday after it. v1/v2:
+- `nth_day_then_next_day_of_week` — finds nth weekday, then the next occurrence of another weekday after it. v2:
   `[month, dayOfWeek, nth, after]` → v3: `{"nth": 1, "dayOfWeek": 1, "month": 7, "afterDayOfWeek": 2}` (Tuesday after
   the 1st Monday of July)
 - `leap_year_date` — returns different dates for leap/non-leap years.
@@ -233,7 +255,7 @@ generation finishes, instead of unconditionally re-enabling). The detail page wi
 - All JSON keys in admin internal APIs (`/admin/api/*`) and JSON embedded in Twig templates (data-* blobs and
   `<script type='application/json'>` payloads) MUST use `snake_case` — never camelCase. The PHP-side variable that
   holds the value can stay camelCase; only the JSON key gets converted (e.g. `'country_code' => $country->isoCode`).
-  This convention does NOT apply to public versioned APIs under `/v1`, `/v2`, `/v3` — those keep their existing shape
+  This convention does NOT apply to public versioned APIs under `/v2`, `/v3` — those keep their existing shape
   for backwards compatibility.
 - Always use CRLF line endings in all files. Every file must also end with a final CRLF (trailing newline) — no
   exceptions, including JSON, YAML, SCSS, TS, PHP, Twig, and Markdown.

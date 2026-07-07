@@ -1618,7 +1618,7 @@ body {
   line-height: 1;
 }
 
-// Reports toolbar (inline filter selects + CSV export)
+// Reports toolbar (inline filter selects)
 .reports-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -1637,12 +1637,6 @@ body {
   gap: 10px;
   flex: 1;
   align-items: center;
-}
-
-.reports-toolbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .filter-inline {

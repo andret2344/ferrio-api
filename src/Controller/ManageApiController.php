@@ -54,6 +54,7 @@ class ManageApiController extends AbstractController
 		if ($sourceDescription !== null) {
 			$sourceDescription = (string)$sourceDescription;
 		}
+		$sourceAiGenerated = !empty($source['ai_generated']);
 
 		$polish = $this->entityManager->getRepository(Language::class)
 			->findOneBy(['code' => Language::DEFAULT_CODE]);
@@ -97,7 +98,8 @@ class ManageApiController extends AbstractController
 
 		$tagIds = array_values(array_filter(array_map('intval', $meta['tags'] ?? []), fn(int $v) => $v > 0));
 		if ($tagIds !== []) {
-			$categories = $this->entityManager->getRepository(Category::class)->findBy(['id' => $tagIds]);
+			$categories = $this->entityManager->getRepository(Category::class)
+				->findBy(['id' => $tagIds]);
 			$metadata->categories = new ArrayCollection($categories);
 		}
 
@@ -106,6 +108,7 @@ class ManageApiController extends AbstractController
 		$polishHoliday = $kind === 'fixed'
 			? new FixedHoliday($polish, $metadata, $sourceName, $sourceDescription, '')
 			: new FloatingHoliday($polish, $metadata, $sourceName, $sourceDescription, '');
+		$polishHoliday->aiGenerated = $sourceAiGenerated;
 		$this->entityManager->persist($polishHoliday);
 
 		$languageRepo = $this->entityManager->getRepository(Language::class);
@@ -139,6 +142,7 @@ class ManageApiController extends AbstractController
 			$holiday = $kind === 'fixed'
 				? new FixedHoliday($language, $metadata, $name, $description, '')
 				: new FloatingHoliday($language, $metadata, $name, $description, '');
+			$holiday->aiGenerated = !empty($entry['ai_generated']);
 			$this->entityManager->persist($holiday);
 		}
 
@@ -170,7 +174,8 @@ class ManageApiController extends AbstractController
 		$metadataClass = $kind === 'fixed' ? FixedHolidayMetadata::class : FloatingHolidayMetadata::class;
 		$holidayClass = $kind === 'fixed' ? FixedHoliday::class : FloatingHoliday::class;
 
-		$metadata = $this->entityManager->getRepository($metadataClass)->find($id);
+		$metadata = $this->entityManager->getRepository($metadataClass)
+			->find($id);
 		if ($metadata === null) {
 			return new JsonResponse(['success' => false, 'errors' => ['Holiday not found.']], Response::HTTP_NOT_FOUND);
 		}
@@ -190,6 +195,7 @@ class ManageApiController extends AbstractController
 		if ($sourceDescription !== null) {
 			$sourceDescription = (string)$sourceDescription;
 		}
+		$sourceAiGenerated = !empty($source['ai_generated']);
 
 		$polish = $languageRepo->findOneBy(['code' => Language::DEFAULT_CODE]);
 		if ($polish === null) {
@@ -204,6 +210,7 @@ class ManageApiController extends AbstractController
 			$polishHoliday->name = $sourceName;
 			$polishHoliday->description = $sourceDescription;
 		}
+		$polishHoliday->aiGenerated = $sourceAiGenerated;
 		$this->entityManager->persist($polishHoliday);
 
 		$meta = $data['metadata'] ?? [];
@@ -223,7 +230,7 @@ class ManageApiController extends AbstractController
 			$metadata->day = $day;
 		} else {
 			/** @var FloatingHolidayMetadata $metadata */
-			$algorithm = \App\Enum\Algorithm::tryFrom((string)($meta['algorithm'] ?? ''));
+			$algorithm = Algorithm::tryFrom((string)($meta['algorithm'] ?? ''));
 			if ($algorithm === null) {
 				return new JsonResponse(['success' => false, 'errors' => ['Invalid algorithm.']], Response::HTTP_BAD_REQUEST);
 			}
@@ -292,6 +299,7 @@ class ManageApiController extends AbstractController
 				$holiday->name = $name;
 				$holiday->description = $description;
 			}
+			$holiday->aiGenerated = !empty($entry['ai_generated']);
 			$this->entityManager->persist($holiday);
 		}
 
@@ -318,7 +326,8 @@ class ManageApiController extends AbstractController
 		$metadataClass = $kind === 'fixed' ? FixedHolidayMetadata::class : FloatingHolidayMetadata::class;
 		$suggestionClass = $kind === 'fixed' ? FixedHolidaySuggestion::class : FloatingHolidaySuggestion::class;
 
-		$metadata = $this->entityManager->getRepository($metadataClass)->find($id);
+		$metadata = $this->entityManager->getRepository($metadataClass)
+			->find($id);
 		if ($metadata === null) {
 			return new JsonResponse(['success' => false, 'errors' => ['Holiday not found.']], Response::HTTP_NOT_FOUND);
 		}

@@ -218,7 +218,7 @@ function initModerationModal(opts: ModerationModalOptions): void {
     const refreshDirty = () => {
         const dirty = stateInput.value !== initialState
             || commentInput.value !== initialComment
-            || (holidayIdInput !== null && holidayIdInput.value !== initialHolidayId);
+            || holidayIdInput !== null && holidayIdInput.value !== initialHolidayId;
         saveBtn.disabled = !dirty;
     };
 
@@ -257,8 +257,16 @@ function initModerationModal(opts: ModerationModalOptions): void {
         refreshDirty();
     });
 
-    deleteBtn.addEventListener('click', () =>
-        deleteReport(modalEl, deleteUrl, kindInput, idInput, errorBox, saveBtn, deleteBtn));
+    deleteBtn.addEventListener('click', () => {
+        const runDelete = () => deleteReport(modalEl, deleteUrl, kindInput, idInput, errorBox, saveBtn, deleteBtn);
+        const confirmEl = document.getElementById('reportDeleteConfirmModal');
+        if (!confirmEl) {
+            runDelete();
+            return;
+        }
+        pendingReportDelete = runDelete;
+        bootstrap.Modal.getOrCreateInstance(confirmEl).show();
+    });
 
     saveBtn.addEventListener('click', async () => {
         errorBox.classList.add('d-none');
@@ -313,9 +321,7 @@ function initSuggestionModal(): void {
         errorBoxId: 'suggestionError',
         saveBtnId: 'suggestionSave',
         deleteBtnId: 'suggestionDelete',
-        onShow: trigger => {
-            populateSuggestionContent(trigger);
-        },
+        onShow: trigger => populateSuggestionContent(trigger),
     });
 }
 
@@ -365,9 +371,6 @@ async function deleteReport(
     saveBtn: HTMLButtonElement,
     deleteBtn: HTMLButtonElement,
 ): Promise<void> {
-    if (!confirm('Delete this report? This cannot be undone.')) {
-        return;
-    }
     errorBox.classList.add('d-none');
     errorBox.textContent = '';
     deleteBtn.disabled = true;
@@ -397,6 +400,41 @@ async function deleteReport(
         deleteBtn.disabled = false;
         saveBtn.disabled = false;
     }
+}
+
+let pendingReportDelete: (() => void) | null = null;
+
+function initReportDeleteConfirm(): void {
+    const modalEl = document.getElementById('reportDeleteConfirmModal');
+    const confirmBtn = document.getElementById('reportDeleteConfirm') as HTMLButtonElement | null;
+    if (!modalEl || !confirmBtn) {
+        return;
+    }
+    confirmBtn.addEventListener('click', () => {
+        bootstrap.Modal.getInstance(modalEl)?.hide();
+        const action = pendingReportDelete;
+        pendingReportDelete = null;
+        action?.();
+    });
+    // Stacked on top of the moderation modal: Bootstrap does not raise the second modal's
+    // z-index, so its backdrop would fall behind the moderation modal (page dims twice, the
+    // report modal never dims). Lift this modal and its backdrop above whatever is already open.
+    modalEl.addEventListener('show.bs.modal', () => {
+        const openCount = document.querySelectorAll('.modal.show').length;
+        const zIndex = 1055 + (openCount + 1) * 20;
+        modalEl.style.zIndex = String(zIndex);
+        globalThis.setTimeout(() => {
+            const backdrops = document.querySelectorAll<HTMLElement>('.modal-backdrop');
+            const top = backdrops[backdrops.length - 1];
+            if (top) {
+                top.style.zIndex = String(zIndex - 10);
+            }
+        }, 0);
+    });
+    modalEl.addEventListener('hidden.bs.modal', () => {
+        pendingReportDelete = null;
+        modalEl.style.zIndex = '';
+    });
 }
 
 function initRowTriggers(): void {
@@ -568,6 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     initSuggestionModal();
     initErrorModal();
+    initReportDeleteConfirm();
     initRowTriggers();
     initCommentPopovers();
     initSortableHeaders();

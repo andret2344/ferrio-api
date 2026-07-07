@@ -9,6 +9,7 @@ interface GenerateFields {
     readonly day: () => string | undefined;
     readonly country?: () => string | undefined;
     readonly enabled?: () => boolean;
+    readonly onGenerated?: () => void;
 }
 
 export interface GenerateHandle {
@@ -61,6 +62,9 @@ export function attachGenerateHandler(btn: HTMLButtonElement, fields: GenerateFi
             } else {
                 target.value = res.data.result;
                 target.dispatchEvent(new Event('input', {bubbles: true}));
+                if (fields.onGenerated) {
+                    fields.onGenerated();
+                }
             }
         } catch {
             alert('Failed to generate.');

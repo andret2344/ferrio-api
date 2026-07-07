@@ -20,6 +20,7 @@ class FixedHolidayFixture extends Fixture implements DependentFixtureInterface
 		$metadata0314 = $this->getReference(FixedHolidayMetadataFixture::METADATA_0314, FixedHolidayMetadata::class);
 
 		$holiday0301 = new FixedHoliday($languageEn, $metadata0301, 'March First', 'A test fixed holiday', null);
+		$holiday0301->aiGenerated = true;
 		$manager->persist($holiday0301);
 		$this->addReference('fixed-holiday-0301-en', $holiday0301);
 

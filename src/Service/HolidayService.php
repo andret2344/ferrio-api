@@ -34,6 +34,7 @@ readonly class HolidayService
 				'country' => $holiday['countryCode'],
 				'url' => $holiday['url'],
 				'mature_content' => $holiday['matureContent'],
+				'ai_generated' => $holiday['aiGenerated'],
 			];
 		}
 

@@ -70,6 +70,7 @@ readonly class HolidayServiceV3
 			'country' => $h['countryCode'],
 			'url' => $h['url'],
 			'mature_content' => $h['matureContent'],
+			'ai_generated' => $h['aiGenerated'],
 			'categories' => $categoriesByMetadata[$h['id']] ?? [],
 		], $holidays);
 	}
@@ -116,6 +117,7 @@ readonly class HolidayServiceV3
 				'country' => $metadata->country?->isoCode,
 				'url' => $holiday->url,
 				'mature_content' => $metadata->matureContent,
+				'ai_generated' => $holiday->aiGenerated,
 				'categories' => $categoriesByMetadata[$metadata->id] ?? [],
 			];
 		}

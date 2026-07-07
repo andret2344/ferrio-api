@@ -31,7 +31,7 @@ class FloatingHolidayMetadata implements JsonSerializable
 	#[ORM\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
 	public ?Country $country;
 
-	#[ORM\ManyToOne(targetEntity: Script::class)]
+	#[ORM\ManyToOne(targetEntity: Script::class, inversedBy: 'metadata')]
 	#[ORM\JoinColumn(name: 'script_id', referencedColumnName: 'id')]
 	public ?Script $script;
 

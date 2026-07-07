@@ -76,7 +76,7 @@ class ManageController extends AbstractController
 			'countries' => $countries,
 			'tags' => $tags,
 			'selectedTagIds' => [],
-			'source' => ['name' => '', 'description' => ''],
+			'source' => ['name' => '', 'description' => '', 'ai_generated' => false],
 			'translations' => [],
 			'countryCode' => null,
 			'mature' => false,
@@ -106,10 +106,10 @@ class ManageController extends AbstractController
 			$sourceMetadata = $this->entityManager->getRepository($sourceMetadataClass)
 				->find($fromId);
 			if ($sourceMetadata !== null) {
-				$source = ['name' => '', 'description' => ''];
+				$source = ['name' => '', 'description' => '', 'ai_generated' => false];
 				$translations = [];
 				foreach ($sourceMetadata->holidays as $holiday) {
-					$entry = ['name' => $holiday->name, 'description' => $holiday->description];
+					$entry = ['name' => $holiday->name, 'description' => $holiday->description, 'ai_generated' => $holiday->aiGenerated];
 					if ($holiday->language->code === Language::DEFAULT_CODE) {
 						$source = $entry;
 					} else {
@@ -142,10 +142,10 @@ class ManageController extends AbstractController
 		$languages = $languageRepository->findBy([], ['code' => 'ASC']);
 		$targets = array_values(array_filter($languages, fn(Language $l) => $l->code !== Language::DEFAULT_CODE));
 
-		$source = ['name' => '', 'description' => ''];
+		$source = ['name' => '', 'description' => '', 'ai_generated' => false];
 		$translations = [];
 		foreach ($metadata->holidays as $holiday) {
-			$entry = ['name' => $holiday->name, 'description' => $holiday->description];
+			$entry = ['name' => $holiday->name, 'description' => $holiday->description, 'ai_generated' => $holiday->aiGenerated];
 			if ($holiday->language->code === Language::DEFAULT_CODE) {
 				$source = $entry;
 			} else {
@@ -538,99 +538,6 @@ class ManageController extends AbstractController
 			$out[(string)$k] = (int)$row['c'];
 		}
 		return $out;
-	}
-
-	#[Route('/reports/{type<fixed-suggestions|floating-suggestions|fixed-errors|floating-errors>}/export.csv', name: 'reports_export', methods: ['GET'])]
-	public function reportsExport(string $type, Request $request): Response
-	{
-		$config = self::REPORT_TYPES[$type];
-		$kind = $config['kind'];
-		$isError = !$kind->isSuggestion();
-
-		$filters = $this->parseReportFilters($request);
-		$rows = $this->entityManager->getRepository($kind->entityClass())
-			->findBy($this->buildReportCriteria($filters), ['datetime' => 'DESC']);
-
-		$out = fopen('php://temp', 'w+');
-		if ($isError) {
-			$header = [
-				'id',
-				'datetime',
-				'user_id',
-				'language',
-				'metadata_id',
-				'report_type',
-				'description',
-				'report_state',
-				'comment',
-				'platform',
-				'real_device',
-				'device_country'
-			];
-		} else {
-			$header = [
-				'id',
-				'datetime',
-				'user_id',
-				'name',
-				'day_or_date',
-				'description',
-				'country',
-				'report_state',
-				'comment',
-				'holiday_id',
-				'platform',
-				'real_device',
-				'device_country'
-			];
-		}
-		fputcsv($out, $header);
-
-		foreach ($rows as $r) {
-			if ($isError) {
-				$row = [
-					$r->id,
-					$r->datetime->format('Y-m-d H:i:s'),
-					$r->userId,
-					$r->language->code,
-					$r->metadata?->id,
-					$r->reportType->value,
-					$r->description,
-					$r->reportState->value,
-					$r->comment,
-					$r->platform?->value,
-					$r->realDevice,
-					$r->deviceCountry?->isoCode
-				];
-			} else {
-				$dayOrDate = property_exists($r, 'date') ? $r->date : sprintf('%02d.%02d', $r->day, $r->month);
-				$row = [
-					$r->id,
-					$r->datetime->format('Y-m-d H:i:s'),
-					$r->userId,
-					$r->name,
-					$dayOrDate,
-					$r->description,
-					$r->country?->isoCode,
-					$r->reportState->value,
-					$r->comment,
-					$r->holiday?->id,
-					$r->platform?->value,
-					$r->realDevice,
-					$r->deviceCountry?->isoCode
-				];
-			}
-			fputcsv($out, $row);
-		}
-
-		rewind($out);
-		$csv = stream_get_contents($out);
-		fclose($out);
-
-		$response = new Response($csv);
-		$response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
-		$response->headers->set('Content-Disposition', sprintf('attachment; filename="reports-%s-%s.csv"', $type, date('Ymd-His')));
-		return $response;
 	}
 
 	#[Route('/reports/moderate', name: 'reports_moderate', methods: ['POST'])]

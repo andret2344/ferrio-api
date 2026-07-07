@@ -14,8 +14,8 @@ class ApiHit
 	private(set) DateTimeImmutable $bucketHour;
 
 	#[ORM\Id]
-	#[ORM\Column(length: 8)]
-	private(set) string $version;
+	#[ORM\Column(length: 255)]
+	private(set) string $path;
 
 	#[ORM\Column(options: ['unsigned' => true, 'default' => 0])]
 	private(set) int $hits = 0;

@@ -7,9 +7,11 @@ use App\Entity\FixedHoliday;
 use App\Entity\FixedHolidayMetadata;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Override;
 
 class FixedHolidayRepository extends ServiceEntityRepository
 {
+	#[Override]
 	public function __construct(ManagerRegistry $registry)
 	{
 		parent::__construct($registry, FixedHoliday::class);
@@ -26,6 +28,7 @@ class FixedHolidayRepository extends ServiceEntityRepository
 				'm.usual',
 				'h.description',
 				'h.url',
+				'h.aiGenerated',
 				'c.englishName AS countryName',
 				'c.isoCode AS countryCode',
 				'm.matureContent AS matureContent'
@@ -55,6 +58,7 @@ class FixedHolidayRepository extends ServiceEntityRepository
 				'm.usual',
 				'h.description',
 				'h.url',
+				'h.aiGenerated',
 				'c.englishName AS countryName',
 				'c.isoCode AS countryCode',
 				'm.matureContent AS matureContent'
@@ -71,21 +75,26 @@ class FixedHolidayRepository extends ServiceEntityRepository
 			->addOrderBy('m.day', 'ASC');
 
 		if ($month !== null) {
-			$qb->andWhere('m.month = :month')->setParameter('month', $month);
+			$qb->andWhere('m.month = :month')
+				->setParameter('month', $month);
 		}
 		if ($day !== null) {
-			$qb->andWhere('m.day = :day')->setParameter('day', $day);
+			$qb->andWhere('m.day = :day')
+				->setParameter('day', $day);
 		}
 		if ($country !== null) {
-			$qb->andWhere('c.isoCode = :country')->setParameter('country', $country);
+			$qb->andWhere('c.isoCode = :country')
+				->setParameter('country', $country);
 		}
 
-		return $qb->getQuery()->getResult();
+		return $qb->getQuery()
+			->getResult();
 	}
 
 	public function findAllAggregatedById(string $languageFrom, string $languageTo, ?int $month = null): array
 	{
-		$qb = $this->getEntityManager()->createQueryBuilder()
+		$qb = $this->getEntityManager()
+			->createQueryBuilder()
 			->select([
 				'm.day AS day',
 				'm.month AS month',
@@ -105,9 +114,11 @@ class FixedHolidayRepository extends ServiceEntityRepository
 			->addOrderBy('m.day', 'ASC');
 
 		if ($month !== null) {
-			$qb->andWhere('m.month = :month')->setParameter('month', $month);
+			$qb->andWhere('m.month = :month')
+				->setParameter('month', $month);
 		}
 
-		return $qb->getQuery()->getResult();
+		return $qb->getQuery()
+			->getResult();
 	}
 }

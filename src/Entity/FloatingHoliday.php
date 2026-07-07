@@ -30,6 +30,9 @@ class FloatingHoliday implements JsonSerializable
 	#[ORM\Column(type: 'text', nullable: true)]
 	private(set) ?string $url;
 
+	#[ORM\Column(name: 'ai_generated', type: 'boolean', options: ['default' => false])]
+	public bool $aiGenerated = false;
+
 	public function __construct(Language $language, FloatingHolidayMetadata $metadata, string $name, ?string $description, ?string $url)
 	{
 		$this->language = $language;
@@ -46,7 +49,8 @@ class FloatingHoliday implements JsonSerializable
 		'name' => "null|string",
 		'description' => "null|string",
 		'url' => "null|string",
-		'script' => "null|string"
+		'script' => "null|string",
+		'ai_generated' => "bool"
 	])]
 	public function jsonSerialize(): array
 	{
@@ -56,7 +60,8 @@ class FloatingHoliday implements JsonSerializable
 			'name' => $this->name,
 			'description' => $this->description,
 			'url' => $this->url,
-			'script' => $this->metadata->script?->content
+			'script' => $this->metadata->script?->content,
+			'ai_generated' => $this->aiGenerated
 		];
 	}
 }

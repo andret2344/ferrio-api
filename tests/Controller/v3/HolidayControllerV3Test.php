@@ -9,7 +9,6 @@ use App\Entity\Script;
 use App\Enum\Algorithm;
 use App\Tests\Fixture\FixedHolidayFixture;
 use App\Tests\Fixture\FloatingHolidayFixture;
-use App\Tests\Fixture\LanguageFixture;
 use App\Tests\Trait\TestUtilTrait;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\ORM\EntityManagerInterface;
@@ -76,11 +75,31 @@ class HolidayControllerV3Test extends WebTestCase
 			$this->assertArrayHasKey('country', $holiday);
 			$this->assertArrayHasKey('url', $holiday);
 			$this->assertArrayHasKey('mature_content', $holiday);
+			$this->assertArrayHasKey('ai_generated', $holiday);
 			$this->assertArrayHasKey('categories', $holiday);
 			$this->assertIsArray($holiday['categories']);
 			// No 'script' key in v3
 			$this->assertArrayNotHasKey('script', $holiday);
 		}
+	}
+
+	public function testGetAllReturnsAiGeneratedFlag(): void
+	{
+		$this->request('GET', '/v3/holidays', ['lang' => 'en', 'year' => 2026]);
+
+		$this->assertResponseIsSuccessful();
+		$response = json_decode($this->client->getResponse()
+			->getContent(), true);
+
+		$byName = array_column($response, null, 'name');
+
+		// Fixed "March First" fixture is flagged AI-generated
+		$this->assertArrayHasKey('March First', $byName);
+		$this->assertTrue($byName['March First']['ai_generated']);
+
+		// Floating fixture is not
+		$this->assertArrayHasKey('Floating Test Day', $byName);
+		$this->assertFalse($byName['Floating Test Day']['ai_generated']);
 	}
 
 	public function testGetAllReturnsSortedByDate(): void
@@ -396,8 +415,10 @@ class HolidayControllerV3Test extends WebTestCase
 
 	public function testIncludeMatureContentTrueIncludesMatureFloating(): void
 	{
-		$language = $this->em->getRepository(Language::class)->find('en');
-		$script = $this->em->getRepository(Script::class)->find(1);
+		$language = $this->em->getRepository(Language::class)
+			->find('en');
+		$script = $this->em->getRepository(Script::class)
+			->find(1);
 		$matureMetadata = new FloatingHolidayMetadata(
 			true,
 			null,
@@ -414,11 +435,13 @@ class HolidayControllerV3Test extends WebTestCase
 		$this->em->flush();
 
 		$this->request('GET', '/v3/holidays', ['lang' => 'en', 'year' => 2026]);
-		$default = json_decode($this->client->getResponse()->getContent(), true);
+		$default = json_decode($this->client->getResponse()
+			->getContent(), true);
 		$this->assertNotContains('Mature Floating', array_column($default, 'name'));
 
 		$this->request('GET', '/v3/holidays', ['lang' => 'en', 'year' => 2026, 'includeMatureContent' => 'true']);
-		$included = json_decode($this->client->getResponse()->getContent(), true);
+		$included = json_decode($this->client->getResponse()
+			->getContent(), true);
 		$names = array_column($included, 'name');
 		$this->assertContains('Mature Floating', $names);
 	}

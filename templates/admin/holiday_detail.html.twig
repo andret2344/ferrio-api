@@ -136,6 +136,11 @@
 								        title='Generate description with AI'
 								        id='source-description-ai'><i class='bi bi-stars'></i></button>
 							</div>
+							<div class='form-check form-switch mt-3'>
+								<input class='form-check-input' type='checkbox' id='source-ai-generated'
+								       {{ source.ai_generated|default(false) ? 'checked' : '' }}>
+								<label class='form-check-label' for='source-ai-generated'>AI-generated content</label>
+							</div>
 						</div>
 					</div>
 				</section>
@@ -232,6 +237,10 @@
 					        title='Generate description with AI' data-role='ai-description'><i
 								class='bi bi-stars'></i></button>
 				</div>
+			</div>
+			<div class='form-check form-switch translate-field'>
+				<input class='form-check-input' type='checkbox' data-role='ai-generated'/>
+				<label class='form-check-label' data-role='ai-generated-label'>AI-generated content</label>
 			</div>
 		</section>
 	</template>

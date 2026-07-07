@@ -1,0 +1,74 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "v3 holidays flat list — gen02 (AI-labelled content)",
+	"type": "array",
+	"items": {
+		"type": "object",
+		"required": [
+			"id",
+			"day",
+			"month",
+			"name",
+			"usual",
+			"description",
+			"country",
+			"url",
+			"mature_content",
+			"ai_generated",
+			"categories"
+		],
+		"properties": {
+			"id": {
+				"type": "string",
+				"pattern": "^(fixed|floating)-\\d+$"
+			},
+			"day": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 31
+			},
+			"month": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 12
+			},
+			"name": {
+				"type": "string"
+			},
+			"usual": {
+				"type": "boolean"
+			},
+			"description": {
+				"type": [
+					"string",
+					"null"
+				]
+			},
+			"country": {
+				"type": [
+					"string",
+					"null"
+				],
+				"pattern": "^[A-Z]{2}$"
+			},
+			"url": {
+				"type": [
+					"string",
+					"null"
+				]
+			},
+			"mature_content": {
+				"type": "boolean"
+			},
+			"ai_generated": {
+				"type": "boolean"
+			},
+			"categories": {
+				"type": "array",
+				"items": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
