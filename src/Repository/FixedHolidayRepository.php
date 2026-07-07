@@ -7,11 +7,9 @@ use App\Entity\FixedHoliday;
 use App\Entity\FixedHolidayMetadata;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Override;
 
 class FixedHolidayRepository extends ServiceEntityRepository
 {
-	#[Override]
 	public function __construct(ManagerRegistry $registry)
 	{
 		parent::__construct($registry, FixedHoliday::class);
