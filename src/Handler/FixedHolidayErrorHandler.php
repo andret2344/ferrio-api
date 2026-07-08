@@ -32,8 +32,8 @@ readonly class FixedHolidayErrorHandler extends AbstractErrorReportHandler
 	}
 
 	#[Override]
-	protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description, ?string $comment, Platform $platform, ?string $realDevice, ?Country $deviceCountry, ?string $osVersion, ?string $appVersion): object
+	protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description, ?string $comment, Platform $platform, ?string $realDevice, ?Country $deviceCountry, ?string $osVersion, ?string $appVersion, ?int $appBuild): object
 	{
-		return new FixedHolidayError($userId, $language, $metadata, $reportType, $description, $comment, $platform, $realDevice, $deviceCountry, $osVersion, $appVersion);
+		return new FixedHolidayError($userId, $language, $metadata, $reportType, $description, $comment, $platform, $realDevice, $deviceCountry, $osVersion, $appVersion, $appBuild);
 	}
 }

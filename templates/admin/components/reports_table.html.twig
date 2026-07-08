@@ -2,8 +2,9 @@
 {# @var emptyLabel string  Human label for the empty state ("fixed holiday suggestions"). #}
 {# @var rows iterable  Report rows (suggestion or error entities). #}
 {# @var users array  uid => user info. #}
-{# @var fixedHolidaysPl array  metadata id => {name, description} for fixed PL data. #}
-{# @var floatingHolidaysPl array  metadata id => {name, description} for floating PL data. #}
+{# @var defaultLang string  PL source language code, used as referred-holiday fallback. #}
+{# @var fixedHolidays array  "metadataId:lang" => {name, description} for fixed referred data. #}
+{# @var floatingHolidays array  "metadataId:lang" => {name, description} for floating referred data. #}
 
 {% set isError = kind ends with '_error' %}
 {% set isFloating = kind starts with 'floating_' %}
@@ -66,11 +67,12 @@
 			</thead>
 			<tbody>
 			{% for r in rows %}
-				{# Resolve linked metadata id + PL referent + edit payload uniformly. #}
+				{# Resolve linked metadata id + referent (in the reported language, PL fallback) + edit payload uniformly. #}
 				{% set linkedId = isError ? (r.metadata ? r.metadata.id : null) : (r.holiday ? r.holiday.id : null) %}
-				{% set plData = isError ? (isFloating ? (floatingHolidaysPl[linkedId] ?? null) : (fixedHolidaysPl[linkedId] ?? null)) : null %}
-				{% set referredName = isError ? (plData ? plData.name : null) : null %}
-				{% set referredDescription = isError ? (plData ? plData.description : null) : null %}
+				{% set referredMap = isFloating ? floatingHolidays : fixedHolidays %}
+				{% set refData = isError ? (referredMap[linkedId ~ ':' ~ r.language.code] ?? referredMap[linkedId ~ ':' ~ defaultLang] ?? null) : null %}
+				{% set referredName = isError ? (refData ? refData.name : null) : null %}
+				{% set referredDescription = isError ? (refData ? refData.description : null) : null %}
 				{% set reportDate = isError ? '' : (isFloating ? r.date : '%02d.%02d'|format(r.day, r.month)) %}
 				{% set reportCountry = isError ? '' : (r.country ? r.country.isoCode : '') %}
 				{% set deviceCountryCode = r.deviceCountry ? r.deviceCountry.isoCode : '' %}
@@ -94,16 +96,20 @@
 						data-report-date='{{ reportDate }}'
 						data-report-country='{{ reportCountry }}'
 						data-report-type='{{ reportType }}'
-						data-report-language='{{ isError ? r.language.code : '' }}'
 						data-report-datetime='{{ r.datetime|date('Y-m-d H:i:s') }}'
 						data-report-user-id='{{ r.userId|e('html_attr') }}'
 						data-report-user-name='{{ (u ? (u.name ?? '') : '')|e('html_attr') }}'
 						data-report-user-email='{{ (u ? (u.email ?? '') : '')|e('html_attr') }}'
+						data-report-user-avatar='{{ (u ? (u.avatar ?? '') : '')|e('html_attr') }}'
 						data-platform='{{ platformValue }}'
 						data-real-device='{{ (r.realDevice ?? '')|e('html_attr') }}'
 						data-device-country='{{ deviceCountryCode }}'
+						data-os-version='{{ (r.osVersion ?? '')|e('html_attr') }}'
+						data-app-version='{{ (r.appVersion ?? '')|e('html_attr') }}'
+						data-app-build='{{ r.appBuild ?? '' }}'
 						data-referred-name='{{ (referredName ?? '')|e('html_attr') }}'
 						data-referred-description='{{ (referredDescription ?? '')|e('html_attr') }}'
+						data-referred-lang='{{ isError ? r.language.code : '' }}'
 						data-detail-href='{{ detailHref }}'
 				>
 					<td data-sort-value='{{ loop.index }}'>{{ loop.index }}</td>

@@ -27,6 +27,9 @@ final readonly class DeviceDTO
 		#[SerializedName('app_version')]
 		#[Assert\Length(max: 64)]
 		public ?string $appVersion = null,
+
+		#[SerializedName('app_build')]
+		public ?int $appBuild = null,
 	)
 	{
 	}

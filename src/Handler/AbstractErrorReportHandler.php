@@ -68,6 +68,7 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 			$this->getCountry($device?->country),
 			$device?->osVersion,
 			$device?->appVersion,
+			$device?->appBuild,
 		);
 		$metadata->reports->add($report);
 		$this->entityManager->persist($metadata);
@@ -83,5 +84,5 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 	/** @return class-string */
 	abstract protected function getMetadataEntityClass(): string;
 
-	abstract protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description, ?string $comment, Platform $platform, ?string $realDevice, ?Country $deviceCountry, ?string $osVersion, ?string $appVersion): object;
+	abstract protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description, ?string $comment, Platform $platform, ?string $realDevice, ?Country $deviceCountry, ?string $osVersion, ?string $appVersion, ?int $appBuild): object;
 }

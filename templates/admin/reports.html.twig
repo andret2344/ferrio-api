@@ -49,8 +49,9 @@
 					rows: rows,
 					emptyLabel: emptyLabel,
 					users: users,
-					fixedHolidaysPl: fixedHolidaysPl,
-					floatingHolidaysPl: floatingHolidaysPl,
+					defaultLang: defaultLang,
+					fixedHolidays: fixedHolidays,
+					floatingHolidays: floatingHolidays,
 				} only %}
 			</div>
 		</div>
@@ -88,47 +89,45 @@
 			<div class='modal-dialog modal-dialog-centered modal-lg'>
 				<div class='modal-content'>
 					<div class='modal-header'>
-						<h5 class='modal-title' id='moderateSuggestionModalLabel'>
-							<i class='bi bi-lightbulb me-2'></i>Moderate suggestion
-						</h5>
+						<div class='modal-heading-group'>
+							<h5 class='modal-title' id='moderateSuggestionModalLabel'>
+								<i class='bi bi-lightbulb me-2'></i>Moderate suggestion
+							</h5>
+							<div class='modal-subtitle'>
+								<i class='bi bi-clock-history'></i>
+								<span id='suggestionReportDatetime'></span>
+							</div>
+						</div>
 						<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
 					</div>
 					<div class='modal-body'>
-						<div class='report-content-card mb-3'>
-							<div class='report-content-label'>
-								<i class='bi bi-person-lines-fill'></i>
-								Submitted by user
+						<div class='report-device-bar' id='suggestionReportPills'></div>
+						<div class='report-user-card mb-3'>
+							<span class='report-user-avatar' id='suggestionReportAvatar'>
+								<img alt='' class='report-user-avatar-img d-none'>
+								<i class='bi bi-person-circle'></i>
+							</span>
+							<div class='report-user-main'>
+								<span class='report-user-name' id='suggestionReportUser'></span>
+								<span class='report-user-role'>Reporter</span>
 							</div>
-							<dl class='report-content-grid'>
-								<dt>Name</dt>
-								<dd id='suggestionReportName'></dd>
-								<dt>Date</dt>
-								<dd id='suggestionReportDate'></dd>
-								<dt>Country</dt>
-								<dd id='suggestionReportCountry'></dd>
-								<dt>Description</dt>
-								<dd id='suggestionReportDescription' class='report-content-description'></dd>
-							</dl>
+							<button type='button' class='user-id-copy' id='suggestionReportUserId' title='Copy user ID'>
+								<i class='bi bi-clipboard'></i>
+							</button>
 						</div>
-						<div class='report-meta-card mb-3'>
-							<div class='report-content-label'>
-								<i class='bi bi-info-circle'></i>
-								Report details
+						<div class='report-content-card mb-3'>
+							<div class='report-content-title' id='suggestionReportName'></div>
+							<div class='report-content-submeta'>
+								<span class='report-content-submeta-item'>
+									<i class='bi bi-calendar2-event'></i>
+									<span id='suggestionReportDate'></span>
+								</span>
+								<span class='report-content-submeta-item'>
+									<i class='bi bi-geo-alt'></i>
+									<span id='suggestionReportCountry'></span>
+								</span>
 							</div>
-							<dl class='report-content-grid'>
-								<dt>Reported at</dt>
-								<dd id='suggestionReportDatetime'></dd>
-								<dt>User</dt>
-								<dd id='suggestionReportUser'></dd>
-								<dt>User ID</dt>
-								<dd id='suggestionReportUserId' class='report-content-mono'></dd>
-								<dt>Platform</dt>
-								<dd id='suggestionReportPlatform'></dd>
-								<dt>Real device</dt>
-								<dd id='suggestionReportDevice' class='report-content-description'></dd>
-								<dt>Device country</dt>
-								<dd id='suggestionReportDeviceCountry'></dd>
-							</dl>
+							<div class='report-content-body report-content-description' id='suggestionReportDescription'></div>
 						</div>
 						<form id='suggestionForm'>
 							<input type='hidden' id='suggestionKind'>
@@ -173,12 +172,32 @@
 			<div class='modal-dialog modal-dialog-centered modal-lg'>
 				<div class='modal-content'>
 					<div class='modal-header'>
-						<h5 class='modal-title' id='moderateErrorModalLabel'>
-							<i class='bi bi-exclamation-triangle me-2'></i>Moderate error report
-						</h5>
+						<div class='modal-heading-group'>
+							<h5 class='modal-title' id='moderateErrorModalLabel'>
+								<i class='bi bi-exclamation-triangle me-2'></i>Moderate error report
+							</h5>
+							<div class='modal-subtitle'>
+								<i class='bi bi-clock-history'></i>
+								<span id='errorReportDatetime'></span>
+							</div>
+						</div>
 						<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
 					</div>
 					<div class='modal-body'>
+						<div class='report-device-bar' id='errorReportPills'></div>
+						<div class='report-user-card mb-3'>
+							<span class='report-user-avatar' id='errorReportAvatar'>
+								<img alt='' class='report-user-avatar-img d-none'>
+								<i class='bi bi-person-circle'></i>
+							</span>
+							<div class='report-user-main'>
+								<span class='report-user-name' id='errorReportUser'></span>
+								<span class='report-user-role'>Reporter</span>
+							</div>
+							<button type='button' class='user-id-copy' id='errorReportUserId' title='Copy user ID'>
+								<i class='bi bi-clipboard'></i>
+							</button>
+						</div>
 						<div class='referred-holiday-card mb-3' id='referredHolidayCard'>
 							<div class='referred-holiday-label'>
 								<i class='bi bi-link-45deg'></i>
@@ -189,7 +208,10 @@
 									<i class='bi bi-calendar2-event'></i>
 								</div>
 								<div class='referred-holiday-body'>
-									<div class='referred-holiday-name' id='referredHolidayName'></div>
+									<div class='referred-holiday-name-row'>
+										<span class='referred-holiday-name' id='referredHolidayName'></span>
+										<span class='referred-holiday-lang' id='referredHolidayLang'></span>
+									</div>
 									<div class='referred-holiday-description' id='referredHolidayDescription'></div>
 								</div>
 							</div>
@@ -199,38 +221,8 @@
 							</div>
 						</div>
 						<div class='report-content-card mb-3'>
-							<div class='report-content-label'>
-								<i class='bi bi-person-lines-fill'></i>
-								Submitted by user
-							</div>
-							<dl class='report-content-grid'>
-								<dt>Type</dt>
-								<dd id='errorReportType'></dd>
-								<dt>Language</dt>
-								<dd id='errorReportLanguage'></dd>
-								<dt>Description</dt>
-								<dd id='errorReportDescription' class='report-content-description'></dd>
-							</dl>
-						</div>
-						<div class='report-meta-card mb-3'>
-							<div class='report-content-label'>
-								<i class='bi bi-info-circle'></i>
-								Report details
-							</div>
-							<dl class='report-content-grid'>
-								<dt>Reported at</dt>
-								<dd id='errorReportDatetime'></dd>
-								<dt>User</dt>
-								<dd id='errorReportUser'></dd>
-								<dt>User ID</dt>
-								<dd id='errorReportUserId' class='report-content-mono'></dd>
-								<dt>Platform</dt>
-								<dd id='errorReportPlatform'></dd>
-								<dt>Real device</dt>
-								<dd id='errorReportDevice' class='report-content-description'></dd>
-								<dt>Device country</dt>
-								<dd id='errorReportDeviceCountry'></dd>
-							</dl>
+							<div class='report-content-title' id='errorReportType'></div>
+							<div class='report-content-body report-content-description' id='errorReportDescription'></div>
 						</div>
 						<form id='errorForm'>
 							<input type='hidden' id='errorKind'>

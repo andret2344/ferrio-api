@@ -386,26 +386,32 @@ class ManageController extends AbstractController
 
 		$users = $this->firebaseUserLookup->lookup(array_map(fn($r) => $r->userId, $rows));
 
-		// Error reports reference an existing holiday whose PL name/description we surface in the modal;
-		// suggestions carry their own name/date/country, so no referent lookup is needed.
-		$holidaysPl = [];
+		// Error reports reference an existing holiday whose name/description we surface in the modal,
+		// rendered in the language the user reported in (falling back to the PL source when that
+		// translation is missing). Suggestions carry their own name/date/country, so no lookup is
+		// needed. Keyed by "metadataId:languageCode".
+		$holidaysReferred = [];
 		if ($isError) {
 			$metadataIds = array_values(array_unique(array_filter(
 				array_map(fn($e) => $e->metadata?->id, $rows),
 			)));
 			if (!empty($metadataIds)) {
+				$langCodes = array_values(array_unique(array_map(fn($e) => $e->language->code, $rows)));
+				if (!in_array(Language::DEFAULT_CODE, $langCodes, true)) {
+					$langCodes[] = Language::DEFAULT_CODE;
+				}
 				$holidayClass = $isFloating ? FloatingHoliday::class : FixedHoliday::class;
-				/** @var FixedHoliday[]|FloatingHoliday[] $plRows */
-				$plRows = $this->entityManager->getRepository($holidayClass)
+				/** @var FixedHoliday[]|FloatingHoliday[] $referredRows */
+				$referredRows = $this->entityManager->getRepository($holidayClass)
 					->createQueryBuilder('h')
-					->where('h.language = :lang')
+					->where('h.language IN (:langs)')
 					->andWhere('h.metadata IN (:ids)')
-					->setParameter('lang', Language::DEFAULT_CODE)
+					->setParameter('langs', $langCodes)
 					->setParameter('ids', $metadataIds)
 					->getQuery()
 					->getResult();
-				foreach ($plRows as $h) {
-					$holidaysPl[$h->metadata->id] = [
+				foreach ($referredRows as $h) {
+					$holidaysReferred[$h->metadata->id . ':' . $h->language->code] = [
 						'name' => $h->name,
 						'description' => $h->description,
 					];
@@ -426,8 +432,9 @@ class ManageController extends AbstractController
 			'filters' => $filters,
 			'countries' => $this->entityManager->getRepository(Country::class)
 				->findBy([], ['isoCode' => 'ASC']),
-			'fixedHolidaysPl' => $isFloating ? [] : $holidaysPl,
-			'floatingHolidaysPl' => $isFloating ? $holidaysPl : [],
+			'defaultLang' => Language::DEFAULT_CODE,
+			'fixedHolidays' => $isFloating ? [] : $holidaysReferred,
+			'floatingHolidays' => $isFloating ? $holidaysReferred : [],
 		]);
 	}
 

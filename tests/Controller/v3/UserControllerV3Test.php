@@ -145,6 +145,7 @@ class UserControllerV3Test extends WebTestCase
 					'country' => null,
 					'os_version' => null,
 					'app_version' => null,
+					'app_build' => null,
 				]
 			]
 		], JSON_THROW_ON_ERROR);
@@ -264,6 +265,7 @@ class UserControllerV3Test extends WebTestCase
 					'country' => null,
 					'os_version' => null,
 					'app_version' => null,
+					'app_build' => null,
 				]
 			]
 		], JSON_THROW_ON_ERROR);
@@ -383,6 +385,9 @@ class UserControllerV3Test extends WebTestCase
 					'platform' => 'android',
 					'model' => 'Pixel 8 Pro',
 					'country' => 'PL',
+					'os_version' => '14',
+					'app_version' => '3.2.0',
+					'app_build' => 420,
 				],
 			],
 			['Authorization' => 'Bearer test-token']
@@ -399,6 +404,9 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertSame('Pixel 8 Pro', $entity->realDevice);
 		$this->assertNotNull($entity->deviceCountry);
 		$this->assertSame('PL', $entity->deviceCountry->isoCode);
+		$this->assertSame('14', $entity->osVersion);
+		$this->assertSame('3.2.0', $entity->appVersion);
+		$this->assertSame(420, $entity->appBuild);
 	}
 
 	/**

@@ -68,7 +68,8 @@ class FixedHolidaySuggestion implements JsonSerializable
 		?string               $realDevice = null,
 		?Country              $deviceCountry = null,
 		?string               $osVersion = null,
-		?string               $appVersion = null)
+		?string               $appVersion = null,
+		?int                  $appBuild = null)
 	{
 		$this->userId = $userId;
 		$this->name = $name;
@@ -85,6 +86,7 @@ class FixedHolidaySuggestion implements JsonSerializable
 		$this->deviceCountry = $deviceCountry;
 		$this->osVersion = $osVersion;
 		$this->appVersion = $appVersion;
+		$this->appBuild = $appBuild;
 	}
 
 	#[Override]

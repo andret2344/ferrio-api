@@ -58,7 +58,8 @@ class FixedHolidayError implements JsonSerializable
 		?string              $realDevice = null,
 		?Country             $deviceCountry = null,
 		?string              $osVersion = null,
-		?string              $appVersion = null)
+		?string              $appVersion = null,
+		?int                 $appBuild = null)
 	{
 		$this->userId = $userId;
 		$this->language = $language;
@@ -73,6 +74,7 @@ class FixedHolidayError implements JsonSerializable
 		$this->deviceCountry = $deviceCountry;
 		$this->osVersion = $osVersion;
 		$this->appVersion = $appVersion;
+		$this->appBuild = $appBuild;
 	}
 
 	#[Override]

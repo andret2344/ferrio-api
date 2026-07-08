@@ -129,6 +129,7 @@ class ReportControllerV2Test extends WebTestCase
 					'country' => null,
 					'os_version' => null,
 					'app_version' => null,
+					'app_build' => null,
 				]
 			]
 		]);
@@ -231,6 +232,7 @@ class ReportControllerV2Test extends WebTestCase
 					'country' => null,
 					'os_version' => null,
 					'app_version' => null,
+					'app_build' => null,
 				]
 			]
 		]);

@@ -46,6 +46,7 @@ readonly class FloatingHolidaySuggestionHandler implements ReportHandlerInterfac
 			deviceCountry: $this->pickCountry($countries, $device?->country),
 			osVersion    : $device?->osVersion,
 			appVersion   : $device?->appVersion,
+			appBuild     : $device?->appBuild,
 		);
 		$this->entityManager->persist($report);
 		$this->entityManager->flush();

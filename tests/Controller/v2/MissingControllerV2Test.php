@@ -125,6 +125,7 @@ class MissingControllerV2Test extends WebTestCase
 					'country' => null,
 					'os_version' => null,
 					'app_version' => null,
+					'app_build' => null,
 				]
 			]
 		]);
@@ -223,6 +224,7 @@ class MissingControllerV2Test extends WebTestCase
 					'country' => null,
 					'os_version' => null,
 					'app_version' => null,
+					'app_build' => null,
 				]
 			]
 		]);

@@ -14,6 +14,7 @@ const PLATFORM_META: Record<string, PlatformMeta> = {
     ios: {label: 'iOS', icon: 'bi-apple'},
     web: {label: 'Web', icon: 'bi-globe'},
     api: {label: 'API', icon: 'bi-braces'},
+    unknown: {label: 'Unknown', icon: 'bi-question-circle'},
 };
 
 let pendingDetailHref: string | null = null;
@@ -63,15 +64,21 @@ function escapeHtml(value: string): string {
         .replace(/'/g, '&#39;');
 }
 
-function platformBadgeHtml(raw: string): string {
-    if (!raw) {
-        return '';
-    }
+// Renders one metadata pill. Always present: when `text` is empty it shows a muted em-dash so a
+// missing datum is visually distinct from a value that is literally "unknown".
+function metaPill(icon: string, text: string, title: string, extraClass = ''): string {
+    const empty = !text;
+    const cls = `device-pill ${empty ? 'device-pill-empty ' : ''}${extraClass}`.trim();
+    const body = empty ? '—' : escapeHtml(text);
+    return `<span class='${cls}' title='${escapeHtml(title)}'><i class='bi ${icon}'></i><span>${body}</span></span>`;
+}
+
+function platformPillHtml(raw: string): string {
     const meta = PLATFORM_META[raw];
-    if (!meta) {
-        return `<span class='badge platform-badge platform-icon-unknown'><i class='bi bi-question-circle me-1'></i>${escapeHtml(raw)}</span>`;
+    if (meta) {
+        return metaPill(meta.icon, meta.label, 'Platform', `platform-icon-${raw}`);
     }
-    return `<span class='badge platform-badge platform-icon-${raw}'><i class='bi ${meta.icon} me-1'></i>${escapeHtml(meta.label)}</span>`;
+    return metaPill('bi-question-circle', raw, 'Platform', 'platform-icon-unknown');
 }
 
 function flagEmoji(iso: string): string {
@@ -87,13 +94,40 @@ function flagEmoji(iso: string): string {
     return String.fromCodePoint(...codes);
 }
 
-function deviceCountryHtml(iso: string): string {
+function countryPillHtml(iso: string): string {
     if (!iso) {
-        return '';
+        return metaPill('bi-geo-alt', '', 'Device country');
     }
     const flag = flagEmoji(iso);
     const label = escapeHtml(iso.toUpperCase());
-    return flag ? `<span class='device-country-flag' aria-hidden='true'>${flag}</span> ${label}` : label;
+    if (flag) {
+        return `<span class='device-pill' title='Device country'><span class='device-country-flag' aria-hidden='true'>${flag}</span><span>${label}</span></span>`;
+    }
+    return `<span class='device-pill' title='Device country'><i class='bi bi-geo-alt'></i><span>${label}</span></span>`;
+}
+
+function appLabel(version: string, build: string): string {
+    if (!version && !build) {
+        return '';
+    }
+    let label = version ? `v${version}` : '';
+    if (build) {
+        label = label ? `${label} (${build})` : `build ${build}`;
+    }
+    return label;
+}
+
+// Fixed set of slots — every one is always rendered (empty ones as a muted dash) so a missing
+// datum reads differently from an "unknown" value.
+function devicePillsHtml(data: DOMStringMap): string {
+    const osText = data.osVersion ? `OS ${data.osVersion}` : '';
+    return [
+        platformPillHtml(data.platform ?? ''),
+        metaPill('bi-phone', data.realDevice ?? '', 'Device'),
+        countryPillHtml(data.deviceCountry ?? ''),
+        metaPill('bi-cpu', osText, 'OS version'),
+        metaPill('bi-box-seam', appLabel(data.appVersion ?? '', data.appBuild ?? ''), 'App version'),
+    ].join('');
 }
 
 function formatUserLine(name: string, email: string): string {
@@ -103,13 +137,55 @@ function formatUserLine(name: string, email: string): string {
     return name || email || '';
 }
 
+function setUserIdChip(chipId: string, userId: string): void {
+    const chip = document.getElementById(chipId);
+    if (!chip) {
+        return;
+    }
+    chip.dataset.userId = userId;
+    if (userId) {
+        chip.title = `Copy user ID (${userId})`;
+        chip.classList.remove('d-none');
+    } else {
+        chip.title = '';
+        chip.classList.add('d-none');
+    }
+}
+
+function setUserAvatar(avatarId: string, url: string): void {
+    const container = document.getElementById(avatarId);
+    if (!container) {
+        return;
+    }
+    const img = container.querySelector<HTMLImageElement>('.report-user-avatar-img');
+    const icon = container.querySelector<HTMLElement>('i');
+    if (!img || !icon) {
+        return;
+    }
+    if (!url) {
+        img.classList.add('d-none');
+        icon.classList.remove('d-none');
+        return;
+    }
+    img.classList.add('d-none');
+    icon.classList.remove('d-none');
+    img.onload = () => {
+        img.classList.remove('d-none');
+        icon.classList.add('d-none');
+    };
+    img.onerror = () => {
+        img.classList.add('d-none');
+        icon.classList.remove('d-none');
+    };
+    img.src = url;
+}
+
 function populateReportMeta(row: HTMLElement, prefix: 'suggestionReport' | 'errorReport'): void {
     setReportField(`${prefix}Datetime`, row.dataset.reportDatetime ?? '');
     setReportField(`${prefix}User`, formatUserLine(row.dataset.reportUserName ?? '', row.dataset.reportUserEmail ?? ''));
-    setReportField(`${prefix}UserId`, row.dataset.reportUserId ?? '');
-    setReportHtml(`${prefix}Platform`, platformBadgeHtml(row.dataset.platform ?? ''));
-    setReportField(`${prefix}Device`, row.dataset.realDevice ?? '');
-    setReportHtml(`${prefix}DeviceCountry`, deviceCountryHtml(row.dataset.deviceCountry ?? ''));
+    setUserAvatar(`${prefix}Avatar`, row.dataset.reportUserAvatar ?? '');
+    setUserIdChip(`${prefix}UserId`, row.dataset.reportUserId ?? '');
+    setReportHtml(`${prefix}Pills`, devicePillsHtml(row.dataset));
 }
 
 function populateSuggestionContent(row: HTMLElement): void {
@@ -122,7 +198,6 @@ function populateSuggestionContent(row: HTMLElement): void {
 
 function populateErrorContent(row: HTMLElement): void {
     setReportField('errorReportType', formatReportType(row.dataset.reportType ?? ''));
-    setReportField('errorReportLanguage', row.dataset.reportLanguage ?? '');
     setReportField('errorReportDescription', row.dataset.reportDescription ?? '');
     populateReportMeta(row, 'errorReport');
 }
@@ -130,18 +205,22 @@ function populateErrorContent(row: HTMLElement): void {
 function setReferredHoliday(row: HTMLElement | null): void {
     const card = document.getElementById('referredHolidayCard');
     const nameEl = document.getElementById('referredHolidayName');
+    const langEl = document.getElementById('referredHolidayLang');
     const descEl = document.getElementById('referredHolidayDescription');
     const emptyEl = document.getElementById('referredHolidayEmpty');
     const contentEl = document.getElementById('referredHolidayContent');
-    if (!card || !nameEl || !descEl || !emptyEl || !contentEl) {
+    if (!card || !nameEl || !langEl || !descEl || !emptyEl || !contentEl) {
         return;
     }
 
     const name = row?.dataset.referredName ?? '';
+    const lang = row?.dataset.referredLang ?? '';
     const description = row?.dataset.referredDescription ?? '';
     pendingDetailHref = row?.dataset.detailHref || null;
 
     nameEl.textContent = name;
+    langEl.textContent = lang ? lang.toUpperCase() : '';
+    langEl.classList.toggle('d-none', !lang || !name);
     descEl.textContent = description;
 
     const isEmpty = !name && !description;
@@ -437,6 +516,29 @@ function initReportDeleteConfirm(): void {
     });
 }
 
+function initUserIdCopy(): void {
+    document.querySelectorAll<HTMLButtonElement>('.user-id-copy').forEach(button => {
+        button.addEventListener('click', async () => {
+            const value = button.dataset.userId ?? '';
+            if (!value) {
+                return;
+            }
+            const icon = button.querySelector<HTMLElement>('i');
+            try {
+                await navigator.clipboard.writeText(value);
+                button.classList.add('copied');
+                icon?.classList.replace('bi-clipboard', 'bi-clipboard-check');
+                globalThis.setTimeout(() => {
+                    button.classList.remove('copied');
+                    icon?.classList.replace('bi-clipboard-check', 'bi-clipboard');
+                }, 1200);
+            } catch {
+                // Clipboard unavailable (insecure context / denied) — silently ignore.
+            }
+        });
+    });
+}
+
 function initRowTriggers(): void {
     const suggestionModalEl = document.getElementById('moderateSuggestionModal');
     const errorModalEl = document.getElementById('moderateErrorModal');
@@ -607,6 +709,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSuggestionModal();
     initErrorModal();
     initReportDeleteConfirm();
+    initUserIdCopy();
     initRowTriggers();
     initCommentPopovers();
     initSortableHeaders();
