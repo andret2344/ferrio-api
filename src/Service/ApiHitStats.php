@@ -36,11 +36,11 @@ readonly class ApiHitStats
 	 */
 	public function collect(ApiHitGrouping $grouping, int $days): array
 	{
-		$sql = 'SELECT bucket_hour, path, hits FROM api	_hit';
+		$sql = 'SELECT bucket_hour, path, hits FROM api_hit';
 		$params = [];
 		if ($days > 0) {
 			$sql .= ' WHERE bucket_hour >= ?';
-			$params[] = (new DateTimeImmutable(sprintf('-%d days', $days), new DateTimeZone('UTC')))
+			$params[] = new DateTimeImmutable(sprintf('-%d days', $days), new DateTimeZone('UTC'))
 				->format('Y-m-d H:00:00');
 		}
 		return self::aggregate($this->connection->fetchAllAssociative($sql, $params), $grouping);
