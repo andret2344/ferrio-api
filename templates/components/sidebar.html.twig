@@ -32,11 +32,20 @@
 			<i class='bi bi-speedometer2'></i>
 			<span class='sidebar-label'>Dashboard</span>
 		</a>
+		<a href='{{ path('admin_stats') }}'
+		   class='sidebar-item no-a {{ route == 'admin_stats' ? 'sidebar-item-active' : '' }}'
+		   title='API traffic'>
+			<i class='bi bi-graph-up'></i>
+			<span class='sidebar-label'>Stats</span>
+		</a>
+		<hr class='sidebar-divider'>
 		<div class='sidebar-group {{ holidaysActive ? 'sidebar-group-active' : '' }}'>
-			<div class='sidebar-group-title' title='Holidays'>
+			<button type='button' class='sidebar-group-title' data-sidebar-group='holidays' aria-expanded='true'
+			        title='Holidays'>
 				<i class='bi bi-calendar-event'></i>
 				<span class='sidebar-label'>Holidays</span>
-			</div>
+				<i class='bi bi-chevron-down sidebar-chevron'></i>
+			</button>
 			<a href='{{ path('admin_create') }}'
 			   class='sidebar-subitem no-a {{ route in ['admin_create', 'admin_create_month'] ? 'sidebar-item-active' : '' }}'
 			   title='Fixed ({{ nav.fixedCount }})'>
@@ -66,11 +75,17 @@
 			<span class='sidebar-label'>Languages</span>
 			<span class='sidebar-badge'>{{ nav.languageCount }}</span>
 		</a>
+		<hr class='sidebar-divider'>
 		<div class='sidebar-group {{ missingActive ? 'sidebar-group-active' : '' }}'>
-			<div class='sidebar-group-title' title='Missing translations'>
+			<button type='button' class='sidebar-group-title' data-sidebar-group='missing' aria-expanded='true'
+			        title='Missing translations'>
 				<i class='bi bi-translate'></i>
-				<span class='sidebar-label'>Missing</span>
-			</div>
+				<span class='sidebar-label'>Missing translations</span>
+				{% if nav.fixedMissing > 0 or nav.floatingMissing > 0 %}
+					<i class='bi bi-exclamation-triangle sidebar-warning' title='Missing translations'></i>
+				{% endif %}
+				<i class='bi bi-chevron-down sidebar-chevron'></i>
+			</button>
 			<a href='{{ path('admin_missing_overview', {kind: 'fixed'}) }}'
 			   class='sidebar-subitem no-a {{ missingActive and routeKind == 'fixed' ? 'sidebar-item-active' : '' }}'
 			   title='Missing fixed translations ({{ nav.fixedMissing }})'>
@@ -95,13 +110,15 @@
 			</a>
 		</div>
 		<div class='sidebar-group {{ reportsActive ? 'sidebar-group-active' : '' }}'>
-			<div class='sidebar-group-title' title='Reports'>
+			<button type='button' class='sidebar-group-title' data-sidebar-group='reports' aria-expanded='true'
+			        title='Reports'>
 				<i class='bi bi-flag'></i>
 				<span class='sidebar-label'>Reports</span>
 				{% if nav.reportsPending > 0 %}
-					<span class='sidebar-dot sidebar-dot-warning'></span>
+					<i class='bi bi-exclamation-triangle sidebar-warning' title='Pending reports'></i>
 				{% endif %}
-			</div>
+				<i class='bi bi-chevron-down sidebar-chevron'></i>
+			</button>
 			{% for entry in [
 				{type: 'fixed-suggestions', kind: 'fixed_suggestion', label: 'Fixed suggestions', icon: 'bi-lightbulb'},
 				{type: 'floating-suggestions', kind: 'floating_suggestion', label: 'Floating suggestions', icon: 'bi-lightbulb-fill'},

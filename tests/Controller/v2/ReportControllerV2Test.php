@@ -327,8 +327,7 @@ class ReportControllerV2Test extends WebTestCase
 		$this->assertNotNull($entity->platform);
 		$this->assertSame('ios', $entity->platform->value);
 		$this->assertSame('iPhone 15 Pro', $entity->realDevice);
-		$this->assertNotNull($entity->deviceCountry);
-		$this->assertSame('GB', $entity->deviceCountry->isoCode);
+		$this->assertSame('GB', $entity->deviceCountry);
 	}
 
 	public function testPostFixedReportUnknownPlatformStoredAsUnknown(): void
@@ -397,8 +396,7 @@ class ReportControllerV2Test extends WebTestCase
 			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
-		$this->assertNotNull($entity->deviceCountry);
-		$this->assertSame('PL', $entity->deviceCountry->isoCode);
+		$this->assertSame('PL', $entity->deviceCountry);
 	}
 
 	/**
@@ -597,7 +595,7 @@ class ReportControllerV2Test extends WebTestCase
 	/**
 	 * @throws JsonException
 	 */
-	public function testPostFixedReportUnknownDeviceCountryStoredAsNull(): void
+	public function testPostFixedReportKeepsDeviceCountryAbsentFromCountryTable(): void
 	{
 		/** @var FixedHolidayMetadata $metadata */
 		$metadata = $this->getFixture(FixedHolidayMetadataFixture::METADATA_0301, FixedHolidayMetadata::class);
@@ -619,7 +617,7 @@ class ReportControllerV2Test extends WebTestCase
 			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
-		$this->assertNull($entity->deviceCountry);
+		$this->assertSame('ZZ', $entity->deviceCountry);
 	}
 
 	/**

@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
@@ -19,52 +17,22 @@ class Country implements JsonSerializable
 	#[ORM\Column(type: 'string', length: 255, unique: true)]
 	private(set) string $englishName;
 
-	#[ORM\OneToMany(targetEntity: FixedHolidayMetadata::class, mappedBy: 'country', orphanRemoval: true)]
-	private(set) Collection $fixedHolidays;
-
-	#[ORM\OneToMany(targetEntity: FloatingHolidayMetadata::class, mappedBy: 'country', orphanRemoval: true)]
-	private(set) Collection $floatingHolidays;
-
 	public function __construct(string $isoCode, string $englishName)
 	{
 		$this->isoCode = $isoCode;
 		$this->englishName = $englishName;
-		$this->fixedHolidays = new ArrayCollection();
-		$this->floatingHolidays = new ArrayCollection();
 	}
 
-	public function addFixedHoliday(FixedHolidayMetadata $fixedMetadata): self
+	/**
+	 * Normalises a raw device/report country code: uppercases it, and folds empty / literal
+	 * 'null' inputs to null. Pure — no DB access — so it is safe to call from anywhere.
+	 */
+	public static function normalizeCode(?string $code): ?string
 	{
-		if (!$this->fixedHolidays->contains($fixedMetadata)) {
-			$this->fixedHolidays[] = $fixedMetadata;
-			$fixedMetadata->country = $this;
+		if ($code === null || $code === '' || $code === 'null') {
+			return null;
 		}
-		return $this;
-	}
-
-	public function removeHoliday(FixedHolidayMetadata $fixedMetadata): self
-	{
-		if ($this->fixedHolidays->removeElement($fixedMetadata) && $fixedMetadata->country === $this) {
-			$fixedMetadata->country = null;
-		}
-		return $this;
-	}
-
-	public function addFloatingHoliday(FloatingHolidayMetadata $floatingMetadata): self
-	{
-		if (!$this->floatingHolidays->contains($floatingMetadata)) {
-			$this->floatingHolidays[] = $floatingMetadata;
-			$floatingMetadata->country = $this;
-		}
-		return $this;
-	}
-
-	public function removeFloatingHoliday(FloatingHolidayMetadata $floatingMetadata): self
-	{
-		if ($this->floatingHolidays->removeElement($floatingMetadata) && $floatingMetadata->country === $this) {
-			$floatingMetadata->country = null;
-		}
-		return $this;
+		return strtoupper($code);
 	}
 
 	#[Override]

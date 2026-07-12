@@ -66,7 +66,7 @@ class FixedHolidaySuggestion implements JsonSerializable
 		?string               $comment = null,
 		Platform              $platform = Platform::UNKNOWN,
 		?string               $realDevice = null,
-		?Country              $deviceCountry = null,
+		?string               $deviceCountry = null,
 		?string               $osVersion = null,
 		?string               $appVersion = null,
 		?int                  $appBuild = null)

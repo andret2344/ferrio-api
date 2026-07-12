@@ -6,12 +6,9 @@ use App\Repository\FixedMetadataRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\ArrayShape;
-use JsonSerializable;
-use Override;
 
 #[ORM\Entity(repositoryClass: FixedMetadataRepository::class)]
-class FixedHolidayMetadata implements JsonSerializable
+class FixedHolidayMetadata
 {
 	#[ORM\Id]
 	#[ORM\Column(type: 'integer')]
@@ -33,7 +30,7 @@ class FixedHolidayMetadata implements JsonSerializable
 	#[ORM\InverseJoinColumn(name: 'category_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
 	public Collection $categories;
 
-	#[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'fixedHolidays')]
+	#[ORM\ManyToOne(targetEntity: Country::class)]
 	#[ORM\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
 	public ?Country $country;
 
@@ -59,29 +56,5 @@ class FixedHolidayMetadata implements JsonSerializable
 		$this->holidays = new ArrayCollection();
 		$this->reports = new ArrayCollection();
 		$this->matureContent = $matureContent;
-	}
-
-	#[Override]
-	#[ArrayShape([
-		'id' => 'int|null',
-		'month' => 'int',
-		'day' => 'int',
-		'usual' => 'bool',
-		'country' => 'array|null',
-		'categories' => 'string[]',
-		'mature_content' => 'bool',
-	])]
-	public function jsonSerialize(): array
-	{
-		return [
-			'id' => $this->id,
-			'month' => $this->month,
-			'day' => $this->day,
-			'usual' => $this->usual,
-			'country' => $this->country?->jsonSerialize(),
-			'categories' => $this->categories->map(fn(Category $c) => $c->slug)
-				->getValues(),
-			'mature_content' => $this->matureContent,
-		];
 	}
 }

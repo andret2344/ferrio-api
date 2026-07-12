@@ -402,8 +402,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertNotNull($entity->platform);
 		$this->assertSame('android', $entity->platform->value);
 		$this->assertSame('Pixel 8 Pro', $entity->realDevice);
-		$this->assertNotNull($entity->deviceCountry);
-		$this->assertSame('PL', $entity->deviceCountry->isoCode);
+		$this->assertSame('PL', $entity->deviceCountry);
 		$this->assertSame('14', $entity->osVersion);
 		$this->assertSame('3.2.0', $entity->appVersion);
 		$this->assertSame(420, $entity->appBuild);
@@ -510,8 +509,7 @@ class UserControllerV3Test extends WebTestCase
 			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
 
 		$this->assertNotNull($entity);
-		$this->assertNotNull($entity->deviceCountry);
-		$this->assertSame('GB', $entity->deviceCountry->isoCode);
+		$this->assertSame('GB', $entity->deviceCountry);
 	}
 
 	/**
@@ -715,7 +713,7 @@ class UserControllerV3Test extends WebTestCase
 		$this->assertSame('ios', $entity->platform->value);
 		$this->assertSame('iPhone 15', $entity->realDevice);
 		$this->assertSame('GB', $entity->country->isoCode);
-		$this->assertSame('PL', $entity->deviceCountry->isoCode);
+		$this->assertSame('PL', $entity->deviceCountry);
 	}
 
 	/**
