@@ -14,16 +14,17 @@ abstract readonly class AbstractSuggestionPayload
 	public function __construct(
 		#[SerializedName('user_id')]
 		#[Assert\NotBlank]
-		public string  $userId,
+		public string     $userId,
 
 		#[Assert\NotBlank]
-		public string  $name,
+		public string     $name,
 
-		public ?string $description = null,
+		#[Assert\NotBlank]
+		public ?string    $description = null,
 
-		public ?string $country = null,
+		public ?string    $country = null,
 
-		public ?string $comment = null,
+		public ?string    $comment = null,
 
 		#[Assert\Valid]
 		public ?DeviceDTO $device = null,

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ label }} — Ferrio Admin{% endblock %}
+{% block title %}{{ label }} - Ferrio Admin{% endblock %}
 
 {% block body %}
 	<main class='section-manage-main'>
@@ -36,8 +36,8 @@
 							<option value='unknown' {{ filters.device_country == 'unknown' ? 'selected' : '' }}>
 								Unknown
 							</option>
-							{% for c in countries %}
-								<option value='{{ c.isoCode }}' {{ filters.device_country == c.isoCode ? 'selected' : '' }}>{{ c.isoCode }}</option>
+							{% for c in device_countries %}
+								<option value='{{ c }}' {{ filters.device_country == c ? 'selected' : '' }}>{{ c }}</option>
 							{% endfor %}
 						</select>
 					</label>

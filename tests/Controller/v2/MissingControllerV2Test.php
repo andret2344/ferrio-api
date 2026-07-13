@@ -326,7 +326,36 @@ class MissingControllerV2Test extends WebTestCase
 		$this->assertSame('ios', $entity->platform->value);
 		$this->assertSame('iPhone 15 Pro', $entity->realDevice);
 		$this->assertSame('GB', $entity->country->isoCode);
-		$this->assertSame('PL', $entity->deviceCountry->isoCode);
+		$this->assertSame('PL', $entity->deviceCountry);
+	}
+
+	/**
+	 * Device country is telemetry, not a reference into `country` — a reporter whose locale names
+	 * a country we hold no holidays for must still be recorded, not silently nulled.
+	 *
+	 * @throws JsonException
+	 */
+	public function testPostFixedMissingKeepsDeviceCountryAbsentFromCountryTable(): void
+	{
+		$this->request('POST', '/v2/missing/fixed', [], [
+			'user_id' => 'user-id',
+			'day' => 1,
+			'month' => 1,
+			'name' => 'Test name',
+			'description' => 'Test description',
+			'device' => [
+				'platform' => 'android',
+				'country' => 'de',
+			],
+		]);
+
+		$this->assertResponseStatusCodeSame(201);
+
+		$entity = $this->em->getRepository(FixedHolidaySuggestion::class)
+			->findOneBy(['userId' => 'user-id'], ['id' => 'DESC']);
+
+		$this->assertNotNull($entity);
+		$this->assertSame('DE', $entity->deviceCountry);
 	}
 
 	/**
@@ -404,7 +433,7 @@ class MissingControllerV2Test extends WebTestCase
 
 		$this->assertNotNull($entity);
 		$this->assertSame('GB', $entity->country->isoCode);
-		$this->assertSame('GB', $entity->deviceCountry->isoCode);
+		$this->assertSame('GB', $entity->deviceCountry);
 	}
 
 	/**

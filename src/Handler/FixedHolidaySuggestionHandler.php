@@ -3,6 +3,7 @@
 namespace App\Handler;
 
 use App\DTO\FixedSuggestionDTO;
+use App\Entity\Country;
 use App\Entity\FixedHolidaySuggestion;
 use App\Entity\Platform;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,18 +34,17 @@ readonly class FixedHolidaySuggestionHandler implements ReportHandlerInterface
 		}
 		$device = $payload->device;
 		$platform = Platform::fromInputOrUnknown($device?->platform);
-		$countries = $this->getCountriesByCodes($payload->country, $device?->country);
 		$report = new FixedHolidaySuggestion(
 			$userId,
 			$payload->name,
 			$payload->description,
 			$payload->day,
 			$payload->month,
-			$this->pickCountry($countries, $payload->country),
+			$this->getCountry($payload->country),
 			comment      : $payload->comment,
 			platform     : $platform,
 			realDevice   : $this->resolveRealDevice($platform, $device?->model),
-			deviceCountry: $this->pickCountry($countries, $device?->country),
+			deviceCountry: Country::normalizeCode($device?->country),
 			osVersion    : $device?->osVersion,
 			appVersion   : $device?->appVersion,
 			appBuild     : $device?->appBuild,

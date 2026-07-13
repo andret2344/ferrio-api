@@ -1,4 +1,4 @@
-const Encore = require('@symfony/webpack-encore');
+import Encore from '@symfony/webpack-encore';
 
 if (!Encore.isRuntimeEnvironmentConfigured()) {
 	Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
@@ -14,14 +14,13 @@ Encore
 	.enableBuildNotifications()
 	.enableSourceMaps(!Encore.isProduction())
 	.enableVersioning(Encore.isProduction())
-	.configureBabel(config => config.plugins.push('@babel/plugin-transform-class-properties'))
-	.configureBabelPresetEnv(config => {
-		config.useBuiltIns = 'usage';
-		config.corejs = '3.23';
+	.configureBabel(config => {
+		config.plugins.push('@babel/plugin-transform-class-properties');
+		config.plugins.push(['babel-plugin-polyfill-corejs3', {method: 'usage-global', version: '3.49'}]);
 	})
 	.enableSassLoader()
 	.enableTypeScriptLoader()
 	.enableIntegrityHashes(Encore.isProduction())
 ;
 
-module.exports = Encore.getWebpackConfig();
+export default await Encore.getWebpackConfig();

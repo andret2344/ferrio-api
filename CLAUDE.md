@@ -99,6 +99,14 @@ Errors are caught and logged as warnings — analytics must never break a reques
 bounded by the number of distinct GET paths hit per hour; query it directly: per endpoint via
 `GROUP BY path`, per version via `path LIKE '/v3/%'`, per day via `GROUP BY DATE(bucket_hour), path`.
 
+The admin UI surfaces this at `/admin/stats` (`ManageController::stats`, sidebar "Stats"). `ApiHitStats::collect()`
+loads the raw rows for the selected window (`?days=` ∈ 1/7/30/90/365/0-for-all, default 30) and folds them in PHP —
+no SQL date functions, so it stays portable across MySQL and the SQLite test DB. `ApiHitGrouping` (`?group=` ∈
+hour/day/week/month, default day) supplies the `bucket_hour` format string used as the period key; the formats are
+chosen so string sort == chronological sort. Endpoints are normalised by dropping every purely numeric path segment
+(`/v2/holiday/en/day/7/7` → `/v2/holiday/en/day`). The page renders one
+period × endpoint matrix with per-version (`v2`, `v3`) columns and totals.
+
 ### v3 API
 
 Single endpoint: `GET /v3/holidays` with query parameters:
@@ -163,6 +171,13 @@ Available algorithms with v2 `args` → v3 `algorithmArgs` mapping (dayOfWeek us
 
 `UserControllerV2` dispatches to handler classes via `ReportHandlerInterface`. Four handlers cover the matrix of
 {suggestion, error} × {fixed, floating}. Handlers are wired explicitly in `config/services.yaml`.
+
+Reports carry two distinct country fields, and only one is a reference. A suggestion's `country` is a real FK into
+`country` — the user picks it from the list `GET /v2/countries` serves. `device_country` (in `ReporterDeviceMetaTrait`,
+on all four report tables) is **telemetry**: a plain `VARCHAR(2)` holding whatever ISO-3166 code the reporter's device
+locale reported. It has no FK, because a device may legitimately sit in a country we hold no holidays for, and an FK
+would silently null those rows out and skew `by_device_country` in `/admin/api/reports/stats`. Normalisation
+(uppercase, `''`/`'null'` → `null`) is the pure static `Country::normalizeCode`. Do not "fix" this into a relation.
 
 ### Admin UI
 
@@ -289,6 +304,8 @@ generation finishes, instead of unconditionally re-enabling). The detail page wi
   for backwards compatibility.
 - Always use CRLF line endings in all files. Every file must also end with a final CRLF (trailing newline) — no
   exceptions, including JSON, YAML, SCSS, TS, PHP, Twig, and Markdown.
+- In titles and headings, only use the plain ASCII hyphen `-` (the key on a normal keyboard). Never use en-dash `–`
+  or em-dash `—`.
 - Frontend uses Webpack Encore with TypeScript and Bootstrap 5 / MDB UI Kit. Icons: Bootstrap Icons, Unicons, Font
   Awesome 5.
 - TypeScript conventions:

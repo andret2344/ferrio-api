@@ -7,11 +7,9 @@ use App\Repository\FloatingMetadataRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JsonSerializable;
-use Override;
 
 #[ORM\Entity(repositoryClass: FloatingMetadataRepository::class)]
-class FloatingHolidayMetadata implements JsonSerializable
+class FloatingHolidayMetadata
 {
 	#[ORM\Id]
 	#[ORM\Column(type: 'integer')]
@@ -27,11 +25,11 @@ class FloatingHolidayMetadata implements JsonSerializable
 	#[ORM\InverseJoinColumn(name: 'category_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
 	public Collection $categories;
 
-	#[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'floatingHolidays')]
+	#[ORM\ManyToOne(targetEntity: Country::class)]
 	#[ORM\JoinColumn(name: 'country_code', referencedColumnName: 'iso_code', nullable: true)]
 	public ?Country $country;
 
-	#[ORM\ManyToOne(targetEntity: Script::class, inversedBy: 'metadata')]
+	#[ORM\ManyToOne(targetEntity: Script::class)]
 	#[ORM\JoinColumn(name: 'script_id', referencedColumnName: 'id')]
 	public ?Script $script;
 
@@ -76,22 +74,5 @@ class FloatingHolidayMetadata implements JsonSerializable
 		$this->matureContent = $matureContent;
 		$this->algorithm = $algorithm;
 		$this->algorithmArgs = $algorithmArgs;
-	}
-
-	#[Override]
-	public function jsonSerialize(): array
-	{
-		return [
-			'id' => $this->id,
-			'usual' => $this->usual,
-			'categories' => $this->categories->map(fn(Category $c) => $c->slug)
-				->getValues(),
-			'country' => $this->country?->jsonSerialize(),
-			'script' => $this->script,
-			'args' => $this->args,
-			'algorithm_args' => $this->algorithmArgs,
-			'algorithm' => $this->algorithm->value,
-			'mature_content' => $this->matureContent
-		];
 	}
 }

@@ -142,6 +142,14 @@ body {
       }
     }
 
+    // Top-level rows — leaf links and expandable group headers share one look.
+    .sidebar-item, .sidebar-group-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6060aa;
+    }
+
     .sidebar-item:hover, .sidebar-subitem:hover {
       background-color: #14142a;
       color: #e0e0f0;
@@ -153,16 +161,37 @@ body {
       box-shadow: inset 2px 0 0 #5050aa;
     }
 
+    .sidebar-divider {
+      border: 0;
+      border-top: 1px solid #22224a;
+      margin: 8px 12px;
+      opacity: 1;
+    }
+
     .sidebar-group {
       margin: 6px 0 4px;
       padding-bottom: 4px;
 
+      // Renders as a plain nav row so an expandable group header and a leaf item look identical.
       .sidebar-group-title {
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #6060aa;
-        cursor: default;
+        width: 100%;
+        background: none;
+        border: 0;
+        font-family: inherit;
+        text-align: left;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #14142a;
+          color: #e0e0f0;
+        }
+      }
+
+      .sidebar-chevron {
+        font-size: 10px;
+        width: auto;
+        flex-shrink: 0;
+        transition: transform 0.15s;
       }
 
       .sidebar-subitem {
@@ -174,6 +203,18 @@ body {
         font-size: 14px;
         width: 18px;
         text-align: center;
+      }
+    }
+
+    .sidebar-group-collapsed {
+      padding-bottom: 0;
+
+      .sidebar-chevron {
+        transform: rotate(-90deg);
+      }
+
+      .sidebar-subitem {
+        display: none;
       }
     }
 
@@ -198,20 +239,9 @@ body {
       background-color: rgba(220, 53, 69, 0.14);
     }
 
-    .sidebar-dot {
-      display: none;
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: #6868a0;
-    }
-
-    .sidebar-dot-warning {
-      background-color: #f0b840;
-      box-shadow: 0 0 0 2px #0a0a16;
+    // Group header stand-in for the warning badges its subitems carry — no count, just the flag.
+    .sidebar-warning {
+      color: #f0b840;
     }
   }
 
@@ -2840,17 +2870,15 @@ html.sidebar-collapsed .section-manage-main {
         display: none;
       }
 
+      // Icon rail has no room for a header, so subitems stay visible regardless of expand state.
       .sidebar-subitem {
+        display: flex;
         padding-left: 0;
       }
 
       .sidebar-subitem-icon {
         display: inline-block;
       }
-    }
-
-    .sidebar-dot {
-      display: block;
     }
   }
 }

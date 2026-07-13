@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ isNew|default(false) ? 'New ' ~ kind ~ ' holiday' : 'Holiday #' ~ id }} — Ferrio Admin{% endblock %}
+{% block title %}{{ isNew|default(false) ? 'New ' ~ kind ~ ' holiday' : 'Holiday #' ~ id }} - Ferrio Admin{% endblock %}
 {% block body %}
 	<main class='section-manage-main' data-page='admin-holiday-detail'
 	      data-kind='{{ kind }}'

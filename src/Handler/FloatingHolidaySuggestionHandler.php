@@ -3,6 +3,7 @@
 namespace App\Handler;
 
 use App\DTO\FloatingSuggestionDTO;
+use App\Entity\Country;
 use App\Entity\FloatingHolidaySuggestion;
 use App\Entity\Platform;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,17 +34,16 @@ readonly class FloatingHolidaySuggestionHandler implements ReportHandlerInterfac
 		}
 		$device = $payload->device;
 		$platform = Platform::fromInputOrUnknown($device?->platform);
-		$countries = $this->getCountriesByCodes($payload->country, $device?->country);
 		$report = new FloatingHolidaySuggestion(
 			$userId,
 			$payload->name,
 			$payload->description,
 			$payload->date,
-			$this->pickCountry($countries, $payload->country),
+			$this->getCountry($payload->country),
 			comment      : $payload->comment,
 			platform     : $platform,
 			realDevice   : $this->resolveRealDevice($platform, $device?->model),
-			deviceCountry: $this->pickCountry($countries, $device?->country),
+			deviceCountry: Country::normalizeCode($device?->country),
 			osVersion    : $device?->osVersion,
 			appVersion   : $device?->appVersion,
 			appBuild     : $device?->appBuild,

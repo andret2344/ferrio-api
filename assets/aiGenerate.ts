@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {showToast} from './toast';
 
 interface GenerateFields {
     readonly type: 'description_pl' | 'description' | 'name';
@@ -29,7 +30,7 @@ export function attachGenerateHandler(btn: HTMLButtonElement, fields: GenerateFi
         const day = fields.day();
 
         if (!target || !name || !month || !day) {
-            alert('Fill in day, month and name first.');
+            showToast('danger', 'Fill in day, month and name first.');
             return;
         }
 
@@ -58,7 +59,7 @@ export function attachGenerateHandler(btn: HTMLButtonElement, fields: GenerateFi
             }
             const res = await axios.post('/admin/api/generate', payload);
             if (res.data.error) {
-                alert(res.data.error);
+                showToast('danger', res.data.error);
             } else {
                 target.value = res.data.result;
                 target.dispatchEvent(new Event('input', {bubbles: true}));
@@ -67,7 +68,7 @@ export function attachGenerateHandler(btn: HTMLButtonElement, fields: GenerateFi
                 }
             }
         } catch {
-            alert('Failed to generate.');
+            showToast('danger', 'Failed to generate.');
         } finally {
             if (icon) {
                 icon.className = originalClass;

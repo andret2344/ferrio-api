@@ -215,7 +215,7 @@ and do not overlap:
 `/v3/polls/*`. Low priority unless one of them is about to change. The same generational model
 applies; for any other `/v3/*` route reuse the auth dimension already built here.
 
-## Sample schema (v2 fixed error report — gen02 response item)
+## Sample schema (v2 fixed error report - gen02 response item)
 
 See `tests/Contract/data/v2/fixed_error/gen02_device.schema.json`. Shape:
 

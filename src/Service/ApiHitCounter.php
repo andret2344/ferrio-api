@@ -5,6 +5,7 @@ namespace App\Service;
 use DateTimeImmutable;
 use DateTimeZone;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
@@ -29,6 +30,11 @@ readonly class ApiHitCounter
 			return;
 		}
 		if (preg_match('#^/v\d+\b#', $path) !== 1) {
+			return;
+		}
+		// ponytail: INSERT ... ON DUPLICATE KEY UPDATE is MySQL-only; add a platform branch if
+		// analytics ever needs to run on another DB (the test DB is SQLite, where this no-ops).
+		if (!$this->connection->getDatabasePlatform() instanceof AbstractMySQLPlatform) {
 			return;
 		}
 		$bucketHour = (new DateTimeImmutable('now', new DateTimeZone('UTC')))->format('Y-m-d H:00:00');

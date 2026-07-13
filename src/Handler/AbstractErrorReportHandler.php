@@ -15,7 +15,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 abstract readonly class AbstractErrorReportHandler implements ReportHandlerInterface
 {
-	use CountryLookupTrait;
 	use RealDeviceResolverTrait;
 
 	public function __construct(
@@ -56,7 +55,8 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 
 		$device = $payload->device;
 		$platform = Platform::fromInputOrUnknown($device?->platform);
-		$report = $this->createErrorEntity(
+		$class = $this->getErrorEntityClass();
+		$report = new $class(
 			$userId,
 			$language,
 			$metadata,
@@ -65,7 +65,7 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 			$payload->comment,
 			$platform,
 			$this->resolveRealDevice($platform, $device?->model),
-			$this->getCountry($device?->country),
+			Country::normalizeCode($device?->country),
 			$device?->osVersion,
 			$device?->appVersion,
 			$device?->appBuild,
@@ -83,6 +83,4 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 
 	/** @return class-string */
 	abstract protected function getMetadataEntityClass(): string;
-
-	abstract protected function createErrorEntity(string $userId, Language $language, object $metadata, ReportType $reportType, ?string $description, ?string $comment, Platform $platform, ?string $realDevice, ?Country $deviceCountry, ?string $osVersion, ?string $appVersion, ?int $appBuild): object;
 }

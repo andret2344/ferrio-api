@@ -12,9 +12,11 @@ use App\Entity\Language;
 use App\Entity\Platform;
 use App\Entity\ReportState;
 use App\Enum\Algorithm;
+use App\Enum\ApiHitGrouping;
 use App\Enum\ReportKind;
 use App\Repository\FixedHolidayRepository;
 use App\Service\AdminMetricsService;
+use App\Service\ApiHitStats;
 use App\Service\BanService;
 use App\Service\FirebaseUserLookup;
 use BackedEnum;
@@ -29,6 +31,11 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/admin', name: 'admin_')]
 class ManageController extends AbstractController
 {
+	/**
+	 * Selectable "last N days" windows for the stats page; 0 means no lower bound.
+	 */
+	private const array STATS_RANGES = [1, 7, 30, 90, 365, 0];
+
 	public function __construct(
 		private readonly EntityManagerInterface $entityManager,
 		private readonly FixedHolidayRepository $fixedHolidayRepository,
@@ -54,6 +61,23 @@ class ManageController extends AbstractController
 			'translationCountsByKind' => $this->metrics->translationCountsByLanguageAndKind(),
 			'translationTotalsByKind' => ['fixed' => $fixedTotal, 'floating' => $floatingTotal],
 			'reportCounts' => $this->metrics->reportCounts(),
+		]);
+	}
+
+	#[Route('/stats', name: 'stats')]
+	public function stats(Request $request, ApiHitStats $apiHitStats): Response
+	{
+		$grouping = ApiHitGrouping::tryFrom((string)$request->query->get('group')) ?? ApiHitGrouping::DAY;
+		$days = filter_var($request->query->get('days'), FILTER_VALIDATE_INT);
+		if (!in_array($days, self::STATS_RANGES, true)) {
+			$days = 30;
+		}
+		return $this->render('admin/stats.html.twig', [
+			'grouping' => $grouping->value,
+			'groupings' => array_column(ApiHitGrouping::cases(), 'value'),
+			'days' => $days,
+			'ranges' => self::STATS_RANGES,
+			'stats' => $apiHitStats->collect($grouping, $days),
 		]);
 	}
 
@@ -435,8 +459,7 @@ class ManageController extends AbstractController
 			'report_states' => array_column(ReportState::cases(), 'value'),
 			'platforms' => Platform::values(),
 			'filters' => $filters,
-			'countries' => $this->entityManager->getRepository(Country::class)
-				->findBy([], ['isoCode' => 'ASC']),
+			'device_countries' => $this->deviceCountries($kind),
 			'defaultLang' => Language::DEFAULT_CODE,
 			'fixedHolidays' => $isFloating ? [] : $holidaysReferred,
 			'floatingHolidays' => $isFloating ? $holidaysReferred : [],
@@ -444,6 +467,24 @@ class ManageController extends AbstractController
 	}
 
 	private const string UNKNOWN_COUNTRY = 'unknown';
+
+	/**
+	 * Device country is free-form telemetry, not an FK into `country`, so the filter options come
+	 * from the rows themselves — otherwise a code with no holiday behind it is unfilterable.
+	 *
+	 * @return list<string>
+	 */
+	private function deviceCountries(ReportKind $kind): array
+	{
+		$rows = $this->entityManager->getRepository($kind->entityClass())
+			->createQueryBuilder('r')
+			->select('DISTINCT r.deviceCountry AS code')
+			->where('r.deviceCountry IS NOT NULL')
+			->orderBy('r.deviceCountry', 'ASC')
+			->getQuery()
+			->getArrayResult();
+		return array_column($rows, 'code');
+	}
 
 	/**
 	 * @return array{platform: ?string, device_country: ?string, state: ?string}
@@ -486,11 +527,7 @@ class ManageController extends AbstractController
 			$criteria['deviceCountry'] = null;
 		} else {
 			if ($filters['device_country'] !== null) {
-				$country = $this->entityManager->getRepository(Country::class)
-					->findOneBy(['isoCode' => $filters['device_country']]);
-				if ($country !== null) {
-					$criteria['deviceCountry'] = $country;
-				}
+				$criteria['deviceCountry'] = $filters['device_country'];
 			}
 		}
 		if ($filters['state'] !== null) {
@@ -520,7 +557,7 @@ class ManageController extends AbstractController
 
 			$qb = $this->entityManager->getRepository($kind->entityClass())
 				->createQueryBuilder('r');
-			$byCountry = $qb->select('COALESCE(IDENTITY(r.deviceCountry), \'_unknown\') AS country, COUNT(r.id) AS c')
+			$byCountry = $qb->select('COALESCE(r.deviceCountry, \'_unknown\') AS country, COUNT(r.id) AS c')
 				->groupBy('r.deviceCountry')
 				->getQuery()
 				->getArrayResult();

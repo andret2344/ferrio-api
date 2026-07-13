@@ -1,7 +1,7 @@
 # Ferrio API
 
 Symfony 7.4 / PHP 8.5 application serving holiday data (fixed and floating) across multiple
-languages and countries. It exposes a versioned JSON REST API (`/v1`, `/v2`, `/v3`) and a
+languages and countries. It exposes a versioned JSON REST API (`/v2`, `/v3`) and a
 Twig-based admin UI under `/admin`.
 
 See [`CLAUDE.md`](CLAUDE.md) for the full architecture, domain model, and conventions.

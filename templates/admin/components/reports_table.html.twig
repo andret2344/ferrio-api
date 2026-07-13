@@ -64,6 +64,9 @@
 				<th data-sort='state'>State</th>
 				<th data-sort='datetime'>Reported</th>
 				<th data-sort='user'>User</th>
+				{% if not isError %}
+					<th class='holiday-link-col' title='Holiday'></th>
+				{% endif %}
 			</tr>
 			</thead>
 			<tbody>
@@ -76,7 +79,7 @@
 				{% set referredDescription = isError ? (refData ? refData.description : null) : null %}
 				{% set reportDate = isError ? '' : (isFloating ? r.date : '%02d.%02d'|format(r.day, r.month)) %}
 				{% set reportCountry = isError ? '' : (r.country ? r.country.isoCode : '') %}
-				{% set deviceCountryCode = r.deviceCountry ? r.deviceCountry.isoCode : '' %}
+				{% set deviceCountryCode = r.deviceCountry ?? '' %}
 				{% set reportType = isError ? r.reportType.value : '' %}
 				{% set detailHref = linkedId
 					? path('admin_holiday_detail', {kind: isFloating ? 'floating' : 'fixed', id: linkedId})
@@ -170,6 +173,15 @@
 							<i class='bi bi-slash-circle'></i> Banned
 						</span>
 					</td>
+					{% if not isError %}
+						<td class='holiday-link-cell text-center'>
+							{% if detailHref %}
+								<a href='{{ detailHref }}' class='holiday-link' title='Open holiday'>
+									<i class='bi bi-box-arrow-up-right'></i>
+								</a>
+							{% endif %}
+						</td>
+					{% endif %}
 				</tr>
 			{% endfor %}
 			</tbody>
