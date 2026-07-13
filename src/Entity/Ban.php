@@ -32,6 +32,16 @@ class Ban implements JsonSerializable
 		$this->datetime = $datetime;
 	}
 
+	/**
+	 * Re-bans an already banned user: overwrites the reason and refreshes the ban date, so a second
+	 * ban of the same user reads as a new decision rather than a stale one.
+	 */
+	public function update(string $reason, DateTimeImmutable $datetime): void
+	{
+		$this->reason = $reason;
+		$this->datetime = $datetime;
+	}
+
 	#[Override]
 	#[ArrayShape([
 		'id' => 'integer',

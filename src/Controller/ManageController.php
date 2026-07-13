@@ -15,6 +15,7 @@ use App\Enum\Algorithm;
 use App\Enum\ReportKind;
 use App\Repository\FixedHolidayRepository;
 use App\Service\AdminMetricsService;
+use App\Service\BanService;
 use App\Service\FirebaseUserLookup;
 use BackedEnum;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,6 +34,7 @@ class ManageController extends AbstractController
 		private readonly FixedHolidayRepository $fixedHolidayRepository,
 		private readonly FirebaseUserLookup     $firebaseUserLookup,
 		private readonly AdminMetricsService    $metrics,
+		private readonly BanService             $banService,
 	)
 	{
 	}
@@ -384,7 +386,9 @@ class ManageController extends AbstractController
 		$rows = $this->entityManager->getRepository($kind->entityClass())
 			->findBy($this->buildReportCriteria($filters), ['datetime' => 'DESC']);
 
-		$users = $this->firebaseUserLookup->lookup(array_map(fn($r) => $r->userId, $rows));
+		$userIds = array_map(fn($r) => $r->userId, $rows);
+		$users = $this->firebaseUserLookup->lookup($userIds);
+		$bans = $this->banService->getBans($userIds);
 
 		// Error reports reference an existing holiday whose name/description we surface in the modal,
 		// rendered in the language the user reported in (falling back to the PL source when that
@@ -427,6 +431,7 @@ class ManageController extends AbstractController
 			'emptyLabel' => $config['emptyLabel'],
 			'rows' => $rows,
 			'users' => $users,
+			'bans' => $bans,
 			'report_states' => array_column(ReportState::cases(), 'value'),
 			'platforms' => Platform::values(),
 			'filters' => $filters,

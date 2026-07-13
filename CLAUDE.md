@@ -183,6 +183,36 @@ from `AdminNavRuntime`'s `reportsByKind` (the `reported`-state count per `Report
 rows link to the corresponding per-type page. `admin_reports_moderate` / `admin_reports_delete` remain the shared
 POST endpoints driven by `assets/reports.ts`.
 
+### Users & bans (Admin UI)
+
+There is no local user table — an end user only exists as a Firebase UID repeated across the four report tables, the
+poll votes and the `ban` table. `FirebaseUserLookup` resolves UIDs to name/email/avatar (Gravatar identicon fallback);
+`AdminUserService` does the GROUP BY aggregation over the report tables and owns the bulk report deletion.
+
+A "Users" sidebar group holds two pages, both served by `AdminUserController`:
+
+- **User stats** (`/admin/users`, route `admin_users_index`) — summary tiles (reporters, active in the last 30 days,
+  total reports, poll votes, banned) plus one row per reporter: per-kind report counts, total, pending, last report,
+  ban state, and a ban/unban button.
+- **Banned** (`/admin/users/banned`, route `admin_users_banned`) — the `ban` table (user, reason, report counts,
+  ban date) with unban and, when the user still has reports, a "delete their reports" button. The sidebar badge is
+  `AdminNavRuntime`'s `bannedCount`.
+
+Bans are **permanent**: `Ban` stores `user_id` (unique), `reason`, `datetime`; unbanning deletes the row and re-banning
+overwrites the reason (`Ban::update`). `BanService::getBanInfo` is what blocks banned users from reporting
+(`UserControllerV3`) and voting (`PollControllerV3`).
+
+Every ban entry point opens the same modal, `admin/components/ban_modal.html.twig` (ban / unban / delete-reports),
+driven by `assets/users.ts`: the reporter bar of both report moderation modals (a Ban button that flips to Unban with a
+"Banned" badge carrying the reason), the users table rows, and the "Ban user" topbar button on both Users pages (manual
+ban by UID). The ban modal always asks what to do with the user's reports: keep them, delete only the pending
+(`REPORTED`) ones, or delete all — with live counts fetched from `GET /admin/api/users/report-counts`. The JSON
+endpoints (`/admin/api/users/ban`, `/unban`, `/reports/delete`) are CSRF-protected with the `user_ban` token and use
+`snake_case` keys like every other admin API. Report rows carry the reporter's ban state as
+`data-report-user-banned` / `data-report-user-ban-reason`; after a ban/unban `users.ts` reloads the Users pages and
+emits `ferrio:user-updated` elsewhere, which `reports.ts` uses to patch the rows in place (or reload, if reports were
+deleted).
+
 List views (`/admin/create/{month}` for fixed, `/admin/floating` for floating) are read-only summaries. Each row is a
 button linking to the **holiday detail page** at `/admin/holiday/{kind}/{id}` (kind ∈ `fixed` | `floating`). Each row
 also shows a `XX/YY` translation count (translations present / total non-Polish languages) sourced from

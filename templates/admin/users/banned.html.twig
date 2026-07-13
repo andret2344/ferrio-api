@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+{% block title %}Banned users — Ferrio Admin{% endblock %}
+{% block body %}
+	<main class='section-manage-main users-page'>
+		{% include 'components/sidebar.html.twig' %}
+		{% set banToolbar %}
+			<button type='button' class='btn btn-danger btn-sm' data-role='ban-open' data-user-id='' data-manual='1'>
+				<i class='bi bi-slash-circle me-1'></i>Ban user
+			</button>
+		{% endset %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'Banned users', toolbar: banToolbar} %}
+		<div class='manage-content'>
+			{% if bans is empty %}
+				<div class='text-center text-muted py-5'>No banned users.</div>
+			{% else %}
+				<div class='table-responsive'>
+					<table class='table table-dark table-striped table-hover align-middle users-table'>
+						<thead>
+						<tr>
+							<th>User</th>
+							<th>Reason</th>
+							<th class='text-center'>Reports</th>
+							<th>Banned at</th>
+							<th></th>
+						</tr>
+						</thead>
+						<tbody>
+						{% for ban in bans %}
+							{% set profile = profiles[ban.userId] ?? null %}
+							{% set counts = reportCounts[ban.userId] ?? {'total': 0, 'pending': 0} %}
+							{% set label = profile and (profile.name or profile.email) ? (profile.name ?? profile.email) : ban.userId %}
+							<tr data-user-row='{{ ban.userId|e('html_attr') }}'>
+								<td class='user-cell'>
+									<div class='user-identity'>
+										<img class='user-identity-avatar' alt=''
+										     src='{{ profile ? profile.avatar : '' }}'>
+										<div class='user-identity-main'>
+											<div class='user-name'>{{ label }}</div>
+											<div class='user-email'>{{ profile and profile.email ? profile.email : '—' }}</div>
+											<div class='user-uid-row'>
+												<span class='user-uid'>{{ ban.userId }}</span>
+												<button type='button' class='user-id-copy' title='Copy user ID'
+												        data-user-id='{{ ban.userId|e('html_attr') }}'>
+													<i class='bi bi-clipboard'></i>
+												</button>
+											</div>
+										</div>
+									</div>
+								</td>
+								<td class='ban-reason-cell'>{{ ban.reason }}</td>
+								<td class='text-center' data-role='report-counts'
+								    data-total='{{ counts.total }}' data-pending='{{ counts.pending }}'>
+									{% if counts.total > 0 %}
+										<span title='{{ counts.pending }} pending / {{ counts.total }} total'>
+											<strong>{{ counts.pending }}</strong> / {{ counts.total }}
+										</span>
+									{% else %}
+										<span class='text-muted'>—</span>
+									{% endif %}
+								</td>
+								<td>{{ ban.datetime|date('Y-m-d H:i') }}</td>
+								<td class='text-end'>
+									{% if counts.total > 0 %}
+										<button type='button' class='btn btn-sm btn-outline-danger me-1'
+										        data-role='delete-reports-open'
+										        data-user-id='{{ ban.userId|e('html_attr') }}'
+										        data-user-label='{{ label|e('html_attr') }}'
+										        title='Delete this user’s reports'>
+											<i class='bi bi-trash'></i>
+										</button>
+									{% endif %}
+									<button type='button' class='btn btn-sm btn-outline-light'
+									        data-role='unban-open'
+									        data-user-id='{{ ban.userId|e('html_attr') }}'
+									        title='Unban user'>
+										<i class='bi bi-check-lg'></i> Unban
+									</button>
+								</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			{% endif %}
+		</div>
+	</main>
+
+	{% include 'admin/components/ban_modal.html.twig' %}
+{% endblock %}

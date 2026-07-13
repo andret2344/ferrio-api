@@ -4,6 +4,7 @@
 {% set holidaysActive = route in ['admin_create', 'admin_create_month', 'admin_floating'] %}
 {% set missingActive = route in ['admin_missing', 'admin_missing_overview'] %}
 {% set reportsActive = route in ['admin_reports', 'admin_reports_index'] %}
+{% set usersActive = route starts with 'admin_users_' %}
 {% set reportType = app.request.attributes.get('type') %}
 <script>
 	(() => {
@@ -121,6 +122,29 @@
 					{% endif %}
 				</a>
 			{% endfor %}
+		</div>
+		<div class='sidebar-group {{ usersActive ? 'sidebar-group-active' : '' }}'>
+			<div class='sidebar-group-title' title='Users'>
+				<i class='bi bi-people'></i>
+				<span class='sidebar-label'>Users</span>
+			</div>
+			<a href='{{ path('admin_users_index') }}'
+			   class='sidebar-subitem no-a {{ route == 'admin_users_index' ? 'sidebar-item-active' : '' }}'
+			   title='User stats'>
+				<i class='bi bi-graph-up sidebar-subitem-icon'></i>
+				<span class='sidebar-label'>User stats</span>
+			</a>
+			<a href='{{ path('admin_users_banned') }}'
+			   class='sidebar-subitem no-a {{ route == 'admin_users_banned' ? 'sidebar-item-active' : '' }}'
+			   title='Banned users ({{ nav.bannedCount }})'>
+				<i class='bi bi-slash-circle sidebar-subitem-icon'></i>
+				<span class='sidebar-label'>Banned</span>
+				{% if nav.bannedCount > 0 %}
+					<span class='sidebar-badge sidebar-badge-danger'>{{ nav.bannedCount }}</span>
+				{% else %}
+					<span class='sidebar-badge'>0</span>
+				{% endif %}
+			</a>
 		</div>
 	</nav>
 </aside>

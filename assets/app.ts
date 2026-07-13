@@ -6,6 +6,7 @@ import './create';
 import './sidebar';
 import './holidayDetail';
 import './languages';
+import './users';
 
 (window as any).axios = axios;
 (window as any).bootstrap = bootstrap;

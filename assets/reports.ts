@@ -1,4 +1,7 @@
 import * as bootstrap from 'bootstrap';
+import {liftModal} from './modalStack';
+import {initUserIdCopy} from './userIdCopy';
+import {USER_UPDATED_EVENT, UserUpdatedDetail} from './users';
 
 interface BootstrapModalEvent extends Event {
     readonly relatedTarget: HTMLElement | null;
@@ -180,12 +183,42 @@ function setUserAvatar(avatarId: string, url: string): void {
     img.src = url;
 }
 
+// Ban state of the reporter, as shown in the moderation modal: a "Banned" badge carrying the reason
+// plus the ban/unban button pair. Both buttons are re-pointed at the current reporter every time the
+// modal opens (users.ts owns the modals they trigger).
+function setUserBanState(prefix: 'suggestionReport' | 'errorReport', userId: string, banned: boolean, reason: string): void {
+    const badge = document.getElementById(`${prefix}BanBadge`);
+    const banBtn = document.getElementById(`${prefix}BanBtn`);
+    const unbanBtn = document.getElementById(`${prefix}UnbanBtn`);
+    const role = document.getElementById(`${prefix}Role`);
+    if (!badge || !banBtn || !unbanBtn) {
+        return;
+    }
+
+    badge.title = reason;
+    badge.classList.toggle('d-none', !banned);
+    banBtn.classList.toggle('d-none', banned || !userId);
+    unbanBtn.classList.toggle('d-none', !banned);
+    banBtn.dataset.userId = userId;
+    banBtn.dataset.banReason = reason;
+    unbanBtn.dataset.userId = userId;
+    if (role) {
+        role.textContent = banned ? 'Reporter · banned' : 'Reporter';
+    }
+}
+
 function populateReportMeta(row: HTMLElement, prefix: 'suggestionReport' | 'errorReport'): void {
     setReportField(`${prefix}Datetime`, row.dataset.reportDatetime ?? '');
     setReportField(`${prefix}User`, formatUserLine(row.dataset.reportUserName ?? '', row.dataset.reportUserEmail ?? ''));
     setUserAvatar(`${prefix}Avatar`, row.dataset.reportUserAvatar ?? '');
     setUserIdChip(`${prefix}UserId`, row.dataset.reportUserId ?? '');
     setReportHtml(`${prefix}Pills`, devicePillsHtml(row.dataset));
+    setUserBanState(
+        prefix,
+        row.dataset.reportUserId ?? '',
+        row.dataset.reportUserBanned === '1',
+        row.dataset.reportUserBanReason ?? '',
+    );
 }
 
 function populateSuggestionContent(row: HTMLElement): void {
@@ -495,45 +528,41 @@ function initReportDeleteConfirm(): void {
         pendingReportDelete = null;
         action?.();
     });
-    // Stacked on top of the moderation modal: Bootstrap does not raise the second modal's
-    // z-index, so its backdrop would fall behind the moderation modal (page dims twice, the
-    // report modal never dims). Lift this modal and its backdrop above whatever is already open.
-    modalEl.addEventListener('show.bs.modal', () => {
-        const openCount = document.querySelectorAll('.modal.show').length;
-        const zIndex = 1055 + (openCount + 1) * 20;
-        modalEl.style.zIndex = String(zIndex);
-        globalThis.setTimeout(() => {
-            const backdrops = document.querySelectorAll<HTMLElement>('.modal-backdrop');
-            const top = backdrops[backdrops.length - 1];
-            if (top) {
-                top.style.zIndex = String(zIndex - 10);
-            }
-        }, 0);
-    });
+    liftModal(modalEl);
     modalEl.addEventListener('hidden.bs.modal', () => {
         pendingReportDelete = null;
-        modalEl.style.zIndex = '';
     });
 }
 
-function initUserIdCopy(): void {
-    document.querySelectorAll<HTMLButtonElement>('.user-id-copy').forEach(button => {
-        button.addEventListener('click', async () => {
-            const value = button.dataset.userId ?? '';
-            if (!value) {
+// Ban/unban happened in one of the shared user modals (users.ts). Reports of that user stay on the
+// page, so their rows and any open moderation modal must reflect the new ban state — unless reports
+// were deleted along with the ban, in which case the table is stale and a reload is the only honest
+// way to show what is left.
+function initUserUpdates(): void {
+    document.addEventListener(USER_UPDATED_EVENT, event => {
+        const detail = (event as CustomEvent<UserUpdatedDetail>).detail;
+        if (detail.deletedReports > 0) {
+            window.location.reload();
+            return;
+        }
+
+        document.querySelectorAll<HTMLElement>('tr.report-row').forEach(row => {
+            if (row.dataset.reportUserId !== detail.userId) {
                 return;
             }
-            const icon = button.querySelector<HTMLElement>('i');
-            try {
-                await navigator.clipboard.writeText(value);
-                button.classList.add('copied');
-                icon?.classList.replace('bi-clipboard', 'bi-clipboard-check');
-                globalThis.setTimeout(() => {
-                    button.classList.remove('copied');
-                    icon?.classList.replace('bi-clipboard-check', 'bi-clipboard');
-                }, 1200);
-            } catch {
-                // Clipboard unavailable (insecure context / denied) — silently ignore.
+            row.dataset.reportUserBanned = detail.banned ? '1' : '';
+            row.dataset.reportUserBanReason = detail.reason;
+            const badge = row.querySelector<HTMLElement>('[data-role="user-ban-badge"]');
+            if (badge) {
+                badge.title = detail.reason;
+                badge.classList.toggle('d-none', !detail.banned);
+            }
+        });
+
+        (['suggestionReport', 'errorReport'] as const).forEach(prefix => {
+            const banBtn = document.getElementById(`${prefix}BanBtn`);
+            if (banBtn?.dataset.userId === detail.userId) {
+                setUserBanState(prefix, detail.userId, detail.banned, detail.reason);
             }
         });
     });
@@ -710,6 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initErrorModal();
     initReportDeleteConfirm();
     initUserIdCopy();
+    initUserUpdates();
     initRowTriggers();
     initCommentPopovers();
     initSortableHeaders();

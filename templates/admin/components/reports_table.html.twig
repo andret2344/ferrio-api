@@ -2,6 +2,7 @@
 {# @var emptyLabel string  Human label for the empty state ("fixed holiday suggestions"). #}
 {# @var rows iterable  Report rows (suggestion or error entities). #}
 {# @var users array  uid => user info. #}
+{# @var bans array  uid => Ban entity; only banned reporters are present. #}
 {# @var defaultLang string  PL source language code, used as referred-holiday fallback. #}
 {# @var fixedHolidays array  "metadataId:lang" => {name, description} for fixed referred data. #}
 {# @var floatingHolidays array  "metadataId:lang" => {name, description} for floating referred data. #}
@@ -82,6 +83,7 @@
 					: '' %}
 				{% set platformValue = r.platform ? r.platform.value : '' %}
 				{% set u = users[r.userId] ?? null %}
+				{% set ban = bans[r.userId] ?? null %}
 				<tr
 						class='report-row'
 						role='button'
@@ -101,6 +103,8 @@
 						data-report-user-name='{{ (u ? (u.name ?? '') : '')|e('html_attr') }}'
 						data-report-user-email='{{ (u ? (u.email ?? '') : '')|e('html_attr') }}'
 						data-report-user-avatar='{{ (u ? (u.avatar ?? '') : '')|e('html_attr') }}'
+						data-report-user-banned='{{ ban ? '1' : '' }}'
+						data-report-user-ban-reason='{{ (ban ? ban.reason : '')|e('html_attr') }}'
 						data-platform='{{ platformValue }}'
 						data-real-device='{{ (r.realDevice ?? '')|e('html_attr') }}'
 						data-device-country='{{ deviceCountryCode }}'
@@ -155,13 +159,16 @@
 					</td>
 					<td data-sort-value='{{ r.datetime|date('Y-m-d H:i:s') }}'>{{ r.datetime|date('Y-m-d H:i') }}</td>
 					<td class='user-cell' data-sort-value='{{ (u ? (u.name ?? '') : r.userId)|e('html_attr') }}' title='{{ r.userId }}'>
-						{% set u = users[r.userId] ?? null %}
 						{% if u and (u.name or u.email) %}
 							<div class='user-name'>{{ u.name ?? '-' }}</div>
 							<div class='user-email'>{{ u.email ?? '-' }}</div>
 						{% else %}
 							<div class='user-uid'>{{ r.userId }}</div>
 						{% endif %}
+						<span class='badge ban-badge {{ ban ? '' : 'd-none' }}' data-role='user-ban-badge'
+						      title='{{ (ban ? ban.reason : '')|e('html_attr') }}'>
+							<i class='bi bi-slash-circle'></i> Banned
+						</span>
 					</td>
 				</tr>
 			{% endfor %}

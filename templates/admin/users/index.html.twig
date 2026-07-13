@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+{% block title %}User stats — Ferrio Admin{% endblock %}
+{% block body %}
+	<main class='section-manage-main users-page'>
+		{% include 'components/sidebar.html.twig' %}
+		{% set banToolbar %}
+			<button type='button' class='btn btn-danger btn-sm' data-role='ban-open' data-user-id='' data-manual='1'>
+				<i class='bi bi-slash-circle me-1'></i>Ban user
+			</button>
+		{% endset %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'User stats', toolbar: banToolbar} %}
+		<div class='manage-content'>
+			<div class='dashboard-grid'>
+				<div class='dashboard-stat'>
+					<div class='dashboard-stat-icon'><i class='bi bi-people'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Reporters</div>
+						<div class='dashboard-stat-value'>{{ totals.reporters | number_format(0, '.', ' ') }}</div>
+					</div>
+				</div>
+				<div class='dashboard-stat'>
+					<div class='dashboard-stat-icon'><i class='bi bi-activity'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Active (30 days)</div>
+						<div class='dashboard-stat-value'>{{ totals.active | number_format(0, '.', ' ') }}</div>
+					</div>
+				</div>
+				<a href='{{ path('admin_reports_index') }}' class='dashboard-stat no-a'>
+					<div class='dashboard-stat-icon'><i class='bi bi-flag'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Reports</div>
+						<div class='dashboard-stat-value'>{{ totals.reports | number_format(0, '.', ' ') }}</div>
+					</div>
+				</a>
+				<div class='dashboard-stat'>
+					<div class='dashboard-stat-icon'><i class='bi bi-check2-square'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Poll votes</div>
+						<div class='dashboard-stat-value'>{{ totals.votes | number_format(0, '.', ' ') }}</div>
+					</div>
+				</div>
+				<a href='{{ path('admin_users_banned') }}'
+				   class='dashboard-stat no-a {{ totals.banned > 0 ? 'dashboard-stat-warning' : '' }}'>
+					<div class='dashboard-stat-icon'><i class='bi bi-slash-circle'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Banned</div>
+						<div class='dashboard-stat-value'>{{ totals.banned | number_format(0, '.', ' ') }}</div>
+					</div>
+				</a>
+			</div>
+
+			{% if reporters is empty %}
+				<div class='text-center text-muted py-5'>No user has reported anything yet.</div>
+			{% else %}
+				<div class='table-responsive'>
+					<table class='table table-dark table-striped table-hover align-middle users-table'>
+						<thead>
+						<tr>
+							<th>User</th>
+							<th class='text-center' title='Fixed suggestions'><i class='bi bi-lightbulb'></i></th>
+							<th class='text-center' title='Floating suggestions'><i class='bi bi-lightbulb-fill'></i></th>
+							<th class='text-center' title='Fixed errors'><i class='bi bi-exclamation-triangle'></i></th>
+							<th class='text-center' title='Floating errors'><i class='bi bi-exclamation-triangle-fill'></i></th>
+							<th class='text-center'>Total</th>
+							<th class='text-center'>Pending</th>
+							<th>Last report</th>
+							<th></th>
+						</tr>
+						</thead>
+						<tbody>
+						{% for row in reporters %}
+							{% set profile = profiles[row.user_id] ?? null %}
+							{% set ban = bans[row.user_id] ?? null %}
+							{% set label = profile and (profile.name or profile.email) ? (profile.name ?? profile.email) : row.user_id %}
+							<tr data-user-row='{{ row.user_id|e('html_attr') }}'>
+								<td class='user-cell'>
+									<div class='user-identity'>
+										<img class='user-identity-avatar' alt=''
+										     src='{{ profile ? profile.avatar : '' }}'>
+										<div class='user-identity-main'>
+											<div class='user-name'>{{ label }}</div>
+											<div class='user-email'>{{ profile and profile.email ? profile.email : '—' }}</div>
+											<div class='user-uid-row'>
+												<span class='user-uid'>{{ row.user_id }}</span>
+												<button type='button' class='user-id-copy' title='Copy user ID'
+												        data-user-id='{{ row.user_id|e('html_attr') }}'>
+													<i class='bi bi-clipboard'></i>
+												</button>
+											</div>
+										</div>
+									</div>
+								</td>
+								<td class='text-center'>{{ row.counts.fixed_suggestion }}</td>
+								<td class='text-center'>{{ row.counts.floating_suggestion }}</td>
+								<td class='text-center'>{{ row.counts.fixed_error }}</td>
+								<td class='text-center'>{{ row.counts.floating_error }}</td>
+								<td class='text-center'><strong>{{ row.total }}</strong></td>
+								<td class='text-center'>
+									{% if row.pending > 0 %}
+										<span class='badge pending-badge'>{{ row.pending }}</span>
+									{% else %}
+										<span class='text-muted'>0</span>
+									{% endif %}
+								</td>
+								<td>{{ row.last ? row.last|date('Y-m-d H:i') : '—' }}</td>
+								<td class='text-end'>
+									{% if ban %}
+										<span class='badge ban-badge me-2' title='{{ ban.reason|e('html_attr') }}'>
+											<i class='bi bi-slash-circle'></i> Banned
+										</span>
+										<button type='button' class='btn btn-sm btn-outline-light'
+										        data-role='unban-open'
+										        data-user-id='{{ row.user_id|e('html_attr') }}'
+										        title='Unban user'>
+											<i class='bi bi-check-lg'></i>
+										</button>
+									{% else %}
+										<button type='button' class='btn btn-sm btn-outline-danger'
+										        data-role='ban-open'
+										        data-user-id='{{ row.user_id|e('html_attr') }}'
+										        title='Ban user'>
+											<i class='bi bi-slash-circle'></i>
+										</button>
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			{% endif %}
+		</div>
+	</main>
+
+	{% include 'admin/components/ban_modal.html.twig' %}
+{% endblock %}

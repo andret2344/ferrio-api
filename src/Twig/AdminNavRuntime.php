@@ -4,13 +4,17 @@ namespace App\Twig;
 
 use App\Entity\Language;
 use App\Service\AdminMetricsService;
+use App\Service\BanService;
 use Twig\Extension\RuntimeExtensionInterface;
 
 class AdminNavRuntime implements RuntimeExtensionInterface
 {
 	private ?array $data = null;
 
-	public function __construct(private readonly AdminMetricsService $metrics)
+	public function __construct(
+		private readonly AdminMetricsService $metrics,
+		private readonly BanService          $banService,
+	)
 	{
 	}
 
@@ -38,6 +42,7 @@ class AdminNavRuntime implements RuntimeExtensionInterface
 			'reportsByKind' => array_map(fn(array $c): int => $c['reported'], $reportCounts),
 			'fixedMissing' => $fixedMissing,
 			'floatingMissing' => $floatingMissing,
+			'bannedCount' => $this->banService->count(),
 		];
 	}
 }

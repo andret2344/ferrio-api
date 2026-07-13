@@ -1,0 +1,138 @@
+{# Shared ban / unban modals. Included on the reports pages and both Users pages; every ban entry
+   point (report modal, users table, banned page "Ban user") opens this same modal. #}
+<div class='modal fade' id='banUserModal' tabindex='-1' aria-labelledby='banUserModalLabel' aria-hidden='true'
+     data-ban-url='{{ path('admin_users_ban') }}'
+     data-counts-url='{{ path('admin_users_report_counts') }}'
+     data-csrf-token='{{ csrf_token('user_ban') }}'>
+	<div class='modal-dialog modal-dialog-centered'>
+		<div class='modal-content'>
+			<div class='modal-header'>
+				<h5 class='modal-title' id='banUserModalLabel'>
+					<i class='bi bi-slash-circle me-2'></i>Ban user
+				</h5>
+				<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+			</div>
+			<div class='modal-body'>
+				<div class='mb-3'>
+					<label for='banUserId' class='form-label'>User ID</label>
+					<input type='text' class='form-control text-monospace' id='banUserId' autocomplete='off'
+					       placeholder='Firebase UID'>
+				</div>
+				<div class='mb-3'>
+					<label for='banReason' class='form-label'>Reason</label>
+					<textarea class='form-control' id='banReason' rows='3' maxlength='2047'
+					          placeholder='Why is this user banned? (shown to the user by the app)'></textarea>
+				</div>
+				<fieldset class='ban-scope'>
+					<legend class='form-label'>Their reports</legend>
+					<div class='form-check'>
+						<input class='form-check-input' type='radio' name='ban_delete_reports' id='banScopeNone'
+						       value='none' checked>
+						<label class='form-check-label' for='banScopeNone'>
+							Keep all reports
+						</label>
+					</div>
+					<div class='form-check'>
+						<input class='form-check-input' type='radio' name='ban_delete_reports' id='banScopePending'
+						       value='pending'>
+						<label class='form-check-label' for='banScopePending'>
+							Delete pending reports
+							<span class='ban-scope-count' data-role='ban-count-pending'></span>
+						</label>
+					</div>
+					<div class='form-check'>
+						<input class='form-check-input' type='radio' name='ban_delete_reports' id='banScopeAll'
+						       value='all'>
+						<label class='form-check-label' for='banScopeAll'>
+							Delete <strong>all</strong> reports
+							<span class='ban-scope-count' data-role='ban-count-all'></span>
+						</label>
+					</div>
+					<div class='form-text ban-scope-hint'>
+						Deleting reports is permanent and cannot be undone.
+					</div>
+				</fieldset>
+				<div class='alert alert-danger d-none mt-3' id='banError' role='alert'></div>
+			</div>
+			<div class='modal-footer'>
+				<button type='button' class='btn btn-outline-light' data-bs-dismiss='modal'>Cancel</button>
+				<button type='button' class='btn btn-danger' id='banSubmit' disabled>
+					<i class='bi bi-slash-circle me-1'></i>Ban user
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class='modal fade' id='unbanUserModal' tabindex='-1' aria-labelledby='unbanUserModalLabel' aria-hidden='true'
+     data-unban-url='{{ path('admin_users_unban') }}'
+     data-csrf-token='{{ csrf_token('user_ban') }}'>
+	<div class='modal-dialog modal-dialog-centered'>
+		<div class='modal-content'>
+			<div class='modal-header'>
+				<h5 class='modal-title' id='unbanUserModalLabel'>
+					<i class='bi bi-check-circle me-2'></i>Unban user?
+				</h5>
+				<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+			</div>
+			<div class='modal-body'>
+				<p class='mb-2'>This user will be able to send reports and vote in polls again.</p>
+				<p class='mb-0 text-monospace unban-user-id' id='unbanUserId'></p>
+				<div class='alert alert-danger d-none mt-3' id='unbanError' role='alert'></div>
+			</div>
+			<div class='modal-footer'>
+				<button type='button' class='btn btn-outline-light' data-bs-dismiss='modal'>No</button>
+				<button type='button' class='btn btn-primary' id='unbanSubmit'>
+					<i class='bi bi-check-lg me-1'></i>Yes, unban
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class='modal fade' id='deleteUserReportsModal' tabindex='-1' aria-labelledby='deleteUserReportsModalLabel'
+     aria-hidden='true'
+     data-delete-url='{{ path('admin_users_reports_delete') }}'
+     data-csrf-token='{{ csrf_token('user_ban') }}'>
+	<div class='modal-dialog modal-dialog-centered'>
+		<div class='modal-content'>
+			<div class='modal-header'>
+				<h5 class='modal-title' id='deleteUserReportsModalLabel'>
+					<i class='bi bi-exclamation-triangle me-2'></i>Delete reports?
+				</h5>
+				<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+			</div>
+			<div class='modal-body'>
+				<p class='mb-2' id='deleteUserReportsSummary'></p>
+				<fieldset class='ban-scope'>
+					<div class='form-check'>
+						<input class='form-check-input' type='radio' name='delete_reports_scope'
+						       id='deleteScopePending' value='pending' checked>
+						<label class='form-check-label' for='deleteScopePending'>
+							Pending reports only
+							<span class='ban-scope-count' data-role='delete-count-pending'></span>
+						</label>
+					</div>
+					<div class='form-check'>
+						<input class='form-check-input' type='radio' name='delete_reports_scope' id='deleteScopeAll'
+						       value='all'>
+						<label class='form-check-label' for='deleteScopeAll'>
+							<strong>All</strong> reports
+							<span class='ban-scope-count' data-role='delete-count-all'></span>
+						</label>
+					</div>
+					<div class='form-text ban-scope-hint'>
+						This action is permanent and cannot be undone.
+					</div>
+				</fieldset>
+				<div class='alert alert-danger d-none mt-3' id='deleteUserReportsError' role='alert'></div>
+			</div>
+			<div class='modal-footer'>
+				<button type='button' class='btn btn-outline-light' data-bs-dismiss='modal'>Cancel</button>
+				<button type='button' class='btn btn-danger' id='deleteUserReportsSubmit'>
+					<i class='bi bi-trash me-1'></i>Delete reports
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

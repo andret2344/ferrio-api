@@ -49,6 +49,7 @@
 					rows: rows,
 					emptyLabel: emptyLabel,
 					users: users,
+					bans: bans,
 					defaultLang: defaultLang,
 					fixedHolidays: fixedHolidays,
 					floatingHolidays: floatingHolidays,
@@ -56,6 +57,27 @@
 			</div>
 		</div>
 	</main>
+
+	{# Ban / unban / copy-uid actions of the reporter bar. `prefix` matches the ids the frontend
+	   populates for the given modal ('suggestionReport' or 'errorReport'). #}
+	{% macro user_actions(prefix) %}
+		<div class='report-user-actions'>
+			<span class='badge ban-badge d-none' id='{{ prefix }}BanBadge'>
+				<i class='bi bi-slash-circle'></i> Banned
+			</span>
+			<button type='button' class='btn btn-sm btn-outline-danger report-user-ban' id='{{ prefix }}BanBtn'
+			        data-role='ban-open' data-user-id='' title='Ban user'>
+				<i class='bi bi-slash-circle'></i> Ban
+			</button>
+			<button type='button' class='btn btn-sm btn-outline-light report-user-ban d-none' id='{{ prefix }}UnbanBtn'
+			        data-role='unban-open' data-user-id='' title='Unban user'>
+				<i class='bi bi-check-lg'></i> Unban
+			</button>
+			<button type='button' class='user-id-copy' id='{{ prefix }}UserId' title='Copy user ID'>
+				<i class='bi bi-clipboard'></i>
+			</button>
+		</div>
+	{% endmacro %}
 
 	{% macro state_dropdown(toggleId, hiddenId, report_states) %}
 		<div class='dropdown state-dropdown'>
@@ -109,11 +131,9 @@
 							</span>
 							<div class='report-user-main'>
 								<span class='report-user-name' id='suggestionReportUser'></span>
-								<span class='report-user-role'>Reporter</span>
+								<span class='report-user-role' id='suggestionReportRole'>Reporter</span>
 							</div>
-							<button type='button' class='user-id-copy' id='suggestionReportUserId' title='Copy user ID'>
-								<i class='bi bi-clipboard'></i>
-							</button>
+							{{ _self.user_actions('suggestionReport') }}
 						</div>
 						<div class='report-content-card mb-3'>
 							<div class='report-content-title' id='suggestionReportName'></div>
@@ -192,11 +212,9 @@
 							</span>
 							<div class='report-user-main'>
 								<span class='report-user-name' id='errorReportUser'></span>
-								<span class='report-user-role'>Reporter</span>
+								<span class='report-user-role' id='errorReportRole'>Reporter</span>
 							</div>
-							<button type='button' class='user-id-copy' id='errorReportUserId' title='Copy user ID'>
-								<i class='bi bi-clipboard'></i>
-							</button>
+							{{ _self.user_actions('errorReport') }}
 						</div>
 						<div class='referred-holiday-card mb-3' id='referredHolidayCard'>
 							<div class='referred-holiday-label'>
@@ -276,4 +294,5 @@
 		</div>
 	</div>
 
+	{% include 'admin/components/ban_modal.html.twig' %}
 {% endblock %}
