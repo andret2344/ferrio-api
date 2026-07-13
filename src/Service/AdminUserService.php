@@ -108,6 +108,44 @@ class AdminUserService
 	}
 
 	/**
+	 * Reports per calendar month, all kinds folded together. Months with no reports are filled with
+	 * a zero so the chart's time axis has no holes.
+	 *
+	 * @return array<string, int> map of `Y-m` => report count, oldest month first
+	 */
+	public function reportsByMonth(): array
+	{
+		$counts = [];
+		foreach (ReportKind::cases() as $kind) {
+			$rows = $this->entityManager->createQueryBuilder()
+				->select('r.datetime AS datetime')
+				->from($kind->entityClass(), 'r')
+				->getQuery()
+				->getResult();
+			foreach ($rows as $row) {
+				$month = $this->toDateTime($row['datetime'])?->format('Y-m');
+				if ($month !== null) {
+					$counts[$month] = ($counts[$month] ?? 0) + 1;
+				}
+			}
+		}
+		if ($counts === []) {
+			return [];
+		}
+
+		ksort($counts);
+		$cursor = new DateTimeImmutable(array_key_first($counts) . '-01');
+		$last = new DateTimeImmutable(array_key_last($counts) . '-01');
+		$filled = [];
+		while ($cursor <= $last) {
+			$month = $cursor->format('Y-m');
+			$filled[$month] = $counts[$month] ?? 0;
+			$cursor = $cursor->modify('+1 month');
+		}
+		return $filled;
+	}
+
+	/**
 	 * @param string[] $userIds
 	 *
 	 * @return array<string, array{total: int, pending: int}> keyed by user id; users with no reports are absent

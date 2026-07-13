@@ -1,3 +1,6 @@
 services:
   App\Service\FirebaseTokenVerifier:
     class: App\Service\DevFirebaseTokenVerifier
+
+  App\Service\FirebaseUserLookup:
+    class: App\Service\DevFirebaseUserLookup

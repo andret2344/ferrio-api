@@ -53,7 +53,7 @@ class AdminUserControllerTest extends WebTestCase
 
 	public function testStatsPageListsReporters(): void
 	{
-		$crawler = $this->client->request('GET', '/admin/users', [], [], self::CREDENTIALS);
+		$crawler = $this->client->request('GET', '/admin/stats/users', [], [], self::CREDENTIALS);
 
 		$this->assertResponseIsSuccessful();
 		$this->assertSame(1, $crawler->filter(sprintf('tr[data-user-row="%s"]', self::REPORTER))->count());
@@ -61,7 +61,7 @@ class AdminUserControllerTest extends WebTestCase
 
 	public function testBannedPageListsBans(): void
 	{
-		$crawler = $this->client->request('GET', '/admin/users/banned', [], [], self::CREDENTIALS);
+		$crawler = $this->client->request('GET', '/admin/bans', [], [], self::CREDENTIALS);
 
 		$this->assertResponseIsSuccessful();
 		$this->assertSame(1, $crawler->filter('tr[data-user-row="user-id-banned"]')->count());
@@ -196,7 +196,7 @@ class AdminUserControllerTest extends WebTestCase
 
 	public function testBanRejectsInvalidCsrfToken(): void
 	{
-		$this->client->request('GET', '/admin/users', [], [], self::CREDENTIALS);
+		$this->client->request('GET', '/admin/stats/users', [], [], self::CREDENTIALS);
 		$this->client->request('POST', '/admin/api/users/ban', [], [], [
 			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
@@ -296,14 +296,14 @@ class AdminUserControllerTest extends WebTestCase
 
 	public function testSidebarShowsBannedCount(): void
 	{
-		$crawler = $this->client->request('GET', '/admin/users', [], [], self::CREDENTIALS);
+		$crawler = $this->client->request('GET', '/admin/stats/users', [], [], self::CREDENTIALS);
 
-		$this->assertSame('1', trim($crawler->filter('a[href="/admin/users/banned"] .sidebar-badge')->text()));
+		$this->assertSame('1', trim($crawler->filter('a[href="/admin/bans"] .sidebar-badge')->text()));
 	}
 
 	public function testUsersPagesRequireAuthentication(): void
 	{
-		$this->client->request('GET', '/admin/users');
+		$this->client->request('GET', '/admin/stats/users');
 
 		$this->assertResponseStatusCodeSame(401);
 	}
@@ -336,7 +336,7 @@ class AdminUserControllerTest extends WebTestCase
 	 */
 	private function post(string $url, array $body): void
 	{
-		$crawler = $this->client->request('GET', '/admin/users', [], [], self::CREDENTIALS);
+		$crawler = $this->client->request('GET', '/admin/stats/users', [], [], self::CREDENTIALS);
 		$token = $crawler->filter('#banUserModal')->attr('data-csrf-token');
 
 		$this->client->request('POST', $url, [], [], [

@@ -2896,6 +2896,67 @@ html.sidebar-collapsed .section-manage-main {
   }
 }
 
+// Charts (Chart.js) — cards on the Stats pages. Every chart is paired with the table below it, which
+// is the table view the palette's CVD floor band requires.
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.chart-card {
+  background-color: #0c0c24;
+  border: 1px solid #1a1a3a;
+  border-radius: 12px;
+  padding: 16px 18px;
+
+  .chart-card-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .chart-card-title {
+    color: #e6e6f6;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .chart-card-note {
+    color: #7a7a9a;
+    font-size: 11.5px;
+  }
+
+  .chart-card-body {
+    position: relative;
+    height: 260px;
+  }
+
+  .chart-card-body-tall {
+    height: 340px;
+  }
+
+  .chart-card-empty {
+    color: #7a7a9a;
+    font-size: 13px;
+    padding: 24px 0;
+    text-align: center;
+  }
+}
+
+.translation-link {
+  color: #f0b840;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+
+  &:hover, &:focus-visible {
+    color: #ffd479;
+  }
+}
+
 // Users — ban state, reporter actions, user stats / banned tables
 .ban-badge {
   display: inline-flex;

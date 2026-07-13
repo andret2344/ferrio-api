@@ -67,7 +67,7 @@
 								<select id='meta-algorithm' class='form-select manage-input'
 								        data-examples='{{ algorithmExamples|json_encode|e('html_attr') }}'>
 									{% for a in algorithms %}
-										<option value='{{ a }}' {{ algorithm == a ? 'selected' : '' }}>{{ a }}</option>
+										<option value='{{ a.value }}' {{ algorithm == a.value ? 'selected' : '' }}>{{ a.label }}</option>
 									{% endfor %}
 								</select>
 							</div>

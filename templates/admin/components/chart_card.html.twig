@@ -1,0 +1,21 @@
+{# @var id string  Unique id; the JSON payload is exposed as "{id}-data" and read by assets/charts.ts. #}
+{# @var title string  Names the chart — a single-series chart carries no legend, so this is its label. #}
+{# @var spec array  {kind, labels, series} — see assets/charts.ts. #}
+{# @var note string  Optional caption under the title. #}
+{# @var tall bool  Optional; taller body for charts with many categories. #}
+<section class='chart-card'>
+	<header class='chart-card-header'>
+		<span class='chart-card-title'>{{ title }}</span>
+		{% if note is defined and note %}
+			<span class='chart-card-note'>{{ note }}</span>
+		{% endif %}
+	</header>
+	{% if spec.labels is empty %}
+		<div class='chart-card-empty'>No data yet.</div>
+	{% else %}
+		<div class='chart-card-body {{ tall is defined and tall ? 'chart-card-body-tall' : '' }}'>
+			<canvas data-chart='{{ id }}-data' role='img' aria-label='{{ title }}'></canvas>
+		</div>
+		<script type='application/json' id='{{ id }}-data'>{{ spec|json_encode|raw }}</script>
+	{% endif %}
+</section>

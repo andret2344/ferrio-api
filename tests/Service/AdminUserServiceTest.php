@@ -140,6 +140,29 @@ class AdminUserServiceTest extends KernelTestCase
 		$this->assertSame(0, $totals['pending']);
 	}
 
+	public function testReportsByMonthFillsTheGapsBetweenMonths(): void
+	{
+		$byMonth = $this->service->reportsByMonth();
+
+		$months = array_keys($byMonth);
+		$this->assertSame('2020-01', $months[0]);
+		$this->assertSame((new DateTimeImmutable())->format('Y-m'), end($months));
+		// 4 reports of the busy user + 1 of the stale one, spread over the filled range.
+		$this->assertSame(5, array_sum($byMonth));
+		$this->assertSame(1, $byMonth['2020-01']);
+		$this->assertSame(2, $byMonth['2024-06']);
+		// Every month between the first and the last report is present, zeros included.
+		$this->assertSame(0, $byMonth['2020-02']);
+	}
+
+	public function testReportsByMonthOfNoReports(): void
+	{
+		$this->service->deleteReports(self::BUSY, AdminUserService::SCOPE_ALL);
+		$this->service->deleteReports(self::STALE, AdminUserService::SCOPE_ALL);
+
+		$this->assertSame([], $this->service->reportsByMonth());
+	}
+
 	public function testReportCounts(): void
 	{
 		$counts = $this->service->reportCounts([self::BUSY, self::STALE, 'user-unknown']);

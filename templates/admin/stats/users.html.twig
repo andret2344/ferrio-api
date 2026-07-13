@@ -52,6 +52,26 @@
 			{% if reporters is empty %}
 				<div class='text-center text-muted py-5'>No user has reported anything yet.</div>
 			{% else %}
+				<div class='chart-grid'>
+					{% include 'admin/components/chart_card.html.twig' with {
+						id: 'timeline',
+						title: 'Reports per month',
+						spec: timeline_chart,
+					} only %}
+					{% include 'admin/components/chart_card.html.twig' with {
+						id: 'kinds',
+						title: 'Reports by type',
+						spec: kind_chart,
+					} only %}
+					{% include 'admin/components/chart_card.html.twig' with {
+						id: 'top-reporters',
+						title: 'Top reporters',
+						note: 'Ten most active users; the table below lists everyone',
+						spec: top_chart,
+						tall: true,
+					} only %}
+				</div>
+
 				<div class='table-responsive'>
 					<table class='table table-dark table-striped table-hover align-middle users-table'>
 						<thead>

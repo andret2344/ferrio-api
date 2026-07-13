@@ -13,6 +13,7 @@ use App\Entity\FloatingHolidayMetadata;
 use App\Entity\FloatingHolidaySuggestion;
 use App\Entity\Language;
 use App\Entity\ReportState;
+use App\Enum\Algorithm;
 use App\Enum\ReportKind;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -174,6 +175,49 @@ class AdminMetricsService
 		foreach ($rows as $row) {
 			$counts[(int)$row['metadataId']] = (int)$row['cnt'];
 		}
+		return $counts;
+	}
+
+	/**
+	 * @return array<int, int> map of month number (1-12) => number of fixed holidays, every month present
+	 */
+	public function fixedCountsByMonth(): array
+	{
+		$rows = $this->entityManager->createQueryBuilder()
+			->select('m.month AS month', 'COUNT(m.id) AS cnt')
+			->from(FixedHolidayMetadata::class, 'm')
+			->groupBy('m.month')
+			->getQuery()
+			->getResult();
+
+		$counts = array_fill_keys(range(1, 12), 0);
+		foreach ($rows as $row) {
+			$counts[(int)$row['month']] = (int)$row['cnt'];
+		}
+		return $counts;
+	}
+
+	/**
+	 * @return array<string, int> map of algorithm value => number of floating holidays, biggest first
+	 */
+	public function floatingCountsByAlgorithm(): array
+	{
+		$rows = $this->entityManager->createQueryBuilder()
+			->select('m.algorithm AS algorithm', 'COUNT(m.id) AS cnt')
+			->from(FloatingHolidayMetadata::class, 'm')
+			->groupBy('m.algorithm')
+			->getQuery()
+			->getResult();
+
+		$counts = [];
+		foreach ($rows as $row) {
+			$algorithm = $row['algorithm'];
+			if ($algorithm instanceof Algorithm) {
+				$algorithm = $algorithm->value;
+			}
+			$counts[(string)$algorithm] = (int)$row['cnt'];
+		}
+		arsort($counts);
 		return $counts;
 	}
 

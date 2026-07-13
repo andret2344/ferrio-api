@@ -12,11 +12,9 @@ use App\Entity\Language;
 use App\Entity\Platform;
 use App\Entity\ReportState;
 use App\Enum\Algorithm;
-use App\Enum\ApiHitGrouping;
 use App\Enum\ReportKind;
 use App\Repository\FixedHolidayRepository;
 use App\Service\AdminMetricsService;
-use App\Service\ApiHitStats;
 use App\Service\BanService;
 use App\Service\FirebaseUserLookup;
 use BackedEnum;
@@ -31,11 +29,6 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/admin', name: 'admin_')]
 class ManageController extends AbstractController
 {
-	/**
-	 * Selectable "last N days" windows for the stats page; 0 means no lower bound.
-	 */
-	private const array STATS_RANGES = [1, 7, 30, 90, 365, 0];
-
 	public function __construct(
 		private readonly EntityManagerInterface $entityManager,
 		private readonly FixedHolidayRepository $fixedHolidayRepository,
@@ -61,23 +54,6 @@ class ManageController extends AbstractController
 			'translationCountsByKind' => $this->metrics->translationCountsByLanguageAndKind(),
 			'translationTotalsByKind' => ['fixed' => $fixedTotal, 'floating' => $floatingTotal],
 			'reportCounts' => $this->metrics->reportCounts(),
-		]);
-	}
-
-	#[Route('/stats', name: 'stats')]
-	public function stats(Request $request, ApiHitStats $apiHitStats): Response
-	{
-		$grouping = ApiHitGrouping::tryFrom((string)$request->query->get('group')) ?? ApiHitGrouping::DAY;
-		$days = filter_var($request->query->get('days'), FILTER_VALIDATE_INT);
-		if (!in_array($days, self::STATS_RANGES, true)) {
-			$days = 30;
-		}
-		return $this->render('admin/stats.html.twig', [
-			'grouping' => $grouping->value,
-			'groupings' => array_column(ApiHitGrouping::cases(), 'value'),
-			'days' => $days,
-			'ranges' => self::STATS_RANGES,
-			'stats' => $apiHitStats->collect($grouping, $days),
 		]);
 	}
 
@@ -119,7 +95,7 @@ class ManageController extends AbstractController
 		} else {
 			$context['algorithm'] = Algorithm::HARDCODED_DATES->value;
 			$context['algorithmArgs'] = '';
-			$context['algorithms'] = array_map(fn(Algorithm $a) => $a->value, Algorithm::cases());
+			$context['algorithms'] = array_map(fn(Algorithm $a) => ['value' => $a->value, 'label' => $a->label()], Algorithm::cases());
 			$context['algorithmExamples'] = $this->algorithmExamples();
 			$context['backUrl'] = $this->generateUrl('admin_floating');
 			$context['backLabel'] = 'Floating';
@@ -209,7 +185,7 @@ class ManageController extends AbstractController
 			/** @var FloatingHolidayMetadata $metadata */
 			$context['algorithm'] = $metadata->algorithm->value;
 			$context['algorithmArgs'] = $metadata->algorithmArgs;
-			$context['algorithms'] = array_map(fn(Algorithm $a) => $a->value, Algorithm::cases());
+			$context['algorithms'] = array_map(fn(Algorithm $a) => ['value' => $a->value, 'label' => $a->label()], Algorithm::cases());
 			$context['algorithmExamples'] = $this->algorithmExamples();
 			$context['backUrl'] = $this->generateUrl('admin_floating');
 			$context['backLabel'] = 'Floating';
@@ -284,40 +260,6 @@ class ManageController extends AbstractController
 			'translationCounts' => $this->metrics->floatingTranslationCountsByMetadata(),
 			'targetLanguageCount' => $this->metrics->targetLanguageCount(),
 			'tagCounts' => $this->metrics->floatingTagCountsByMetadata(),
-		]);
-	}
-
-	#[Route('/missing/{kind<fixed|floating>}', name: 'missing_overview')]
-	public function missingOverview(string $kind): Response
-	{
-		$languages = $this->entityManager->getRepository(Language::class)
-			->findBy([], ['code' => 'ASC']);
-		$targets = array_values(array_filter(
-			$languages,
-			fn(Language $l) => $l->code !== Language::DEFAULT_CODE,
-		));
-
-		$countsByKind = $this->metrics->translationCountsByLanguageAndKind();
-		$kindTotal = $kind === 'fixed'
-			? $this->metrics->fixedHolidayCount()
-			: $this->metrics->floatingHolidayCount();
-
-		$rows = [];
-		foreach ($targets as $language) {
-			$translated = $countsByKind[$kind][$language->code] ?? 0;
-			$missing = max(0, $kindTotal - $translated);
-			$rows[] = [
-				'language' => $language,
-				'translated' => $translated,
-				'total' => $kindTotal,
-				'missing' => $missing,
-			];
-		}
-
-		return $this->render('admin/missing_overview.html.twig', [
-			'kind' => $kind,
-			'rows' => $rows,
-			'kindTotal' => $kindTotal,
 		]);
 	}
 

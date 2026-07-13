@@ -99,13 +99,40 @@ Errors are caught and logged as warnings — analytics must never break a reques
 bounded by the number of distinct GET paths hit per hour; query it directly: per endpoint via
 `GROUP BY path`, per version via `path LIKE '/v3/%'`, per day via `GROUP BY DATE(bucket_hour), path`.
 
-The admin UI surfaces this at `/admin/stats` (`ManageController::stats`, sidebar "Stats"). `ApiHitStats::collect()`
+The admin UI surfaces this at `/admin/stats` (`AdminStatsController::api`, sidebar Stats → API). `ApiHitStats::collect()`
 loads the raw rows for the selected window (`?days=` ∈ 1/7/30/90/365/0-for-all, default 30) and folds them in PHP —
 no SQL date functions, so it stays portable across MySQL and the SQLite test DB. `ApiHitGrouping` (`?group=` ∈
 hour/day/week/month, default day) supplies the `bucket_hour` format string used as the period key; the formats are
 chosen so string sort == chronological sort. Endpoints are normalised by dropping every purely numeric path segment
-(`/v2/holiday/en/day/7/7` → `/v2/holiday/en/day`). The page renders one
-period × endpoint matrix with per-version (`v2`, `v3`) columns and totals.
+(`/v2/holiday/en/day/7/7` → `/v2/holiday/en/day`). The page renders a hits-over-time line (one line per version), a
+top-endpoints bar and the full period × endpoint matrix with per-version (`v2`, `v3`) columns and totals.
+
+### Stats pages & charts (Admin UI)
+
+`AdminStatsController` (`/admin/stats`) serves the three pages of the collapsible "Stats" drawer group:
+
+- **API** (`/admin/stats`, route `admin_stats`) — API traffic, described above.
+- **Holidays** (`/admin/stats/holidays`, route `admin_stats_holidays`) — holiday/translation coverage. This page
+  replaced the old per-kind "Missing translations" pages: it shows fixed/floating/language/tag/missing tiles, a stacked
+  bar of translated-vs-missing per language, fixed holidays per month, floating holidays per algorithm, and a table
+  whose cells link into the still-existing per-language drill-down `admin_missing`
+  (`/admin/missing/{kind}/{lang}`).
+- **Users** (`/admin/stats/users`, route `admin_stats_users`) — reporter activity: tiles, reports-per-month line,
+  reports-by-type doughnut, top-ten-reporters bar and the full reporter table with ban/unban actions.
+
+Charts are Chart.js, bundled through Encore (never a CDN) and driven from `assets/charts.ts`. Templates stay
+declarative: `admin/components/chart_card.html.twig` renders a `<canvas data-chart='{id}-data'>` next to a
+`<script type='application/json' id='{id}-data'>` holding `{kind, labels, series}` (snake_case, like every other
+Twig-embedded JSON), and the controller builds that spec. `kind` ∈ `line | bar | stacked_bar | horizontal_bar |
+doughnut`. Axis labels are spelled out, never codes: languages come from ICU (`Locale::getDisplayName($code, 'en')`,
+hence the `ext-intl` requirement) rather than the DB `name` column, months are full names, algorithms use
+`Algorithm::label()`; reporters are keyed by UID but labelled with their name (UID only as a last-resort fallback). A
+label may also be a list of strings, which Chart.js renders as one line per tick. The optional `notes` array carries
+one hover-only string per category, shown under the tooltip title — that is where detail goes that would crowd the axis
+(the top-reporters chart puts the reporter's e-mail there). The categorical palette in `charts.ts` is fixed-order and validated for colour-vision deficiency against the
+dark admin surface — series take slots by position; never cycle, recolour or extend the hues ad hoc. Its CVD margin
+sits in the floor band, which is only legal with a secondary encoding, so **every chart keeps a legend (≥ 2 series) and
+the same numbers in a table on the same page** — do not add a chart without its table.
 
 ### v3 API
 
@@ -129,7 +156,9 @@ back to the tag slug when no translation exists). Categories are bulk-loaded onc
 Floating holiday dates in v3 are computed by polymorphic resolver classes in `src/Service/Algorithm/`, each implementing
 `AlgorithmResolverInterface`. The `Algorithm` enum maps each case to its resolver class via `resolverClass()`.
 `AlgorithmResolver` is a thin factory using Symfony's `#[AutowireLocator]` to inject all resolvers via a
-`ServiceLocator`.
+`ServiceLocator`. `Algorithm::label()` is the human name ("N-th day of week in month") shown everywhere in the admin UI
+(the floating holiday form's `<select>`, the algorithm chart); the snake_case case value stays the wire format — DB
+column, JSON payloads, `<option value>` — so add a label whenever you add a case.
 
 Available algorithms with v2 `args` → v3 `algorithmArgs` mapping (dayOfWeek uses ISO 1-7, Mon-Sun):
 
@@ -204,14 +233,11 @@ There is no local user table — an end user only exists as a Firebase UID repea
 poll votes and the `ban` table. `FirebaseUserLookup` resolves UIDs to name/email/avatar (Gravatar identicon fallback);
 `AdminUserService` does the GROUP BY aggregation over the report tables and owns the bulk report deletion.
 
-A "Users" sidebar group holds two pages, both served by `AdminUserController`:
-
-- **User stats** (`/admin/users`, route `admin_users_index`) — summary tiles (reporters, active in the last 30 days,
-  total reports, poll votes, banned) plus one row per reporter: per-kind report counts, total, pending, last report,
-  ban state, and a ban/unban button.
-- **Banned** (`/admin/users/banned`, route `admin_users_banned`) — the `ban` table (user, reason, report counts,
-  ban date) with unban and, when the user still has reports, a "delete their reports" button. The sidebar badge is
-  `AdminNavRuntime`'s `bannedCount`.
+The two user-facing pages live in different places on purpose: the read-only **User stats** page is a Stats page
+(`/admin/stats/users`, `AdminStatsController::users`, see above), while **Banned** (`/admin/bans`, route
+`admin_users_banned`, `AdminUserController::banned`) is a top-level drawer entry — the `ban` table (user, reason,
+report counts, ban date) with unban and, when the user still has reports, a "delete their reports" button. Its sidebar
+badge is `AdminNavRuntime`'s `bannedCount`. `AdminUserController` also owns every `/admin/api/users/*` write endpoint.
 
 Bans are **permanent**: `Ban` stores `user_id` (unique), `reason`, `datetime`; unbanning deletes the row and re-banning
 overwrites the reason (`Ban::update`). `BanService::getBanInfo` is what blocks banned users from reporting
@@ -219,8 +245,9 @@ overwrites the reason (`Ban::update`). `BanService::getBanInfo` is what blocks b
 
 Every ban entry point opens the same modal, `admin/components/ban_modal.html.twig` (ban / unban / delete-reports),
 driven by `assets/users.ts`: the reporter bar of both report moderation modals (a Ban button that flips to Unban with a
-"Banned" badge carrying the reason), the users table rows, and the "Ban user" topbar button on both Users pages (manual
-ban by UID). The ban modal always asks what to do with the user's reports: keep them, delete only the pending
+"Banned" badge carrying the reason), the reporter rows of the User stats table, and the "Ban user" topbar button on the
+User stats and Banned pages (manual ban by UID). The ban modal always asks what to do with the user's reports: keep
+them, delete only the pending
 (`REPORTED`) ones, or delete all — with live counts fetched from `GET /admin/api/users/report-counts`. The JSON
 endpoints (`/admin/api/users/ban`, `/unban`, `/reports/delete`) are CSRF-protected with the `user_ban` token and use
 `snake_case` keys like every other admin API. Report rows carry the reporter's ban state as

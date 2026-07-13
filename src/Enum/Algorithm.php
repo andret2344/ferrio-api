@@ -29,6 +29,27 @@ enum Algorithm: string
 	case FIXED_DATE_WITH_CHANGES = 'fixed_date_with_changes';
 
 	/**
+	 * Human-readable name — the only thing an admin ever sees; the snake_case value stays the wire
+	 * format (DB column, JSON payloads, the algorithm `<select>`'s option values).
+	 */
+	public function label(): string
+	{
+		return match ($this) {
+			self::NTH_DAY_OF_WEEK_IN_MONTH => 'N-th day of week in month',
+			self::LAST_NTH_DAY_OF_WEEK_IN_MONTH => 'N-th last day of week in month',
+			self::FIRST_DAY_OF_WEEK_AFTER_DATE => 'First day of week after date',
+			self::LAST_DAY_OF_WEEK_BEFORE_DATE => 'Last day of week before date',
+			self::NEAREST_DAY_OF_WEEK_TO_DATE => 'Nearest day of week to date',
+			self::NTH_DAY_THEN_NEXT_DAY_OF_WEEK => 'N-th day of week, then next day of week',
+			self::LEAP_YEAR_DATE => 'Leap year date',
+			self::EARTH_HOUR => 'Earth Hour',
+			self::EASTER_OFFSET => 'Easter offset',
+			self::HARDCODED_DATES => 'Hardcoded dates',
+			self::FIXED_DATE_WITH_CHANGES => 'Fixed date with changes',
+		};
+	}
+
+	/**
 	 * @return class-string<\App\Service\Algorithm\AlgorithmResolverInterface>
 	 */
 	public function resolverClass(): string

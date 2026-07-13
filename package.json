@@ -18,6 +18,7 @@
 		"axios": "^1.18.1",
 		"bootstrap": "^5.3.8",
 		"bootstrap-icons": "^1.13.1",
+		"chart.js": "^4.5.1",
 		"core-js": "^3.49.0",
 		"jquery": "^4.0.0",
 		"mdb-ui-kit": "^9.3.0",

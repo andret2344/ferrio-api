@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+{% block title %}Holiday stats — Ferrio Admin{% endblock %}
+{% block body %}
+	<main class='section-manage-main' data-page='admin-stats-holidays'>
+		{% include 'components/sidebar.html.twig' %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'Holiday stats'} %}
+		<div class='manage-content'>
+			<div class='dashboard-grid'>
+				<a href='{{ path('admin_create') }}' class='dashboard-stat no-a'>
+					<div class='dashboard-stat-icon'><i class='bi bi-calendar-event'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Fixed holidays</div>
+						<div class='dashboard-stat-value'>{{ fixedTotal | number_format(0, '.', ' ') }}</div>
+					</div>
+				</a>
+				<a href='{{ path('admin_floating') }}' class='dashboard-stat no-a'>
+					<div class='dashboard-stat-icon'><i class='bi bi-calendar2-range'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Floating holidays</div>
+						<div class='dashboard-stat-value'>{{ floatingTotal | number_format(0, '.', ' ') }}</div>
+					</div>
+				</a>
+				<a href='{{ path('admin_languages_index') }}' class='dashboard-stat no-a'>
+					<div class='dashboard-stat-icon'><i class='bi bi-translate'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Languages</div>
+						<div class='dashboard-stat-value'>{{ languageCount | number_format(0, '.', ' ') }}</div>
+					</div>
+				</a>
+				<a href='{{ path('admin_tags_index') }}' class='dashboard-stat no-a'>
+					<div class='dashboard-stat-icon'><i class='bi bi-tag'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Tags</div>
+						<div class='dashboard-stat-value'>{{ tagCount | number_format(0, '.', ' ') }}</div>
+					</div>
+				</a>
+				<div class='dashboard-stat {{ missingTotal > 0 ? 'dashboard-stat-warning' : '' }}'>
+					<div class='dashboard-stat-icon'><i class='bi bi-exclamation-triangle'></i></div>
+					<div class='dashboard-stat-body'>
+						<div class='dashboard-stat-label'>Missing translations</div>
+						<div class='dashboard-stat-value'>{{ missingTotal | number_format(0, '.', ' ') }}</div>
+					</div>
+				</div>
+			</div>
+
+			<div class='chart-grid'>
+				{% include 'admin/components/chart_card.html.twig' with {
+					id: 'coverage',
+					title: 'Translation coverage per language',
+					note: 'Fixed + floating translations against what is still missing',
+					spec: coverage_chart,
+				} only %}
+				{% include 'admin/components/chart_card.html.twig' with {
+					id: 'months',
+					title: 'Fixed holidays per month',
+					spec: month_chart,
+				} only %}
+				{% include 'admin/components/chart_card.html.twig' with {
+					id: 'algorithms',
+					title: 'Floating holidays per algorithm',
+					spec: algorithm_chart,
+					tall: true,
+				} only %}
+			</div>
+
+			<div class='table-responsive'>
+				<table class='table table-dark table-striped table-hover align-middle'>
+					<thead>
+					<tr>
+						<th scope='col'>Code</th>
+						<th scope='col'>Language</th>
+						<th scope='col' class='text-end'>Fixed</th>
+						<th scope='col' class='text-end'>Floating</th>
+						<th scope='col' class='text-end'>Missing</th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for row in rows %}
+						<tr>
+							<th scope='row'>{{ row.language.code }}</th>
+							<td>{{ row.language.name }}</td>
+							<td class='text-end'>
+								{% if row.fixed_missing > 0 %}
+									<a class='no-a translation-link'
+									   href='{{ path('admin_missing', {kind: 'fixed', lang: row.language.code}) }}'
+									   title='{{ row.fixed_missing }} fixed holidays without a {{ row.language.code }} translation'>
+										{{ row.fixed }} / {{ fixedTotal }}
+									</a>
+								{% else %}
+									{{ row.fixed }} / {{ fixedTotal }}
+								{% endif %}
+							</td>
+							<td class='text-end'>
+								{% if row.floating_missing > 0 %}
+									<a class='no-a translation-link'
+									   href='{{ path('admin_missing', {kind: 'floating', lang: row.language.code}) }}'
+									   title='{{ row.floating_missing }} floating holidays without a {{ row.language.code }} translation'>
+										{{ row.floating }} / {{ floatingTotal }}
+									</a>
+								{% else %}
+									{{ row.floating }} / {{ floatingTotal }}
+								{% endif %}
+							</td>
+							<td class='text-end'>
+								{% if row.missing > 0 %}
+									<span class='badge translation-count-chip-empty'>{{ row.missing }}</span>
+								{% else %}
+									<span class='badge translation-count-chip-full'>0</span>
+								{% endif %}
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan='5' class='text-center text-muted py-4'>No target languages configured.</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</main>
+{% endblock %}

@@ -24,22 +24,7 @@ class AdminUserController extends AbstractController
 	{
 	}
 
-	#[Route('/users', name: 'index', methods: ['GET'])]
-	public function index(): Response
-	{
-		$reporters = $this->users->reporters();
-		$bans = $this->banService->getBans(array_column($reporters, 'user_id'));
-		$profiles = $this->firebaseUserLookup->lookup(array_column($reporters, 'user_id'));
-
-		return $this->render('admin/users/index.html.twig', [
-			'reporters' => $reporters,
-			'bans' => $bans,
-			'profiles' => $profiles,
-			'totals' => $this->users->totals($reporters, $this->banService->count()),
-		]);
-	}
-
-	#[Route('/users/banned', name: 'banned', methods: ['GET'])]
+	#[Route('/bans', name: 'banned', methods: ['GET'])]
 	public function banned(): Response
 	{
 		$bans = $this->banService->findAll();
