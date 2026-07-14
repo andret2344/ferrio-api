@@ -92,11 +92,20 @@ Per-endpoint GET traffic is counted in the `api_hit` table (entity `ApiHit`): on
 `(bucket_hour, path)` with a `hits` counter, bucketed by **UTC hour**, where `path` is the full
 request path (e.g. `/v3/holidays`, `/v2/holiday/en/day/3/1`). `ApiHitListener`
 (on `kernel.terminate`, so it adds no latency to the response) calls `ApiHitCounter::count($method, $path)`,
-which records **only GET** requests to a versioned path (`/v\d+…`; non-versioned admin/asset paths are ignored)
-and runs an atomic `INSERT ... ON DUPLICATE KEY UPDATE hits = hits + 1` via raw DBAL. Raw DBAL
+which runs an atomic `INSERT ... ON DUPLICATE KEY UPDATE hits = hits + 1` via raw DBAL. Raw DBAL
 (not the ORM) is deliberate: read-modify-write through Doctrine would race under concurrency.
-Errors are caught and logged as warnings — analytics must never break a request. Cardinality is
-bounded by the number of distinct GET paths hit per hour; query it directly: per endpoint via
+Errors are caught and logged as warnings — analytics must never break a request.
+
+What counts is the pure static `ApiHitCounter::isCountable($method, $path)`: a **GET** whose path sits
+under a **known** version — the `ApiHitCounter::VERSIONS` allow-list, currently `v2`/`v3`, **which must
+be widened whenever a new API version ships**, or that version's traffic silently never reaches
+`/admin/stats`. A path need not resolve to a route: a 404 under `/v3` is real client traffic (a build
+hitting a typo'd URL) and is counted. Excluded are paths that never targeted the API — unknown versions
+(`/v543.php`, `/v999/anything`) and anything ending in `.php` (single front controller, so it is always
+a scanner). Both exclusions exist because a bot walking a fixed path list would otherwise mint unbounded
+`(bucket_hour, path)` rows. Admin/asset paths carry no version prefix and never match anyway.
+
+Cardinality is bounded by the number of distinct GET paths hit per hour; query it directly: per endpoint via
 `GROUP BY path`, per version via `path LIKE '/v3/%'`, per day via `GROUP BY DATE(bucket_hour), path`.
 
 The admin UI surfaces this at `/admin/stats` (`AdminStatsController::api`, sidebar Stats → API). `ApiHitStats::collect()`
@@ -105,7 +114,18 @@ no SQL date functions, so it stays portable across MySQL and the SQLite test DB.
 hour/day/week/month, default day) supplies the `bucket_hour` format string used as the period key; the formats are
 chosen so string sort == chronological sort. Endpoints are normalised by dropping every purely numeric path segment
 (`/v2/holiday/en/day/7/7` → `/v2/holiday/en/day`). The page renders a hits-over-time line (one line per version), a
-top-endpoints bar and the full period × endpoint matrix with per-version (`v2`, `v3`) columns and totals.
+top-endpoints bar and one doughnut per version showing how that version's traffic splits across its endpoints
+(`AdminStatsController::versionCharts` loops over the versions present in the window, so a future `v4` brings its own
+doughnut without a template change; `ApiHitStats` hands it `paths_by_version`, each version's endpoints already sorted
+busiest-first). Both `?days=` and `?group=` re-render the page, but a doughnut has no time axis — only `?days=` changes
+what it shows.
+
+The doughnuts cap at `AdminStatsController::TOP_ENDPOINTS` (7) slices plus an "Other" bucket. That cap is not
+cosmetic: a doughnut encodes its categories in colour alone and `color()` in `charts.ts` wraps modulo the palette's 8
+slots, so a 9th endpoint would repeat a hue and two slices would be indistinguishable. Keep it at (palette size - 1).
+This page carries **no table** — the endpoint hit counts are printed into the slice labels instead
+(`/v3/holidays (512)`), so the legend is where the numbers are read; the per-version share is a hover-only `note`. It
+is the one exception to the table rule below, and the label-embedded counts are what buys the exception.
 
 ### Stats pages & charts (Admin UI)
 
@@ -132,7 +152,14 @@ one hover-only string per category, shown under the tooltip title — that is wh
 (the top-reporters chart puts the reporter's e-mail there). The categorical palette in `charts.ts` is fixed-order and validated for colour-vision deficiency against the
 dark admin surface — series take slots by position; never cycle, recolour or extend the hues ad hoc. Its CVD margin
 sits in the floor band, which is only legal with a secondary encoding, so **every chart keeps a legend (≥ 2 series) and
-the same numbers in a table on the same page** — do not add a chart without its table.
+its numbers reachable as text on the same page** — never colour alone. In practice that text is a table under the
+chart, and that is the default: do not add a chart without its table. The API page is the one deliberate exception —
+its doughnuts carry the counts inside the slice labels instead, which is why they may skip the table. Copy that trick
+only when the category count is small enough to keep the legend readable; otherwise write the table.
+
+Note that `color()` in `charts.ts` wraps modulo the palette, so the "never cycle" rule is a convention the code does
+not enforce — a chart with more categories than the palette's 8 slots silently repeats hues. Cap the categories
+(as the API doughnuts do with `TOP_ENDPOINTS` + "Other") rather than letting a chart grow past 8.
 
 ### v3 API
 

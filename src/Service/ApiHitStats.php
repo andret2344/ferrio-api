@@ -30,6 +30,7 @@ readonly class ApiHitStats
 	 *     version_cells: array<string, array<string, int>>,
 	 *     period_totals: array<string, int>,
 	 *     path_totals: array<string, int>,
+	 *     paths_by_version: array<string, array<string, int>>,
 	 *     version_totals: array<string, int>,
 	 *     total: int
 	 * }
@@ -55,6 +56,7 @@ readonly class ApiHitStats
 		$versionCells = [];
 		$periodTotals = [];
 		$pathTotals = [];
+		$pathsByVersion = [];
 		$versionTotals = [];
 		$total = 0;
 
@@ -68,6 +70,7 @@ readonly class ApiHitStats
 			$versionCells[$period][$version] = ($versionCells[$period][$version] ?? 0) + $hits;
 			$periodTotals[$period] = ($periodTotals[$period] ?? 0) + $hits;
 			$pathTotals[$path] = ($pathTotals[$path] ?? 0) + $hits;
+			$pathsByVersion[$version][$path] = ($pathsByVersion[$version][$path] ?? 0) + $hits;
 			$versionTotals[$version] = ($versionTotals[$version] ?? 0) + $hits;
 			$total += $hits;
 		}
@@ -75,6 +78,13 @@ readonly class ApiHitStats
 		krsort($periodTotals);
 		arsort($pathTotals);
 		ksort($versionTotals);
+		// Each version's endpoints ordered by traffic, so a caller that wants the busiest N (the
+		// per-version doughnuts on the stats page) can just slice off the front.
+		ksort($pathsByVersion);
+		foreach ($pathsByVersion as &$paths) {
+			arsort($paths);
+		}
+		unset($paths);
 
 		return [
 			'periods' => array_keys($periodTotals),
@@ -84,6 +94,7 @@ readonly class ApiHitStats
 			'version_cells' => $versionCells,
 			'period_totals' => $periodTotals,
 			'path_totals' => $pathTotals,
+			'paths_by_version' => $pathsByVersion,
 			'version_totals' => $versionTotals,
 			'total' => $total,
 		];
@@ -97,8 +108,10 @@ readonly class ApiHitStats
 
 	private static function version(string $path): string
 	{
-		// api_hit only ever stores versioned paths (ApiHitCounter guards on /v\d+), so a match is
-		// guaranteed; the fallback exists only to keep the return type total.
+		// api_hit only ever stores paths under a known version (ApiHitCounter::isCountable), so a
+		// match is guaranteed; the fallback exists only to keep the return type total. Rows written
+		// before that guard was tightened may still carry junk like `/v543.php` — those land in
+		// 'unknown' rather than inventing a version column.
 		preg_match('#^/(v\d+)(/|$)#', $path, $matches);
 		return $matches[1] ?? 'unknown';
 	}

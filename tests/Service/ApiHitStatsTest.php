@@ -38,6 +38,21 @@ class ApiHitStatsTest extends TestCase
 		self::assertSame(28, $result['total']);
 	}
 
+	public function testAggregateSplitsEndpointsPerVersionBusiestFirst(): void
+	{
+		$result = ApiHitStats::aggregate(self::ROWS, ApiHitGrouping::DAY);
+
+		self::assertSame(['v2', 'v3'], array_keys($result['paths_by_version']));
+		self::assertSame([
+			'/v2/report' => 9,
+			'/v2/holiday/en/day' => 5,
+		], $result['paths_by_version']['v2']);
+		self::assertSame([
+			'/v3/users/reports' => 9,
+			'/v3/holidays' => 5,
+		], $result['paths_by_version']['v3']);
+	}
+
 	public function testAggregateGroupsByHour(): void
 	{
 		$result = ApiHitStats::aggregate(self::ROWS, ApiHitGrouping::HOUR);

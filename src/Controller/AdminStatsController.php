@@ -32,6 +32,15 @@ class AdminStatsController extends AbstractController
 	/** Reporters listed in the top-reporters chart; the table below it still shows everyone. */
 	private const int TOP_REPORTERS = 10;
 
+	/**
+	 * Endpoints given their own slice in a per-version doughnut; the rest are summed into "Other".
+	 * The cap exists because a doughnut encodes its categories in colour alone, and `color()` in
+	 * assets/charts.ts wraps around after the palette's 8 slots — a 9th endpoint would repeat a hue
+	 * and two slices would be indistinguishable. Keep this at (palette size - 1) to leave room for
+	 * the "Other" slice.
+	 */
+	private const int TOP_ENDPOINTS = 7;
+
 	public function __construct(
 		private readonly EntityManagerInterface $entityManager,
 		private readonly AdminMetricsService    $metrics,
@@ -60,6 +69,7 @@ class AdminStatsController extends AbstractController
 			'stats' => $stats,
 			'traffic_chart' => $this->trafficChart($stats),
 			'endpoint_chart' => $this->endpointChart($stats),
+			'version_charts' => $this->versionCharts($stats),
 		]);
 	}
 
@@ -255,6 +265,61 @@ class AdminStatsController extends AbstractController
 				'label' => 'Hits',
 				'data' => array_map(fn(string $path) => $stats['path_totals'][$path], $paths),
 			]],
+		];
+	}
+
+	/**
+	 * One doughnut per API version, showing how that version's traffic splits across its endpoints.
+	 * Built by looping over the versions actually present in the window rather than a hardcoded pair,
+	 * so a future v4 brings its own chart along without touching this page.
+	 *
+	 * @param array<string, mixed> $stats
+	 *
+	 * @return list<array{version: string, spec: array<string, mixed>}>
+	 */
+	private function versionCharts(array $stats): array
+	{
+		$charts = [];
+		foreach ($stats['versions'] as $version) {
+			$totals = $stats['paths_by_version'][$version] ?? [];
+			if ($totals === []) {
+				continue;
+			}
+			$charts[] = ['version' => $version, 'spec' => self::endpointDoughnut($totals)];
+		}
+		return $charts;
+	}
+
+	/**
+	 * The page carries no table, so the hit count goes into the slice's own label — the legend is
+	 * where the numbers are read, and colour is not the only thing carrying them. The share of the
+	 * version's traffic is a hover-only note, to keep the legend from wrapping.
+	 *
+	 * @param array<string, int> $totals endpoint => hits, busiest first
+	 *
+	 * @return array<string, mixed>
+	 */
+	private static function endpointDoughnut(array $totals): array
+	{
+		$slices = array_slice($totals, 0, self::TOP_ENDPOINTS, true);
+		$rest = array_slice($totals, self::TOP_ENDPOINTS, null, true);
+		if ($rest !== []) {
+			$slices[sprintf('Other (%d endpoints)', count($rest))] = array_sum($rest);
+		}
+		$total = array_sum($slices);
+
+		$labels = [];
+		$notes = [];
+		foreach ($slices as $path => $hits) {
+			$labels[] = sprintf('%s (%s)', $path, number_format($hits, 0, '.', ' '));
+			$notes[] = sprintf('%s%% of this version', number_format(100 * $hits / $total, 1));
+		}
+
+		return [
+			'kind' => 'doughnut',
+			'labels' => $labels,
+			'series' => [['label' => 'Hits', 'data' => array_values($slices)]],
+			'notes' => $notes,
 		];
 	}
 }
