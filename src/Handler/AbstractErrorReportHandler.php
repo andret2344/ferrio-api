@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Override;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 abstract readonly class AbstractErrorReportHandler implements ReportHandlerInterface
@@ -19,6 +20,7 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 
 	public function __construct(
 		protected EntityManagerInterface $entityManager,
+		#[Target('reports')]
 		protected LoggerInterface        $reportsLogger,
 	)
 	{
@@ -27,8 +29,7 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 	#[Override]
 	public function list(string $userId): array
 	{
-		return $this->entityManager->getRepository($this->getErrorEntityClass())
-			->findBy(['userId' => $userId]);
+		return $this->entityManager->getRepository($this->getErrorEntityClass())->findBy(['userId' => $userId]);
 	}
 
 	#[Override]
@@ -39,15 +40,13 @@ abstract readonly class AbstractErrorReportHandler implements ReportHandlerInter
 			throw new InvalidArgumentException(sprintf('Expected %s', $dtoClass));
 		}
 		/** @var AbstractReportPayload $payload */
-		$language = $this->entityManager->getRepository(Language::class)
-			->findOneBy(['code' => $payload->language]);
+		$language = $this->entityManager->getRepository(Language::class)->findOneBy(['code' => $payload->language]);
 		if (!$language) {
 			$this->reportsLogger->info('Report rejected: language not found', ['user_id' => $userId, 'language' => $payload->language]);
 			throw new BadRequestHttpException('Language not found');
 		}
 
-		$metadata = $this->entityManager->getRepository($this->getMetadataEntityClass())
-			->findOneBy(['id' => $payload->metadata]);
+		$metadata = $this->entityManager->getRepository($this->getMetadataEntityClass())->findOneBy(['id' => $payload->metadata]);
 		if (!$metadata) {
 			$this->reportsLogger->info('Report rejected: metadata not found', ['user_id' => $userId, 'metadata' => $payload->metadata]);
 			throw new BadRequestHttpException('Metadata not found');

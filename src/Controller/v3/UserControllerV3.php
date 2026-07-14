@@ -11,6 +11,7 @@ use App\Handler\ReportHandlerInterface;
 use App\Service\BanService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,6 +33,7 @@ class UserControllerV3 extends AbstractController
 		private readonly BanService          $banService,
 		private readonly SerializerInterface $serializer,
 		private readonly ValidatorInterface  $validator,
+		#[Target('reports')]
 		private readonly LoggerInterface     $reportsLogger,
 		ReportHandlerInterface               $floatingSuggestionHandler,
 		ReportHandlerInterface               $floatingErrorHandler,
@@ -67,10 +69,15 @@ class UserControllerV3 extends AbstractController
 	public function handle(Request $request): JsonResponse
 	{
 		$userId = $this->getUser()
-			->getUserIdentifier();
+		               ->getUserIdentifier();
 		$banInfo = $this->banService->getBanInfo($userId);
 		if ($banInfo) {
-			$this->reportsLogger->info('Report rejected: user banned', ['user_id' => $userId, 'report_type' => $request->query->getString('reportType'), 'holiday_type' => $request->query->getString('holidayType'), 'reason' => $banInfo->reason]);
+			$this->reportsLogger->info('Report rejected: user banned', [
+				'user_id' => $userId,
+				'report_type' => $request->query->getString('reportType'),
+				'holiday_type' => $request->query->getString('holidayType'),
+				'reason' => $banInfo->reason
+			]);
 			return new JsonResponse(['reason' => $banInfo->reason], Response::HTTP_FORBIDDEN);
 		}
 
@@ -105,7 +112,12 @@ class UserControllerV3 extends AbstractController
 					'message' => $violation->getMessage(),
 				];
 			}
-			$this->reportsLogger->info('Report rejected: validation failed', ['user_id' => $userId, 'report_type' => $reportType, 'holiday_type' => $holidayType, 'errors' => $errors]);
+			$this->reportsLogger->info('Report rejected: validation failed', [
+				'user_id' => $userId,
+				'report_type' => $reportType,
+				'holiday_type' => $holidayType,
+				'errors' => $errors
+			]);
 			return new JsonResponse(['errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY);
 		}
 

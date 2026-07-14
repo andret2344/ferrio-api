@@ -108,24 +108,25 @@ a scanner). Both exclusions exist because a bot walking a fixed path list would 
 Cardinality is bounded by the number of distinct GET paths hit per hour; query it directly: per endpoint via
 `GROUP BY path`, per version via `path LIKE '/v3/%'`, per day via `GROUP BY DATE(bucket_hour), path`.
 
-The admin UI surfaces this at `/admin/stats` (`AdminStatsController::api`, sidebar Stats → API). `ApiHitStats::collect()`
-loads the raw rows for the selected window (`?days=` ∈ 1/7/30/90/365/0-for-all, default 30) and folds them in PHP —
-no SQL date functions, so it stays portable across MySQL and the SQLite test DB. `ApiHitGrouping` (`?group=` ∈
-hour/day/week/month, default day) supplies the `bucket_hour` format string used as the period key; the formats are
-chosen so string sort == chronological sort. Endpoints are normalised by dropping every purely numeric path segment
-(`/v2/holiday/en/day/7/7` → `/v2/holiday/en/day`). The page renders a hits-over-time line (one line per version), a
-top-endpoints bar and one doughnut per version showing how that version's traffic splits across its endpoints
-(`AdminStatsController::versionCharts` loops over the versions present in the window, so a future `v4` brings its own
-doughnut without a template change; `ApiHitStats` hands it `paths_by_version`, each version's endpoints already sorted
-busiest-first). Both `?days=` and `?group=` re-render the page, but a doughnut has no time axis — only `?days=` changes
-what it shows.
+The admin UI surfaces this at `/admin/stats` (`AdminStatsController::api`, sidebar Stats → API).
+`ApiHitStats::collect()` loads the raw rows for the selected window (`?days=` ∈ 1/7/30/90/365/0-for-all, default 30) and
+folds them in PHP — no SQL date functions, so it stays portable across MySQL and the SQLite test DB. `ApiHitGrouping` (
+`?group=` ∈ hour/day/week/month, default day) supplies the `bucket_hour` format string used as the period key; the
+formats are chosen so string sort == chronological sort. Endpoints are normalised by dropping every purely numeric path
+segment (`/v2/holiday/en/day/7/7` → `/v2/holiday/en/day`). The page is charts only — no stat tiles, no table. It renders
+a hits-over-time line (one line per version), a hits-per-version doughnut (`versionChart`, which absorbed the stat tiles
+the page used to carry: the per-version totals are its slice labels, the grand total is the card's note) and then one
+doughnut per version showing how that version's traffic splits across its endpoints (`versionCharts` loops over the
+versions present in the window, so a future `v4` brings its own doughnut without a template change; `ApiHitStats` hands
+it `paths_by_version`, each version's endpoints already sorted busiest-first). Both `?days=` and `?group=` re-render the
+page, but a doughnut has no time axis — only `?days=` changes what a doughnut shows.
 
-The doughnuts cap at `AdminStatsController::TOP_ENDPOINTS` (7) slices plus an "Other" bucket. That cap is not
-cosmetic: a doughnut encodes its categories in colour alone and `color()` in `charts.ts` wraps modulo the palette's 8
-slots, so a 9th endpoint would repeat a hue and two slices would be indistinguishable. Keep it at (palette size - 1).
-This page carries **no table** — the endpoint hit counts are printed into the slice labels instead
-(`/v3/holidays (512)`), so the legend is where the numbers are read; the per-version share is a hover-only `note`. It
-is the one exception to the table rule below, and the label-embedded counts are what buys the exception.
+Every doughnut on the page is built by the shared `AdminStatsController::doughnut()`, which prints each slice's hit
+count into that slice's label (`/v3/holidays (512)`) and puts the percentage share in a hover-only `note`. That is what
+lets the page skip a table: the numbers are still readable as text, in the legend. The per-endpoint doughnuts cap at
+`TOP_ENDPOINTS` (7) slices plus an "Other" bucket, and that cap is not cosmetic — a doughnut encodes its categories in
+colour alone and `color()` in `charts.ts` wraps modulo the palette's 8 slots, so a 9th endpoint would repeat a hue and
+two slices would be indistinguishable. Keep it at (palette size - 1).
 
 ### Stats pages & charts (Admin UI)
 
@@ -149,7 +150,8 @@ hence the `ext-intl` requirement) rather than the DB `name` column, months are f
 `Algorithm::label()`; reporters are keyed by UID but labelled with their name (UID only as a last-resort fallback). A
 label may also be a list of strings, which Chart.js renders as one line per tick. The optional `notes` array carries
 one hover-only string per category, shown under the tooltip title — that is where detail goes that would crowd the axis
-(the top-reporters chart puts the reporter's e-mail there). The categorical palette in `charts.ts` is fixed-order and validated for colour-vision deficiency against the
+(the top-reporters chart puts the reporter's e-mail there). The categorical palette in `charts.ts` is fixed-order and
+validated for colour-vision deficiency against the
 dark admin surface — series take slots by position; never cycle, recolour or extend the hues ad hoc. Its CVD margin
 sits in the floor band, which is only legal with a secondary encoding, so **every chart keeps a legend (≥ 2 series) and
 its numbers reachable as text on the same page** — never colour alone. In practice that text is a table under the

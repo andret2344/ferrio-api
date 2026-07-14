@@ -2,6 +2,53 @@
 
 {% block title %}{{ label }} - Ferrio Admin{% endblock %}
 
+{# Macros must sit at the root of the template — Twig 3.27 deprecated declaring them inside a block. #}
+
+{# Ban / unban / copy-uid actions of the reporter bar. `prefix` matches the ids the frontend
+   populates for the given modal ('suggestionReport' or 'errorReport'). #}
+{% macro user_actions(prefix) %}
+	<div class='report-user-actions'>
+		<span class='badge ban-badge d-none' id='{{ prefix }}BanBadge'>
+			<i class='bi bi-slash-circle'></i> Banned
+		</span>
+		<button type='button' class='btn btn-sm btn-outline-danger report-user-ban' id='{{ prefix }}BanBtn'
+		        data-role='ban-open' data-user-id='' title='Ban user'>
+			<i class='bi bi-slash-circle'></i> Ban
+		</button>
+		<button type='button' class='btn btn-sm btn-outline-light report-user-ban d-none' id='{{ prefix }}UnbanBtn'
+		        data-role='unban-open' data-user-id='' title='Unban user'>
+			<i class='bi bi-check-lg'></i> Unban
+		</button>
+		<button type='button' class='user-id-copy' id='{{ prefix }}UserId' title='Copy user ID'>
+			<i class='bi bi-clipboard'></i>
+		</button>
+	</div>
+{% endmacro %}
+
+{% macro state_dropdown(toggleId, hiddenId, report_states) %}
+	<div class='dropdown state-dropdown'>
+		<button
+				class='btn dropdown-toggle state-dropdown-toggle'
+				type='button'
+				id='{{ toggleId }}'
+				data-bs-toggle='dropdown'
+				aria-expanded='false'>
+			<span class='badge report-state' data-role='state-toggle-badge'></span>
+		</button>
+		<ul class='dropdown-menu dropdown-menu-dark state-dropdown-menu'
+		    aria-labelledby='{{ toggleId }}'>
+			{% for state in report_states %}
+				<li>
+					<button type='button' class='dropdown-item' data-value='{{ state }}'>
+						<span class='badge report-state report-state-{{ state|lower }}'>{{ state }}</span>
+					</button>
+				</li>
+			{% endfor %}
+		</ul>
+		<input type='hidden' id='{{ hiddenId }}' name='report_state'>
+	</div>
+{% endmacro %}
+
 {% block body %}
 	<main class='section-manage-main'>
 		{% include 'components/sidebar.html.twig' %}
@@ -57,51 +104,6 @@
 			</div>
 		</div>
 	</main>
-
-	{# Ban / unban / copy-uid actions of the reporter bar. `prefix` matches the ids the frontend
-	   populates for the given modal ('suggestionReport' or 'errorReport'). #}
-	{% macro user_actions(prefix) %}
-		<div class='report-user-actions'>
-			<span class='badge ban-badge d-none' id='{{ prefix }}BanBadge'>
-				<i class='bi bi-slash-circle'></i> Banned
-			</span>
-			<button type='button' class='btn btn-sm btn-outline-danger report-user-ban' id='{{ prefix }}BanBtn'
-			        data-role='ban-open' data-user-id='' title='Ban user'>
-				<i class='bi bi-slash-circle'></i> Ban
-			</button>
-			<button type='button' class='btn btn-sm btn-outline-light report-user-ban d-none' id='{{ prefix }}UnbanBtn'
-			        data-role='unban-open' data-user-id='' title='Unban user'>
-				<i class='bi bi-check-lg'></i> Unban
-			</button>
-			<button type='button' class='user-id-copy' id='{{ prefix }}UserId' title='Copy user ID'>
-				<i class='bi bi-clipboard'></i>
-			</button>
-		</div>
-	{% endmacro %}
-
-	{% macro state_dropdown(toggleId, hiddenId, report_states) %}
-		<div class='dropdown state-dropdown'>
-			<button
-					class='btn dropdown-toggle state-dropdown-toggle'
-					type='button'
-					id='{{ toggleId }}'
-					data-bs-toggle='dropdown'
-					aria-expanded='false'>
-				<span class='badge report-state' data-role='state-toggle-badge'></span>
-			</button>
-			<ul class='dropdown-menu dropdown-menu-dark state-dropdown-menu'
-			    aria-labelledby='{{ toggleId }}'>
-				{% for state in report_states %}
-					<li>
-						<button type='button' class='dropdown-item' data-value='{{ state }}'>
-							<span class='badge report-state report-state-{{ state|lower }}'>{{ state }}</span>
-						</button>
-					</li>
-				{% endfor %}
-			</ul>
-			<input type='hidden' id='{{ hiddenId }}' name='report_state'>
-		</div>
-	{% endmacro %}
 
 	{% if not isError %}
 		<div class='modal fade' id='moderateSuggestionModal' tabindex='-1'

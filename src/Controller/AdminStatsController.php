@@ -68,7 +68,7 @@ class AdminStatsController extends AbstractController
 			'ranges' => self::RANGES,
 			'stats' => $stats,
 			'traffic_chart' => $this->trafficChart($stats),
-			'endpoint_chart' => $this->endpointChart($stats),
+			'version_chart' => $this->versionChart($stats),
 			'version_charts' => $this->versionCharts($stats),
 		]);
 	}
@@ -77,8 +77,7 @@ class AdminStatsController extends AbstractController
 	public function holidays(): Response
 	{
 		/** @var Language[] $languages */
-		$languages = $this->entityManager->getRepository(Language::class)
-			->findBy([], ['code' => 'ASC']);
+		$languages = $this->entityManager->getRepository(Language::class)->findBy([], ['code' => 'ASC']);
 		$targets = array_values(array_filter($languages, fn(Language $l) => $l->code !== Language::DEFAULT_CODE));
 
 		$fixedTotal = $this->metrics->fixedHolidayCount();
@@ -250,22 +249,19 @@ class AdminStatsController extends AbstractController
 	}
 
 	/**
+	 * How the window's traffic splits between API versions — one slice per version. This also carries
+	 * the per-version totals that used to sit in stat tiles above the charts, which is why the counts
+	 * go into the slice labels; the grand total is the card's note in the template.
+	 *
 	 * @param array<string, mixed> $stats
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function endpointChart(array $stats): array
+	private function versionChart(array $stats): array
 	{
-		$paths = array_slice($stats['paths'], 0, 10);
+		$totals = $stats['version_totals'];
 
-		return [
-			'kind' => 'horizontal_bar',
-			'labels' => $paths,
-			'series' => [[
-				'label' => 'Hits',
-				'data' => array_map(fn(string $path) => $stats['path_totals'][$path], $paths),
-			]],
-		];
+		return self::doughnut($totals, $stats['total'], 'of all hits');
 	}
 
 	/**
@@ -291,9 +287,8 @@ class AdminStatsController extends AbstractController
 	}
 
 	/**
-	 * The page carries no table, so the hit count goes into the slice's own label — the legend is
-	 * where the numbers are read, and colour is not the only thing carrying them. The share of the
-	 * version's traffic is a hover-only note, to keep the legend from wrapping.
+	 * Everything past the busiest TOP_ENDPOINTS is folded into one "Other" slice, so the chart can
+	 * never outgrow the palette (see TOP_ENDPOINTS).
 	 *
 	 * @param array<string, int> $totals endpoint => hits, busiest first
 	 *
@@ -306,13 +301,28 @@ class AdminStatsController extends AbstractController
 		if ($rest !== []) {
 			$slices[sprintf('Other (%d endpoints)', count($rest))] = array_sum($rest);
 		}
-		$total = array_sum($slices);
 
+		return self::doughnut($slices, array_sum($slices), 'of this version');
+	}
+
+	/**
+	 * The page carries no table, so each slice's hit count goes into its own label — the legend is
+	 * where the numbers are read, and colour is not the only thing carrying them. The share is a
+	 * hover-only note instead, to keep the legend from wrapping.
+	 *
+	 * @param array<string, int> $slices label => hits, in the order they should be drawn
+	 * @param int $total denominator for the share note; slices always sum to it
+	 * @param string $of tail of the share note, e.g. "of this version"
+	 *
+	 * @return array<string, mixed>
+	 */
+	private static function doughnut(array $slices, int $total, string $of): array
+	{
 		$labels = [];
 		$notes = [];
-		foreach ($slices as $path => $hits) {
-			$labels[] = sprintf('%s (%s)', $path, number_format($hits, 0, '.', ' '));
-			$notes[] = sprintf('%s%% of this version', number_format(100 * $hits / $total, 1));
+		foreach ($slices as $label => $hits) {
+			$labels[] = sprintf('%s (%s)', $label, number_format($hits, 0, '.', ' '));
+			$notes[] = sprintf('%s%% %s', number_format(100 * $hits / $total, 1), $of);
 		}
 
 		return [

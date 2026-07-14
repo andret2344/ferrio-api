@@ -29,25 +29,6 @@
 			{% if stats.total == 0 %}
 				<p class='text-muted'>No API hits recorded in this range.</p>
 			{% else %}
-				<div class='dashboard-grid'>
-					{% for version in stats.versions %}
-						<div class='dashboard-stat'>
-							<div class='dashboard-stat-icon'><i class='bi bi-braces'></i></div>
-							<div class='dashboard-stat-body'>
-								<div class='dashboard-stat-label'>{{ version }}</div>
-								<div class='dashboard-stat-value'>{{ stats.version_totals[version] | number_format(0, '.', ' ') }}</div>
-							</div>
-						</div>
-					{% endfor %}
-					<div class='dashboard-stat'>
-						<div class='dashboard-stat-icon'><i class='bi bi-graph-up'></i></div>
-						<div class='dashboard-stat-body'>
-							<div class='dashboard-stat-label'>Total hits</div>
-							<div class='dashboard-stat-value'>{{ stats.total | number_format(0, '.', ' ') }}</div>
-						</div>
-					</div>
-				</div>
-
 				<div class='chart-grid'>
 					{% include 'admin/components/chart_card.html.twig' with {
 						id: 'traffic',
@@ -56,11 +37,10 @@
 						spec: traffic_chart,
 					} only %}
 					{% include 'admin/components/chart_card.html.twig' with {
-						id: 'endpoints',
-						title: 'Top endpoints',
-						note: 'Numeric path segments are folded together',
-						spec: endpoint_chart,
-						tall: true,
+						id: 'versions',
+						title: 'Hits per version',
+						note: stats.total | number_format(0, '.', ' ') ~ ' hits in this window',
+						spec: version_chart,
 					} only %}
 				</div>
 

@@ -9,6 +9,7 @@ use App\Handler\FloatingHolidayErrorHandler;
 use App\Service\BanService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -21,6 +22,7 @@ class ReportControllerV2 extends AbstractController
 		private readonly BanService                  $banService,
 		private readonly FixedHolidayErrorHandler    $fixedHolidayErrorHandler,
 		private readonly FloatingHolidayErrorHandler $floatingHolidayErrorHandler,
+		#[Target('reports')]
 		private readonly LoggerInterface             $reportsLogger,
 	)
 	{

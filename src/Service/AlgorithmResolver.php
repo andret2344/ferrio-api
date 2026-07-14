@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 readonly class AlgorithmResolver
 {
 	public function __construct(
-		#[AutowireLocator(AlgorithmResolverInterface::class, defaultIndexMethod: '')]
+		#[AutowireLocator(AlgorithmResolverInterface::class)]
 		private ServiceLocator $resolvers,
 	)
 	{
@@ -23,7 +23,6 @@ readonly class AlgorithmResolver
 	 */
 	public function resolve(Algorithm $algorithm, array $args, int $year): ?array
 	{
-		return $this->resolvers->get($algorithm->resolverClass())
-			->calculate($args, $year);
+		return $this->resolvers->get($algorithm->resolverClass())->calculate($args, $year);
 	}
 }
