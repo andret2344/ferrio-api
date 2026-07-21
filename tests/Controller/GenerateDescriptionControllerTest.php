@@ -2,6 +2,9 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\AdminUser;
+use App\Tests\Fixture\AdminUserFixture;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Override;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -11,8 +14,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class GenerateDescriptionControllerTest extends WebTestCase
 {
-	private const CREDENTIALS = ['PHP_AUTH_USER' => 'admin', 'PHP_AUTH_PW' => 'admin'];
-
 	private ?array $capturedBody = null;
 
 	#[Override]
@@ -30,7 +31,6 @@ class GenerateDescriptionControllerTest extends WebTestCase
 		));
 
 		$client->request('POST', '/admin/api/generate', [], [], [
-			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 25, 'month' => 12, 'name' => 'Boże Narodzenie']));
 
@@ -53,7 +53,6 @@ class GenerateDescriptionControllerTest extends WebTestCase
 		));
 
 		$client->request('POST', '/admin/api/generate', [], [], [
-			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 1, 'month' => 1, 'name' => 'Nowy Rok', 'type' => 'description', 'language' => 'German']));
 
@@ -74,7 +73,6 @@ class GenerateDescriptionControllerTest extends WebTestCase
 		));
 
 		$client->request('POST', '/admin/api/generate', [], [], [
-			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 25, 'month' => 12, 'name' => 'Boże Narodzenie', 'type' => 'name', 'language' => 'English']));
 
@@ -91,7 +89,6 @@ class GenerateDescriptionControllerTest extends WebTestCase
 		$client = $this->createAuthenticatedClient();
 
 		$client->request('POST', '/admin/api/generate', [], [], [
-			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 25, 'month' => 12]));
 
@@ -108,7 +105,6 @@ class GenerateDescriptionControllerTest extends WebTestCase
 		));
 
 		$client->request('POST', '/admin/api/generate', [], [], [
-			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 1, 'month' => 1, 'name' => 'Nowy Rok']));
 
@@ -125,7 +121,6 @@ class GenerateDescriptionControllerTest extends WebTestCase
 		));
 
 		$client->request('POST', '/admin/api/generate', [], [], [
-			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 1, 'month' => 5, 'name' => 'Święto Pracy', 'type' => 'unknown_type']));
 
@@ -143,7 +138,8 @@ class GenerateDescriptionControllerTest extends WebTestCase
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['day' => 1, 'month' => 1, 'name' => 'Nowy Rok']));
 
-		$this->assertResponseStatusCodeSame(401);
+		// With form_login there is no Basic Auth challenge: the entry point redirects to the login form at `/`.
+		$this->assertResponseRedirects('http://localhost/');
 	}
 
 	private function createAuthenticatedClient(?MockResponse $mockResponse = null): KernelBrowser
@@ -157,6 +153,13 @@ class GenerateDescriptionControllerTest extends WebTestCase
 		});
 
 		static::getContainer()->set(HttpClientInterface::class, $mock);
+
+		$fixtures = static::getContainer()
+			->get(DatabaseToolCollection::class)
+			->get()
+			->loadFixtures([AdminUserFixture::class]);
+		$client->loginUser($fixtures->getReferenceRepository()
+			->getReference(AdminUserFixture::ADMIN, AdminUser::class));
 
 		return $client;
 	}

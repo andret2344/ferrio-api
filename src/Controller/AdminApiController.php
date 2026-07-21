@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/admin/api', name: 'admin_api_')]
-class ManageApiController extends AbstractController
+class AdminApiController extends AbstractController
 {
 	use CountryLookupTrait;
 

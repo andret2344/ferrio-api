@@ -13,5 +13,23 @@
 				{{ toolbar|raw }}
 			</div>
 		{% endif %}
+		{% if app.user %}
+			<div class='topbar-account dropdown {{ toolbar is defined and toolbar ? 'ms-3' : 'ms-auto' }}'>
+				<button class='topbar-account-btn' type='button' data-bs-toggle='dropdown'
+						data-bs-auto-close='outside' aria-expanded='false' aria-label='Account'>
+					<img class='topbar-account-avatar' src='{{ app.user.avatarUrl }}' alt=''>
+				</button>
+				<div class='topbar-account-menu dropdown-menu dropdown-menu-end'>
+					<div class='topbar-account-identity'>
+						<div class='topbar-account-name'>{{ app.user.username }}</div>
+						<div class='topbar-account-email'>{{ app.user.email }}</div>
+					</div>
+					<a class='topbar-account-logout'
+					   href='{{ path('admin_logout', {_csrf_token: csrf_token('logout')}) }}'>
+						<i class='bi bi-box-arrow-right me-2'></i>Logout
+					</a>
+				</div>
+			</div>
+		{% endif %}
 	</div>
 </header>

@@ -1,6 +1,7 @@
 import './styles/app.scss';
 import * as bootstrap from 'bootstrap';
 import axios from 'axios';
+import './csrfProtection';
 import './reports';
 import './create';
 import './sidebar';

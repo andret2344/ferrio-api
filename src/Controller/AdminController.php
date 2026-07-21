@@ -27,7 +27,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/admin', name: 'admin_')]
-class ManageController extends AbstractController
+class AdminController extends AbstractController
 {
 	public function __construct(
 		private readonly EntityManagerInterface $entityManager,

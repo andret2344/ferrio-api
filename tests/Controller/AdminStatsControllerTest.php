@@ -2,9 +2,11 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\AdminUser;
 use App\Entity\FixedHoliday;
 use App\Entity\FixedHolidayMetadata;
 use App\Entity\Language;
+use App\Tests\Fixture\AdminUserFixture;
 use App\Tests\Fixture\CountryFixture;
 use App\Tests\Fixture\FixedHolidayErrorFixture;
 use App\Tests\Fixture\FixedHolidayFixture;
@@ -21,8 +23,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AdminStatsControllerTest extends WebTestCase
 {
-	private const array CREDENTIALS = ['PHP_AUTH_USER' => 'admin', 'PHP_AUTH_PW' => 'admin'];
-
 	private KernelBrowser $client;
 	private AbstractDatabaseTool $databaseTool;
 
@@ -36,6 +36,7 @@ class AdminStatsControllerTest extends WebTestCase
 			->get(DatabaseToolCollection::class)
 			->get();
 		$fixtures = $this->databaseTool->loadFixtures([
+			AdminUserFixture::class,
 			CountryFixture::class,
 			FixedHolidayFixture::class,
 			FloatingHolidayFixture::class,
@@ -56,6 +57,9 @@ class AdminStatsControllerTest extends WebTestCase
 			$em->persist(new FixedHoliday($polish, $metadata, 'Polskie święto', 'Opis', null));
 		}
 		$em->flush();
+
+		$this->client->loginUser($fixtures->getReferenceRepository()
+			->getReference(AdminUserFixture::ADMIN, AdminUser::class));
 	}
 
 	#[Override]
@@ -67,7 +71,7 @@ class AdminStatsControllerTest extends WebTestCase
 
 	public function testApiPageRendersWithoutHits(): void
 	{
-		$this->client->request('GET', '/admin/stats', [], [], self::CREDENTIALS);
+		$this->client->request('GET', '/admin/stats');
 
 		$this->assertResponseIsSuccessful();
 		$this->assertSelectorTextContains('.manage-content', 'No API hits recorded in this range.');
@@ -75,7 +79,7 @@ class AdminStatsControllerTest extends WebTestCase
 
 	public function testHolidayStatsPageChartsCarryTheirData(): void
 	{
-		$crawler = $this->client->request('GET', '/admin/stats/holidays', [], [], self::CREDENTIALS);
+		$crawler = $this->client->request('GET', '/admin/stats/holidays');
 
 		$this->assertResponseIsSuccessful();
 
@@ -102,7 +106,7 @@ class AdminStatsControllerTest extends WebTestCase
 
 	public function testHolidayStatsPageLinksToTheMissingTranslations(): void
 	{
-		$crawler = $this->client->request('GET', '/admin/stats/holidays', [], [], self::CREDENTIALS);
+		$crawler = $this->client->request('GET', '/admin/stats/holidays');
 
 		$this->assertResponseIsSuccessful();
 		$this->assertSame(1, $crawler->filter('a[href="/admin/missing/fixed/de"]')->count());
@@ -112,7 +116,7 @@ class AdminStatsControllerTest extends WebTestCase
 
 	public function testUserStatsPageChartsCarryTheirData(): void
 	{
-		$crawler = $this->client->request('GET', '/admin/stats/users', [], [], self::CREDENTIALS);
+		$crawler = $this->client->request('GET', '/admin/stats/users');
 
 		$this->assertResponseIsSuccessful();
 
@@ -135,9 +139,13 @@ class AdminStatsControllerTest extends WebTestCase
 
 	public function testStatsPagesRequireAuthentication(): void
 	{
+		// Drops the session cookie `loginUser` set in setUp, so these run as an anonymous visitor.
+		$this->client->getCookieJar()->clear();
+
 		foreach (['/admin/stats', '/admin/stats/holidays', '/admin/stats/users'] as $url) {
 			$this->client->request('GET', $url);
-			$this->assertResponseStatusCodeSame(401, $url);
+			// With form_login there is no Basic Auth challenge: the entry point redirects to `/`.
+			$this->assertResponseRedirects('http://localhost/', null, $url);
 		}
 	}
 }

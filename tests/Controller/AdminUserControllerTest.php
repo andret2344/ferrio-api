@@ -2,10 +2,12 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\AdminUser;
 use App\Entity\Ban;
 use App\Entity\FixedHolidayError;
 use App\Entity\FixedHolidaySuggestion;
 use App\Entity\ReportState;
+use App\Tests\Fixture\AdminUserFixture;
 use App\Tests\Fixture\BanFixture;
 use App\Tests\Fixture\CountryFixture;
 use App\Tests\Fixture\FixedHolidayErrorFixture;
@@ -19,7 +21,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AdminUserControllerTest extends WebTestCase
 {
-	private const array CREDENTIALS = ['PHP_AUTH_USER' => 'admin', 'PHP_AUTH_PW' => 'admin'];
 	private const string REPORTER = 'user-id';
 
 	private KernelBrowser $client;
@@ -35,13 +36,17 @@ class AdminUserControllerTest extends WebTestCase
 		$this->databaseTool = static::getContainer()
 			->get(DatabaseToolCollection::class)
 			->get();
-		$this->databaseTool->loadFixtures([
+		$fixtures = $this->databaseTool->loadFixtures([
+			AdminUserFixture::class,
 			CountryFixture::class,
 			FixedHolidaySuggestionFixture::class,
 			FixedHolidayErrorFixture::class,
 			BanFixture::class,
 		]);
 		$this->em = static::getContainer()->get(EntityManagerInterface::class);
+
+		$this->client->loginUser($fixtures->getReferenceRepository()
+			->getReference(AdminUserFixture::ADMIN, AdminUser::class));
 	}
 
 	#[Override]
@@ -53,7 +58,7 @@ class AdminUserControllerTest extends WebTestCase
 
 	public function testStatsPageListsReporters(): void
 	{
-		$crawler = $this->client->request('GET', '/admin/stats/users', [], [], self::CREDENTIALS);
+		$crawler = $this->client->request('GET', '/admin/stats/users');
 
 		$this->assertResponseIsSuccessful();
 		$this->assertSame(1, $crawler->filter(sprintf('tr[data-user-row="%s"]', self::REPORTER))->count());
@@ -61,7 +66,7 @@ class AdminUserControllerTest extends WebTestCase
 
 	public function testBannedPageListsBans(): void
 	{
-		$crawler = $this->client->request('GET', '/admin/bans', [], [], self::CREDENTIALS);
+		$crawler = $this->client->request('GET', '/admin/bans');
 
 		$this->assertResponseIsSuccessful();
 		$this->assertSame(1, $crawler->filter('tr[data-user-row="user-id-banned"]')->count());
@@ -72,7 +77,7 @@ class AdminUserControllerTest extends WebTestCase
 		$this->post('/admin/api/users/ban', ['user_id' => self::REPORTER, 'reason' => 'Spam']);
 		$this->assertResponseIsSuccessful();
 
-		$crawler = $this->client->request('GET', '/admin/reports/fixed-suggestions', [], [], self::CREDENTIALS);
+		$crawler = $this->client->request('GET', '/admin/reports/fixed-suggestions');
 
 		$this->assertResponseIsSuccessful();
 		$row = $crawler->filter('tr.report-row')->first();
@@ -82,7 +87,7 @@ class AdminUserControllerTest extends WebTestCase
 
 	public function testReportCounts(): void
 	{
-		$this->client->request('GET', '/admin/api/users/report-counts', ['user_id' => self::REPORTER], [], self::CREDENTIALS);
+		$this->client->request('GET', '/admin/api/users/report-counts', ['user_id' => self::REPORTER]);
 
 		$this->assertResponseIsSuccessful();
 		$payload = json_decode($this->client->getResponse()->getContent(), true);
@@ -187,7 +192,6 @@ class AdminUserControllerTest extends WebTestCase
 	public function testBanRejectsMalformedJsonBody(): void
 	{
 		$this->client->request('POST', '/admin/api/users/ban', [], [], [
-			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], 'not json');
 
@@ -196,9 +200,8 @@ class AdminUserControllerTest extends WebTestCase
 
 	public function testBanRejectsInvalidCsrfToken(): void
 	{
-		$this->client->request('GET', '/admin/stats/users', [], [], self::CREDENTIALS);
+		$this->client->request('GET', '/admin/stats/users');
 		$this->client->request('POST', '/admin/api/users/ban', [], [], [
-			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode(['user_id' => self::REPORTER, 'reason' => 'Spam', '_token' => 'nope']));
 
@@ -279,14 +282,14 @@ class AdminUserControllerTest extends WebTestCase
 
 	public function testReportCountsRequiresUserId(): void
 	{
-		$this->client->request('GET', '/admin/api/users/report-counts', [], [], self::CREDENTIALS);
+		$this->client->request('GET', '/admin/api/users/report-counts');
 
 		$this->assertResponseStatusCodeSame(400);
 	}
 
 	public function testReportCountsOfUserWithoutReports(): void
 	{
-		$this->client->request('GET', '/admin/api/users/report-counts', ['user_id' => 'user-id-banned'], [], self::CREDENTIALS);
+		$this->client->request('GET', '/admin/api/users/report-counts', ['user_id' => 'user-id-banned']);
 
 		$this->assertResponseIsSuccessful();
 		$payload = json_decode($this->client->getResponse()->getContent(), true);
@@ -296,16 +299,20 @@ class AdminUserControllerTest extends WebTestCase
 
 	public function testSidebarShowsBannedCount(): void
 	{
-		$crawler = $this->client->request('GET', '/admin/stats/users', [], [], self::CREDENTIALS);
+		$crawler = $this->client->request('GET', '/admin/stats/users');
 
 		$this->assertSame('1', trim($crawler->filter('a[href="/admin/bans"] .sidebar-badge')->text()));
 	}
 
 	public function testUsersPagesRequireAuthentication(): void
 	{
+		// Drops the session cookie `loginUser` set in setUp, so this runs as an anonymous visitor.
+		$this->client->getCookieJar()->clear();
+
 		$this->client->request('GET', '/admin/stats/users');
 
-		$this->assertResponseStatusCodeSame(401);
+		// With form_login there is no Basic Auth challenge: the entry point redirects to `/`.
+		$this->assertResponseRedirects('http://localhost/');
 	}
 
 	private function assertJsonError(string $field): void
@@ -336,11 +343,10 @@ class AdminUserControllerTest extends WebTestCase
 	 */
 	private function post(string $url, array $body): void
 	{
-		$crawler = $this->client->request('GET', '/admin/stats/users', [], [], self::CREDENTIALS);
+		$crawler = $this->client->request('GET', '/admin/stats/users');
 		$token = $crawler->filter('#banUserModal')->attr('data-csrf-token');
 
 		$this->client->request('POST', $url, [], [], [
-			...self::CREDENTIALS,
 			'CONTENT_TYPE' => 'application/json',
 		], json_encode([...$body, '_token' => $token]));
 	}

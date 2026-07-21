@@ -1,15 +1,14 @@
 security:
   # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
   password_hashers:
-    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'plaintext'
+    App\Entity\AdminUser: 'auto'
   # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
   providers:
-    users_in_memory:
-      memory:
-        users:
-          - identifier: '%env(HTTP_BASIC_AUTH_USERNAME)%'
-            password: '%env(HTTP_BASIC_AUTH_PASSWORD)%'
-            roles: [ ROLE_USER ]
+    # No `property` key: the provider falls through to AdminUserRepository::loadUserByIdentifier,
+    # which is what enables logging in with either the e-mail or the username.
+    admin_provider:
+      entity:
+        class: App\Entity\AdminUser
   firewalls:
     firebase:
       pattern: "^/v3/(users|polls)"
@@ -18,7 +17,28 @@ security:
         - App\Security\FirebaseAuthenticator
     main:
       pattern: ^/
-      http_basic: ~
+      lazy: true
+      provider: admin_provider
+      form_login:
+        login_path: index
+        check_path: index
+        enable_csrf: true
+        default_target_path: admin_index
+        # Plain `username`/`password` rather than Symfony's `_username`/`_password`: password
+        # managers match fields by name, and the leading underscore defeats some of their
+        # heuristics.
+        username_parameter: username
+        password_parameter: password
+      logout:
+        path: admin_logout
+        target: index
+        enable_csrf: true
+      remember_me:
+        secret: '%kernel.secret%'
+        lifetime: 2592000
+        always_remember_me: true
+  role_hierarchy:
+    ROLE_ADMIN: [ ROLE_USER ]
   access_control:
     - { path: ^/v2/countries, roles: [ PUBLIC_ACCESS ] }
     - { path: ^/v2/missing, roles: [ PUBLIC_ACCESS ] }
@@ -26,9 +46,15 @@ security:
     - { path: ^/v3/users, roles: [ ROLE_FIREBASE_USER ] }
     - { path: ^/v\d+/report, roles: [ PUBLIC_ACCESS ] }
     - { path: ^/v\d+/holiday, roles: [ PUBLIC_ACCESS ] }
-    - { path: ^/, roles: [ ROLE_USER ] }
+    - { path: ^/admin, roles: [ ROLE_ADMIN ] }
 
 when@test:
   security:
     password_hashers:
-      Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'plaintext'
+      # Cheapest legal work factor, so hashing never slows the suite. `time_cost` cannot go below
+      # 3: argon2id rejects an opsLimit under that.
+      App\Entity\AdminUser:
+        algorithm: auto
+        cost: 4
+        time_cost: 3
+        memory_cost: 65536

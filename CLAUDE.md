@@ -8,9 +8,9 @@ explicitly ask. Do not silently leave stale guidance.
 
 ## Project Overview
 
-Ferrio API is a Symfony 7.4 / PHP 8.5 application that serves holiday data (fixed and floating) across multiple
-languages and countries. It exposes a versioned JSON REST API (v2, v3) and includes a Twig-based admin UI (
-`/admin`, with a 301 redirect from the legacy `/manage` prefix) protected by HTTP Basic Auth.
+Ferrio API is a Symfony 8.1 / PHP 8.5 application that serves holiday data (fixed and floating) across multiple
+languages and countries. It exposes a versioned JSON REST API (v2, v3) and includes a Twig-based admin UI (`/admin`)
+protected by a form login. The legacy `/manage` prefix is gone entirely - those URLs 404.
 
 ## Commands
 
@@ -35,6 +35,12 @@ yarn watch        # development with watch
 
 # Doctrine migrations
 php bin/console doctrine:migrations:migrate
+
+# Create an admin panel account (interactive; the only way to provision one)
+php bin/console app:user:create
+
+# Change an existing admin's password (identifier = e-mail or username)
+php bin/console app:user:password [user]
 
 # Clear cache
 php bin/console cache:clear
@@ -237,15 +243,62 @@ locale reported. It has no FK, because a device may legitimately sit in a countr
 would silently null those rows out and skew `by_device_country` in `/admin/api/reports/stats`. Normalisation
 (uppercase, `''`/`'null'` → `null`) is the pure static `Country::normalizeCode`. Do not "fix" this into a relation.
 
+### Admin authentication
+
+Form login + server session, no JWT: the admin is server-rendered Twig navigated by the browser, so a `Bearer`
+header could not protect page navigations without an SPA rewrite. `remember_me` is on with `always_remember_me`
+and a 30-day lifetime.
+
+The **app root `/` is the login page** - it is both `login_path` and `check_path`, so the firewall intercepts the
+POST and `WebController::index` only ever renders the GET (or redirects an already-authenticated user to
+`admin_index`). There is no `/admin/login`. Logout is `/admin/logout` (`SecurityController::logout`, an empty body
+intercepted by the firewall, CSRF-protected).
+
+Admins live in the `admin_user` table (entity `AdminUser`), which is entirely separate from the Firebase end-users -
+those still have no DB table at all. `AdminUserRepository` implements the Doctrine bridge's `UserLoaderInterface`
+(note the namespace: `Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface`, **not** security-core) and matches
+`email OR username`, which is what lets a single login field accept either. The provider therefore carries no
+`property` key. Passwords use the `auto` hasher; `when@test` pins the cheapest legal work factor so hashing never
+slows the suite.
+
+The login form posts **`username`** and **`password`**, not Symfony's default `_username` / `_password`
+(`username_parameter` / `password_parameter` in security.yaml). Password managers match fields by name, and the
+leading underscore defeats some of their heuristics; the field `id`s, the `autocomplete` tokens
+(`username` / `current-password`) and `form[action]` are part of that same contract and are asserted by
+`SecurityControllerTest::testLoginFormExposesPasswordManagerFriendlyFields`. Never put `autocomplete='off'`
+on this form.
+
+Provisioning is CLI-only - there is no in-panel admin management UI and no self-service password reset (no
+`symfony/mailer`). Both commands mint passwords through the shared `PasswordGenerator`:
+
+```bash
+php bin/console app:user:create      # interactive: e-mail, username, hidden password (empty -> generated and printed)
+php bin/console app:user:password    # changes an existing account's password; takes e-mail or username
+```
+
+Changing a password does **not** revoke existing sessions - they are server-side and not derived from the hash.
+
+The first admin is seeded by `Version20260721120000` from the retired `HTTP_BASIC_AUTH_USERNAME` /
+`HTTP_BASIC_AUTH_PASSWORD` env vars (e-mail placeholder `admin@null.com`); it skips the insert when they are unset.
+Those env vars can be dropped once the migration has run everywhere.
+
+The topbar renders a Gravatar identicon (keyed by a SHA-256 of the lowercased e-mail, mirroring `FirebaseUserLookup`'s
+avatar rule) opening a dropdown with the username, e-mail and Logout - only when `app.user` is set.
+
+Admin controller tests authenticate with `$this->client->loginUser($admin)` (an `AdminUserFixture` row; the hash is
+never verified, so no hashing cost) rather than `PHP_AUTH_*` headers. An unauthenticated `/admin/*` request is a
+**302 to `/`**, not a 401 - there is no Basic Auth challenge any more. Tests that assert this call
+`$this->client->getCookieJar()->clear()` first to shed the session `loginUser` set.
+
 ### Admin UI
 
-`ManageController` + `WebController` serve Twig templates under `/admin`. Protected by `ROLE_USER` via HTTP Basic Auth.
+`AdminController` + `WebController` serve Twig templates under `/admin`. Protected by `ROLE_ADMIN`, see
+"Admin authentication" below.
 `AdminTagController` (under `/admin/tags`) handles tag (category) management with chip UI and per-type usage counters.
 `AdminLanguageController` (under `/admin/languages`) handles language create/delete; deletion requires the user to
 type either the language's display name or the literal word `DELETE` in a confirmation modal, and cascades all
 related rows (fixed/floating holiday translations, error reports, category translations) in a single transaction.
 The Polish source language (`pl`) cannot be deleted from the UI.
-Legacy `/manage/*` URLs return 301 redirects to `/admin/*` via `ManageRedirectController`.
 
 Reports moderation is split into four separate drawer entries under a "Reports" sidebar group — one page per report
 type at `/admin/reports/{type}` where `type` ∈ `fixed-suggestions | floating-suggestions | fixed-errors |
