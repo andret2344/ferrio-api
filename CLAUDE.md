@@ -42,6 +42,9 @@ php bin/console app:user:create
 # Change an existing admin's password (identifier = e-mail or username)
 php bin/console app:user:password [user]
 
+# Compare a pasted holiday list against the stored Polish holidays (read-only report)
+php bin/console app:holiday:diff [file] [--all] [--json]
+
 # Clear cache
 php bin/console cache:clear
 ```
@@ -389,6 +392,44 @@ generation finishes, instead of unconditionally re-enabling). The detail page wi
 - **Description buttons** (Source PL and per-language) additionally require the name in the SAME language to be
   present — descriptions are generated about a specific holiday name, and the prompts expect a name in the target
   language.
+
+### Holiday import diff (CLI)
+
+`app:holiday:diff` (`HolidayDiffCommand`) takes text pasted from a holiday blog or forum - a file argument, or STDIN -
+and reports each line against the stored **Polish** holidays. It is **read-only and stays that way**: those sources
+carry typos, duplicates and invented holidays, so the decision to store a row is manual. Three services in
+`src/Service/Import/`:
+
+- `HolidayTextParser` - text to `ParsedHoliday[]`. Reads `1 stycznia`, `14. marca`, `01.01`, `01.01.2026`, `5 V`, and
+  bare list items (`1. …`) under a month heading, which sets the month context for the lines that follow. A trailing
+  year is swallowed by the date match so it never lands in the name; the name is cut at the first sentence break,
+  because blogs run the description straight on from it. **One line can yield several holidays** - sources routinely
+  comma-separate them under one date ("1 stycznia - Dzień Emo, Światowy Dzień Pokoju, Światowy Dzień Kaca"), including
+  with the repeated head elided ("Światowy Dzień Celnictwa, Transplantologii", which still matches because the elided
+  words are exactly the ones the matcher drops as noise). Parenthesised asides are cut before the split, since they
+  carry commas and dates of their own ("obchodzony także 24 czerwca"). The same split would also chop a prose sentence
+  into fragments, so `isName()` throws those away: a name is capitalised, under `MAX_NAME_LENGTH`, and free of the
+  `PROSE_WORDS` clause markers. Two rules make the output trustworthy: a line that reads as a date but fails validation
+  comes back **unparsed** (`day`/`month` null) rather than repaired, and a line with no date shape at all is dropped
+  **silently** - blog prose is mostly such lines and reporting them would bury the rest. That also covers recurrence
+  phrases ("trzeci czwartek listopada"): they are floating holidays and no fixed date is invented for them.
+- `HolidayNameMatcher` - pure and static, so it unit-tests on plain strings. `normalize()` folds Polish diacritics,
+  `stem()` strips the inflectional ending (sources disagree on case - "Dzień Kota" vs "Święto Kotów" - and plain edit
+  distance does not survive that), then noise stems (`swiatow`, `dzien`, `swiet`, …) are dropped, without which every
+  holiday scores highly against every other one. Score is the Dice coefficient over the surviving stems, paired greedily
+  with an edit tolerance of one (two only from `TWO_EDIT_LENGTH` = 10 characters up) and a required two-character
+  common prefix. Both guards exist because Polish declension gives unrelated words the same ending, so stems collide at
+  the tail while never diverging at the head - `kierowc` / `wiezowc` was two edits apart over seven characters and
+  scored 0.67 before they were added. `MATCH_THRESHOLD` 0.85, `CANDIDATE_THRESHOLD` 0.5. Matching is done in PHP, never SQL:
+  MySQL's only fuzzy operator is `SOUNDEX`, which encodes English phonetics and is worthless for Polish.
+- `HolidayDiffService` - loads every Polish name once (tokens precomputed on `HolidayCandidate`, since the diff is an
+  N x M comparison) and classifies into `HolidayDiffStatus`: `EXACT`, `DATE_MISMATCH`, `FLOATING_MATCH`, `AMBIGUOUS`,
+  `MISSING`, `UNPARSED`. **Floating holidays sit in the same candidate pool as fixed ones** - without them, every
+  floating holiday a source pinned to a concrete date ("Dzień Matki - 26 maja") would come back `MISSING` and acting on
+  that would create a duplicate. On tied scores the candidate whose date also agrees wins, so the verdict never depends
+  on load order.
+
+`--all` also lists the exact matches; `--json` prints every row (snake_case keys) instead of the report.
 
 ### Testing
 
