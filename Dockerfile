@@ -3,7 +3,7 @@
 # public/ - copied from it, so the two can never drift apart. CI pushes the php and web stages to
 # GHCR as two images tagged with the commit SHA; the server only ever pulls them.
 
-FROM node:24-alpine AS assets
+FROM node:26-alpine AS assets
 
 WORKDIR /app
 
@@ -60,7 +60,7 @@ CMD ["php-fpm"]
 # Unprivileged nginx: runs as uid 101 and listens on 8080 instead of 80, so a compromise of nginx
 # never yields root in the container. The public edge is Apache on the host, which reaches this only
 # over the loopback port published in compose.yaml.
-FROM nginxinc/nginx-unprivileged:1.29-alpine AS web
+FROM nginxinc/nginx-unprivileged:1.30-alpine AS web
 
 LABEL eu.andret.project="ferrio-api"
 
