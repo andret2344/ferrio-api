@@ -1,4 +1,3 @@
-* text=auto eol=crlf
-
-# Shell scripts run on Linux (docker/deploy.sh on the server): with CRLF bash fails on line one.
-*.sh text eol=lf
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf

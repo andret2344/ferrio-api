@@ -5,7 +5,8 @@
 #   sudo /opt/docker-images/ferrio-api/deploy.sh <full commit sha>
 # A rollback is the same command with an older SHA.
 #
-# This file must keep LF line endings (see .gitattributes): with CRLF, bash fails on the first line.
+# This file must keep LF line endings (.gitattributes pins every file to LF): with CRLF, bash fails
+# on the first line.
 
 set -euo pipefail
 

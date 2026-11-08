@@ -9,7 +9,7 @@
 
 Build a cross-device holiday "like" feature for Ferrio API. Work in small, reviewed
 steps - propose the data model and API contract first, get my OK, THEN implement.
-Follow every convention in CLAUDE.md (CRLF + trailing CRLF everywhere, ASCII hyphens
+Follow every convention in CLAUDE.md (LF + trailing newline everywhere, ASCII hyphens
 only, snake_case for admin/internal JSON, no ternaries in PHP, TS style rules, PHP 8.5
 property hooks). Write tests for every new code path.
 
