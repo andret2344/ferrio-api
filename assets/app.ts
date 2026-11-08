@@ -9,6 +9,7 @@ import './holidayDetail';
 import './languages';
 import './users';
 import './charts';
+import './holidayImport';
 
 (window as any).axios = axios;
 (window as any).bootstrap = bootstrap;

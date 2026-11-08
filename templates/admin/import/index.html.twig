@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+{% block title %}Import - Ferrio Admin{% endblock %}
+{% block body %}
+	<main class='section-manage-main import-page' data-import-page
+	      data-csrf-token='{{ csrf_token('holiday_import') }}'>
+		{% include 'components/sidebar.html.twig' %}
+		{% set importToolbar %}
+			<a class='btn btn-outline-light btn-sm' href='{{ path('admin_import_blacklist') }}'>
+				<i class='bi bi-slash-circle me-1'></i>Blacklist
+			</a>
+		{% endset %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'Import holidays', toolbar: importToolbar} %}
+		<div class='manage-content'>
+
+			{% for message in app.flashes('error') %}
+				<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+					{{ message }}
+					<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+				</div>
+			{% endfor %}
+
+			<form method='post' action='{{ path('admin_import_paste') }}' class='import-paste'>
+				<input type='hidden' name='_token' value='{{ csrf_token('holiday_import') }}'>
+				<label class='form-label' for='import-text'>
+					Paste a holiday list from a blog or forum - only the list, not the whole page.
+					Lines are compared with the stored Polish names; nothing is saved as a holiday.
+				</label>
+				<textarea id='import-text' name='text' class='form-control manage-input' rows='{{ tiles is empty ? 10 : 4 }}'
+				          placeholder='1 stycznia - Światowy Dzień Pokoju&#10;14 marca - Dzień Liczby Pi&#10;…'
+				          required></textarea>
+				<div class='d-flex justify-content-end mt-2'>
+					<button type='submit' class='btn btn-primary'>
+						<i class='bi bi-funnel me-1'></i>Compare
+					</button>
+				</div>
+			</form>
+
+			{% if result %}
+				<div class='import-result'>
+					<div>
+						<strong>{{ result.created }}</strong> new {{ result.created == 1 ? 'tile' : 'tiles' }},
+						<strong>{{ result.merged }}</strong> added to existing ones,
+						<strong>{{ result.already_stored }}</strong> already stored.
+						{% if result.unparsed is not empty %}
+							<a href='#import-unparsed' class='translation-link'>{{ result.unparsed|length }} unreadable</a>
+						{% endif %}
+					</div>
+					{% if result.blacklisted is not empty %}
+						<details class='import-result-skipped'>
+							<summary>Skipped {{ result.blacklisted|length }} previously rejected</summary>
+							<ul>
+								{% for skipped in result.blacklisted %}
+									<li>
+										{{ skipped.name }}
+										{% if skipped.rejected_as != skipped.name %}
+											<span class='import-muted'>as “{{ skipped.rejected_as }}”</span>
+										{% endif %}
+										<span class='import-muted'>- {{ skipped.reason }}</span>
+									</li>
+								{% endfor %}
+							</ul>
+						</details>
+					{% endif %}
+				</div>
+			{% endif %}
+
+			{% if tiles is empty %}
+				<div class='text-center text-muted py-5' data-import-empty>
+					Nothing to decide. Paste a list to compare it with the stored holidays.
+				</div>
+			{% else %}
+				{% set counts = {missing: 0, ambiguous: 0, date_mismatch: 0} %}
+				{% for tile in tiles %}
+					{% set counts = counts|merge({(tile.status.value): counts[tile.status.value] + 1}) %}
+				{% endfor %}
+				<div class='import-summary'>
+					<span><strong data-import-count>{{ tiles|length }}</strong> to decide</span>
+					<span class='import-status import-status-missing'>{{ counts.missing }} not stored</span>
+					<span class='import-status import-status-ambiguous'>{{ counts.ambiguous }} close match</span>
+					<span class='import-status import-status-date_mismatch'>{{ counts.date_mismatch }} different date</span>
+				</div>
+				<div class='import-grid' data-import-grid>
+					{% for tile in tiles %}
+						{% include 'admin/import/_tile.html.twig' with {tile: tile} %}
+					{% endfor %}
+				</div>
+			{% endif %}
+
+			{% if result and result.unparsed is not empty %}
+				<section class='import-unparsed' id='import-unparsed'>
+					<h2 class='import-section-title'>Looks like a date, could not be read</h2>
+					<ul>
+						{% for line in result.unparsed %}
+							<li><span class='import-muted'>line {{ line.line }}:</span> {{ line.text }}</li>
+						{% endfor %}
+					</ul>
+				</section>
+			{% endif %}
+		</div>
+	</main>
+
+	<div class='modal fade' id='importRejectModal' tabindex='-1' aria-labelledby='importRejectTitle' aria-hidden='true'>
+		<div class='modal-dialog modal-dialog-centered'>
+			<div class='modal-content bg-dark text-light'>
+				<div class='modal-header'>
+					<h5 class='modal-title' id='importRejectTitle'>Reject <span data-role='reject-name'></span></h5>
+					<button type='button' class='btn-close btn-close-white' data-bs-dismiss='modal' aria-label='Close'></button>
+				</div>
+				<div class='modal-body'>
+					<p class='import-muted mb-3'>
+						Goes onto the blacklist: later pastes skip this name and its variants.
+						You can restore it from the Blacklist page.
+					</p>
+					{% for reason in reasons %}
+						<div class='form-check'>
+							<input class='form-check-input' type='radio' name='import-reject-reason'
+							       id='import-reason-{{ reason.value }}' value='{{ reason.value }}'
+							       data-requires-comment='{{ reason.requiresComment ? '1' : '0' }}'
+									{{ loop.first ? 'checked' : '' }}>
+							<label class='form-check-label' for='import-reason-{{ reason.value }}'>{{ reason.label }}</label>
+						</div>
+					{% endfor %}
+					<label class='form-label mt-3' for='import-reject-comment'>
+						Comment <span class='import-muted' data-role='comment-hint'>(optional)</span>
+					</label>
+					<textarea id='import-reject-comment' class='form-control manage-input' rows='2' maxlength='1023'></textarea>
+					<div class='alert alert-danger mt-3 mb-0 d-none' data-role='reject-error'></div>
+				</div>
+				<div class='modal-footer'>
+					<button type='button' class='btn btn-outline-light' data-bs-dismiss='modal'>Cancel</button>
+					<button type='button' class='btn btn-danger' data-role='reject-confirm'>Reject</button>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

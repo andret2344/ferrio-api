@@ -1,0 +1,136 @@
+{# One import tile. Rendered by the page and re-rendered by every tile action (AdminImportController),
+   so this file is the only definition of how a tile looks. #}
+{% set months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] %}
+{% set status = tile.status.value %}
+{% set conflictKeys = tile.conflictingDates|map(d => d.day ~ '.' ~ d.month) %}
+<article class='import-tile import-tile-{{ status }}' data-import-tile='{{ tile.id }}'
+         data-name='{{ tile.name|e('html_attr') }}'
+         data-remove-url='{{ path('admin_import_remove', {id: tile.id}) }}'
+         data-reject-url='{{ path('admin_import_reject', {id: tile.id}) }}'
+         data-ignore-url='{{ path('admin_import_ignore', {id: tile.id}) }}'
+         data-link-url='{{ path('admin_import_link', {id: tile.id}) }}'
+         data-verify-url='{{ path('admin_import_verify', {id: tile.id}) }}'
+         data-show-url='{{ path('admin_import_show', {id: tile.id}) }}'>
+	<header class='import-tile-header'>
+		<span class='import-status import-status-{{ status }}'>{{ tile.status.label }}</span>
+		<button type='button' class='import-tile-remove' data-import-action='remove'
+		        title='Remove the tile - it comes back if a paste mentions the holiday again'
+		        aria-label='Remove tile'>
+			<i class='bi bi-x-lg'></i>
+		</button>
+	</header>
+	<h3 class='import-tile-name'>{{ tile.name }}</h3>
+
+	<div class='import-tile-dates'>
+		{% for date in tile.dates %}
+			{% set conflicting = (date.day ~ '.' ~ date.month) in conflictKeys %}
+			<span class='import-date{{ conflicting ? ' import-date-conflict' : '' }}'
+			      title='Given by {{ date.count }} {{ date.count == 1 ? 'paste' : 'pastes' }}'>
+				{{ date.day }} {{ months[date.month - 1] }}
+				{% if date.count > 1 %}<span class='import-date-count'>&times;{{ date.count }}</span>{% endif %}
+			</span>
+		{% endfor %}
+	</div>
+
+	{% if status == 'date_mismatch' and tile.match %}
+		<p class='import-tile-note'>
+			Stored as
+			<a class='translation-link' href='{{ path('admin_holiday_detail', {kind: tile.match.kind, id: tile.match.metadataId}) }}'
+			   target='_blank' rel='noopener'>{{ tile.match.name }}</a>
+			on <strong>{{ tile.match.day }} {{ months[tile.match.month - 1] }}</strong>.
+		</p>
+	{% elseif status == 'ambiguous' %}
+		<p class='import-tile-note'>Close to a stored holiday - the same one?</p>
+		<ul class='import-alternatives'>
+			{% for alternative in tile.alternatives %}
+				{% set stored = alternative.candidate %}
+				<li>
+					<div class='import-alternative-main'>
+						<a class='translation-link' href='{{ path('admin_holiday_detail', {kind: stored.kind, id: stored.metadataId}) }}'
+						   target='_blank' rel='noopener'>{{ stored.name }}</a>
+						<span class='import-muted'>
+							{% if stored.kind == 'fixed' %}{{ stored.day }} {{ months[stored.month - 1] }}{% else %}floating{% endif %}
+							&middot; {{ (alternative.score * 100)|round }}%
+						</span>
+					</div>
+					<button type='button' class='btn btn-sm btn-outline-light' data-import-action='link'
+					        data-kind='{{ stored.kind }}' data-metadata-id='{{ stored.metadataId }}'>
+						This is it
+					</button>
+				</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+
+	{% if tile.verification %}
+		{% set check = tile.verification %}
+		{% set existsLabels = {yes: 'Exists', no: 'Looks invented', unclear: 'Unclear'} %}
+		{% set kindLabels = {authority: 'official', media: 'media', encyclopedia: 'encyclopedia', calendar_blog: 'calendar blog', other: 'other'} %}
+		<section class='import-check'>
+			<div class='import-check-head'>
+				<span class='import-badge import-exists-{{ check.exists }}'>{{ existsLabels[check.exists] ?? check.exists }}</span>
+				<span class='import-badge import-confidence-{{ check.confidence }}'>{{ check.confidence }} confidence</span>
+				{% if check.date %}
+					<span class='import-muted'>sources say {{ check.date }}</span>
+				{% endif %}
+				{% if tile.verifiedAt %}
+					<span class='import-muted ms-auto' title='Checked {{ tile.verifiedAt|date('Y-m-d H:i') }}'>{{ tile.verifiedAt|date('Y-m-d') }}</span>
+				{% endif %}
+			</div>
+			{% if check.origin %}
+				<p class='import-check-origin'>{{ check.origin }}</p>
+			{% endif %}
+			{% if check.summary %}
+				<p class='import-check-summary'>{{ check.summary }}</p>
+			{% endif %}
+			{% if check.date_note %}
+				<p class='import-check-summary import-muted'>{{ check.date_note }}</p>
+			{% endif %}
+			{% if check.sources is not empty %}
+				<ul class='import-sources'>
+					{% for source in check.sources %}
+						<li>
+							<a href='{{ source.url }}' target='_blank' rel='noopener noreferrer'
+							   title='{{ source.url|e('html_attr') }}'>{{ (source.url|split('/'))[2] ?? source.url }}</a>
+							<span class='import-source-kind'>{{ kindLabels[source.kind] ?? source.kind }}</span>
+							{% if not source.searched|default(false) %}
+								<span class='import-source-unconfirmed'
+								      title='Named by the model, but not among the pages its web search returned'>unconfirmed</span>
+							{% endif %}
+						</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		</section>
+	{% endif %}
+
+	<footer class='import-tile-actions'>
+		<button type='button' class='btn btn-sm btn-outline-info' data-import-action='verify'
+		        title='Search the web for this holiday (takes up to a few minutes)'>
+			<i class='bi bi-search me-1'></i>{{ tile.verification ? 'Re-check' : 'Check' }}
+		</button>
+		{% if status == 'date_mismatch' %}
+			{% if tile.match %}
+				<a class='btn btn-sm btn-outline-light'
+				   href='{{ path('admin_holiday_detail', {kind: tile.match.kind, id: tile.match.metadataId}) }}'
+				   target='_blank' rel='noopener'>Open holiday</a>
+			{% endif %}
+			<button type='button' class='btn btn-sm btn-outline-secondary' data-import-action='ignore'
+			        title='Keep the stored date. A date no source has given yet still shows up again.'>
+				Ignore
+			</button>
+		{% else %}
+			<div class='btn-group'>
+				<a class='btn btn-sm btn-success' href='{{ path('admin_holiday_new', tile.addQuery) }}'
+				   target='_blank' rel='noopener'>
+					<i class='bi bi-plus-lg me-1'></i>{{ status == 'ambiguous' ? 'Add as new' : 'Add' }}
+				</a>
+				<a class='btn btn-sm btn-outline-success' href='{{ path('admin_holiday_new', tile.addFloatingQuery) }}'
+				   target='_blank' rel='noopener' title='Add as a floating holiday'>floating</a>
+			</div>
+			<button type='button' class='btn btn-sm btn-outline-danger' data-import-action='reject'>
+				<i class='bi bi-slash-circle me-1'></i>Reject
+			</button>
+		{% endif %}
+	</footer>
+</article>

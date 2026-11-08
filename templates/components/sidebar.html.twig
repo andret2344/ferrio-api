@@ -1,7 +1,7 @@
 {% set nav = admin_nav() %}
 {% set route = app.request.attributes.get('_route') %}
 {% set routeKind = app.request.attributes.get('kind') %}
-{% set holidaysActive = route in ['admin_create', 'admin_create_month', 'admin_floating'] %}
+{% set holidaysActive = route in ['admin_create', 'admin_create_month', 'admin_floating', 'admin_import', 'admin_import_blacklist'] %}
 {# "Missing translations" is no longer a page of its own — it lives inside Holiday stats, and the
    per-language drill-down (admin_missing) belongs to that entry. #}
 {% set holidayStatsActive = route in ['admin_stats_holidays', 'admin_missing'] %}
@@ -105,6 +105,20 @@
 				<i class='bi bi-calendar2-range sidebar-subitem-icon'></i>
 				<span class='sidebar-label'>Floating</span>
 				<span class='sidebar-badge'>{{ nav.floatingCount | number_format(0, '.', ' ') }}</span>
+			</a>
+			{# No badge: counting the open tiles means matching each against every stored name, too
+			   heavy for a sidebar rendered on every admin page. #}
+			<a href='{{ path('admin_import') }}'
+			   class='sidebar-subitem no-a {{ route == 'admin_import' ? 'sidebar-item-active' : '' }}'
+			   title='Import a holiday list'>
+				<i class='bi bi-clipboard-plus sidebar-subitem-icon'></i>
+				<span class='sidebar-label'>Import</span>
+			</a>
+			<a href='{{ path('admin_import_blacklist') }}'
+			   class='sidebar-subitem no-a {{ route == 'admin_import_blacklist' ? 'sidebar-item-active' : '' }}'
+			   title='Rejected holidays'>
+				<i class='bi bi-slash-square sidebar-subitem-icon'></i>
+				<span class='sidebar-label'>Blacklist</span>
 			</a>
 		</div>
 		<hr class='sidebar-divider'>

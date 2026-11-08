@@ -55,6 +55,7 @@ class AdminApiController extends AbstractController
 			$sourceDescription = (string)$sourceDescription;
 		}
 		$sourceAiGenerated = !empty($source['ai_generated']);
+		$sourceUrl = trim((string)($source['url'] ?? ''));
 
 		$polish = $this->entityManager->getRepository(Language::class)
 			->findOneBy(['code' => Language::DEFAULT_CODE]);
@@ -106,8 +107,8 @@ class AdminApiController extends AbstractController
 		$this->entityManager->persist($metadata);
 
 		$polishHoliday = $kind === 'fixed'
-			? new FixedHoliday($polish, $metadata, $sourceName, $sourceDescription, '')
-			: new FloatingHoliday($polish, $metadata, $sourceName, $sourceDescription, '');
+			? new FixedHoliday($polish, $metadata, $sourceName, $sourceDescription, $sourceUrl)
+			: new FloatingHoliday($polish, $metadata, $sourceName, $sourceDescription, $sourceUrl);
 		$polishHoliday->aiGenerated = $sourceAiGenerated;
 		$this->entityManager->persist($polishHoliday);
 
@@ -136,12 +137,13 @@ class AdminApiController extends AbstractController
 			if ($description !== null) {
 				$description = (string)$description;
 			}
+			$url = trim((string)($entry['url'] ?? ''));
 			if ($name === '' && (string)$description === '') {
 				continue;
 			}
 			$holiday = $kind === 'fixed'
-				? new FixedHoliday($language, $metadata, $name, $description, '')
-				: new FloatingHoliday($language, $metadata, $name, $description, '');
+				? new FixedHoliday($language, $metadata, $name, $description, $url)
+				: new FloatingHoliday($language, $metadata, $name, $description, $url);
 			$holiday->aiGenerated = !empty($entry['ai_generated']);
 			$this->entityManager->persist($holiday);
 		}
@@ -196,6 +198,7 @@ class AdminApiController extends AbstractController
 			$sourceDescription = (string)$sourceDescription;
 		}
 		$sourceAiGenerated = !empty($source['ai_generated']);
+		$sourceUrl = trim((string)($source['url'] ?? ''));
 
 		$polish = $languageRepo->findOneBy(['code' => Language::DEFAULT_CODE]);
 		if ($polish === null) {
@@ -204,11 +207,12 @@ class AdminApiController extends AbstractController
 		$polishHoliday = $holidayRepo->findOneBy(['metadata' => $id, 'language' => Language::DEFAULT_CODE]);
 		if ($polishHoliday === null) {
 			$polishHoliday = $kind === 'fixed'
-				? new FixedHoliday($polish, $metadata, $sourceName, $sourceDescription, '')
-				: new FloatingHoliday($polish, $metadata, $sourceName, $sourceDescription, '');
+				? new FixedHoliday($polish, $metadata, $sourceName, $sourceDescription, $sourceUrl)
+				: new FloatingHoliday($polish, $metadata, $sourceName, $sourceDescription, $sourceUrl);
 		} else {
 			$polishHoliday->name = $sourceName;
 			$polishHoliday->description = $sourceDescription;
+			$polishHoliday->url = $sourceUrl;
 		}
 		$polishHoliday->aiGenerated = $sourceAiGenerated;
 		$this->entityManager->persist($polishHoliday);
@@ -283,6 +287,7 @@ class AdminApiController extends AbstractController
 			if ($description !== null) {
 				$description = (string)$description;
 			}
+			$url = trim((string)($entry['url'] ?? ''));
 
 			$holiday = $holidayRepo->findOneBy(['metadata' => $id, 'language' => $code]);
 			if ($name === '' && (string)$description === '') {
@@ -293,11 +298,12 @@ class AdminApiController extends AbstractController
 			}
 			if ($holiday === null) {
 				$holiday = $kind === 'fixed'
-					? new FixedHoliday($language, $metadata, $name, $description, '')
-					: new FloatingHoliday($language, $metadata, $name, $description, '');
+					? new FixedHoliday($language, $metadata, $name, $description, $url)
+					: new FloatingHoliday($language, $metadata, $name, $description, $url);
 			} else {
 				$holiday->name = $name;
 				$holiday->description = $description;
+				$holiday->url = $url;
 			}
 			$holiday->aiGenerated = !empty($entry['ai_generated']);
 			$this->entityManager->persist($holiday);

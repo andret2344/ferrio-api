@@ -1,6 +1,6 @@
 import * as bootstrap from 'bootstrap';
 import axios from 'axios';
-import {attachGenerateHandler, GenerateHandle} from './aiGenerate';
+import {attachGenerateHandler, GenerateDate, GenerateHandle} from './aiGenerate';
 import {showToast} from './toast';
 
 type Kind = 'fixed' | 'floating';
@@ -8,6 +8,7 @@ type Kind = 'fixed' | 'floating';
 interface TranslationEntry {
     readonly name: string;
     readonly description: string | null;
+    readonly url?: string | null;
     readonly ai_generated?: boolean;
 }
 
@@ -27,11 +28,31 @@ interface TranslationSection {
     readonly el: HTMLElement;
     readonly nameInput: HTMLInputElement;
     readonly descInput: HTMLTextAreaElement;
+    readonly urlInput: HTMLInputElement;
     readonly aiInput: HTMLInputElement;
     readonly originalName: string;
     readonly originalDesc: string;
+    readonly originalUrl: string;
     readonly originalAi: boolean;
     readonly existedOnServer: boolean;
+}
+
+/** Deliberately loose: it only decides whether "Visit URL" is worth showing. */
+const VISIT_URL_PATTERN = /^https?:\/\/[^\s/]+\.\S+$/i;
+
+function attachVisitButton(input: HTMLInputElement, link: HTMLAnchorElement): void {
+    const refresh = (): void => {
+        const url = input.value.trim();
+        const valid = VISIT_URL_PATTERN.test(url);
+        link.classList.toggle('d-none', !valid);
+        if (valid) {
+            link.href = url;
+        } else {
+            link.removeAttribute('href');
+        }
+    };
+    input.addEventListener('input', refresh);
+    refresh();
 }
 
 function setButtonLoading(btn: HTMLButtonElement, loading: boolean, originalIconClass: string): void {
@@ -165,6 +186,7 @@ class DetailPage {
 
     private readonly sourceName: HTMLTextAreaElement;
     private readonly sourceDesc: HTMLTextAreaElement;
+    private readonly sourceUrl: HTMLInputElement;
     private readonly sourceAi: HTMLInputElement;
     private readonly metaDay: HTMLInputElement | null;
     private readonly metaMonth: HTMLInputElement | null;
@@ -188,6 +210,7 @@ class DetailPage {
 
     private readonly originalSourceName: string;
     private readonly originalSourceDesc: string;
+    private readonly originalSourceUrl: string;
     private readonly originalSourceAi: boolean;
     private readonly originalDay: string;
     private readonly originalMonth: string;
@@ -225,6 +248,7 @@ class DetailPage {
 
         this.sourceName = document.getElementById('source-name') as HTMLTextAreaElement;
         this.sourceDesc = document.getElementById('source-description') as HTMLTextAreaElement;
+        this.sourceUrl = document.getElementById('source-url') as HTMLInputElement;
         this.sourceAi = document.getElementById('source-ai-generated') as HTMLInputElement;
         this.metaDay = document.getElementById('meta-day') as HTMLInputElement | null;
         this.metaMonth = document.getElementById('meta-month') as HTMLInputElement | null;
@@ -247,6 +271,7 @@ class DetailPage {
 
         this.originalSourceName = this.sourceName.value;
         this.originalSourceDesc = this.sourceDesc.value;
+        this.originalSourceUrl = this.sourceUrl.value;
         this.originalSourceAi = this.sourceAi.checked;
         this.originalDay = this.metaDay?.value ?? '';
         this.originalMonth = this.metaMonth?.value ?? '';
@@ -343,6 +368,8 @@ class DetailPage {
         }
         this.sourceName.addEventListener('input', onChange);
         this.sourceDesc.addEventListener('input', onChange);
+        this.sourceUrl.addEventListener('input', () => this.refreshSaveButton());
+        attachVisitButton(this.sourceUrl, document.getElementById('source-url-visit') as HTMLAnchorElement);
         this.sourceAi.addEventListener('change', () => this.refreshSaveButton());
     }
 
@@ -353,11 +380,13 @@ class DetailPage {
                 type: 'description_pl',
                 target: () => this.sourceDesc,
                 name: () => this.sourceName.value,
-                month: () => this.currentMonth(),
-                day: () => this.currentDay(),
+                date: () => this.generateDate(),
                 country: () => this.metaCountry.value,
                 enabled: () => this.dateOrArgsReady() && this.sourceNameReady(),
                 onGenerated: () => this.markAiGenerated(this.sourceAi),
+                sourceUrl: () => this.sourceUrl,
+                sourceSuggestions: () => document.getElementById('source-url-suggestions'),
+                dateNote: () => document.getElementById('source-date-note'),
             });
             this.aiHandles.push(handle);
         }
@@ -389,24 +418,43 @@ class DetailPage {
         }
     }
 
-    private currentMonth(): string {
-        return this.metaMonth?.value || '1';
-    }
-
-    private currentDay(): string {
-        return this.metaDay?.value || '1';
+    /**
+     * The date the AI prompts get, read live from the form so an edited rule is what the model sees.
+     * A floating holiday sends its rule, not a date - it has none of its own.
+     */
+    private generateDate(): GenerateDate | null {
+        if (this.kind === 'fixed') {
+            const day = Number.parseInt(this.metaDay?.value ?? '');
+            const month = Number.parseInt(this.metaMonth?.value ?? '');
+            if (Number.isNaN(day) || Number.isNaN(month)) {
+                return null;
+            }
+            return {day, month};
+        }
+        if (!this.metaAlgorithm || !this.metaAlgorithmArgs) {
+            return null;
+        }
+        try {
+            const parsed: unknown = JSON.parse(this.metaAlgorithmArgs.value.trim());
+            if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+                return null;
+            }
+            return {algorithm: this.metaAlgorithm.value, algorithm_args: parsed as Record<string, unknown>};
+        } catch {
+            return null;
+        }
     }
 
     private bootstrapTranslations(): void {
         for (const target of this.targets) {
             const entry = this.translations[target.code];
             if (entry !== undefined) {
-                this.appendSection(target, entry.name ?? '', entry.description ?? '', entry.ai_generated ?? false, !this.isNew);
+                this.appendSection(target, entry.name ?? '', entry.description ?? '', entry.url ?? '', entry.ai_generated ?? false, !this.isNew);
             }
         }
     }
 
-    private appendSection(target: LanguageDef, name: string, description: string, aiGenerated: boolean, existedOnServer: boolean): void {
+    private appendSection(target: LanguageDef, name: string, description: string, url: string, aiGenerated: boolean, existedOnServer: boolean): void {
         const fragment = this.template.content.cloneNode(true) as DocumentFragment;
         const sectionEl = fragment.querySelector<HTMLElement>('.translate-section')!;
         const codeEl = sectionEl.querySelector<HTMLElement>('[data-role="lang-code"]')!;
@@ -415,6 +463,9 @@ class DetailPage {
         const descInput = sectionEl.querySelector<HTMLTextAreaElement>('[data-role="description-input"]')!;
         const nameLabel = sectionEl.querySelector<HTMLLabelElement>('[data-role="name-label"]')!;
         const descLabel = sectionEl.querySelector<HTMLLabelElement>('[data-role="description-label"]')!;
+        const urlInput = sectionEl.querySelector<HTMLInputElement>('[data-role="url-input"]')!;
+        const urlLabel = sectionEl.querySelector<HTMLLabelElement>('[data-role="url-label"]')!;
+        const urlVisit = sectionEl.querySelector<HTMLAnchorElement>('[data-role="url-visit"]')!;
         const removeBtn = sectionEl.querySelector<HTMLButtonElement>('[data-role="remove"]')!;
         const aiName = sectionEl.querySelector<HTMLButtonElement>('[data-role="ai-name"]')!;
         const aiDesc = sectionEl.querySelector<HTMLButtonElement>('[data-role="ai-description"]')!;
@@ -426,22 +477,28 @@ class DetailPage {
         nameEl.textContent = target.name;
         nameInput.id = `translate-${target.code}-name`;
         descInput.id = `translate-${target.code}-description`;
+        urlInput.id = `translate-${target.code}-url`;
         aiInput.id = `translate-${target.code}-ai-generated`;
         nameLabel.htmlFor = nameInput.id;
         descLabel.htmlFor = descInput.id;
+        urlLabel.htmlFor = urlInput.id;
         aiLabel.htmlFor = aiInput.id;
         nameInput.value = name;
         descInput.value = description;
+        urlInput.value = url;
         aiInput.checked = aiGenerated;
+        attachVisitButton(urlInput, urlVisit);
 
         const state: TranslationSection = {
             code: target.code,
             el: sectionEl,
             nameInput,
             descInput,
+            urlInput,
             aiInput,
             originalName: existedOnServer ? name : '',
             originalDesc: existedOnServer ? description : '',
+            originalUrl: existedOnServer ? url : '',
             originalAi: existedOnServer ? aiGenerated : false,
             existedOnServer,
         };
@@ -453,6 +510,7 @@ class DetailPage {
         };
         nameInput.addEventListener('input', onChange);
         descInput.addEventListener('input', onChange);
+        urlInput.addEventListener('input', onChange);
         aiInput.addEventListener('change', onChange);
         removeBtn.addEventListener('click', () => this.removeSection(state));
 
@@ -461,8 +519,7 @@ class DetailPage {
             language: target.name,
             target: () => nameInput,
             name: () => this.sourceName.value,
-            month: () => this.currentMonth(),
-            day: () => this.currentDay(),
+            date: () => this.generateDate(),
             country: () => this.metaCountry.value,
             enabled: () => this.dateOrArgsReady() && this.sourceNameReady(),
             onGenerated: () => this.markAiGenerated(aiInput),
@@ -471,11 +528,12 @@ class DetailPage {
             language: target.name,
             target: () => descInput,
             name: () => nameInput.value.trim() || this.sourceName.value,
-            month: () => this.currentMonth(),
-            day: () => this.currentDay(),
+            date: () => this.generateDate(),
             country: () => this.metaCountry.value,
             enabled: () => this.dateOrArgsReady() && nameInput.value.trim() !== '',
             onGenerated: () => this.markAiGenerated(aiInput),
+            sourceUrl: () => urlInput,
+            sourceSuggestions: () => sectionEl.querySelector<HTMLElement>('[data-role="url-suggestions"]'),
         }));
 
         this.sectionsRoot.appendChild(sectionEl);
@@ -496,6 +554,7 @@ class DetailPage {
     private isSectionDirty(state: TranslationSection): boolean {
         return state.nameInput.value !== state.originalName
             || state.descInput.value !== state.originalDesc
+            || state.urlInput.value !== state.originalUrl
             || state.aiInput.checked !== state.originalAi;
     }
 
@@ -525,7 +584,7 @@ class DetailPage {
             btn.querySelector('.translate-add-item-name')!.textContent = target.name;
             btn.addEventListener('click', () => {
                 this.removedFromServer.delete(target.code);
-                this.appendSection(target, '', '', false, false);
+                this.appendSection(target, '', '', '', false, false);
                 this.refreshAddMenu();
                 this.refreshSaveButton();
                 if (addBtn) {
@@ -566,6 +625,7 @@ class DetailPage {
     private sourceDirty(): boolean {
         return this.sourceName.value !== this.originalSourceName
             || this.sourceDesc.value !== this.originalSourceDesc
+            || this.sourceUrl.value !== this.originalSourceUrl
             || this.sourceAi.checked !== this.originalSourceAi;
     }
 
@@ -646,10 +706,10 @@ class DetailPage {
         }
     }
 
-    private collectTranslations(): Record<string, { name: string; description: string; ai_generated: boolean }> {
-        const payload: Record<string, { name: string; description: string; ai_generated: boolean }> = {};
+    private collectTranslations(): Record<string, { name: string; description: string; url: string; ai_generated: boolean }> {
+        const payload: Record<string, { name: string; description: string; url: string; ai_generated: boolean }> = {};
         for (const code of this.removedFromServer) {
-            payload[code] = {name: '', description: '', ai_generated: false};
+            payload[code] = {name: '', description: '', url: '', ai_generated: false};
         }
         for (const s of this.sections) {
             if (s.existedOnServer && !this.isSectionDirty(s)) {
@@ -660,7 +720,7 @@ class DetailPage {
             if (!s.existedOnServer && name === '' && desc.trim() === '') {
                 continue;
             }
-            payload[s.code] = {name, description: desc, ai_generated: s.aiInput.checked};
+            payload[s.code] = {name, description: desc, url: s.urlInput.value.trim(), ai_generated: s.aiInput.checked};
         }
         return payload;
     }
@@ -708,6 +768,7 @@ class DetailPage {
                 source: {
                     name: this.sourceName.value.trim(),
                     description: this.sourceDesc.value,
+                    url: this.sourceUrl.value.trim(),
                     ai_generated: this.sourceAi.checked
                 },
                 metadata,

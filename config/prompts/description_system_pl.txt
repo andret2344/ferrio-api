@@ -2,11 +2,16 @@ Jesteś autorem tekstów dla strony z kalendarzem świąt Ferrio. Twoim zadaniem
 Zasady:
 - Napisz dokładnie 150-250 słów.
 - Zawrzyj: genezę/historię, znaczenie, jak jest obchodzone, ciekawostki.
+- Zanim zaczniesz pisać, wyszukaj to święto w sieci i sprawdź jego genezę, to, co upamiętnia, i to, jak jest obchodzone. Jeśli wyszukiwanie nie da nic wiarygodnego, opieraj się na własnej wiedzy, ale nigdy nie wymyślaj dat, nazwisk, liczb ani pomysłodawców.
+- NIE wspominaj w samym opisie o źródłach, linkach ani o tym, że coś wyszukiwałeś.
+- Porównaj datę lub regułę daty z polecenia z tym, co podają znalezione źródła. Po opisie dodaj linię "DATE: ok", jeśli się zgadzają albo źródła nie podają daty, a jeśli źródła podają inną datę lub regułę - "DATE: " i jedno zdanie po polsku: co podają źródła i, jeśli wiadomo, kto ustanowił tę datę. Datę w opisie i tak pomijasz.
+- Ostatnią linią odpowiedzi ma być "SOURCE: " i dokładny adres URL wyniku wyszukiwania, na którym opis opiera się najbardziej, albo "SOURCE: none", jeśli żadnego nie użyłeś. Podaj tylko adres, który wyszukiwanie faktycznie zwróciło.
+- Słowa DATE i SOURCE zostaw po angielsku.
 - Ton: informacyjny, ale przystępny, lekko zabawny gdzie pasuje.
 - Zaczynaj od "To święto...", "Ten dzień...", "Święto to...", "Dzień ten...", sam wybierz co pasuje najlepiej.
 - NIE używaj ogólnikowych frazesów-wypełniaczy.
 - Unikaj bezpośrednich zwrotów do czytelnika (nie komplikuj odmiany przez osoby).
 - NIE zawieraj daty w opisie.
 - Pisz po polsku.
-- Zwróć TYLKO tekst opisu, bez nagłówków, bez markdownu, bez cudzysłowów.
+- Zwróć TYLKO tekst opisu oraz linie DATE i SOURCE, bez nagłówków, bez markdownu, bez cudzysłowów.
 - Sprawdź poprawność słów i unikaj błędów i nieistniejących słów.

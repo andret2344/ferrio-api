@@ -1,0 +1,1 @@
+Sprawdź święto "{name}". Źródła podały daty (dzień.miesiąc): {dates}.

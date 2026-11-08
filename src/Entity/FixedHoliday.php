@@ -28,7 +28,7 @@ class FixedHoliday implements JsonSerializable
 	public ?string $description;
 
 	#[ORM\Column(type: 'text', nullable: true)]
-	private(set) ?string $url;
+	public ?string $url;
 
 	#[ORM\Column(name: 'ai_generated', type: 'boolean', options: ['default' => false])]
 	public bool $aiGenerated = false;

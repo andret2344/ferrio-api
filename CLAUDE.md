@@ -130,6 +130,17 @@ versions present in the window, so a future `v4` brings its own doughnut without
 it `paths_by_version`, each version's endpoints already sorted busiest-first). Both `?days=` and `?group=` re-render the
 page, but a doughnut has no time axis — only `?days=` changes what a doughnut shows.
 
+The traffic line plots **whole periods only**. Data starts at the later of the window's lower edge and the first
+`api_hit` row ever (`MIN(bucket_hour)`, i.e. when counting began); the period that start falls inside is dropped
+unless it begins exactly there, and so is the period still in progress at "now" - including the current hour. With
+data from 2026-05-18 07:00 that drops May by month, the week of May 18 by week, May 18 by day, and nothing at the
+start by hour. Without it both ends of the line plot as false dips. The trimming touches only the period-keyed outputs
+of `ApiHitStats::aggregate()` (`periods`, `cells`, `version_cells`, `period_totals`); the doughnut totals still
+count every row. A grouping that fits no whole period into the window (`ApiHitGrouping::hasCompletePeriod`, e.g. by
+week over the last day) is a disabled `<option>`, and a request for one steps down to the coarsest finer grouping
+that fits (`ApiHitGrouping::orFinerWithin`) - the form keeps `?group=` when only `?days=` changes, so "by month over
+the last 7 days" is reachable without picking it.
+
 Every doughnut on the page is built by the shared `AdminStatsController::doughnut()`, which prints each slice's hit
 count into that slice's label (`/v3/holidays (512)`) and puts the percentage share in a hover-only `note`. That is what
 lets the page skip a table: the numbers are still readable as text, in the legend. The per-endpoint doughnuts cap at
@@ -283,7 +294,8 @@ Changing a password does **not** revoke existing sessions - they are server-side
 
 The first admin is seeded by `Version20260721120000` from the retired `HTTP_BASIC_AUTH_USERNAME` /
 `HTTP_BASIC_AUTH_PASSWORD` env vars (e-mail placeholder `admin@null.com`); it skips the insert when they are unset.
-Those env vars can be dropped once the migration has run everywhere.
+The migration has run everywhere and the env vars are gone - the Docker `secrets.env` never carried them -
+so the migration stays only as history; do not reintroduce them.
 
 The topbar renders a Gravatar identicon (keyed by a SHA-256 of the lowercased e-mail, mirroring `FirebaseUserLookup`'s
 avatar rule) opening a dropdown with the username, e-mail and Logout - only when `app.user` is set.
@@ -375,11 +387,31 @@ before saving. Conversion is non-destructive: it copies into a brand-new metadat
 the original untouched.
 
 `GenerateDescriptionController` (`POST /admin/api/generate`) calls the Anthropic API (Claude Sonnet 4.6) to generate
-holiday content. It accepts `{day, month, name, type?, language?}` JSON and returns `{result}` (or `{error}`). `type`
+holiday content. It accepts `{name, type?, language?}` plus the date - `{day, month}` for a fixed holiday,
+`{algorithm, algorithm_args}` for a floating one - and returns `{result, sources, date_note}` (or `{error}`). A floating
+holiday has no date of its own (the page used to send `1.01` for all of them), so `describeDate()` gives the prompts
+its rule as written (`Algorithm::label()` plus the JSON args) and the date `AlgorithmResolver` computes for the
+current year, or a note that the rule gives none. The Polish description prompt also asks for a `DATE: ok | <note>`
+line comparing that date or rule with the sources; a note comes back as `date_note` and is shown under the
+description (`.ai-date-note`) - **never applied**: blogs disagree, the date stays the admin's call. `sources` (at most `MAX_SOURCES`, each `{url, title, recommended}`) are pages the web search actually
+returned: first the one the model names on the `SOURCE: <url>` last line the description prompts ask for -
+`recommended`, and only when the search really returned it (`WebSearchResults::find`, which tolerates a trailing
+slash) - then other results in search order. The `SOURCE` and `DATE` lines are always cut off the text, in either
+order (`splitControlLines`). **Do not go back to
+citations:** `web_search_20260209` filters its results through code execution and the answer written from that output
+carries no citations at all, so the result blocks (`WebSearchResults::collect`, accumulated across `pause_turn`
+continuations) are the only record of what the search found. `sources` is empty for `type: name` - the link belongs to
+the description, not to a translated name. `type`
 selects the prompt set: `description_pl` (default, Polish description), `description` (English-style description), or
 `name` (translates a Polish holiday name into the target `language`). The system prompts enforce Ferrio's copywriting
 style (150-250 words, informative tone) and live in `config/prompts/`. The API key is configured via `ANTHROPIC_API_KEY`
-env var. The detail page's Source description and per-translation sections each have AI sparkle buttons. The shared
+env var. Every request carries Anthropic's server-side web search (`web_search_20260209`, `max_uses` 3) and the system
+prompts tell Claude to look the holiday up before writing, so descriptions and translated names rest on what the web
+says rather than on recall; web search must be enabled for the organization in the Claude Console, or the request
+fails. That has three consequences in the code: the answer is the run of `text` blocks after the last search (earlier
+text is the model announcing a search, and the answer may arrive in several blocks); a `pause_turn` is resumed
+up to `MAX_CONTINUATIONS` times by sending the paused content back; and the HTTP timeout is raised to 180 s, because a
+non-streaming request with searches stays silent far longer than the client's 60 s default. The detail page's Source description and per-translation sections each have AI sparkle buttons. The shared
 helper lives in `assets/aiGenerate.ts` — `attachGenerateHandler` accepts an optional `enabled: () => boolean`
 predicate and returns a `GenerateHandle` with a `refresh()` that re-evaluates `disabled` (also called after each
 generation finishes, instead of unconditionally re-enabling). The detail page wires the following predicates and calls
@@ -392,6 +424,15 @@ generation finishes, instead of unconditionally re-enabling). The detail page wi
 - **Description buttons** (Source PL and per-language) additionally require the name in the SAME language to be
   present — descriptions are generated about a specific holiday name, and the prompts expect a name in the target
   language.
+
+The Source section and every translation also carry a **Source URL** field, the holiday row's existing `url` column -
+already served publicly by v2 and v3, so it needs no API change. The page prefills it from the DB. A description AI
+button **never writes into it**: it lists the returned `sources` under the field (`.url-suggestions`, built in
+`aiGenerate.ts` with `textContent`, never markup), the model's pick marked "AI pick", each with Visit and Use. Only Use
+fills the field. A page the model names is no proof the text rests on it, which is why the admin opens and picks it.
+A "Visit URL" link next to the field appears only while the value matches a deliberately loose `https?://`
+pattern (`VISIT_URL_PATTERN` in `holidayDetail.ts`). Rows the admin creates store an empty URL as `''`, as they always
+have.
 
 ### Holiday import diff (CLI)
 
@@ -431,6 +472,77 @@ carry typos, duplicates and invented holidays, so the decision to store a row is
 
 `--all` also lists the exact matches; `--json` prints every row (snake_case keys) instead of the report.
 
+### Holiday import page (Admin UI)
+
+The panel counterpart of `app:holiday:diff`, and the one meant for real use: holidays are edited on production only,
+so the comparison has to run against the production database, which the CLI on a dev machine does not have.
+`AdminImportController` serves `/admin/import` (route `admin_import`, sidebar Holidays → Import) and
+`/admin/import/blacklist` (`admin_import_blacklist`). The admin pastes text (no URL fetching, on purpose: a
+server-side fetch drags in page chrome, fails behind Cloudflare and would need SSRF guards) and gets **tiles**
+that persist in `holiday_import_candidate` (`HolidayImportCandidate`) until settled.
+
+`HolidayImportService` owns the logic, reusing `HolidayTextParser`, `HolidayDiffService` and `HolidayNameMatcher`:
+
+- Every "same holiday?" check - stored holiday, existing tile, blacklist entry - is the matcher at
+  `MATCH_THRESHOLD`, so a reworded or re-declined name lands on the existing tile instead of a new one. Never
+  compare names as exact text here.
+- A tile keeps every date the sources gave (`dates`, `"day.month"` => number of pastes); a date counts once per
+  paste. Disagreeing dates stay on one tile, because the disagreement is the information.
+- A tile's status (`ImportCandidateStatus`: missing / ambiguous / date_mismatch / resolved) is **computed on every
+  render, never stored**. That is what makes a tile vanish once its holiday exists, whichever page added it;
+  "Add" just opens `admin_holiday_new` prefilled via `?name=&day=&month=&url=` (in a new tab; the page re-fetches
+  that tile on return via `GET /admin/api/import/{id}`). A paste deletes resolved rows unless they hold a decision.
+- Decisions: "This is it" links an ambiguous tile to a stored holiday (`linked_kind` / `linked_metadata_id`, an
+  alias remembered across pastes); "Ignore" on a date conflict stores the *pair* `stored>source`
+  (`ignored_date_pairs`), so a third date or an edited stored date brings the tile back; "Remove" deletes the row
+  (it returns on the next paste mentioning it); "Reject" moves it to `holiday_blacklist`
+  (`HolidayBlacklistEntry`, `BlacklistReason`, comment required only for `other`). Blacklisted names are skipped
+  on later pastes and reported in a collapsed "Skipped N previously rejected" list - never dropped silently.
+
+"Check" on a tile calls `HolidayVerifier`: Claude Opus 5.5 with server-side web search (`max_uses` 5) and
+`fallbacks: "default"` (beta `server-side-fallback-2026-07-01`), one holiday per request - a whole list would not
+fit in one HTTP request. The prompt (`config/prompts/verify_system.txt`) grades confidence by the **origin and
+independence** of the sources, not their count, because holiday blogs copy one another. Each source in the stored
+verdict is flagged `searched` when the web search really returned that page (`WebSearchResults`, same reason as in
+the generator: the answer carries no citations); the others - URLs the model wrote down without finding them - render
+as "unconfirmed". The verifier is injected into the `verify` action only, so the other pages never build an HTTP
+client. Tile actions answer `{html}` - the tile re-rendered from `admin/import/_tile.html.twig`, or `null` when it
+is gone - and `assets/holidayImport.ts` only swaps it in.
+
+### Deploy
+
+Production is a Docker Compose stack (`Dockerfile`, `compose.yaml`): php-fpm and nginx images from GHCR
+behind host Apache, MySQL on the host reached through its unix socket. `DEPLOY.md` is the deploy guide,
+`docs/database-migrations.md` the procedure for every schema change (with a catalog of changes and their
+expand/contract phases), `docs/docker-cutover.md` the one-time switch from mod_php, which doubles as the
+server setup. CI publishes releases but never deploys: on every push to `main` the `image` job `needs:`
+every check, builds both images tagged with the commit SHA and prints the deploy command on the run's
+summary page. GitHub holds no key to the server - the deploy is
+`sudo /opt/docker-images/ferrio-api/deploy.sh <sha>` run by hand there. Every Docker stack on the VPS lives
+under `/opt/docker-images/<stack>`. `docker/deploy.sh` accepts only a full commit SHA, migrates from the new image while
+the old release serves (with a `mysqldump` first when anything is pending) and only then runs `up -d`.
+
+Consequences for code:
+
+- **Migrations must be additive** - the old release runs on the new schema for a few seconds, and a rollback
+  to an older image never undoes a migration. Destructive changes go expand/contract across two or three deploys - follow
+  `docs/database-migrations.md` and its catalog whenever a mapping changes, and check every `diff` by hand (a
+  renamed property comes out as `DROP` + `ADD`).
+  The `destructive-migrations` job (`.github/scripts/check-destructive-migrations.php`) fails on `DROP` of a
+  table/column, `RENAME`, `CHANGE`, `MODIFY` and `ADD ... NOT NULL` without `DEFAULT` in `up()` of any
+  migration after its `BASELINE`, unless the file carries `// destructive-migration: <reason>`. Keep one
+  table per migration: MySQL DDL is not transactional (hence `transactional: false`).
+- There is no CI job running the migrations on MySQL: the first migration renames tables that predate
+  Doctrine, so they cannot run on an empty database.
+- The image is built `--no-dev`: a package production code uses must be in `require`, never `require-dev`
+  (`symfony/http-client` had to move for this), and `config/packages/` files that only make sense in one
+  environment need a `when@<env>` guard, because the Kernel imports that whole directory in every
+  environment (`services_test.yaml` registers `tests/Fixture/`, absent from the image).
+- `when@prod` in `framework.yaml` trusts `PRIVATE_SUBNETS` as proxies (Apache + nginx in front of php-fpm)
+  and keeps sessions in `var/sessions`, a named volume, so a deploy does not log the admin out. `var/log`
+  is a volume too, for `reports.log`; every other log goes to stderr.
+- The images are public: `.dockerignore` must keep anything secret out of the build context.
+
 ### Testing
 
 - Tests extend `WebTestCase` and use `Liip\TestFixturesBundle` with `DAMA\DoctrineTestBundle` for transactional test
@@ -452,8 +564,10 @@ carry typos, duplicates and invented holidays, so the decision to store a row is
   holds the value can stay camelCase; only the JSON key gets converted (e.g. `'country_code' => $country->isoCode`).
   This convention does NOT apply to public versioned APIs under `/v2`, `/v3` — those keep their existing shape
   for backwards compatibility.
-- Always use CRLF line endings in all files. Every file must also end with a final CRLF (trailing newline) — no
-  exceptions, including JSON, YAML, SCSS, TS, PHP, Twig, and Markdown.
+- LF line endings in every file, each ending with a final newline - `.gitattributes`
+  (`* text=auto eol=lf`) and `.editorconfig` enforce it. CRLF only for `*.bat` / `*.cmd`. Never convert a file
+  to CRLF. The repo used CRLF until 2026-11 and that broke production twice: CI checked files out with CRLF,
+  and a shebang ending in `\r` (`#!/usr/bin/env php\r` in `bin/console`) cannot run on Linux.
 - In titles and headings, only use the plain ASCII hyphen `-` (the key on a normal keyboard). Never use en-dash `–`
   or em-dash `—`.
 - Frontend uses Webpack Encore with TypeScript and Bootstrap 5 / MDB UI Kit. Icons: Bootstrap Icons, Unicons, Font
@@ -467,5 +581,6 @@ carry typos, duplicates and invented holidays, so the decision to store a row is
     - Prefer `element.dataset.foo` over `element.getAttribute('data-foo')` when reading `data-*` attributes.
     - Mark all interface properties `readonly` by default. Interfaces describe shapes that are passed around, not
       mutable state — if a property genuinely needs to be reassigned, model the mutability on a class instead.
-- CI runs on GitHub Actions (`.github/workflows/ci.yml`), executing PHPUnit on PHP 8.5.
+- CI runs on GitHub Actions (`.github/workflows/ci.yml`): PHPUnit on PHP 8.5, the contract-fixture and
+  destructive-migration checks, and - on a push to `main` only - the image build (see "Deploy").
 - Composer is at `C:\Tools\php85-ts\composer.bat` (not on PATH in bash).

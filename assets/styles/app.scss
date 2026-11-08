@@ -2170,6 +2170,96 @@ table.reports-table thead th.sortable {
   margin-top: 10px;
 }
 
+// Date disagreement found by the AI description's web search (assets/aiGenerate.ts)
+.ai-date-note {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: 1px solid #f0b840;
+  border-radius: 10px;
+  color: #f0d090;
+  font-size: 13px;
+
+  i,
+  strong {
+    flex-shrink: 0;
+    color: #f0b840;
+  }
+}
+
+// Source URL suggestions after an AI description (assets/aiGenerate.ts)
+.url-suggestions {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background-color: #0c0c24;
+  border: 1px solid #1a1a3a;
+  border-radius: 10px;
+
+  .url-suggestions-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+    color: #7a7a9a;
+    font-size: 12px;
+
+    .btn-close {
+      font-size: 10px;
+    }
+  }
+
+  .url-suggestion {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+
+    & + .url-suggestion {
+      border-top: 1px solid #1a1a3a;
+    }
+  }
+
+  .url-suggestion-text {
+    display: flex;
+    flex: 1;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .url-suggestion-title {
+    overflow: hidden;
+    color: #c0c0f0;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .url-suggestion-host {
+    flex-shrink: 0;
+    color: #7a7a9a;
+    font-size: 11px;
+  }
+
+  .url-suggestion-badge {
+    flex-shrink: 0;
+    padding: 0 6px;
+    border: 1px solid #f0b840;
+    border-radius: 8px;
+    color: #f0b840;
+    font-size: 11px;
+  }
+
+  .url-suggestion-current {
+    flex-shrink: 0;
+    color: #7a7a9a;
+    font-size: 12px;
+  }
+}
+
 .translate-lang-header {
   display: flex;
   align-items: center;
@@ -3216,5 +3306,296 @@ html.sidebar-collapsed .section-manage-main {
     &:hover {
       background-color: rgba(255, 92, 92, 0.1);
     }
+  }
+}
+
+// Holiday import - paste form, result summary, tiles (templates/admin/import/)
+.import-page {
+  .import-muted {
+    color: #7a7a9a;
+    font-size: 12.5px;
+  }
+
+  .import-paste {
+    background-color: #0c0c24;
+    border: 1px solid #1a1a3a;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+
+    .form-label {
+      color: #c0c0e0;
+      font-size: 13px;
+    }
+  }
+
+  .import-result {
+    background-color: rgba(64, 64, 160, 0.14);
+    border: 1px solid #4040a0;
+    border-radius: 10px;
+    color: #e0e0f0;
+    font-size: 13.5px;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+
+    .import-result-skipped {
+      margin-top: 6px;
+
+      summary {
+        color: #8888b0;
+        cursor: pointer;
+        font-size: 12.5px;
+      }
+
+      ul {
+        margin: 6px 0 0;
+        padding-left: 18px;
+        font-size: 12.5px;
+      }
+    }
+  }
+
+  .import-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    color: #c0c0e0;
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+
+  // Status chips carry their label as text, so the colour is never the only cue.
+  .import-status {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 2px 8px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .import-status-missing {
+    color: #8fd19e;
+    background-color: rgba(40, 167, 69, 0.14);
+    border-color: rgba(40, 167, 69, 0.45);
+  }
+
+  .import-status-ambiguous {
+    color: #f0b840;
+    background-color: rgba(240, 184, 64, 0.12);
+    border-color: rgba(240, 184, 64, 0.45);
+  }
+
+  .import-status-date_mismatch {
+    color: #9ec5fe;
+    background-color: rgba(13, 110, 253, 0.14);
+    border-color: rgba(13, 110, 253, 0.45);
+  }
+
+  .import-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+    align-items: start;
+  }
+
+  .import-tile {
+    background-color: #0c0c24;
+    border: 1px solid #1a1a3a;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: opacity 0.15s;
+
+    &.import-tile-busy {
+      opacity: 0.6;
+    }
+  }
+
+  .import-tile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .import-tile-remove {
+    background: none;
+    border: none;
+    color: #7a7a9a;
+    padding: 2px 4px;
+    line-height: 1;
+
+    &:hover, &:focus-visible {
+      color: #e6e6f6;
+    }
+  }
+
+  .import-tile-name {
+    color: #e6e6f6;
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .import-tile-dates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .import-date {
+    background-color: #12122a;
+    border: 1px solid #22224a;
+    border-radius: 6px;
+    color: #c0c0e0;
+    font-size: 12px;
+    padding: 2px 8px;
+
+    &.import-date-conflict {
+      border-color: rgba(13, 110, 253, 0.6);
+      color: #9ec5fe;
+    }
+
+    .import-date-count {
+      color: #8888b0;
+      margin-left: 2px;
+    }
+  }
+
+  .import-tile-note {
+    color: #c0c0e0;
+    font-size: 12.5px;
+    margin: 0;
+  }
+
+  .import-alternatives {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .import-alternative-main {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+  }
+
+  .import-check {
+    background-color: #0a0a1a;
+    border: 1px solid #22224a;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12.5px;
+    color: #c0c0e0;
+
+    p {
+      margin: 6px 0 0;
+    }
+
+    .import-check-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .import-check-origin {
+      color: #e6e6f6;
+    }
+  }
+
+  .import-badge {
+    border-radius: 999px;
+    border: 1px solid #2a2a4a;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 1px 7px;
+    white-space: nowrap;
+  }
+
+  .import-exists-yes, .import-confidence-high {
+    color: #8fd19e;
+    border-color: rgba(40, 167, 69, 0.45);
+  }
+
+  .import-exists-unclear, .import-confidence-medium {
+    color: #f0b840;
+    border-color: rgba(240, 184, 64, 0.45);
+  }
+
+  .import-exists-no, .import-confidence-low {
+    color: #ff8a96;
+    border-color: rgba(220, 53, 69, 0.5);
+  }
+
+  .import-sources {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+
+    li {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    a {
+      color: #f0b840;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .import-source-kind {
+      color: #7a7a9a;
+      font-size: 11px;
+    }
+
+    .import-source-unconfirmed {
+      color: #ff8a96;
+      font-size: 11px;
+    }
+  }
+
+  .import-tile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .import-unparsed {
+    margin-top: 28px;
+
+    ul {
+      color: #c0c0e0;
+      font-size: 13px;
+      padding-left: 18px;
+    }
+  }
+
+  .import-section-title {
+    color: #e6e6f6;
+    font-size: 14px;
+    font-weight: 600;
   }
 }

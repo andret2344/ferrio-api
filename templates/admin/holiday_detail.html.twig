@@ -136,6 +136,19 @@
 								        title='Generate description with AI'
 								        id='source-description-ai'><i class='bi bi-stars'></i></button>
 							</div>
+							<div class='ai-date-note d-none' id='source-date-note' role='status'></div>
+							<div class='mt-3'>
+								<label class='form-label' for='source-url'>Source URL</label>
+								<div class='d-flex align-items-start gap-2'>
+									<input type='url' id='source-url' class='form-control manage-input' placeholder='https://'
+									       value='{{ source.url|default('') }}'>
+									<a class='btn btn-sm btn-outline-light flex-shrink-0 d-none' id='source-url-visit'
+									   target='_blank' rel='noopener noreferrer'>
+										<i class='bi bi-box-arrow-up-right me-1'></i>Visit URL
+									</a>
+								</div>
+								<div class='url-suggestions d-none' id='source-url-suggestions'></div>
+							</div>
 							<div class='form-check form-switch mt-3'>
 								<input class='form-check-input' type='checkbox' id='source-ai-generated'
 								       {{ source.ai_generated|default(false) ? 'checked' : '' }}>
@@ -237,6 +250,17 @@
 					        title='Generate description with AI' data-role='ai-description'><i
 								class='bi bi-stars'></i></button>
 				</div>
+			</div>
+			<div class='translate-field'>
+				<label class='form-label' data-role='url-label'>Source URL</label>
+				<div class='d-flex align-items-start gap-2'>
+					<input type='url' class='form-control manage-input' placeholder='https://' data-role='url-input'/>
+					<a class='btn btn-sm btn-outline-light flex-shrink-0 d-none' data-role='url-visit'
+					   target='_blank' rel='noopener noreferrer'>
+						<i class='bi bi-box-arrow-up-right me-1'></i>Visit URL
+					</a>
+				</div>
+				<div class='url-suggestions d-none' data-role='url-suggestions'></div>
 			</div>
 			<div class='form-check form-switch translate-field'>
 				<input class='form-check-input' type='checkbox' data-role='ai-generated'/>

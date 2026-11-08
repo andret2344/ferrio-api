@@ -78,7 +78,7 @@ class AdminController extends AbstractController
 			'countries' => $countries,
 			'tags' => $tags,
 			'selectedTagIds' => [],
-			'source' => ['name' => '', 'description' => '', 'ai_generated' => false],
+			'source' => ['name' => '', 'description' => '', 'url' => '', 'ai_generated' => false],
 			'translations' => [],
 			'countryCode' => null,
 			'mature' => false,
@@ -86,7 +86,11 @@ class AdminController extends AbstractController
 
 		if ($kind === 'fixed') {
 			$month = filter_var($request->query->get('month'), FILTER_VALIDATE_INT);
+			$day = filter_var($request->query->get('day'), FILTER_VALIDATE_INT);
 			$context['day'] = '';
+			if ($day >= 1 && $day <= 31) {
+				$context['day'] = (string)$day;
+			}
 			$context['month'] = $month >= 1 && $month <= 12 ? (string)$month : '';
 			$context['backUrl'] = $month >= 1 && $month <= 12
 				? $this->generateUrl('admin_create_month', ['month' => $month])
@@ -101,6 +105,17 @@ class AdminController extends AbstractController
 			$context['backLabel'] = 'Floating';
 		}
 
+		// Prefill from an import tile ("Add" on /admin/import): the pasted name, and the source URL the
+		// web check found. The conversion below overrides both, as it copies a whole holiday.
+		$prefillName = trim((string)$request->query->get('name', ''));
+		if ($prefillName !== '') {
+			$context['source']['name'] = mb_substr($prefillName, 0, 255);
+		}
+		$prefillUrl = trim((string)$request->query->get('url', ''));
+		if (preg_match('#^https?://\S+$#i', $prefillUrl) === 1) {
+			$context['source']['url'] = $prefillUrl;
+		}
+
 		$fromKind = $request->query->get('from');
 		$fromId = filter_var($request->query->get('fromId'), FILTER_VALIDATE_INT);
 		if (in_array($fromKind, ['fixed', 'floating'], true) && $fromKind !== $kind && $fromId !== false && $fromId > 0) {
@@ -108,10 +123,10 @@ class AdminController extends AbstractController
 			$sourceMetadata = $this->entityManager->getRepository($sourceMetadataClass)
 				->find($fromId);
 			if ($sourceMetadata !== null) {
-				$source = ['name' => '', 'description' => '', 'ai_generated' => false];
+				$source = ['name' => '', 'description' => '', 'url' => '', 'ai_generated' => false];
 				$translations = [];
 				foreach ($sourceMetadata->holidays as $holiday) {
-					$entry = ['name' => $holiday->name, 'description' => $holiday->description, 'ai_generated' => $holiday->aiGenerated];
+					$entry = ['name' => $holiday->name, 'description' => $holiday->description, 'url' => $holiday->url ?? '', 'ai_generated' => $holiday->aiGenerated];
 					if ($holiday->language->code === Language::DEFAULT_CODE) {
 						$source = $entry;
 					} else {
@@ -144,10 +159,10 @@ class AdminController extends AbstractController
 		$languages = $languageRepository->findBy([], ['code' => 'ASC']);
 		$targets = array_values(array_filter($languages, fn(Language $l) => $l->code !== Language::DEFAULT_CODE));
 
-		$source = ['name' => '', 'description' => '', 'ai_generated' => false];
+		$source = ['name' => '', 'description' => '', 'url' => '', 'ai_generated' => false];
 		$translations = [];
 		foreach ($metadata->holidays as $holiday) {
-			$entry = ['name' => $holiday->name, 'description' => $holiday->description, 'ai_generated' => $holiday->aiGenerated];
+			$entry = ['name' => $holiday->name, 'description' => $holiday->description, 'url' => $holiday->url ?? '', 'ai_generated' => $holiday->aiGenerated];
 			if ($holiday->language->code === Language::DEFAULT_CODE) {
 				$source = $entry;
 			} else {

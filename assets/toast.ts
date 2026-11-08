@@ -17,7 +17,9 @@ export function showToast(type: ToastType, message: string): void {
     const toast = document.createElement('div');
     toast.className = `toast align-items-center text-bg-${type} border-0`;
     toast.setAttribute('role', 'alert');
-    toast.innerHTML = `<div class='d-flex'><div class='toast-body'>${message}</div><button type='button' class='btn-close btn-close-white me-2 m-auto' data-bs-dismiss='toast'></button></div>`;
+    toast.innerHTML = `<div class='d-flex'><div class='toast-body'></div><button type='button' class='btn-close btn-close-white me-2 m-auto' data-bs-dismiss='toast'></button></div>`;
+    // Set as text, not markup: messages carry server error texts.
+    toast.querySelector('.toast-body')!.textContent = message;
     container.appendChild(toast);
     const bsToast = new bootstrap.Toast(toast, {delay: 3000});
     bsToast.show();

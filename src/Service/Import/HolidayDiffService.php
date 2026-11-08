@@ -29,11 +29,12 @@ class HolidayDiffService
 
 	/**
 	 * @param ParsedHoliday[] $parsed
+	 * @param HolidayCandidate[]|null $candidates the stored names, when the caller already loaded them
 	 * @return HolidayDiffRow[]
 	 */
-	public function diff(array $parsed): array
+	public function diff(array $parsed, ?array $candidates = null): array
 	{
-		$candidates = $this->candidates();
+		$candidates ??= $this->candidates();
 		$rows = [];
 		foreach ($parsed as $holiday) {
 			$rows[] = $this->classify($holiday, $candidates);

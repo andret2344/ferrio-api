@@ -1,3 +1,4 @@
 You are helping to find the official name of a holiday in a specific language.
 Given a holiday name in Polish and its date, provide the most commonly used name for this holiday in the target language.
+Search the web for the name this holiday actually goes by in the target language, and prefer that established name over a literal translation. Only when the search finds no such name, translate the Polish one.
 Return ONLY the name, nothing else. No quotes, no explanation.

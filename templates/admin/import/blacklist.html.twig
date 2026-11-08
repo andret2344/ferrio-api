@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% block title %}Blacklist - Ferrio Admin{% endblock %}
+{% block body %}
+	<main class='section-manage-main import-page' data-import-blacklist
+	      data-csrf-token='{{ csrf_token('holiday_import') }}'>
+		{% include 'components/sidebar.html.twig' %}
+		{% set blacklistToolbar %}
+			<a class='btn btn-outline-light btn-sm' href='{{ path('admin_import') }}'>
+				<i class='bi bi-clipboard-plus me-1'></i>Import
+			</a>
+		{% endset %}
+		{% include 'components/topbar.html.twig' with {pageTitle: 'Rejected holidays', toolbar: blacklistToolbar} %}
+		<div class='manage-content'>
+			<p class='import-muted'>
+				Names rejected on the import page. A paste skips each of them, and every name the matcher
+				reads as the same holiday. Restoring one lets it come back as a tile on the next paste.
+			</p>
+			{% if entries is empty %}
+				<div class='text-center text-muted py-5'>Nothing rejected yet.</div>
+			{% else %}
+				<div class='table-responsive'>
+					<table class='table table-dark table-striped table-hover align-middle'>
+						<thead>
+						<tr>
+							<th>Name</th>
+							<th>Dates given</th>
+							<th>Reason</th>
+							<th>Comment</th>
+							<th>Rejected</th>
+							<th></th>
+						</tr>
+						</thead>
+						<tbody>
+						{% for entry in entries %}
+							<tr data-blacklist-row>
+								<td>{{ entry.name }}</td>
+								<td class='import-muted'>{{ entry.dates|keys|join(', ') }}</td>
+								<td>{{ entry.reason.label }}</td>
+								<td>{{ entry.comment ?? '—' }}</td>
+								<td>{{ entry.createdAt|date('Y-m-d') }}</td>
+								<td class='text-end'>
+									<button type='button' class='btn btn-sm btn-outline-light'
+									        data-restore-url='{{ path('admin_import_restore', {id: entry.id}) }}'>
+										<i class='bi bi-arrow-counterclockwise me-1'></i>Restore
+									</button>
+								</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			{% endif %}
+		</div>
+	</main>
+{% endblock %}

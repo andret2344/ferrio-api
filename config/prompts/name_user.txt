@@ -1,1 +1,1 @@
-Holiday: "{name}" (date: {day}.{month}, day.month; country: {country}). Target language: {language}.
+Holiday: "{name}" (celebrated {date}; country: {country}). Target language: {language}.
