@@ -343,7 +343,7 @@ Only after a week without a rollback.
 3. mod_php: if no other vhost runs PHP through Apache, disable it (`apachectl -M | grep php` shows
    the module, `sudo a2dismod php8.5`, then reload). With another PHP site on the box, leave it.
 4. Delete the WinSCP session for this server - from now on the only way code reaches production is
-   the deploy button.
+   `deploy.sh` with a release CI has published.
 5. Drop `HTTP_BASIC_AUTH_*` wherever they still exist outside the repo.
 6. Once you trust the setup, delete `/root/ferrio-pre-docker` (it holds a full database dump with
    personal data - the reporters' UIDs and device data; do not keep it forever).
