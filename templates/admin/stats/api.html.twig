@@ -9,7 +9,7 @@
 			<form method='get' class='mb-4 d-flex gap-2 flex-wrap' data-stats-form>
 				<select name='group' class='form-select manage-input' style='width: auto'>
 					{% for option in groupings %}
-						<option value='{{ option }}' {{ option == grouping ? 'selected' : '' }}>
+						<option value='{{ option }}' {{ option == grouping ? 'selected' : '' }} {{ option in available_groupings ? '' : 'disabled' }}>
 							By {{ option }}
 						</option>
 					{% endfor %}

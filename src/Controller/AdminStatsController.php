@@ -54,16 +54,23 @@ class AdminStatsController extends AbstractController
 	#[Route('', name: '', methods: ['GET'])]
 	public function api(Request $request, ApiHitStats $apiHitStats): Response
 	{
-		$grouping = ApiHitGrouping::tryFrom((string)$request->query->get('group')) ?? ApiHitGrouping::DAY;
 		$days = filter_var($request->query->get('days'), FILTER_VALIDATE_INT);
 		if (!in_array($days, self::RANGES, true)) {
 			$days = 30;
 		}
+		$available = $apiHitStats->groupingsWithCompletePeriods($days);
+		if ($available === []) {
+			// Nothing counted yet, or less than an hour of it: no grouping is better than another.
+			$available = ApiHitGrouping::cases();
+		}
+		$requested = ApiHitGrouping::tryFrom((string)$request->query->get('group')) ?? ApiHitGrouping::DAY;
+		$grouping = $requested->orFinerWithin($available);
 		$stats = $apiHitStats->collect($grouping, $days);
 
 		return $this->render('admin/stats/api.html.twig', [
 			'grouping' => $grouping->value,
 			'groupings' => array_column(ApiHitGrouping::cases(), 'value'),
+			'available_groupings' => array_column($available, 'value'),
 			'days' => $days,
 			'ranges' => self::RANGES,
 			'stats' => $stats,

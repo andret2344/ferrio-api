@@ -14,6 +14,9 @@ use App\Tests\Fixture\FixedHolidayMetadataFixture;
 use App\Tests\Fixture\FixedHolidaySuggestionFixture;
 use App\Tests\Fixture\FloatingHolidayFixture;
 use App\Tests\Fixture\LanguageFixture;
+use DateTimeImmutable;
+use DateTimeZone;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -75,6 +78,47 @@ class AdminStatsControllerTest extends WebTestCase
 
 		$this->assertResponseIsSuccessful();
 		$this->assertSelectorTextContains('.manage-content', 'No API hits recorded in this range.');
+	}
+
+	/**
+	 * A day holds no whole week or month, so those groupings are disabled and a requested "by month"
+	 * steps down to the coarsest one that still draws something - by day at midnight UTC, by hour
+	 * otherwise, which is why only the disabled side is asserted.
+	 */
+	public function testApiPageDisablesGroupingsWithoutACompletePeriod(): void
+	{
+		$this->insertHit('-400 days');
+		$this->insertHit('-2 hours');
+
+		$crawler = $this->client->request('GET', '/admin/stats?group=month&days=1');
+
+		$this->assertResponseIsSuccessful();
+		$options = $crawler->filter("select[name='group'] option");
+		self::assertNotNull($options->filter("[value='month']")->attr('disabled'));
+		self::assertNotNull($options->filter("[value='week']")->attr('disabled'));
+		self::assertNull($options->filter("[value='hour']")->attr('disabled'));
+		self::assertContains($options->filter('[selected]')->attr('value'), ['day', 'hour']);
+	}
+
+	public function testApiPageKeepsEveryGroupingOverALongWindow(): void
+	{
+		$this->insertHit('-400 days');
+
+		$crawler = $this->client->request('GET', '/admin/stats?group=month&days=0');
+
+		$this->assertResponseIsSuccessful();
+		self::assertCount(0, $crawler->filter("select[name='group'] option[disabled]"));
+		self::assertSame('month', $crawler->filter("select[name='group'] option[selected]")->attr('value'));
+	}
+
+	private function insertHit(string $ago): void
+	{
+		$at = new DateTimeImmutable($ago, new DateTimeZone('UTC'));
+		static::getContainer()->get(Connection::class)->insert('api_hit', [
+			'bucket_hour' => $at->format('Y-m-d H:00:00'),
+			'path' => '/v3/holidays',
+			'hits' => 1,
+		]);
 	}
 
 	public function testHolidayStatsPageChartsCarryTheirData(): void
