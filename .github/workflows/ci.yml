@@ -140,6 +140,6 @@ jobs:
       # deploy.sh takes, and this is the run that proved that commit green and published it.
       - name: Print the deploy command
         run: |
-          cmd="sudo /opt/ferrio-api/deploy.sh ${GITHUB_SHA}"
+          cmd="sudo /opt/docker-images/ferrio-api/deploy.sh ${GITHUB_SHA}"
           echo "Release published. Deploy it on the server with: $cmd"
           printf '### Deploy\n\nRelease published. On the server:\n\n```\n%s\n```\n' "$cmd" >> "$GITHUB_STEP_SUMMARY"

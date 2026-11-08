@@ -122,7 +122,7 @@ Check: `sudo ls -l /root/ferrio-pre-docker` lists three files, and the dump is n
 On the server:
 
 ```bash
-sudo install -d -m 755 /opt/ferrio-api
+sudo install -d -m 755 /opt/docker-images/ferrio-api
 ```
 
 Everything in it belongs to root, and `deploy.sh` runs as root (`sudo`): starting containers takes
@@ -139,13 +139,13 @@ scp -P <port> compose.yaml docker/deploy.sh <admin>@<host>:/tmp/
 On the server:
 
 ```bash
-sudo install -m 644 /tmp/compose.yaml /opt/ferrio-api/compose.yaml
+sudo install -m 644 /tmp/compose.yaml /opt/docker-images/ferrio-api/compose.yaml
 ```
 ```bash
-sudo install -m 755 /tmp/deploy.sh /opt/ferrio-api/deploy.sh
+sudo install -m 755 /tmp/deploy.sh /opt/docker-images/ferrio-api/deploy.sh
 ```
 
-Check: `file /opt/ferrio-api/deploy.sh` must not say "CRLF" - bash cannot run it then.
+Check: `file /opt/docker-images/ferrio-api/deploy.sh` must not say "CRLF" - bash cannot run it then.
 
 Repeat this subsection whenever `compose.yaml` or `docker/deploy.sh` changes in the repository.
 
@@ -157,7 +157,7 @@ On the server.
    part 2:
 
    ```bash
-   sudo vim /opt/ferrio-api/secrets.env
+   sudo vim /opt/docker-images/ferrio-api/secrets.env
    ```
 
    - `APP_SECRET`: the old one, or a new one if part 2 found it public. A new one:
@@ -170,15 +170,15 @@ On the server.
    user (uid 33, `www-data`) read it, nobody else:
 
    ```bash
-   sudo install -o root -g 33 -m 640 <path from .env.local> /opt/ferrio-api/firebase.json
+   sudo install -o root -g 33 -m 640 <path from .env.local> /opt/docker-images/ferrio-api/firebase.json
    ```
 
-   Uncomment the `firebase.json` volume in `/opt/ferrio-api/compose.yaml` and set
+   Uncomment the `firebase.json` volume in `/opt/docker-images/ferrio-api/compose.yaml` and set
    `FIREBASE_CREDENTIALS=/run/secrets/firebase.json` in `secrets.env`.
 3. `deploy.env` - what `deploy.sh` needs to make its dump:
 
    ```bash
-   sudo vim /opt/ferrio-api/deploy.env
+   sudo vim /opt/docker-images/ferrio-api/deploy.env
    ```
 
    ```bash
@@ -188,7 +188,7 @@ On the server.
 4. `backup.cnf` - credentials for `mysqldump` and for a restore:
 
    ```bash
-   sudo vim /opt/ferrio-api/backup.cnf
+   sudo vim /opt/docker-images/ferrio-api/backup.cnf
    ```
 
    ```ini
@@ -203,13 +203,13 @@ On the server.
 5. Lock them down:
 
    ```bash
-   sudo chmod 600 /opt/ferrio-api/secrets.env /opt/ferrio-api/backup.cnf
+   sudo chmod 600 /opt/docker-images/ferrio-api/secrets.env /opt/docker-images/ferrio-api/backup.cnf
    ```
 
 Check that the dump works:
 
 ```bash
-sudo sh -c 'cd /opt/ferrio-api && mysqldump --defaults-extra-file=./backup.cnf --single-transaction --no-tablespaces <db> | wc -c'
+sudo sh -c 'cd /opt/docker-images/ferrio-api && mysqldump --defaults-extra-file=./backup.cnf --single-transaction --no-tablespaces <db> | wc -c'
 ```
 
 A large number and no error.
@@ -225,7 +225,7 @@ A large number and no error.
 3. On the server, run the command from the summary page:
 
    ```bash
-   sudo /opt/ferrio-api/deploy.sh <full commit sha>
+   sudo /opt/docker-images/ferrio-api/deploy.sh <full commit sha>
    ```
 
    It must say `No pending migrations` (part 2 made sure of it) and end with
@@ -297,7 +297,7 @@ sudo systemctl reload apache2
 1. Live traffic reaches the stack - the apps' requests appear within a minute:
 
    ```bash
-   cd /opt/ferrio-api && docker compose logs -f nginx
+   cd /opt/docker-images/ferrio-api && docker compose logs -f nginx
    ```
 2. The public API answers:
 
@@ -327,7 +327,7 @@ Only after a week without a rollback.
 1. If the old `reports.log` has history you want to keep, carry it into the stack first:
 
    ```bash
-   cd /opt/ferrio-api && docker compose cp <old dir>/var/log/reports.log php:/app/var/log/reports-pre-docker.log
+   cd /opt/docker-images/ferrio-api && docker compose cp <old dir>/var/log/reports.log php:/app/var/log/reports-pre-docker.log
    ```
 2. Archive and remove the old site:
 

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# The deploy, see DEPLOY.md. It lives in /opt/ferrio-api and is run by hand on the server, as root,
-# with the commit SHA of a release CI has published - every CI run on main prints this command:
-#   sudo /opt/ferrio-api/deploy.sh <full commit sha>
+# The deploy, see DEPLOY.md. It lives in /opt/docker-images/ferrio-api and is run by hand on the
+# server, as root, with the commit SHA of a release CI has published - every CI run on main prints
+# this command:
+#   sudo /opt/docker-images/ferrio-api/deploy.sh <full commit sha>
 # A rollback is the same command with an older SHA.
 #
 # This file must keep LF line endings (see .gitattributes): with CRLF, bash fails on the first line.

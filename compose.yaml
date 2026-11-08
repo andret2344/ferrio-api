@@ -1,5 +1,5 @@
-# Production stack, see DEPLOY.md. It lives on the server in /opt/ferrio-api next to secrets.env and
-# deploy.sh, and pulls prebuilt images from GHCR - no source checkout and no build toolchain on the
+# Production stack, see DEPLOY.md. It lives on the server in /opt/docker-images/ferrio-api next to
+# secrets.env and deploy.sh, and pulls prebuilt images from GHCR - no source checkout and no build toolchain on the
 # box. Copy it there again whenever it changes in the repository; a deploy does not ship it.
 #
 # MySQL is NOT part of the stack: it stays on the host, reached through its unix socket. Mounting
@@ -25,7 +25,7 @@ services:
       - sessions:/app/var/sessions
       - logs:/app/var/log
       # Firebase service account, when FIREBASE_CREDENTIALS points at a file (see secrets.env.dist).
-      # - /opt/ferrio-api/firebase.json:/run/secrets/firebase.json:ro
+      # - /opt/docker-images/ferrio-api/firebase.json:/run/secrets/firebase.json:ro
 
   nginx:
     image: ghcr.io/andret2344/ferrio-api-nginx:${IMAGE_TAG:?IMAGE_TAG is not set - deploy through deploy.sh}

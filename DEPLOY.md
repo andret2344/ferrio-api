@@ -12,7 +12,7 @@ Pull requests run the checks only. GitHub holds no key to the server.
 A deploy is that command, run on the server:
 
 ```bash
-sudo /opt/ferrio-api/deploy.sh <full commit sha>
+sudo /opt/docker-images/ferrio-api/deploy.sh <full commit sha>
 ```
 
 `deploy.sh` pulls the release's images and, from the new image while the old release keeps
@@ -32,7 +32,7 @@ Related documents:
 Deploy an older commit (full SHA) the same way:
 
 ```bash
-sudo /opt/ferrio-api/deploy.sh <full commit sha>
+sudo /opt/docker-images/ferrio-api/deploy.sh <full commit sha>
 ```
 
 Images of the last week are still local; older ones are pulled from GHCR again. A rollback never
@@ -40,7 +40,7 @@ undoes a migration - see the migrations guide for why that is safe.
 
 ## Operations
 
-All commands from `/opt/ferrio-api`.
+All commands from `/opt/docker-images/ferrio-api`.
 
 ```bash
 docker compose logs -f php

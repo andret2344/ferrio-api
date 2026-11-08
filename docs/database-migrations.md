@@ -87,7 +87,7 @@ For anything beyond adding a column - a data change, a type change, a big table 
 migration against a **copy of production**. On the server:
 
 ```bash
-sudo sh -c 'cd /opt/ferrio-api && mysqldump --defaults-extra-file=./backup.cnf --single-transaction --no-tablespaces <db> | gzip > /tmp/ferrio-copy.sql.gz'
+sudo sh -c 'cd /opt/docker-images/ferrio-api && mysqldump --defaults-extra-file=./backup.cnf --single-transaction --no-tablespaces <db> | gzip > /tmp/ferrio-copy.sql.gz'
 ```
 
 On your machine:
@@ -129,7 +129,8 @@ And on the server: `rm /tmp/ferrio-copy.sql.gz`.
 
 ### 5. Deploy and watch
 
-On the server, the command the CI run of that commit printed (`sudo /opt/ferrio-api/deploy.sh <sha>`).
+On the server, the command the CI run of that commit printed
+(`sudo /opt/docker-images/ferrio-api/deploy.sh <sha>`).
 `deploy.sh` reports:
 
 1. `Pending migrations - dumping <db> to backups/...` - the dump it will need if something breaks;
@@ -139,7 +140,7 @@ On the server, the command the CI run of that commit printed (`sudo /opt/ferrio-
 Afterwards, on the server:
 
 ```bash
-cd /opt/ferrio-api && docker compose exec php bin/console doctrine:migrations:status
+cd /opt/docker-images/ferrio-api && docker compose exec php bin/console doctrine:migrations:status
 ```
 
 "New" must be 0.
@@ -155,13 +156,13 @@ change. The job is red.
 2. See what was applied. Doctrine did not record the migration, so it looks pending:
 
    ```bash
-   cd /opt/ferrio-api && docker compose exec php bin/console doctrine:migrations:status
+   cd /opt/docker-images/ferrio-api && docker compose exec php bin/console doctrine:migrations:status
    ```
 
    And compare the affected table with what the migration wanted:
 
    ```bash
-   cd /opt/ferrio-api && mysql --defaults-extra-file=./backup.cnf <db> -e "SHOW CREATE TABLE <table>\G"
+   cd /opt/docker-images/ferrio-api && mysql --defaults-extra-file=./backup.cnf <db> -e "SHOW CREATE TABLE <table>\G"
    ```
 3. With one table per migration (rule 2) the failed statement was the only one, and nothing was
    applied - go to 4. Otherwise, undo the statements that did run, by hand, until the table matches
@@ -176,7 +177,7 @@ repaired by hand. It loses everything written between the dump and the restore (
 API traffic counters), so prefer the manual repair:
 
 ```bash
-cd /opt/ferrio-api && gunzip -c backups/<newest file>.sql.gz | mysql --defaults-extra-file=./backup.cnf <db>
+cd /opt/docker-images/ferrio-api && gunzip -c backups/<newest file>.sql.gz | mysql --defaults-extra-file=./backup.cnf <db>
 ```
 
 ### The migration worked, the new release is broken
