@@ -31,9 +31,16 @@ docker compose pull --quiet
 
 # Everything up to `up -d` runs from the NEW image in a throwaway container, while the old release
 # keeps serving. If any step fails, the script stops here and production is still the old release.
-if docker compose run --rm --no-deps -T php bin/console doctrine:migrations:up-to-date --no-interaction; then
+#
+# up-to-date exits 1 when migrations are pending - but a console that cannot boot, or a database it
+# cannot reach, exits 1 as well (or 126, 255, ...). So "pending" needs exit 1 AND Doctrine's own
+# "Out-of-date!" line; anything else is an error and stops the deploy before the dump or a migration.
+check_status=0
+check_output="$(docker compose run --rm --no-deps -T php bin/console doctrine:migrations:up-to-date --no-interaction 2>&1)" || check_status=$?
+if [ "$check_status" -eq 0 ]; then
     echo "No pending migrations"
-else
+elif [ "$check_status" -eq 1 ] && grep -q 'Out-of-date!' <<< "$check_output"; then
+    printf '%s\n' "$check_output"
     # MySQL commits every DDL statement on its own, so a migration that fails half way cannot be
     # rolled back. The dump is the last resort for that case.
     mkdir -p backups
@@ -47,6 +54,10 @@ else
 
     # Names start with a UTC timestamp, so reverse name order is newest first.
     printf '%s\n' backups/*.sql.gz | sort -r | tail -n +"$((keep_backups + 1))" | xargs -r rm --
+else
+    printf '%s\n' "$check_output" >&2
+    echo "Could not check for pending migrations (exit $check_status) - stopping. Nothing was dumped or migrated; production is still the old release." >&2
+    exit 1
 fi
 
 echo "Starting release $tag"

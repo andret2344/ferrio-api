@@ -48,6 +48,10 @@ COPY composer.json composer.lock symfony.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --no-interaction --prefer-dist --no-progress
 
 COPY . .
+# The repository is committed from Windows (core.fileMode=false), so git never records the
+# executable bit and bin/console arrives as 0644 - `docker compose run php bin/console` would then
+# fail with "Permission denied". Set it here rather than trusting the file mode in git.
+RUN chmod +x bin/console
 COPY --from=assets /app/public/build ./public/build
 RUN composer install --no-dev --no-interaction --prefer-dist --no-progress --classmap-authoritative
 
