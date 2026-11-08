@@ -5,9 +5,6 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  # The deploy button (Actions -> CI -> Run workflow). A dispatch runs every check below again and
-  # only then builds and deploys, so a red build can never reach production. Pushes never deploy.
-  workflow_dispatch:
 
 jobs:
   test:
@@ -91,10 +88,13 @@ jobs:
       - name: Check migrations for unmarked destructive changes
         run: php .github/scripts/check-destructive-migrations.php migrations
 
+  # CI publishes a release, it never deploys one: every green push to main gets its images, and the
+  # deploy is `deploy.sh <sha>` run by hand on the server (DEPLOY.md). Nothing here can reach the
+  # server, so GitHub holds no key to it. Pull requests never publish.
   image:
     name: Build & push images (GHCR)
     needs: [ test, contract-immutability, destructive-migrations ]
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     permissions:
@@ -102,14 +102,6 @@ jobs:
       packages: write
 
     steps:
-      # Dispatch works from any branch, so the guard lives here. It fails rather than skipping: a
-      # green run that deployed nothing is worse than a red one that says why.
-      - name: Deploy runs from main only
-        if: github.ref != 'refs/heads/main'
-        run: |
-          echo "::error::Deploy runs from main only, not ${GITHUB_REF_NAME}"
-          exit 1
-
       - uses: actions/checkout@v4
 
       - name: Log in to GHCR
@@ -144,60 +136,10 @@ jobs:
           cache-from: type=gha,scope=web
           cache-to: type=gha,mode=max,scope=web
 
-  deploy:
-    name: Deploy to VPS
-    needs: image
-    runs-on: ubuntu-latest
-
-    environment:
-      name: production
-      url: ${{ vars.DEPLOY_URL }}
-
-    # Never cancel a deploy in flight: killing it between the migration and `up` would leave
-    # production on a schema its code was not deployed for.
-    concurrency:
-      group: production-deploy
-      cancel-in-progress: false
-
-    permissions:
-      contents: read
-
-    steps:
-      - name: Deploy over SSH
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_PORT: ${{ vars.SSH_PORT || '22' }}
-          DEPLOY_URL: ${{ vars.DEPLOY_URL }}
+      # The run's summary page shows the command, ready to copy - the SHA is the only input
+      # deploy.sh takes, and this is the run that proved that commit green and published it.
+      - name: Print the deploy command
         run: |
-          set -euo pipefail
-
-          # Fail with a readable message rather than an ssh error forty lines on.
-          missing=""
-          for name in SSH_PRIVATE_KEY SSH_KNOWN_HOSTS SSH_HOST SSH_USER DEPLOY_URL; do
-            [ -n "${!name}" ] || missing="$missing $name"
-          done
-          if [ -n "$missing" ]; then
-            echo "::error::Not configured - set these first:$missing"
-            echo "SSH_* are repository secrets, DEPLOY_URL is a repository variable."
-            exit 1
-          fi
-
-          install -m 700 -d ~/.ssh
-          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
-
-          # The key's forced command on the server is deploy.sh; the SHA is the only thing it reads.
-          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "$GITHUB_SHA"
-
-      # The login page goes through Apache, nginx and php-fpm without touching the API, so it is
-      # not counted as API traffic in /admin/stats. The database was already reached by the
-      # migration check in deploy.sh.
-      - name: Smoke test
-        env:
-          DEPLOY_URL: ${{ vars.DEPLOY_URL }}
-        run: curl --fail --silent --show-error --output /dev/null --retry 5 --retry-all-errors --retry-delay 3 "$DEPLOY_URL/"
+          cmd="sudo /opt/ferrio-api/deploy.sh ${GITHUB_SHA}"
+          echo "Release published. Deploy it on the server with: $cmd"
+          printf '### Deploy\n\nRelease published. On the server:\n\n```\n%s\n```\n' "$cmd" >> "$GITHUB_STEP_SUMMARY"

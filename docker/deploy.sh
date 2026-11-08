@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
-# Server side of the deploy, see DEPLOY.md. It lives in /opt/ferrio-api and is the forced command of
-# the CI deploy key in authorized_keys, so that key can run this script and nothing else - the
-# deploy user is in the docker group, which is as good as root. CI sends the commit SHA as the SSH
-# command; it arrives here as SSH_ORIGINAL_COMMAND and is the only input this script accepts.
-#
-# For a manual deploy or a rollback, run it yourself on the server:
-#   SSH_ORIGINAL_COMMAND=<full commit sha> /opt/ferrio-api/deploy.sh
+# The deploy, see DEPLOY.md. It lives in /opt/ferrio-api and is run by hand on the server, as root,
+# with the commit SHA of a release CI has published - every CI run on main prints this command:
+#   sudo /opt/ferrio-api/deploy.sh <full commit sha>
+# A rollback is the same command with an older SHA.
 #
 # This file must keep LF line endings (see .gitattributes): with CRLF, bash fails on the first line.
 
@@ -13,9 +10,10 @@ set -euo pipefail
 
 cd "$(dirname "$(readlink -f "$0")")"
 
-tag="${SSH_ORIGINAL_COMMAND:-}"
+tag="${1:-}"
 if ! [[ "$tag" =~ ^[0-9a-f]{40}$ ]]; then
     echo "Expected a full 40-character commit SHA, got: '$tag'" >&2
+    echo "Usage: sudo $0 <full commit sha> - the CI run of that commit prints the exact command." >&2
     exit 2
 fi
 

@@ -87,7 +87,7 @@ For anything beyond adding a column - a data change, a type change, a big table 
 migration against a **copy of production**. On the server:
 
 ```bash
-sudo -u ferrio-deploy sh -c 'cd /opt/ferrio-api && mysqldump --defaults-extra-file=./backup.cnf --single-transaction --no-tablespaces <db> | gzip > /tmp/ferrio-copy.sql.gz'
+sudo sh -c 'cd /opt/ferrio-api && mysqldump --defaults-extra-file=./backup.cnf --single-transaction --no-tablespaces <db> | gzip > /tmp/ferrio-copy.sql.gz'
 ```
 
 On your machine:
@@ -129,7 +129,8 @@ And on the server: `rm /tmp/ferrio-copy.sql.gz`.
 
 ### 5. Deploy and watch
 
-**Actions -> CI -> Run workflow** on `main`. In the deploy job's log, `deploy.sh` reports:
+On the server, the command the CI run of that commit printed (`sudo /opt/ferrio-api/deploy.sh <sha>`).
+`deploy.sh` reports:
 
 1. `Pending migrations - dumping <db> to backups/...` - the dump it will need if something breaks;
 2. `Running migrations` and Doctrine's output;
@@ -182,11 +183,6 @@ cd /opt/ferrio-api && gunzip -c backups/<newest file>.sql.gz | mysql --defaults-
 
 Deploy the previous commit (`DEPLOY.md`, "Rollback"). Because the migration was additive, the old
 code runs on the new schema. Fix forward from there.
-
-### The deploy job was red after `Release ... is live`
-
-That is the smoke test. The new release is live; check `docker compose logs php` and treat it like
-a broken release above.
 
 ## Catalog of changes
 

@@ -2,10 +2,10 @@
 
 A runbook for the one-time move of production from mod_php (files uploaded with WinSCP) to the
 Docker stack described in [`DEPLOY.md`](../DEPLOY.md). Follow it top to bottom; every part ends with a
-check, and nothing goes on until the check passes. Parts 3 to 7 are also the full server setup from
+check, and nothing goes on until the check passes. Parts 3 to 5 are also the full server setup from
 scratch, should the VPS ever be rebuilt.
 
-**Why it is safe:** the old site keeps serving until part 9, and the old and the new stack share the
+**Why it is safe:** the old site keeps serving until part 7, and the old and the new stack share the
 same database. Until the very end the rollback is putting a few Apache lines back, with no data lost
 - as long as no migration runs during the switch (part 2 makes sure of that).
 
@@ -22,7 +22,7 @@ repository root.
 ## Part 1 - Before you start
 
 1. Pick a quiet hour. `/admin/stats` (by hour, last 7 days) shows when traffic is lowest. Budget an
-   hour; the actual switch (part 9) takes seconds.
+   hour; the actual switch (part 7) takes seconds.
 2. The deploy code must be on `main` and green in CI, and nothing else unfinished may ride along -
    the first deploy ships whatever `main` holds. Commit and push the deploy changes on their own,
    keep unrelated work-in-progress out of that push.
@@ -103,7 +103,7 @@ All on the server.
 
 ## Part 3 - Safety copy
 
-On the server, a full dump and a copy of the old configuration, kept until part 11:
+On the server, a full dump and a copy of the old configuration, kept until part 9:
 
 ```bash
 sudo install -d -m 700 /root/ferrio-pre-docker
@@ -117,22 +117,16 @@ sudo cp <old dir>/.env.local /etc/apache2/sites-available/<vhost file> /root/fer
 
 Check: `sudo ls -l /root/ferrio-pre-docker` lists three files, and the dump is not a few bytes.
 
-## Part 4 - Deploy user and directory
+## Part 4 - Directory and files
 
 On the server:
 
 ```bash
-sudo adduser --disabled-password --gecos "" ferrio-deploy
-```
-```bash
-sudo usermod -aG docker ferrio-deploy
-```
-```bash
-sudo install -d -o ferrio-deploy -g ferrio-deploy /opt/ferrio-api
+sudo install -d -m 755 /opt/ferrio-api
 ```
 
-Membership of the `docker` group is as good as root. That is why the CI key gets a forced command
-(part 6) and can run `deploy.sh` and nothing else.
+Everything in it belongs to root, and `deploy.sh` runs as root (`sudo`): starting containers takes
+root's power anyway, so a separate deploy user would add nothing.
 
 ### Files on the server
 
@@ -145,10 +139,10 @@ scp -P <port> compose.yaml docker/deploy.sh <admin>@<host>:/tmp/
 On the server:
 
 ```bash
-sudo install -o ferrio-deploy -g ferrio-deploy -m 644 /tmp/compose.yaml /opt/ferrio-api/compose.yaml
+sudo install -m 644 /tmp/compose.yaml /opt/ferrio-api/compose.yaml
 ```
 ```bash
-sudo install -o ferrio-deploy -g ferrio-deploy -m 755 /tmp/deploy.sh /opt/ferrio-api/deploy.sh
+sudo install -m 755 /tmp/deploy.sh /opt/ferrio-api/deploy.sh
 ```
 
 Check: `file /opt/ferrio-api/deploy.sh` must not say "CRLF" - bash cannot run it then.
@@ -163,7 +157,7 @@ On the server.
    part 2:
 
    ```bash
-   sudo -u ferrio-deploy vim /opt/ferrio-api/secrets.env
+   sudo vim /opt/ferrio-api/secrets.env
    ```
 
    - `APP_SECRET`: the old one, or a new one if part 2 found it public. A new one:
@@ -184,7 +178,7 @@ On the server.
 3. `deploy.env` - what `deploy.sh` needs to make its dump:
 
    ```bash
-   sudo -u ferrio-deploy vim /opt/ferrio-api/deploy.env
+   sudo vim /opt/ferrio-api/deploy.env
    ```
 
    ```bash
@@ -194,7 +188,7 @@ On the server.
 4. `backup.cnf` - credentials for `mysqldump` and for a restore:
 
    ```bash
-   sudo -u ferrio-deploy vim /opt/ferrio-api/backup.cnf
+   sudo vim /opt/ferrio-api/backup.cnf
    ```
 
    ```ini
@@ -212,98 +206,33 @@ On the server.
    sudo chmod 600 /opt/ferrio-api/secrets.env /opt/ferrio-api/backup.cnf
    ```
 
-Check that the dump works, as the deploy user:
+Check that the dump works:
 
 ```bash
-sudo -u ferrio-deploy sh -c 'cd /opt/ferrio-api && mysqldump --defaults-extra-file=./backup.cnf --single-transaction --no-tablespaces <db> | wc -c'
+sudo sh -c 'cd /opt/ferrio-api && mysqldump --defaults-extra-file=./backup.cnf --single-transaction --no-tablespaces <db> | wc -c'
 ```
 
 A large number and no error.
 
-## Part 6 - Deploy key
+## Part 6 - First deploy, next to the old site
 
-On your machine (no passphrase - CI has to use it unattended):
+1. The push of the deploy code to `main` already built the release: once its CI run is green, the
+   `image` job has published `ferrio-api-php` and `ferrio-api-nginx`, and the run's summary page
+   shows the deploy command.
+2. GHCR creates new packages as **private**, so the server could not pull them. Make both public
+   (GitHub -> your profile -> Packages -> each package -> Package settings -> Change visibility ->
+   Public). The server needs no registry login after that.
+3. On the server, run the command from the summary page:
 
-```bash
-ssh-keygen -t ed25519 -N "" -C ferrio-deploy-ci -f ferrio-deploy
-```
+   ```bash
+   sudo /opt/ferrio-api/deploy.sh <full commit sha>
+   ```
 
-On the server, put the public key (`ferrio-deploy.pub`) into `authorized_keys` behind the forced
-command:
-
-```bash
-sudo -u ferrio-deploy mkdir -m 700 -p /home/ferrio-deploy/.ssh
-```
-```bash
-sudo -u ferrio-deploy vim /home/ferrio-deploy/.ssh/authorized_keys
-```
-
-```
-restrict,command="/opt/ferrio-api/deploy.sh" ssh-ed25519 AAAA... ferrio-deploy-ci
-```
-
-`restrict` turns off the PTY and every kind of forwarding; `command` replaces whatever the client
-asks to run with `deploy.sh`, which receives the request as `SSH_ORIGINAL_COMMAND` and accepts only a
-40-character SHA.
-
-Check from your machine - this must be refused by `deploy.sh`, not give you a shell:
-
-```bash
-ssh -i ferrio-deploy -p <port> ferrio-deploy@<host> whoami
-```
-
-Expected: `Expected a full 40-character commit SHA, got: 'whoami'`.
-
-## Part 7 - GitHub configuration
-
-Host key, pinned instead of trusted on first use:
-
-```bash
-ssh-keyscan -t ed25519 -p <port> <host> > known_hosts
-```
-
-Compare its fingerprint (`ssh-keygen -lf known_hosts`) with the one the server reports for itself
-(on the server: `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub`). They must be identical.
-
-Repository secrets:
-
-```bash
-gh secret set SSH_PRIVATE_KEY < ferrio-deploy
-```
-```bash
-gh secret set SSH_KNOWN_HOSTS < known_hosts
-```
-```bash
-gh secret set SSH_HOST --body <host>
-```
-```bash
-gh secret set SSH_USER --body ferrio-deploy
-```
-
-Repository variables (`SSH_PORT` only when it is not 22):
-
-```bash
-gh variable set DEPLOY_URL --body https://<api host>
-```
-```bash
-gh variable set SSH_PORT --body <port>
-```
-
-Then delete `ferrio-deploy`, `ferrio-deploy.pub` and `known_hosts` from your machine - the private
-key now lives only in GitHub.
-
-## Part 8 - First deploy, next to the old site
-
-1. **Actions -> CI -> Run workflow** on `main`.
-2. The `image` job publishes `ferrio-api-php` and `ferrio-api-nginx`, but GHCR creates new packages
-   as **private**, so `deploy` fails at `docker compose pull`. Make both public (GitHub -> your
-   profile -> Packages -> each package -> Package settings -> Change visibility -> Public), then
-   **Re-run failed jobs**. The server needs no registry login after that.
-3. The deploy log must say `No pending migrations` (part 2 made sure of it) and end with
+   It must say `No pending migrations` (part 2 made sure of it) and end with
    `Release <sha> is live`.
 
-The stack now runs on `127.0.0.1:8081`, while Apache still serves the old site - the smoke test
-passed against the old one, so it proves nothing yet. Check the new stack directly, on the server:
+The stack now runs on `127.0.0.1:8081`, while Apache still serves the old site. Check the new stack
+directly, on the server:
 
 ```bash
 curl -sS -H "Host: <api host>" -H "X-Forwarded-Proto: https" -o /dev/null -w "%{http_code}\n" "http://127.0.0.1:8081/v3/holidays?lang=pl"
@@ -328,7 +257,7 @@ ssh -p <port> -L 8081:127.0.0.1:8081 <admin>@<host>
 Open `http://localhost:8081/`, log in, open a holiday, check `/admin/stats`. If something fails, read
 `docker compose logs php` on the server. Nothing so far has touched the live site.
 
-## Part 9 - The switch
+## Part 7 - The switch
 
 On the server.
 
@@ -363,7 +292,7 @@ sudo apache2ctl configtest
 sudo systemctl reload apache2
 ```
 
-## Part 10 - Verify
+## Part 8 - Verify
 
 1. Live traffic reaches the stack - the apps' requests appear within a minute:
 
@@ -391,7 +320,7 @@ sudo cp /root/ferrio-pre-docker/<vhost file> /etc/apache2/sites-available/<vhost
 sudo systemctl reload apache2
 ```
 
-## Part 11 - Cleanup, a week later
+## Part 9 - Cleanup, a week later
 
 Only after a week without a rollback.
 

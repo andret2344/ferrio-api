@@ -4,19 +4,21 @@ Production is a Docker Compose stack on the VPS: php-fpm plus nginx, both pulled
 Apache terminates TLS and reverse-proxies to nginx on `127.0.0.1:8081`. MySQL stays on the host,
 reached through its unix socket. Nothing is built on the server.
 
-A deploy is one click: **Actions -> CI -> Run workflow** on `main`. That run:
+CI publishes releases, it never deploys them. Every push to `main` runs every check (PHPUnit,
+frozen contract fixtures, destructive migrations); when all are green it builds both images, pushes
+them to GHCR tagged with the commit SHA, and prints the deploy command on the run's summary page.
+Pull requests run the checks only. GitHub holds no key to the server.
 
-1. runs every check (PHPUnit, frozen contract fixtures, destructive migrations) - a red one stops it;
-2. builds both images and pushes them to GHCR, tagged with the commit SHA;
-3. connects over SSH with a key whose only allowed command is `deploy.sh`, handing it the SHA;
-4. requests the login page through the public URL as a smoke test.
+A deploy is that command, run on the server:
 
-`deploy.sh` on the server pulls the new images and, from the new image while the old release keeps
+```bash
+sudo /opt/ferrio-api/deploy.sh <full commit sha>
+```
+
+`deploy.sh` pulls the release's images and, from the new image while the old release keeps
 serving, checks for pending migrations. If there are any, it dumps the database and runs them. Only
 then does it start the new release. If anything before that fails, production stays on the old
-release.
-
-Pushes and pull requests never deploy.
+release. Afterwards open the site and log in - nothing tests the release for you.
 
 Related documents:
 
@@ -27,10 +29,10 @@ Related documents:
 
 ## Rollback
 
-On the server, deploy an older commit (full SHA) by hand:
+Deploy an older commit (full SHA) the same way:
 
 ```bash
-sudo -u ferrio-deploy env SSH_ORIGINAL_COMMAND=<full commit sha> /opt/ferrio-api/deploy.sh
+sudo /opt/ferrio-api/deploy.sh <full commit sha>
 ```
 
 Images of the last week are still local; older ones are pulled from GHCR again. A rollback never
