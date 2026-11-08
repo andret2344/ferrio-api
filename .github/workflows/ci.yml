@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  # The deploy button (Actions -> CI -> Run workflow). A dispatch runs every check below again and
+  # only then builds and deploys, so a red build can never reach production. Pushes never deploy.
+  workflow_dispatch:
 
 jobs:
   test:
@@ -76,3 +79,125 @@ jobs:
             exit 1
           fi
           echo "OK — no frozen fixture touched."
+
+  destructive-migrations:
+    name: Migrations survive the running release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # The runner's preinstalled PHP is enough: the script reads files, it does not boot the app.
+      - name: Check migrations for unmarked destructive changes
+        run: php .github/scripts/check-destructive-migrations.php migrations
+
+  image:
+    name: Build & push images (GHCR)
+    needs: [ test, contract-immutability, destructive-migrations ]
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # Dispatch works from any branch, so the guard lives here. It fails rather than skipping: a
+      # green run that deployed nothing is worse than a red one that says why.
+      - name: Deploy runs from main only
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "::error::Deploy runs from main only, not ${GITHUB_REF_NAME}"
+          exit 1
+
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Two images per release, tagged with the full commit SHA - the only tag deploy.sh accepts, so
+      # a release is always one exact commit and a rollback is that commit's SHA.
+      - name: Build & push php image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: php
+          push: true
+          tags: ghcr.io/andret2344/ferrio-api-php:${{ github.sha }}
+          cache-from: type=gha,scope=php
+          cache-to: type=gha,mode=max,scope=php
+
+      - name: Build & push nginx image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: web
+          push: true
+          tags: ghcr.io/andret2344/ferrio-api-nginx:${{ github.sha }}
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web
+
+  deploy:
+    name: Deploy to VPS
+    needs: image
+    runs-on: ubuntu-latest
+
+    environment:
+      name: production
+      url: ${{ vars.DEPLOY_URL }}
+
+    # Never cancel a deploy in flight: killing it between the migration and `up` would leave
+    # production on a schema its code was not deployed for.
+    concurrency:
+      group: production-deploy
+      cancel-in-progress: false
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Deploy over SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ vars.SSH_PORT || '22' }}
+          DEPLOY_URL: ${{ vars.DEPLOY_URL }}
+        run: |
+          set -euo pipefail
+
+          # Fail with a readable message rather than an ssh error forty lines on.
+          missing=""
+          for name in SSH_PRIVATE_KEY SSH_KNOWN_HOSTS SSH_HOST SSH_USER DEPLOY_URL; do
+            [ -n "${!name}" ] || missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Not configured - set these first:$missing"
+            echo "SSH_* are repository secrets, DEPLOY_URL is a repository variable."
+            exit 1
+          fi
+
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+          # The key's forced command on the server is deploy.sh; the SHA is the only thing it reads.
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "$GITHUB_SHA"
+
+      # The login page goes through Apache, nginx and php-fpm without touching the API, so it is
+      # not counted as API traffic in /admin/stats. The database was already reached by the
+      # migration check in deploy.sh.
+      - name: Smoke test
+        env:
+          DEPLOY_URL: ${{ vars.DEPLOY_URL }}
+        run: curl --fail --silent --show-error --output /dev/null --retry 5 --retry-all-errors --retry-delay 3 "$DEPLOY_URL/"

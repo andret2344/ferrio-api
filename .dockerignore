@@ -1,0 +1,26 @@
+# The images are public on GHCR, so nothing may reach the build context that is not already public
+# in the repository: no local env overrides, no secrets, no server-side files.
+/.env.local
+/.env.*.local
+/secrets.env
+/firebase*.json
+
+/.git/
+/.github/
+/.idea/
+/.claude/
+/.phpunit.cache/
+/graphify-out/
+/docs/
+/tests/
+/node_modules/
+/vendor/
+/var/
+/public/build/
+
+/.env.test
+/phpunit.dist.xml
+/compose.yaml
+/secrets.env.dist
+/docker/deploy.sh
+*.md

@@ -23,3 +23,18 @@ when@test:
     test: true
     session:
       storage_factory_id: session.storage.factory.mock_file
+
+when@prod:
+  framework:
+    # In production the app runs behind host Apache (TLS) and the nginx container, so PHP sees a
+    # Docker-bridge address and plain HTTP. Without trusting them, every request reads as http://:
+    # redirects after login would drop to http and the session cookie would lose its Secure flag
+    # (cookie_secure: auto). Only private addresses can reach php-fpm at all - nginx is published on
+    # the host loopback only - so trusting the private ranges trusts exactly that chain.
+    trusted_proxies: 'PRIVATE_SUBNETS'
+    trusted_headers: [ 'x-forwarded-for', 'x-forwarded-proto', 'x-forwarded-host' ]
+    session:
+      # A path inside the var/sessions volume (compose.yaml) instead of PHP's default /tmp, which
+      # dies with the container: without it every deploy would log the admin out.
+      handler_id: session.handler.native_file
+      save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'

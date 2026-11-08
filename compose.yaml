@@ -1,0 +1,44 @@
+# Production stack, see DEPLOY.md. It lives on the server in /opt/ferrio-api next to secrets.env and
+# deploy.sh, and pulls prebuilt images from GHCR - no source checkout and no build toolchain on the
+# box. Copy it there again whenever it changes in the repository; a deploy does not ship it.
+#
+# MySQL is NOT part of the stack: it stays on the host, reached through its unix socket. Mounting
+# the socket directory means no change to bind-address and no grants for a Docker subnet - the app
+# user connects as 'user'@'localhost', exactly as it did before Docker.
+#
+# IMAGE_TAG is the commit SHA of the release. deploy.sh writes it into .env next to this file, so a
+# manual `docker compose up -d` keeps the release that is running instead of floating to another.
+
+services:
+  php:
+    image: ghcr.io/andret2344/ferrio-api-php:${IMAGE_TAG:?IMAGE_TAG is not set - deploy through deploy.sh}
+    restart: unless-stopped
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: "0"
+    env_file:
+      - secrets.env
+    volumes:
+      # The directory, not the socket file: mysqld recreates the socket on every restart, and a
+      # bind-mounted file would keep pointing at the deleted one.
+      - /var/run/mysqld:/var/run/mysqld
+      - sessions:/app/var/sessions
+      - logs:/app/var/log
+      # Firebase service account, when FIREBASE_CREDENTIALS points at a file (see secrets.env.dist).
+      # - /opt/ferrio-api/firebase.json:/run/secrets/firebase.json:ro
+
+  nginx:
+    image: ghcr.io/andret2344/ferrio-api-nginx:${IMAGE_TAG:?IMAGE_TAG is not set - deploy through deploy.sh}
+    restart: unless-stopped
+    depends_on:
+      - php
+    # Loopback only: Apache on the host is the sole way in. Port 8080 is taken by huntloop-api.
+    ports:
+      - "127.0.0.1:8081:8080"
+
+volumes:
+  # Admin sessions survive a deploy, so replacing the container does not log anyone out.
+  sessions:
+  # reports.log (rejected report POSTs, kept for abuse stats) is a file, not stderr, so it needs a
+  # home that outlives the container. Every other log goes to stderr and `docker compose logs`.
+  logs:

@@ -1,9 +1,13 @@
-services:
-  _defaults:
-    autowire: true
-    autoconfigure: true
+# Kernel imports every file in config/packages/ whatever the environment, so without the when@test
+# guard prod would register test fixtures too - and fail outright where tests/ is not shipped, like
+# the production Docker image.
+when@test:
+  services:
+    _defaults:
+      autowire: true
+      autoconfigure: true
 
-  App\Tests\Fixture\:
-    resource: '../../tests/Fixture/'
-    public: true
-    tags: [ 'doctrine.fixture.orm' ]
+    App\Tests\Fixture\:
+      resource: '../../tests/Fixture/'
+      public: true
+      tags: [ 'doctrine.fixture.orm' ]

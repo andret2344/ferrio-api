@@ -23,6 +23,7 @@
 		"symfony/flex": "^v2.11.0",
 		"symfony/form": "*",
 		"symfony/framework-bundle": "*",
+		"symfony/http-client": "*",
 		"symfony/monolog-bundle": "^v4.0.2",
 		"symfony/property-access": "*",
 		"symfony/property-info": "*",
@@ -90,7 +91,6 @@
 		"phpunit/phpunit": "^13.2.4",
 		"symfony/browser-kit": "*",
 		"symfony/css-selector": "*",
-		"symfony/http-client": "*",
 		"symfony/maker-bundle": "^v1.67.0",
 		"symfony/stopwatch": "*",
 		"symfony/web-profiler-bundle": "*"
