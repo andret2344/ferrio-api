@@ -7,6 +7,10 @@ FROM node:26-alpine AS assets
 
 WORKDIR /app
 
+# Node images ship without yarn since Node 25 (corepack was dropped), so it comes from npm - the
+# same Yarn Classic that reads yarn.lock (v1) on a developer machine, pinned so it never drifts.
+RUN npm install -g yarn@1.22.22
+
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile --non-interactive
 
