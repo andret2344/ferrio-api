@@ -46,8 +46,10 @@ All on the server.
    ```
 
    If `.env.local` has no `APP_SECRET` line, or the same value as `.env`, production signs its
-   remember-me cookies with a public secret - anyone can forge an admin login. Then you generate a
-   new one in part 5, and the switch fixes that hole (it logs you out once). If `.env.local` has its
+   remember-me cookies with a public secret. That alone does not let anyone in - the signature also
+   covers the admin's password hash - but anyone who ever gets a copy of the database can then forge
+   an admin login without cracking a single password. Then you generate a new one in part 5, and the
+   switch fixes that hole (it logs you out once). If `.env.local` has its
    own value, keep it in part 5, so nobody gets logged out.
    Also check that no `.env.local.php` exists (`ls <old dir>/.env*`): if it does, it overrides
    both files and is the real source of the values.
@@ -57,7 +59,8 @@ All on the server.
    cat <old dir>/.env.local
    ```
 
-   Pay attention to `FIREBASE_CREDENTIALS`: is it a file path or the JSON itself?
+   Pay attention to `FIREBASE_CREDENTIALS`: is it base64, the JSON itself, or a file path? The first
+   two go into `secrets.env` as they are; only a path needs part 5, step 2.
 3. **Pending migrations.** Production must be fully migrated before the switch, so that the first
    Docker deploy runs no migration:
 
