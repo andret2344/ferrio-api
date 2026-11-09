@@ -64,11 +64,15 @@ class HolidayNameMatcher
 		'dzien',
 		'dni',
 		'swiet',
+		'sw',
 		'obchod',
 	];
 
-	/** Shorter tokens than this are prepositions and initials, not content. */
-	private const int MIN_TOKEN_LENGTH = 3;
+	/**
+	 * Prepositions and conjunctions, dropped before stemming. A list, not a length cut-off: short
+	 * words are often the whole content of a name ("Dzień Pi"), and a cut-off dropped them.
+	 */
+	private const array STOP_WORDS = ['w', 'z', 'o', 'i', 'a', 'u', 'na', 'do', 'od', 'po', 'za', 'we', 'ze', 'ku'];
 
 	/** Below this length a stem must match exactly; edit distance on short words is noise. */
 	private const int MIN_FUZZY_LENGTH = 4;
@@ -109,20 +113,20 @@ class HolidayNameMatcher
 		if ($normalized === '') {
 			return [];
 		}
-		$all = explode(' ', $normalized);
+		$kept = [];
 		$core = [];
-		foreach ($all as $token) {
-			if (strlen($token) < self::MIN_TOKEN_LENGTH) {
+		foreach (explode(' ', $normalized) as $token) {
+			if (in_array($token, self::STOP_WORDS, true)) {
 				continue;
 			}
 			$stem = self::stem($token);
-			if (in_array($stem, self::NOISE_STEMS, true)) {
-				continue;
+			$kept[] = $stem;
+			if (!in_array($stem, self::NOISE_STEMS, true)) {
+				$core[] = $stem;
 			}
-			$core[] = $stem;
 		}
 		if ($core === []) {
-			return array_map(self::stem(...), $all);
+			return $kept;
 		}
 		return $core;
 	}
@@ -162,6 +166,11 @@ class HolidayNameMatcher
 	{
 		if ($left === $right) {
 			return true;
+		}
+		// A noise word only survives in a name made of nothing else. It carries no signal, so it may
+		// not pair up by spelling alone - "dzien" is one edit from "dziec" (Dzieci).
+		if (in_array($left, self::NOISE_STEMS, true) || in_array($right, self::NOISE_STEMS, true)) {
+			return false;
 		}
 		$shortest = min(strlen($left), strlen($right));
 		if ($shortest < self::MIN_FUZZY_LENGTH) {

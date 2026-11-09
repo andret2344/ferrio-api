@@ -457,7 +457,9 @@ carry typos, duplicates and invented holidays, so the decision to store a row is
 - `HolidayNameMatcher` - pure and static, so it unit-tests on plain strings. `normalize()` folds Polish diacritics,
   `stem()` strips the inflectional ending (sources disagree on case - "Dzień Kota" vs "Święto Kotów" - and plain edit
   distance does not survive that), then noise stems (`swiatow`, `dzien`, `swiet`, …) are dropped, without which every
-  holiday scores highly against every other one. Score is the Dice coefficient over the surviving stems, paired greedily
+  holiday scores highly against every other one. Prepositions go by a `STOP_WORDS` list, never a length cut-off -
+  short words can be the whole content of a name ("Dzień Pi"). A name made only of noise words keeps them, but a noise
+  stem pairs exactly or not at all, since `dzien` is one edit from `dziec` (Dzieci). Score is the Dice coefficient over the surviving stems, paired greedily
   with an edit tolerance of one (two only from `TWO_EDIT_LENGTH` = 10 characters up) and a required two-character
   common prefix. Both guards exist because Polish declension gives unrelated words the same ending, so stems collide at
   the tail while never diverging at the head - `kierowc` / `wiezowc` was two edits apart over seven characters and

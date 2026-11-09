@@ -24,11 +24,13 @@ class HolidayNameMatcherTest extends TestCase
 
 	public static function tokensProvider(): iterable
 	{
-		yield 'noise words dropped' => ['Międzynarodowy Dzień Liczby Pi', ['liczb']];
+		yield 'noise words dropped' => ['Międzynarodowy Dzień Liczby Pi', ['liczb', 'pi']];
 		yield 'inflection stemmed to the same form' => ['Święto Kotów', ['kot']];
-		yield 'short tokens dropped' => ['Dzień Pi i Matematyki', ['matematyk']];
+		yield 'stop words dropped, short words kept' => ['Dzień Pi i Matematyki', ['pi', 'matematyk']];
+		yield 'saint abbreviation is noise' => ['Dzień św. Patryka', ['patryk']];
 		// Nothing but noise words: keeping them beats returning an unmatchable empty set.
 		yield 'all-noise name keeps its words' => ['Światowy Dzień', ['swiatow', 'dzien']];
+		yield 'all-noise name still drops stop words' => ['Dzień w Dzień', ['dzien', 'dzien']];
 	}
 
 	#[DataProvider('tokensProvider')]
@@ -48,6 +50,13 @@ class HolidayNameMatcherTest extends TestCase
 		// apart. They diverge at the first letter, which inflection never does.
 		yield 'shared ending is not a match' => ['Dzień Kierowców Ciężarówek', 'Dzień Wieżowca', 0.0];
 		yield 'shared ending, longer stems' => ['Dzień Pracownika', 'Dzień Ratownika', 0.0];
+		// "Pi" used to fall under a length cut-off, leaving nothing to compare.
+		yield 'short word is content' => ['Dzień Pi', 'Dzień Liczby Pi', 2 / 3];
+		yield 'short word name is not a child holiday' => ['Dzień Pi', 'Międzynarodowy Dzień Dzieci-Żołnierzy', 0.0];
+		yield 'saint abbreviated or spelled out' => ['Dzień św. Patryka', 'Dzień Świętego Patryka', 1.0];
+		// An all-noise name falls back to its noise words, which must not pair up by spelling:
+		// "dzien" is one edit from "dziec" (Dzieci).
+		yield 'noise word does not pair fuzzily' => ['Światowy Dzień', 'Dzień Dzieci Ulicy', 0.0];
 	}
 
 	#[DataProvider('scoreProvider')]
